@@ -36,11 +36,11 @@ export class Candidate{
   @ApiProperty()
   list: string
 
-  @OneToMany(()=> Vote, vote=>vote.id)
-  @ApiProperty()
-  vote: Vote
+  @OneToMany(() => Vote, vote => vote.candidate)
+  @ApiProperty({ type: () => [Vote] })
+  votes: Vote[];
 
-  @OneToOne(()=> User, user=>user.id)
+  @OneToOne(() => User, user => user.candidate)
   @ApiProperty()
-  user: User
+  user: User;
 }

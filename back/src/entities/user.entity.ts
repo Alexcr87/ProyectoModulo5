@@ -83,7 +83,7 @@ export class User{
   })
   Suffrage:boolean
 
-  @OneToOne(()=> Candidate, candidate=>candidate.id)
+  @OneToOne(() => Candidate, candidate => candidate.user)
   @ApiProperty()
-  candidate: Candidate
+  candidate: Candidate;
 }

@@ -17,7 +17,7 @@ export class Vote{
   @ApiProperty()
   date: Date
 
-  @ManyToOne(()=> Candidate, candidate=>candidate.id)
+  @ManyToOne(() => Candidate, candidate => candidate.votes)
   @ApiProperty()
-  candidate: Candidate
+  candidate: Candidate;
 }
