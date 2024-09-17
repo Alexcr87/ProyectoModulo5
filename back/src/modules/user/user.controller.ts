@@ -1,6 +1,7 @@
-import { Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Put } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { ApiTags } from "@nestjs/swagger";
+import { CreateUserDto } from "src/dto/createUserDto";
 
 @ApiTags("Users")
 @Controller("user")
@@ -46,4 +47,11 @@ export class UserController{
       
     }
   }
+
+  @Post()
+  @HttpCode(201)
+  createUser(@Body() createUserDto:CreateUserDto){
+    return this.userService.createUser(createUserDto)
+  }
+
 }
