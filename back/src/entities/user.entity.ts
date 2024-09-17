@@ -81,7 +81,7 @@ export class User{
     description:'Asignada por default al momento de crear el usuario no debe ser incluida',
     default:false
   })
-  Suffrage:boolean
+  suffrage:boolean
 
   @OneToOne(() => Candidate, candidate => candidate.user)
   @ApiProperty()
