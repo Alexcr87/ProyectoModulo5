@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, ParseUUIDPipe, Post, Put } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "src/dto/createUserDto";
@@ -40,11 +40,11 @@ export class UserController{
 
   @Delete(":id")
   @HttpCode(200)
-  deleteUserById(@Param("id", ParseUUIDPipe) id:string){
+  async deleteUserById(@Param("id", ParseUUIDPipe) id:string){
     try {
-      return this.userService.deteleUserById(id)
+      return await this.userService.deteleUserById(id)
     } catch (error) {
-      
+      throw new NotFoundException(error.message)
     }
   }
 
