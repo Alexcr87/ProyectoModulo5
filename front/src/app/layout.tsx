@@ -17,8 +17,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="container">
-          {/* se creo las etiquetas herder, main y footer para organizar los diferentes componentes mateniendo el footer siempre en la parte de abajo */}
+        {/* se creo las etiquetas herder, main y footer para organizar los diferentes componentes mateniendo el footer siempre en la parte de abajo */}
+        <div className="containerPrincipal">
           <header>
             <NavBar />
           </header>
