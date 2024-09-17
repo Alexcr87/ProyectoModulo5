@@ -30,9 +30,9 @@ export class UserController{
 
   @Put(":id")
   @HttpCode(200)
-  updateUserById(@Param("id", ParseUUIDPipe) id:string){
+  updateUserById(@Param("id", ParseUUIDPipe) id:string, @Body() createUserDto:CreateUserDto){
     try {
-      return this.userService.updateUserById(id)
+      return this.userService.updateUserById(id, createUserDto)
     } catch (error) {
       
     }
