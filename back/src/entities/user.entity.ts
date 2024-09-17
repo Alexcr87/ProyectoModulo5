@@ -1,4 +1,4 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm"
 import {v4 as uuid} from 'uuid'
 import { ApiProperty } from "@nestjs/swagger"
 import { IsBoolean, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator"
@@ -84,6 +84,7 @@ export class User{
   suffrage:boolean
 
   @OneToOne(() => Candidate, candidate => candidate.user)
+  @JoinColumn()
   @ApiProperty()
   candidate: Candidate;
 }
