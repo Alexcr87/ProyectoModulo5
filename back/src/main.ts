@@ -1,8 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { connectionSource } from './config/typeorm';
 
 async function bootstrap() {
+  await connectionSource.initialize()
   const app = await NestFactory.create(AppModule);
   const swaggerConfig = new DocumentBuilder()
   .setTitle('Votaciones')
