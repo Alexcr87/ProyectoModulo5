@@ -1,12 +1,7 @@
-export class CreateUserDto{
-  name: string
-  dni: number
-  email:string
-  password:string
-  addres:string
-  city:string
-  country:string
-  rol:string
-  suffrage:boolean
+import { ApiProperty, OmitType } from "@nestjs/swagger"
+import { User } from "src/entities/user.entity"
 
-}
+
+export class CreateUserDto extends OmitType (User,["id","rol","suffrage","candidate"] as const){}
+
+
