@@ -28,6 +28,26 @@ export class UserController{
     }
   }
 
+  @Get()
+  @HttpCode(200)
+  findUserByDni(@Body() dni:number ){
+    try {
+      return this.userService.findUserByDni(dni)
+    } catch (error) {
+      
+    }
+  }
+
+  @Get()
+  @HttpCode(200)
+  findUserByEmail(@Body() email:string ){
+    try {
+      return this.userService.findUserByEmail(email)
+    } catch (error) {
+      
+    }
+  }
+
   @Put(":id")
   @HttpCode(200)
   updateUserById(@Param("id", ParseUUIDPipe) id:string, @Body() createUserDto:CreateUserDto){

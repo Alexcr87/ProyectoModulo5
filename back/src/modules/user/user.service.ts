@@ -50,6 +50,10 @@ export class UserService{
     return await this.userRepository.findOneBy({email})
   }
 
+  async findUserByDni(dni:number):Promise<User>{
+    return await this.userRepository.findOneBy({dni})
+  }
+
   async createUser(createUserDto:CreateUserDto):Promise <Omit<User, "password">>{
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10)
     const newUser = this.userRepository.create({
