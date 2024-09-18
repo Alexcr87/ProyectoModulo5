@@ -83,8 +83,6 @@ export class User{
   })
   suffrage:boolean
 
-  @OneToOne(() => Candidate, candidate => candidate.user)
-  @JoinColumn()
-  @ApiProperty()
+  @OneToOne(() => Candidate, candidate => candidate.user, { cascade: ['remove'], onDelete: 'CASCADE' })
   candidate: Candidate;
 }
