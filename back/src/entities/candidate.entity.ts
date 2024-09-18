@@ -30,6 +30,16 @@ export class Candidate{
   @ApiProperty()
   list: string
 
+  @Column({ type: 'text', nullable: true })
+  @IsString()
+  @ApiProperty()
+  campaignDescription: string;
+
+  @Column({ type: 'text', nullable: true })
+  @IsString()
+  @ApiProperty()
+  proposals: string;
+
   @OneToMany(() => Vote, vote => vote.candidate)
   @ApiProperty({ type: () => [Vote] })
   votes: Vote[];
