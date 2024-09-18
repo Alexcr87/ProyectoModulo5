@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, ParseUUIDPipe, Post, Put } from "@nestjs/common";
+import { Body, ConflictException, Controller, Delete, Get, HttpCode, InternalServerErrorException, NotFoundException, Param, ParseUUIDPipe, Post, Put } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "src/dto/createUserDto";
@@ -14,7 +14,7 @@ export class UserController{
     try {
       return this.userService.getUsers()
     } catch (error) {
-      
+      throw new NotFoundException(error.message)
     }
   }
 
@@ -24,7 +24,11 @@ export class UserController{
     try {
       return this.userService.getUserById(id)
     } catch (error) {
-      
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      } else {
+        throw new InternalServerErrorException('Error retrieving user');
+      }
     }
   }
 
@@ -34,7 +38,11 @@ export class UserController{
     try {
       return this.userService.updateUserById(id, createUserDto)
     } catch (error) {
-      
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      } else {
+        throw new InternalServerErrorException('Error updating user');
+      }
     }
   }
 
@@ -44,14 +52,26 @@ export class UserController{
     try {
       return await this.userService.deteleUserById(id)
     } catch (error) {
-      throw new NotFoundException(error.message)
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      } else {
+        throw new InternalServerErrorException('Error deleting user');
+      }
     }
   }
 
   @Post()
   @HttpCode(201)
   createUser(@Body() createUserDto:CreateUserDto){
-    return this.userService.createUser(createUserDto)
+    try {     
+      return this.userService.createUser(createUserDto)
+    } catch (error) {
+      if (error.code === '23505') { // Unique constraint violation
+        throw new ConflictException('User with this email already exists');
+      } else {
+        throw new InternalServerErrorException('Error creating user');
+      }
+    }
   }
 
 }
