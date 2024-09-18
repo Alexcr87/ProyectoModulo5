@@ -1,7 +1,7 @@
-import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm"
 import {v4 as uuid} from 'uuid'
 import { ApiProperty } from "@nestjs/swagger"
-import { IsBoolean, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator"
+import { IsNotEmpty, IsNumber, IsString, MaxLength, MinLength } from "class-validator"
 import { User } from "./user.entity"
 import { Vote } from "./vote.entity"
 
@@ -11,12 +11,6 @@ export class Candidate{
 
   @PrimaryGeneratedColumn('uuid')
   id: string = uuid()
-
-  @Column({type: "int"})
-  @IsNumber()
-  @IsNotEmpty()
-  @ApiProperty()
-  count: number
 
   @Column({type: "varchar", length: 20, nullable: false,})
   @IsString()
@@ -40,7 +34,8 @@ export class Candidate{
   @ApiProperty({ type: () => [Vote] })
   votes: Vote[];
 
-  @OneToOne(() => User, user => user.candidate)
+  @OneToOne(() => User, user => user.candidate, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'userId' })  // Esto asegura que 'userId' aparezca en Candidate
   @ApiProperty()
   user: User;
 }
