@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.containerPrincipal{
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100dvh;
+}
+:root{
+    --primary-color: #F45D01;
+    --secundary-color: #5BC0EB;
+    --tertiary-color: #2C3D55;
+    --cuartiary-color: #ecfee8;
+}
