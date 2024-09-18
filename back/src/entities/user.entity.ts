@@ -1,4 +1,4 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm"
 import {v4 as uuid} from 'uuid'
 import { ApiProperty } from "@nestjs/swagger"
 import { IsBoolean, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator"
@@ -81,9 +81,8 @@ export class User{
     description:'Asignada por default al momento de crear el usuario no debe ser incluida',
     default:false
   })
-  Suffrage:boolean
+  suffrage:boolean
 
-  @OneToOne(() => Candidate, candidate => candidate.user)
-  @ApiProperty()
+  @OneToOne(() => Candidate, candidate => candidate.user, { cascade: ['remove'], onDelete: 'CASCADE' })
   candidate: Candidate;
 }
