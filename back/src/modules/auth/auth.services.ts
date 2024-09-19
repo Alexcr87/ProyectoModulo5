@@ -1,7 +1,7 @@
 import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import * as bcrypt from "bcrypt";
-import { CredentialUserDto, newChangePassword } from "src/dto/credentialUserDto";
+import { CredentialUserDto, newChangePasswordDto } from "src/dto/credentialUserDto";
 import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto } from "src/dto/createUserDto";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -47,7 +47,7 @@ export class AuthService {
       };
 
 
-  async newPasswordLogin(newPassword : newChangePassword){
+  async newPasswordLogin(newPassword : newChangePasswordDto){
 
   };
 
