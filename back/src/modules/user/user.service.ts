@@ -4,18 +4,26 @@ import { CreateUserDto} from "src/dto/createUserDto";
 import { User } from "src/entities/user.entity";
 import { Repository } from "typeorm";
 import * as bcrypt from "bcrypt"
+import { Role } from "src/entities/roles.entity";
 
 @Injectable()
 export class UserService{
-  constructor (@InjectRepository(User) private userRepository:Repository<User>){}
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    
+    @InjectRepository(Role) 
+    private roleRepository: Repository<Role>,
+  ) {}
 
   async getUsers():Promise<User[]> {
     try {
       
-      return await this.userRepository.find({relations:{candidate:true}})
+      return await this.userRepository.find({relations: ['roles']})
     } catch (error) {
       throw new InternalServerErrorException('Error retrieving users')
     }
+
   }
 
   async deteleUserById(id: string):Promise <string> {
@@ -32,6 +40,7 @@ export class UserService{
     }
     
   }
+
 
   async updateUserById(id: string, createUserDto:CreateUserDto):Promise<Omit<User, 'password'>> {
     try {
@@ -55,6 +64,7 @@ export class UserService{
       throw new InternalServerErrorException('Error updating user')
     }
   }
+
 
   
   async getUserById(id: string) {
@@ -91,29 +101,34 @@ export class UserService{
     return await this.userRepository.findOneBy({dni})
   }
 
-  async createUser(createUserDto:CreateUserDto):Promise <Omit<User, "password">>{
-    try {
-      
-      const existingUser = await this.userRepository.findOneBy({ email: createUserDto.email })
-      if (existingUser) {       
-        throw new BadRequestException('A user with this email already exists')
-      }
-      const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-      console.log(hashedPassword)
-      
-      const newUser = this.userRepository.create({
-        ...createUserDto,
-        password: hashedPassword,
-      });
+  async createUser(createUserDto: CreateUserDto): Promise<Omit<User, 'password'>> {
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
-      await this.userRepository.save(newUser)
-
-      const { password, ...result } = newUser
-
-      return result;
-    } catch (error) {
-      throw new InternalServerErrorException('Error creating user')
+    // Buscar el rol por defecto 'voter' (ID 3)
+    const defaultRole = await this.roleRepository.findOne({ where: { id: 3 } });
+    if (!defaultRole) {
+      throw new Error('Default role not found');
     }
+
+    // Si se pasa un rol en el DTO, buscar ese rol, de lo contrario usar el rol por defecto
+    let userRoles: Role[] = [defaultRole];
+    if (createUserDto.roles && createUserDto.roles.length > 0) {
+      userRoles = await this.roleRepository.findByIds(createUserDto.roles);
+    }
+
+    const newUser = this.userRepository.create({
+      ...createUserDto,
+      password: hashedPassword,
+      roles: userRoles,  // Asignamos los roles aquí
+    });
+
+    await this.userRepository.save(newUser);
+
+    // Excluir el campo `password` antes de retornar
+    const { password, ...result } = newUser;
+    return result;
+
   }
+  
 
 }

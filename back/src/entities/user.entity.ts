@@ -1,6 +1,7 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm"
 import {v4 as uuid} from 'uuid'
 import { Candidate } from "./candidate.entity"
+import { Role } from "./roles.entity"
 
 
 @Entity({name: 'users'})
@@ -29,13 +30,18 @@ export class User{
 
   @Column({type: "varchar", length: 50})
   country: string
-
-  @Column({default: "usuario"})
-  rol:string 
   
   @Column({default: false})
   suffrage:boolean
 
   @OneToOne(() => Candidate, candidate => candidate.user, { cascade: ['remove'], onDelete: 'CASCADE' })
   candidate: Candidate;
+
+  @ManyToMany(() => Role, (role) => role.users)
+  @JoinTable({
+    name: 'user_roles',
+    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
+  })
+  roles: Role[];
 }

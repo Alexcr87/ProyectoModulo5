@@ -9,7 +9,7 @@ interface BotonProps {
 const Boton: React.FC<BotonProps> = ({ text, link }) => {
   return (
     <Link href={`/${link}`}>
-      <p className='bg-tertiaryColor text-cuartiaryColor py-2 px-8 w-32 flex justify-center rounded-full capitalize'>{text}</p>
+      <p className='bg-tertiaryColor text-cuartiaryColor py-2 px-8 w-32 flex justify-center rounded-full uppercase'>{text}</p>
     </Link>
   );
 };

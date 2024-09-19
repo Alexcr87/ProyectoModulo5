@@ -1,7 +1,5 @@
-
-import { ApiProperty, OmitType } from "@nestjs/swagger"
-import { IsEmail, isNotEmpty, IsNotEmpty, IsNumber, IsString, isString, Length, Matches } from "class-validator"
-import { User } from "src/entities/user.entity"
+import { IsBoolean, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, Length, Matches, } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 
 export class CreateUserDto{
@@ -64,5 +62,11 @@ export class CreateUserDto{
 })
   country:string
 
-}
+@IsOptional()
+@ApiProperty({
+    description: 'Lista opcional de IDs de roles para asignar al usuario',
+    example: [1, 2],
+  })
+  roles?: number[];
 
+}
