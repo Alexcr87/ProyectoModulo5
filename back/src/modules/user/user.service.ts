@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException, NotFound
 import { InjectRepository } from "@nestjs/typeorm";
 import { CreateUserDto} from "src/dto/createUserDto";
 import { User } from "src/entities/user.entity";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import * as bcrypt from "bcrypt"
 import { Role } from "src/entities/roles.entity";
 
@@ -42,28 +42,43 @@ export class UserService{
   }
 
 
-  async updateUserById(id: string, createUserDto:CreateUserDto):Promise<Omit<User, 'password'>> {
+  async updateUserById(id: string, createUserDto: CreateUserDto): Promise<Omit<User, 'password'>> {
     try {
-      const userToUpdate = await this.userRepository.findOne({where: {id}})
+      const userToUpdate = await this.userRepository.findOne({ where: { id } })
       if (!userToUpdate) {
         throw new NotFoundException(`User with id: ${id} not found`)
       }
+  
       if (!createUserDto.password) {
         throw new BadRequestException('Password is required for updating user')
       }
+  
       const hashedPassword = await bcrypt.hash(createUserDto.password, 10)
+  
+      let roles
+      if (Array.isArray(createUserDto.roles)) {
+        roles = createUserDto.roles.map(role => {
+          if (typeof role === 'number') {
+            return { id: role }  
+          }
+          return role
+        });
+      }
+  
       const updatedUser = await this.userRepository.save({
         ...userToUpdate,
         ...createUserDto,
         password: hashedPassword,
+        roles,  
       });
-
+  
       const { password, ...userToShow } = updatedUser
       return userToShow
     } catch (error) {
       throw new InternalServerErrorException('Error updating user')
     }
   }
+  
 
 
   
@@ -97,7 +112,7 @@ export class UserService{
     }
   }
 
-  async findUserByDni(dni:number):Promise<User>{
+  async findUserByDni(dni:number):Promise<User>{   
     return await this.userRepository.findOneBy({dni})
   }
 
@@ -113,7 +128,9 @@ export class UserService{
     // Si se pasa un rol en el DTO, buscar ese rol, de lo contrario usar el rol por defecto
     let userRoles: Role[] = [defaultRole];
     if (createUserDto.roles && createUserDto.roles.length > 0) {
-      userRoles = await this.roleRepository.findByIds(createUserDto.roles);
+      userRoles = await this.roleRepository.findBy({id:In(createUserDto.roles)});
+      if (userRoles.length !== createUserDto.roles.length) {
+        throw new BadRequestException('Some roles not found');}
     }
 
     const newUser = this.userRepository.create({
