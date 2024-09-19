@@ -27,7 +27,7 @@ export class CreateUserDto{
 
 
   @ApiProperty({
-    example:"12345"
+    example:"12345aS@"
   })
   @Length(8,15, {message: "password property must contain a minimum of 8 to 15 characters"})
   @IsString()
@@ -64,7 +64,7 @@ export class CreateUserDto{
 
 @IsOptional()
 @ApiProperty({
-    description: 'Lista opcional de IDs de roles para asignar al usuario',
+    description: 'Optional list of role IDs to assign to the user',
     example: [1, 2],
   })
   roles?: number[];

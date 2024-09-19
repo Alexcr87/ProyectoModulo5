@@ -34,6 +34,14 @@ export class User{
   @Column({default: false})
   suffrage:boolean
 
+  @Column({ default: true })
+  @IsBoolean()
+  @ApiProperty({
+    description: 'Indica si es la primera vez que el usuario inicia sesión',
+    default: true
+  })
+  isFirstLogin: boolean;
+
   @OneToOne(() => Candidate, candidate => candidate.user, { cascade: ['remove'], onDelete: 'CASCADE' })
   candidate: Candidate;
 
