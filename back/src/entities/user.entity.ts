@@ -2,6 +2,8 @@ import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGen
 import {v4 as uuid} from 'uuid'
 import { Candidate } from "./candidate.entity"
 import { Role } from "./roles.entity"
+import { ApiProperty } from "@nestjs/swagger"
+import { IsBoolean } from "class-validator"
 
 
 @Entity({name: 'users'})
@@ -35,11 +37,6 @@ export class User{
   suffrage:boolean
 
   @Column({ default: true })
-  @IsBoolean()
-  @ApiProperty({
-    description: 'Indica si es la primera vez que el usuario inicia sesión',
-    default: true
-  })
   isFirstLogin: boolean;
 
   @OneToOne(() => Candidate, candidate => candidate.user, { cascade: ['remove'], onDelete: 'CASCADE' })

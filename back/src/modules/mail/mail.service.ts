@@ -1,6 +1,6 @@
 
-import { Injectable } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
+import { Injectable } from '@nestjs/common'
+import * as nodemailer from 'nodemailer'
 
 @Injectable()
 export class MailService {
@@ -15,7 +15,7 @@ export class MailService {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
-    });
+    })
   }
 
   async sendMail(to: string, subject: string, text: string): Promise<void> {
@@ -24,8 +24,8 @@ export class MailService {
       to,
       subject,
       text,
-    };
+    }
 
-    await this.transporter.sendMail(mailOptions);
+    await this.transporter.sendMail(mailOptions)
   }
 }
