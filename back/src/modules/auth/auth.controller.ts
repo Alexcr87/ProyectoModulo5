@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from "@nestjs/common";
+/*import { Body, Controller, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { AuthService } from "./auth.services";
 import { CredentialUserDto } from "src/dto/credentialUserDto";
@@ -30,4 +30,4 @@ export class AuthController {
         }
     }
 
-}
+}*/
