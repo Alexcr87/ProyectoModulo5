@@ -28,15 +28,14 @@ export class UserController{
     }
   }
 
-  @Put(":id")
-  @HttpCode(200)
-  updateUserById(@Param("id", ParseUUIDPipe) id:string, @Body() createUserDto:CreateUserDto){
-    try {
-      return this.userService.updateUserById(id, createUserDto)
-    } catch (error) {
-      
-    }
-  }
+  // @Put(":id")
+  // @HttpCode(200)
+  // updateUserById(@Param("id", ParseUUIDPipe) id:string, @Body() createUserDto:CreateUserDto){
+  //   try {
+  //     return this.userService.updateUserById(id, createUserDto)
+  //   } catch (error) {
+  //   }
+  // }
 
   @Delete(":id")
   @HttpCode(200)
