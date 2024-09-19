@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from "@nestjs/common";
 import { CandidateService } from "./candidate.service";
 import { CreateCandidateDto } from "../../dto/createCandidateDto";
 import { ApiTags } from "@nestjs/swagger";
 import { Candidate } from "src/entities/candidate.entity";
+import { FileInterceptor } from "@nestjs/platform-express";
+
 
 @ApiTags('Candidates')
 @Controller('candidates')
@@ -10,8 +12,12 @@ export class CandidateController {
   constructor(private readonly candidateService: CandidateService) {}
 
   @Post()
-  create(@Body() createCandidateDto: CreateCandidateDto) {
-    return this.candidateService.create(createCandidateDto);
+  @UseInterceptors(FileInterceptor('file')) // Interceptor para subir el archivo
+  async create(
+    @Body() createCandidateDto: CreateCandidateDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.candidateService.create(createCandidateDto, file);
   }
 
   @Get()
