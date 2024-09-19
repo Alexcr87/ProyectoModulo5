@@ -1,30 +1,39 @@
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const NavBar = () => {
   return (
-    <div className='bg-primaryColor h-14 pl-8 flex items-center justify-between'>
+    <nav className='bg-primaryColor h-14 pl-8 flex items-center justify-between fixed w-full z-50'>
         <div className='flex items-center'>
             <Image src="/images/logo.png" alt="imagenLogo" width={40} height={40}/>
-            <h2 className='text-cuartiaryColor'>SistemaVotaciones</h2>
+            <h2 className='text-cuartiaryColor'>VotingSistem</h2>
         </div>
         <div>
             <ul className='flex gap-4 pr-8 text-cuartiaryColor'>
                 <li>
-                    Registrar
+                    <Link href="/register">
+                        Register
+                    </Link>
                 </li>
                 <li>
-                    Resultado
+                    <Link href="/candidates">
+                        Cadidates
+                    </Link>
                 </li>
                 <li>
-                    Sobre Nosotros
+                    <Link href="/">
+                        About Us
+                    </Link>
                 </li>
                 <li>
-                    Iniciar Sesión
+                    <Link href="/">
+                        Sing In
+                    </Link>
                 </li>
             </ul>
         </div>
-    </div>
+    </nav>
   )
 }
 
