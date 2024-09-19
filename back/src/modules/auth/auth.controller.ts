@@ -42,9 +42,9 @@ export class AuthController {
 
 
     @Post("newPasswordChange")
-    async newPasswordUser (@Body() newPassword: newChangePasswordDto){
+    async newPasswordUser (@Body() newCredential: newChangePasswordDto){
         try {
-         return  await this.authservice.newPasswordLogin(newPassword)
+         return  await this.authservice.newPasswordLogin(newCredential)
         }catch(error){
 
         }
