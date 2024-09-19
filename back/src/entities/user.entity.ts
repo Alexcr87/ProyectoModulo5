@@ -2,6 +2,8 @@ import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGen
 import {v4 as uuid} from 'uuid'
 import { Candidate } from "./candidate.entity"
 import { Role } from "./roles.entity"
+import { ApiProperty } from "@nestjs/swagger"
+import { IsBoolean } from "class-validator"
 
 
 @Entity({name: 'users'})
