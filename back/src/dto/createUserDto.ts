@@ -1,82 +1,72 @@
-import { IsBoolean, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsBoolean, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, Length, Matches, } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateUserDto {
-  
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(3)
-  @MaxLength(80)
-  @ApiProperty({
-    description: 'El nombre del usuario, debe tener como mínimo 3 caracteres y máximo 80 caracteres'
-  })
-  name: string;
 
-  @IsNotEmpty()
+export class CreateUserDto{
+  @ApiProperty({
+    example:"nameuser"
+  })
+  @IsString()
+  @IsNotEmpty({message:"name must not be empty"})
+  @Length(3,80 , {message: "name property must contain a minimum of 3 to 80 characters"})
+  name: string
+
+  @ApiProperty({
+    example:"11111111"
+  })
   @IsNumber()
-  @ApiProperty({
-    description: 'Número de documento del usuario',
-  })
-  dni: number;
+  @IsNotEmpty({message:"dni must not be empty"})
+  dni: number
 
-  @IsNotEmpty()
+  @ApiProperty({
+    example:"usuario@gmail.com"
+  })
   @IsEmail()
-  @ApiProperty({
-    description: 'El email del usuario debe ser un email válido',
-    example: 'example@gmail.com'
-  })
-  email: string;
+  @IsNotEmpty({message:"email must not be empty"})
+  email:string
 
-  @IsNotEmpty()
+
+  @ApiProperty({
+    example:"12345"
+  })
+  @Length(8,15, {message: "password property must contain a minimum of 8 to 15 characters"})
   @IsString()
-  @MinLength(8)
-  @MaxLength(15)
-  @ApiProperty({
-    description: 'La contraseña debe tener entre 8 y 15 caracteres',
-    example: '12345aS@'
-  })
-  password: string;
+  @IsNotEmpty({message:"password must not be empty"})
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,100}$/ , {
+    message: "password must contain at least one lowercase letter, one uppercase letter, one number, and one special character (!@#$%^&*)"
+})
+  password:string
 
-  @IsNotEmpty()
   @IsString()
-  @MinLength(3)
-  @MaxLength(80)
+  @IsNotEmpty({message:"address must not be empty"})
+  @Length(3,80, {message: "address property must contain a minimum of 3 to 80 characters"})
   @ApiProperty({
-    description: 'La dirección del usuario',
-  })
-  address: string;
+    example: "Saavedra 4353"
+})
+  address:string
 
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(5)
-  @MaxLength(20)
-  @ApiProperty({
-    description: 'La ciudad del usuario',
-  })
-  city: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(5)
-  @MaxLength(20)
-  @ApiProperty({
-    description: 'El país del usuario',
-  })
-  country: string;
+ @IsString()
+ @IsNotEmpty({message:"city must not be empty"})
+ @Length(5,50, {message:"city property must contain a minimum of 5 to 50 characters"})
+ @ApiProperty({
+    example: "Cap. Fed."
+})
+  city:string
 
-  @IsOptional()
-  @IsBoolean()
-  @ApiProperty({
-    description: 'Indica si el usuario ha votado o no. Se asigna por defecto a "false".',
-    default: false,
-  })
-  suffrage: boolean;
+@IsString()
+@IsNotEmpty({message:"country must not be empty"})
+@Length(5,50, {message:"country property must contain a minimum of 5 to 50 characters"})
+@ApiProperty({
+    example: "Argentina"
+})
+  country:string
 
-  // Nuevo campo para roles
-  @IsOptional()
-  @ApiProperty({
+@IsOptional()
+@ApiProperty({
     description: 'Lista opcional de IDs de roles para asignar al usuario',
     example: [1, 2],
   })
   roles?: number[];
+
 }
