@@ -32,19 +32,21 @@ export class UserController{
     }
   }
 
-  @Get()
+  @Get("/dni/:dni")
   @HttpCode(200)
-  findUserByDni(@Body() dni:number ){
+  findUserByDni(@Param("dni") dni:number ){
     try {
+      console.log(dni);
+      
       return this.userService.findUserByDni(dni)
     } catch (error) {
       
     }
   }
 
-  @Get()
+  @Get("/email/:email")
   @HttpCode(200)
-  findUserByEmail(@Body() email:string ){
+  findUserByEmail(@Param("email") email:string ){
     try {
       return this.userService.findUserByEmail(email)
     } catch (error) {
