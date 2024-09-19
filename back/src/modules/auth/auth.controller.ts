@@ -1,7 +1,7 @@
 import { BadRequestException, Body, Controller, HttpException, HttpStatus, NotFoundException, Post, Request as Req , Res, UnauthorizedException } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { AuthService } from "./auth.services";
-import { CredentialUserDto, newChangePassword } from "src/dto/credentialUserDto";
+import { CredentialUserDto, newChangePasswordDto } from "src/dto/credentialUserDto";
 import { CreateUserDto } from "src/dto/createUserDto";
 
 
@@ -42,9 +42,9 @@ export class AuthController {
 
 
     @Post("newPasswordChange")
-    async newPasswordUser (@Body() newPassword: newChangePassword){
+    async newPasswordUser (@Body() newPasswordDto: newChangePasswordDto, dni:number){
         try {
-         return  await this.authservice.newPasswordLogin(newPassword)
+         return  await this.authservice.newPasswordLogin(newPasswordDto, dni)
         }catch(error){
 
         }
