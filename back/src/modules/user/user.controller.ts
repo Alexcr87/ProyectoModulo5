@@ -66,6 +66,7 @@ export class UserController{
     }
   }
 
+
   @Delete(":id")
   @HttpCode(200)
   async deleteUserById(@Param("id", ParseUUIDPipe) id:string){

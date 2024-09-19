@@ -1,8 +1,9 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm"
 import {v4 as uuid} from 'uuid'
 import { ApiProperty } from "@nestjs/swagger"
 import { IsBoolean, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator"
 import { Candidate } from "./candidate.entity"
+import { Role } from "./roles.entity"
 
 
 @Entity({name: 'users'})
@@ -64,15 +65,6 @@ export class User{
   @MaxLength(20)
   @ApiProperty()
   country: string
-
-  @Column({default: "usuario"})
-  @IsBoolean()
-  @IsOptional()
-  @ApiProperty({
-    description:'Asignada por default al momento de crear el usuario no debe ser incluida',
-    default: "usuario"
-  })
-  rol:string 
   
   @Column({default: false})
   @IsBoolean()
@@ -85,4 +77,12 @@ export class User{
 
   @OneToOne(() => Candidate, candidate => candidate.user, { cascade: ['remove'], onDelete: 'CASCADE' })
   candidate: Candidate;
+
+  @ManyToMany(() => Role, (role) => role.users)
+  @JoinTable({
+    name: 'user_roles',
+    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
+  })
+  roles: Role[];
 }
