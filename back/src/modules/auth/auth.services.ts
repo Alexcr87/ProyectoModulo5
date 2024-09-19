@@ -34,16 +34,25 @@ export class AuthService {
             throw new NotFoundException("user not found")
         };
 
-        if (!user.isFirstLogin) {
-            throw new UnauthorizedException("You have already logged in and cannot access the system again.");
-        }
-        
         const userHashedPassword= await bcrypt.compare(login.password ,user.password);
+        
         if(!userHashedPassword){
             throw new UnauthorizedException ("incorrect username and/or password")
         };
 
-        return { message: "Login successful, you can now change your password with your dni"};
+        if (!user.isFirstLogin) {
+            // aca hay que hacer la logica del login
+            const userPayload ={
+                sub: user.id,
+                id:user.id,
+                email:user.email,
+                roles:user.roles
+            }
+            const token =this.jwtService.sign(userPayload)
+            return {succes: 'Login Successful, Your session will expire in 1 hour', token, user}
+        }else{
+            return {message: 'you need to change your password to log in'}
+        }
     
       };
 
@@ -56,17 +65,27 @@ export class AuthService {
     throw new BadRequestException ("missing data");
   }
 
-  const user = this.userService.findUserByDni(dni);
+  const user = await this.userService.findUserByDni(dni);
 
   if(!user){
     throw new NotFoundException("user not found");
   };
 
-  const isPasswordValid = await bcrypt.compare(password );
+  if(newPassword !== confirmPassword){
+    throw new UnauthorizedException("passwords do not match");
+  }
+
+  const isPasswordValid = await bcrypt.compare(newCredential.password, user.password );
+
   if (!isPasswordValid) {
       throw new UnauthorizedException("incorrect current password");
   }
 
+    user.isFirstLogin=false;
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await this.userRepository.save(user);
+    return {message: "password changed successfully"}
 
   };
 
