@@ -90,7 +90,7 @@ function Register() {
                                 {" "}
                             </span>
                         </button>
-                        <button className="border rounded-full h-10 bg-tertiaryColor text-white m-10 ">
+                        <button className="border rounded-full h-10 bg-tertiaryColor text-white  m-10 ">
                             Register
                         </button>
                         <img
