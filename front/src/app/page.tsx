@@ -1,9 +1,15 @@
-import Image from "next/image";
+import Boton from "@/components/boton/Boton"
+
 
 export default function Home() {
+  
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <p>home</p>
+    <div className="bg-cuartiaryColor h-full flex justify-center">
+      <div className="bg-white w-11/12 mt-4 rounded-t-2xl p-8 drop-shadow-2xl border-2">
+        <p>home</p>
+        <Boton text="inicio" link="inicio" />
+       
+      </div>
     </div>
   );
 }

@@ -8,6 +8,8 @@ import { CloudinaryService } from './cloudinary/cloudinary.service';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { RoleModule } from './modules/role/role.module';
 import { RoleSeedService } from './seeder/seed.service';
+import { AuthModule } from './modules/auth/auth.module';
+
 
 @Module({
   imports: [
@@ -19,6 +21,7 @@ import { RoleSeedService } from './seeder/seed.service';
       inject:[ConfigService],
       useFactory:(configService: ConfigService)=> configService.get('typeorm')
     }),
+  AuthModule,
   UserModule,
   CandidateModule,
   CloudinaryModule,

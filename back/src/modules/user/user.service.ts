@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CreateUserDto} from "src/dto/createUserDto";
 import { User } from "src/entities/user.entity";
@@ -17,44 +17,88 @@ export class UserService{
   ) {}
 
   async getUsers():Promise<User[]> {
- return await this.userRepository.find({relations: ['roles']})
+    try {
+      
+      return await this.userRepository.find({relations: ['roles']})
+    } catch (error) {
+      throw new InternalServerErrorException('Error retrieving users')
+    }
+
   }
 
   async deteleUserById(id: string):Promise <string> {
-    const userToRemove = await this.userRepository.findOneBy({id})
+    try {
+      const userToRemove = await this.userRepository.findOneBy({id})
     if(userToRemove){
       await this.userRepository.remove(userToRemove)
-      return `Usuario con id: ${id} eliminado con exito`
+      return `User with id: ${id} successfully deleted`
     }else{
-      throw new NotFoundException(`Usuario con id: ${id} no encontrado `)
+      throw new NotFoundException(`User with id: ${id} not found`)
+    }
+    } catch (error) {
+      throw new InternalServerErrorException('Error deleting user')
+    }
+    
+  }
+
+
+  async updateUserById(id: string, createUserDto:CreateUserDto):Promise<Omit<User, 'password'>> {
+    try {
+      const userToUpdate = await this.userRepository.findOne({where: {id}})
+      if (!userToUpdate) {
+        throw new NotFoundException(`User with id: ${id} not found`)
+      }
+      if (!createUserDto.password) {
+        throw new BadRequestException('Password is required for updating user')
+      }
+      const hashedPassword = await bcrypt.hash(createUserDto.password, 10)
+      const updatedUser = await this.userRepository.save({
+        ...userToUpdate,
+        ...createUserDto,
+        password: hashedPassword,
+      });
+
+      const { password, ...userToShow } = updatedUser
+      return userToShow
+    } catch (error) {
+      throw new InternalServerErrorException('Error updating user')
     }
   }
 
-  // async updateUserById(id: string, createUserDto:CreateUserDto):Promise<Omit<User, 'password'>> {
-  //   const userToUpdate = await this.userRepository.findOne({where: {id}})
-  //   if(userToUpdate){
-  //     const hashedPassword = await bcrypt.hash(createUserDto.password, 10)
-  //     const updateUser = await this.userRepository.save({...userToUpdate, ...createUserDto, password:hashedPassword})
-  //     const {password, ...userToShow} =updateUser
-  //     return userToShow
-  //   }
-  // }
+
   
   async getUserById(id: string) {
-    const user = await this.userRepository.findOne({
-      where:{id},
-      relations:{candidate:true}
-    })
+    try {
+      const user = await this.userRepository.findOne({
+        where: { id },
+        relations: { candidate: true },
+      })
 
-    if(user){
-      const {password, ...userToShow}=user
+      if (!user) {
+        throw new NotFoundException(`User with id: ${id} not found`)
+      }
+
+      const { password, ...userToShow } = user
       return userToShow
+    } catch (error) {
+      throw new InternalServerErrorException('Error retrieving user')
     }
-
   }
  
   async findUserByEmail(email:string):Promise<User>{
-    return await this.userRepository.findOneBy({email})
+    try {
+      const user = await this.userRepository.findOneBy({ email })
+      if (!user) {
+        throw new NotFoundException(`User with email: ${email} not found`)
+      }
+      return user
+    } catch (error) {
+      throw new InternalServerErrorException('Error retrieving user by email')
+    }
+  }
+
+  async findUserByDni(dni:number):Promise<User>{
+    return await this.userRepository.findOneBy({dni})
   }
 
   async createUser(createUserDto: CreateUserDto): Promise<Omit<User, 'password'>> {
@@ -83,6 +127,7 @@ export class UserService{
     // Excluir el campo `password` antes de retornar
     const { password, ...result } = newUser;
     return result;
+
   }
   
 
