@@ -8,7 +8,8 @@ import { CloudinaryService } from './cloudinary/cloudinary.service';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { RoleModule } from './modules/role/role.module';
 import { RoleSeedService } from './seeder/seed.service';
-//import { AuthModule } from './modules/auth/auth.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
 
 
 @Module({
@@ -21,11 +22,16 @@ import { RoleSeedService } from './seeder/seed.service';
       inject:[ConfigService],
       useFactory:(configService: ConfigService)=> configService.get('typeorm')
     }),
-  //AuthModule,
+  AuthModule,
   UserModule,
   CandidateModule,
   CloudinaryModule,
-  RoleModule
+  RoleModule,
+  JwtModule.register({
+    global:true,
+    signOptions:{expiresIn:"1h"},
+    secret:process.env.JWT_SECRET
+  })
   ],
   controllers: [],
   providers: [],

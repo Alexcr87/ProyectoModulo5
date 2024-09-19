@@ -4,40 +4,47 @@ import * as bcrypt from "bcrypt";
 import { CredentialUserDto, newChangePassword } from "src/dto/credentialUserDto";
 import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto } from "src/dto/createUserDto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Role } from "src/entities/roles.entity";
 
 
 @Injectable()
 export class AuthService {
     constructor (private readonly userService: UserService , 
-      private readonly jwtService: JwtService
+      private readonly jwtService: JwtService,
+      @InjectRepository(Role) 
+      private roleRepository: Repository<Role>,
+      
      ){}
 
-  async sigIn(login:CredentialUserDto){
+     
+     async sigIn(login:CredentialUserDto){
 
-    const user = await this.userService.findUserByEmail(login.email);
-    if(!user){
-        throw new NotFoundException("user not found")
-    };
-    const userHashedPassword= await bcrypt(login.password ,user.password);
-    if(!userHashedPassword){
-        throw new UnauthorizedException ("incorrect username and/or password")
-    };
-    if (login.email !== login.password){
-        throw new BadRequestException ("missing data")
-    };
-
-    const userPayLoad = {
-      id: user.id,
-      email:user.email,  
-  }
-  
-  const token = this.jwtService.sign(userPayLoad);
-
-  return {message: "enter new password" , token}
-
-  };
-
-
+    
+        const user = await this.userService.findUserByEmail(login.email);
+        if(!user){
+            throw new NotFoundException("user not found")
+        };
+    
+        if(user.isFirstLogin === true){
+            //return user.dni
+        };
+    
+        const userHashedPassword= await bcrypt.compare(login.password ,user.password);
+    
+        
+        if(!userHashedPassword){
+            throw new UnauthorizedException ("incorrect username and/or password")
+        };
+    
+        if (!login.email || !login.password){
+            throw new BadRequestException ("missing data")
+        };
+    
+        
+    
+      };
 
 
   async newPasswordLogin(newPassword : newChangePassword){
