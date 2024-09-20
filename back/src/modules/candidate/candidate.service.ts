@@ -50,12 +50,12 @@ export class CandidateService {
   
     const proposalString = JSON.stringify(createCandidateDto.proposals);
     let imageUrl: string | undefined;
-    console.log(imageUrl)
 
     if (file) {
       const uploadResult = await this.cloudinaryService.uploadFile(file.buffer, file.originalname);
       imageUrl = uploadResult;  // URL segura de Cloudinary
     }
+    console.log(imageUrl)
 
     const candidate = this.candidateRepository.create({
       ...candidateData,
