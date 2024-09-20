@@ -1,4 +1,4 @@
-function generateRandomPassword(length: number = 12): string {
+export function generateRandomPassword(length: number = 12): string {
   const lowerCaseChars = 'abcdefghijklmnopqrstuvwxyz'
   const upperCaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
   const digits = '0123456789'
