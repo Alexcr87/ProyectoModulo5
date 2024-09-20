@@ -34,7 +34,7 @@ export class AuthController {
              }
 
         } else {
-            throw new HttpException("Error inesperado" , HttpStatus.CONFLICT)
+            throw new HttpException("unexpected error" , HttpStatus.CONFLICT)
         }
     }
     
@@ -46,7 +46,28 @@ export class AuthController {
         try {
          return  await this.authservice.newPasswordLogin(newCredential)
         }catch(error){
+            if(error instanceof BadRequestException){
+                return {
+                    statusCode: 400,
+                    message: error.message
+                 }
+                
+            } else if(error instanceof NotFoundException){
+                return {
+                    statusCode: 404,
+                    message: error.message
+                 }
 
+
+            }else if (error instanceof UnauthorizedException){
+                return {
+                    statusCode: 401,
+                    message: error.message
+                 }
+
+            } else {
+                throw new HttpException("unexpected error" , HttpStatus.CONFLICT);
+            }
         }
     }
 
@@ -63,7 +84,7 @@ export class AuthController {
                 }
             }
             else {
-                throw new HttpException("Error en el registro" , HttpStatus.BAD_REQUEST)
+                throw new HttpException("unexpected error" , HttpStatus.BAD_REQUEST)
             }
          }
     }
