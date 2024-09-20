@@ -7,6 +7,8 @@ import * as bcrypt from "bcrypt"
 import { Role } from "src/entities/roles.entity";
 import * as XLSX from 'xlsx';
 import * as fs from 'fs';
+import { MailService } from "../mail/mail.service";
+
 
 
 
@@ -16,9 +18,9 @@ export class UserService{
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    
     @InjectRepository(Role) 
-    private roleRepository: Repository<Role>
+    private roleRepository: Repository<Role>,
+    private readonly mailService: MailService 
     
   ) {}
 
@@ -148,7 +150,7 @@ export class UserService{
     });
 
     await this.userRepository.save(newUser);
-
+    await this.mailService.sendWelcomeEmail(newUser.email, newUser.name)
     // Excluir el campo `password` antes de retornar
     const { password, ...result } = newUser;
     return result;
@@ -187,5 +189,8 @@ export class UserService{
   async findUserByEmailxlsx(email: string): Promise<User | undefined> {
     return await this.userRepository.findOne({ where: { email } });
   }
+
+
+
 
 }
