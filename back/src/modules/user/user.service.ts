@@ -5,6 +5,11 @@ import { User } from "src/entities/user.entity";
 import { In, Repository } from "typeorm";
 import * as bcrypt from "bcrypt"
 import { Role } from "src/entities/roles.entity";
+import * as XLSX from 'xlsx';
+import * as fs from 'fs';
+
+
+
 
 @Injectable()
 export class UserService{
@@ -13,8 +18,11 @@ export class UserService{
     private readonly userRepository: Repository<User>,
     
     @InjectRepository(Role) 
-    private roleRepository: Repository<Role>,
+    private roleRepository: Repository<Role>
+    
   ) {}
+
+  
 
   async getUsers():Promise<User[]> {
     try {
@@ -146,6 +154,38 @@ export class UserService{
     return result;
 
   }
+
+  async readExcelFile(filePath: string): Promise<CreateUserDto[]> {
+    const data = fs.readFileSync(filePath);
+    const workbook = XLSX.read(data, { type: 'buffer' });
+    const sheetNames = workbook.SheetNames;
+    const users: CreateUserDto[] = [];
   
+    sheetNames.forEach(sheetName => {
+      const worksheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json<CreateUserDto>(worksheet);
+      users.push(...jsonData);
+    });
+  
+    return users;
+  }
+  
+  async importUsers(filePath: string): Promise<void> {
+    const users = await this.readExcelFile(filePath);
+    for (const user of users) {
+        const existingUser = await this.findUserByEmailxlsx(user.email);
+        if (!existingUser) {
+            await this.createUser(user);
+            console.log(`User ${user.email} added successfully.`);
+        } else {
+            console.log(`User ${user.email} already exists. Skipping...`);
+        }
+    }
+}
+
+
+  async findUserByEmailxlsx(email: string): Promise<User | undefined> {
+    return await this.userRepository.findOne({ where: { email } });
+  }
 
 }
