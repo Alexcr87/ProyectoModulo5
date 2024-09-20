@@ -86,22 +86,8 @@ export class AuthService {
 
 
   async sigUp(userRegister: CreateUserDto){
-
-   const user = await this.userService.findUserByEmail(userRegister.email);
-
-   if (user){
-    throw new HttpException("email is already registered" , HttpStatus.BAD_REQUEST);
-   }
-
-   const passwordHashed = await bcrypt.hash(userRegister.password ,10);
-if(!passwordHashed){
-    throw new HttpException ("password was not hashed", HttpStatus.CONFLICT)
-}
-
- this.userService.createUser({...userRegister,password:passwordHashed});
-
-
-return {message: "registered user"};
+   
+   return this.userService.createUser(userRegister);
 
 };
 

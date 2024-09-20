@@ -135,7 +135,7 @@ export class UserService{
   
     const defaultRole = await this.roleRepository.findOne({ where: { id: 3 } });
     if (!defaultRole) {
-      throw new Error('Default role not found');
+      throw new BadRequestException('Default role not found');
     }
   
     let userRoles: Role[] = [defaultRole];
@@ -155,7 +155,7 @@ export class UserService{
     await this.mailService.sendWelcomeEmail(newUser.email, newUser.name);
   
     const { password: excludedPassword, ...result } = newUser;
-    return result;
+    return  result;
   }
 
   async readExcelFile(filePath: string): Promise<CreateUserDto[]> {

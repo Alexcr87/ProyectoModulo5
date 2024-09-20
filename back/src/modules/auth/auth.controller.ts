@@ -75,9 +75,9 @@ export class AuthController {
     @Post("sigUp")
     async sigUp (@Body() userRegister:CreateUserDto){
         try{
-     return await this.authservice.sigUp(userRegister)
+     return  this.authservice.sigUp(userRegister)
         }catch(error){
-            if(error instanceof HttpException){
+            if(error instanceof BadRequestException){
                 const status = error.getStatus();
                 return{
                     statusCode: status,
