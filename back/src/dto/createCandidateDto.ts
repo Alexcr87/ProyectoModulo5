@@ -11,10 +11,10 @@ export class CreateCandidateDto {
   @ApiProperty()
   postulation: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  imgUrl: string;
+  // @IsString()
+  // @IsNotEmpty()
+  // @ApiProperty()
+  // imgUrl: string;
 
   @IsString()
   @IsNotEmpty()

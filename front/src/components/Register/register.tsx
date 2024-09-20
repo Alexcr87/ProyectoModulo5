@@ -133,13 +133,13 @@ return (
                                 {" "}
                             </span>
                         </button>
-                
+
                         <button className="border rounded-full h-10 bg-tertiaryColor text-white m-10 disabled:opacity-50 "
                         type="submit"
                         disabled={!isFormValid}>
                             Register
                         </button>
-                            
+                           
                         <img
                             src="/path-to-your-image.jpg"
                             alt="Small icon"
