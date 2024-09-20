@@ -17,8 +17,9 @@ export class AuthController {
       return  await this.authservice.sigIn(login);
     } catch(error){
         if(error instanceof NotFoundException){
+            const status = error.getStatus();
             return {
-               statusCode: 404,
+               statusCode: status,
                message: error.message
             }
         } else if (error instanceof UnauthorizedException){

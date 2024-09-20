@@ -1,4 +1,4 @@
-import { Body, ConflictException, Controller, Delete, Get, HttpCode, InternalServerErrorException, NotFoundException, Param, ParseUUIDPipe, Post, Put, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, ConflictException, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, NotFoundException, Param, ParseUUIDPipe, Post, Put, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "src/dto/createUserDto";
@@ -42,11 +42,18 @@ export class UserController{
   @HttpCode(200)
   findUserByDni(@Param("dni") dni:number ){
     try {
-      console.log(dni);
-      
       return this.userService.findUserByDni(dni)
     } catch (error) {
-      
+      if(error instanceof NotFoundException){
+        const status = error.getStatus();
+        return {
+          statusCode: status ,
+          message: error.message
+        }
+      }
+      else {
+        throw new HttpException( "Unexpected error", HttpStatus.CONFLICT)
+      }
     }
   }
 
@@ -56,7 +63,15 @@ export class UserController{
     try {
       return this.userService.findUserByEmail(email)
     } catch (error) {
-      
+        if (error instanceof NotFoundException){
+          const status = error.getStatus();
+          return {
+          statusCode: status ,
+          message: error.message
+          }
+        } else {
+        throw new InternalServerErrorException('Error retrieving user by email')
+      }
     }
   }
 
