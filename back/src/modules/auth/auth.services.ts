@@ -30,10 +30,6 @@ export class AuthService {
     
         const user = await this.userService.findUserByEmail(login.email);
 
-        if(!user){
-            throw new NotFoundException("user not found")
-        };
-
         const userHashedPassword= await bcrypt.compare(login.password ,user.password);
         
         if(!userHashedPassword){
@@ -67,9 +63,6 @@ export class AuthService {
 
   const user = await this.userService.findUserByDni(dni);
 
-  if(!user){
-    throw new NotFoundException("user not found");
-  };
 
   if(newPassword !== confirmPassword){
     throw new UnauthorizedException("passwords do not match");

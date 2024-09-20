@@ -111,19 +111,20 @@ export class UserService{
   }
  
   async findUserByEmail(email:string):Promise<User>{
-    try {
       const user = await this.userRepository.findOneBy({ email })
       if (!user) {
         throw new NotFoundException(`User with email: ${email} not found`)
       }
       return user
-    } catch (error) {
-      throw new InternalServerErrorException('Error retrieving user by email')
-    }
-  }
+    } 
+  
 
-  async findUserByDni(dni:number):Promise<User>{   
-    return await this.userRepository.findOneBy({dni})
+  async findUserByDni(dni:number):Promise<User>{ 
+    const user = await this.userRepository.findOneBy({dni}); 
+   if(!user){
+    throw new NotFoundException(`user not found`)
+   }
+   return user;
   }
 
   async createUser(createUserDto: CreateUserDto): Promise<Omit<User, 'password'>> {
