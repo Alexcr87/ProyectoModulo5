@@ -1,12 +1,18 @@
-import { Body, ConflictException, Controller, Delete, Get, HttpCode, InternalServerErrorException, NotFoundException, Param, ParseUUIDPipe, Post, Put } from "@nestjs/common";
+import { Body, ConflictException, Controller, Delete, Get, HttpCode, InternalServerErrorException, NotFoundException, Param, ParseUUIDPipe, Post, Put, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "src/dto/createUserDto";
+import { FileInterceptor } from "@nestjs/platform-express";
+import * as fs from 'fs';
+import { diskStorage } from "multer";
+import { extname } from "path";
 
 @ApiTags("Users")
 @Controller("user")
 export class UserController{
-  constructor(private readonly userService:UserService){}
+  constructor(
+    private readonly userService: UserService
+  ) {}
 
   @Get()
   @HttpCode(200)
@@ -97,4 +103,18 @@ export class UserController{
     }
   }
 
+  @Post('import')
+  @UseInterceptors(FileInterceptor('file', {
+    storage: diskStorage({
+      destination: './uploads', // Carpeta donde se guardará el archivo
+      filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, file.fieldname + '-' + uniqueSuffix + extname(file.originalname));
+      },
+    }),
+  }))
+  async importUsers(@UploadedFile() file: Express.Multer.File): Promise<void> {
+    const filePath = file.path; // Ruta del archivo guardado
+    await this.userService.importUsers(filePath);
+  }
 }
