@@ -8,6 +8,7 @@ import { Role } from "src/entities/roles.entity";
 import * as XLSX from 'xlsx';
 import * as fs from 'fs';
 import { MailService } from "../mail/mail.service";
+import { generateRandomPassword } from "src/helpers/password.helper"
 
 
 
@@ -127,34 +128,33 @@ export class UserService{
   }
 
   async createUser(createUserDto: CreateUserDto): Promise<Omit<User, 'password'>> {
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-
-    // Buscar el rol por defecto 'voter' (ID 3)
+    
+    const password = createUserDto.password ? createUserDto.password : generateRandomPassword();
+    const hashedPassword = await bcrypt.hash(password, 10);
+  
     const defaultRole = await this.roleRepository.findOne({ where: { id: 3 } });
     if (!defaultRole) {
       throw new Error('Default role not found');
     }
-
-    // Si se pasa un rol en el DTO, buscar ese rol, de lo contrario usar el rol por defecto
+  
     let userRoles: Role[] = [defaultRole];
     if (createUserDto.roles && createUserDto.roles.length > 0) {
-      userRoles = await this.roleRepository.findBy({id:In(createUserDto.roles)});
+      userRoles = await this.roleRepository.findBy({ id: In(createUserDto.roles) });
       if (userRoles.length !== createUserDto.roles.length) {
-        throw new BadRequestException('Some roles not found');}
+        throw new BadRequestException('Some roles not found');
+      }
     }
-
+  
     const newUser = this.userRepository.create({
       ...createUserDto,
       password: hashedPassword,
       roles: userRoles,  // Asignamos los roles aquí
     });
-
     await this.userRepository.save(newUser);
-    await this.mailService.sendWelcomeEmail(newUser.email, newUser.name)
-    // Excluir el campo `password` antes de retornar
-    const { password, ...result } = newUser;
+    await this.mailService.sendWelcomeEmail(newUser.email, newUser.name);
+  
+    const { password: excludedPassword, ...result } = newUser;
     return result;
-
   }
 
   async readExcelFile(filePath: string): Promise<CreateUserDto[]> {

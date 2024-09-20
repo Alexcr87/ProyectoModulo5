@@ -1,0 +1,26 @@
+CREAR USUARIO = 
+{
+  "name": "John Doe",
+  "dni": 12345678,
+  "email": "john.doe@example.com",
+  "password": "SecureP@ssw0rd",
+  "address": "123 Main St, Springfield",
+  "city": "Springfield",
+  "country": "USA",
+  "suffrage": true
+}
+
+CREAR UN CANDIDATO QUE YA ESTA REGISTRADO COMO USUARIO 
+
+  
+ {
+  "postulation": "President",
+  "list": "List A",
+  "campaignDescription": "A campaign focused on unity and economic growth.",
+  "proposals": [
+    "Implement renewable energy solutions.",
+    "Increase funding for public education.",
+    "Improve healthcare access for all citizens."
+  ],
+  "userId": "19f04078-1400-4724-99e7-41bf44f29da5"  }
+  ARCHIVO FILE
