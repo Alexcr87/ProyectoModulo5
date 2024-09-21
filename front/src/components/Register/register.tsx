@@ -141,9 +141,9 @@ return (
                         </button>
                            
                         <img
-                            src="/path-to-your-image.jpg"
+                            src="/images/registerImage.png"
                             alt="Small icon"
-                            className="w-5 h-5 mx-auto"
+                            className="w-40 mx-auto"
                         />
                     </div>
                 </div>
