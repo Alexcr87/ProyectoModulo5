@@ -82,7 +82,7 @@ const Register = () => {
           </div>
         </div>
 
-        <div className="flex">
+       <div className="flex">
           <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
             <div className="flex flex-col">
               <input
@@ -180,16 +180,17 @@ const Register = () => {
                             Register
                         </button>
                            
-                        <img
+                  <img
                             src="/path-to-your-image.jpg"
                             alt="Small icon"
                             className="w-5 h-5 mx-auto"
                         />
-                    </div>
-                </div>
-            </div>
-        </form>
-    );
+                   </div>
+        </div>
+      </div>
+      </div> 
+        </form> 
+        )
 }
 
 export default Register;
