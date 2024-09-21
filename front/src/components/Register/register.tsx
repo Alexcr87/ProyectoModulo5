@@ -82,7 +82,7 @@ const Register = () => {
           </div>
         </div>
 
-       <div className="flex">
+        <div className="flex">
           <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
             <div className="flex flex-col">
               <input
@@ -166,31 +166,38 @@ const Register = () => {
               {errors.country && <span className="text-red-500 text-sm">{errors.country}</span>}
             </div>
 
-                    <div className="flex flex-col  mr-[3em]  pl-[4em] w-1/2 ">
-                        <button className="border rounded-full bg-secundaryColor text-black text-left p-2 pl-3 mt-1  focus:border-tertiaryColor shadow-xl relative">
-                            Ciudad
-                            <span className="absolute right-4 top-1/2 transform -translate-y-1/2 border-t-4 border-x-4 border-transparent border-t-black">
-                                {" "}
-                            </span>
-                        </button>
+            <div className="flex flex-col mt-4">
+              <select
+                name="city"
+                value={dataUser.city}
+                onChange={handleChange}
+                className="border rounded-full bg-secundaryColor text-black p-2 pl-3 mt-1 outline-none focus:border-tertiaryColor shadow-xl"
+              >
+                <option value="">Selecciona una ciudad</option>
+                {cities.map(city => (
+                  <option key={city} value={city}>{city}</option>
+                ))}
+              </select>
+              {errors.city && <span className="text-red-500 text-sm">{errors.city}</span>}
+            </div>
 
-                        <button className="border rounded-full h-10 bg-tertiaryColor text-white m-10 disabled:opacity-50 "
-                        type="submit"
-                        disabled={!isFormValid}>
-                            Register
-                        </button>
-                           
-                  <img
-                            src="/path-to-your-image.jpg"
-                            alt="Small icon"
-                            className="w-5 h-5 mx-auto"
-                        />
-                   </div>
+            <img
+              src="/path-to-your-image.jpg"
+              alt="Small icon"
+              className="w-5 h-5 mx-auto"
+            />
+            <button
+              className="border rounded-full h-10 bg-tertiaryColor text-white m-10 disabled:opacity-50"
+              type="submit"
+              disabled={!isFormValid}
+            >
+              Register
+            </button>
+          </div>
         </div>
       </div>
-      </div> 
-        </form> 
-        )
-}
+    </form>
+  );
+};
 
 export default Register;
