@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
+import Link from "next/link"
 
 const NavBar = () => {
   return (
@@ -11,10 +11,9 @@ const NavBar = () => {
         </div>
         <div>
             <ul className='flex gap-4 pr-8 text-cuartiaryColor'>
+ 
                 <li>
-                    <Link href="/register">
-                        Register
-                    </Link>
+                <Link href="/register" >Registrar</Link>
                 </li>
                 <li>
                     <Link href="/candidates">
@@ -27,9 +26,8 @@ const NavBar = () => {
                     </Link>
                 </li>
                 <li>
-                    <Link href="/">
-                        Sing In
-                    </Link>
+                <Link href="/login" >Iniciar Sesión</Link>
+                    
                 </li>
             </ul>
         </div>
