@@ -1,7 +1,7 @@
 
 'use client'
 
-import Login from '@/helpers/login.helper';
+import { login } from '@/helpers/login.helper';
 import { validateFields } from '@/helpers/validateLogin';
 import { IloginError, IloginProps } from '@/interfaces/ILogin';
 import { useRouter } from 'next/navigation';
@@ -12,8 +12,7 @@ const LoginForm = () => {
     const router = useRouter();
     const initialState = {
       email:"",
-      password:"",
-      token: ""
+      password:""
         }
         
     const [dataUser, SetdataUser] = useState<IloginProps> (initialState);
@@ -32,11 +31,15 @@ const LoginForm = () => {
     event.preventDefault ();
     
     if (Object.keys(errors).length > 0) { 
-    alert ('hay un error')
-    } else {
-    //   const response = await login (dataUser);
-    //   const {token, user} = response;
-      const clearUser = Login
+      alert ('hay un error')
+      } else {
+        const response = await login (dataUser);
+        const {token, user} = response;
+        const clearUser = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        }
       // AQUI ES DONDE GUARDO LOS NUEVOS DATOS DEL USUARIO EN EL NAVEGADOR PARA QUE SEA PERSISTENTE
        localStorage.setItem ('userSesion', JSON.stringify ({userData:clearUser}))
        router.push ('/');
