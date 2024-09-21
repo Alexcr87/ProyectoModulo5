@@ -26,7 +26,7 @@ export async function login(userData : IloginProps) {
     try {
       // const ResLogin = await fetch (`${APIURL}/auth/sigIn`, {
 
-        const ResLogin = await fetch (`http://localhost:3000/auth/sigIn`, {
+        const ResLogin = await fetch (`${APIURL}/auth/sigIn`, {
         // cache: 'no-cache'
         method: 'POST',
         headers: {

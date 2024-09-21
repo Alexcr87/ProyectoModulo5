@@ -34,6 +34,8 @@ const LoginForm = () => {
       alert ('hay un error')
       } else {
         const response = await login (dataUser);
+        const APIURL = process.env.NEXT_PUBLIC_API_URL
+        console.log (APIURL)
         const {token, user} = response;
         const clearUser = {
           id: user.id,
