@@ -106,12 +106,12 @@ export class UserController{
 
   @Post()
   @HttpCode(201)
-  createUser(@Body() createUserDto:CreateUserDto){
+  async createUser(@Body() createUserDto:CreateUserDto){
     try {     
-      return this.userService.createUser(createUserDto)
+      return await this.userService.createUser(createUserDto)
     } catch (error) {
-      if (error.code === '23505') { // Unique constraint violation
-        throw new ConflictException('User with this email already exists');
+      if (error.response && error.response.error === 'Unauthorized') {
+        throw new ConflictException(error.response.message);
       } else {
         throw new InternalServerErrorException('Error creating user');
       }

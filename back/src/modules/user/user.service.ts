@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CreateUserDto} from "src/dto/createUserDto";
 import { User } from "src/entities/user.entity";
@@ -129,7 +129,15 @@ export class UserService{
   }
 
   async createUser(createUserDto: CreateUserDto): Promise<Omit<User, 'password'>> {
-    
+    const user = await this.userRepository.findOneBy({dni:createUserDto.dni})
+    if (user) {
+      throw new UnauthorizedException(`User with dni: ${createUserDto.dni} alredy exist`)
+    }
+
+    const userbyemail = await this.userRepository.findOneBy({email:createUserDto.email})
+    if (userbyemail) {
+      throw new UnauthorizedException(`User with email:${createUserDto.email} alredy exist`)
+    }
     const password = createUserDto.password ? createUserDto.password : generateRandomPassword();
     const hashedPassword = await bcrypt.hash(password, 10);
   
