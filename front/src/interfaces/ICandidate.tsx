@@ -1,7 +1,11 @@
 interface ICandidate{
     id: number,
-    name: string,
-    grupo: string
+    postulation: string,
+    imgUrl: string,
+    list: string,
+    campaignDescription: string,
+    proposals: string[],
+    userId: number
 }
 
 export default ICandidate
