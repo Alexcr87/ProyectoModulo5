@@ -138,7 +138,8 @@ export class UserService{
     if (userbyemail) {
       throw new UnauthorizedException(`User with email:${createUserDto.email} alredy exist`)
     }
-    const password = createUserDto.password ? createUserDto.password : generateRandomPassword();
+    const passwordGenerated = !createUserDto.password;
+    const password = createUserDto.password || generateRandomPassword();
     const hashedPassword = await bcrypt.hash(password, 10);
   
     const defaultRole = await this.roleRepository.findOne({ where: { id: 3 } });
@@ -160,7 +161,11 @@ export class UserService{
       roles: userRoles,  // Asignamos los roles aquí
     });
     await this.userRepository.save(newUser);
-    await this.mailService.sendWelcomeEmail(newUser.email, newUser.name);
+    if(passwordGenerated){
+      await this.mailService.sendPasswordEmail(newUser.email, newUser.name, newUser.password)
+    }else{
+      await this.mailService.sendWelcomeEmail(newUser.email, newUser.name);
+    }
   
     const { password: excludedPassword, ...result } = newUser;
     return  result;
