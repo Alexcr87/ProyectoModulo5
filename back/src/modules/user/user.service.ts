@@ -162,7 +162,7 @@ export class UserService{
     });
     await this.userRepository.save(newUser);
     if(passwordGenerated){
-      await this.mailService.sendPasswordEmail(newUser.email, newUser.name, newUser.password)
+      await this.mailService.sendPasswordEmail(newUser.email, newUser.name, password)
     }else{
       await this.mailService.sendWelcomeEmail(newUser.email, newUser.name);
     }
