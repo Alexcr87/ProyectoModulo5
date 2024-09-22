@@ -14,18 +14,18 @@ export class AuthGuard implements CanActivate {
       }
 
       const [scheme,token] = authorizationHeader.split(" ");
-      
+
       if(scheme !== "Bearer" || !token) {
         throw new UnauthorizedException("Bearer or token not found");
       }
       try{
         const secret = process.env.JWT_SECRET
         const payLoad= await  this.jwtServices.verifyAsync(token , {secret:secret})
-        payLoad.iat= new Date(payLoad.iat *1000)
-        payLoad.exp = new Date(payLoad.exp *1000)
+        payLoad.iat= new Date(payLoad.iat * 1000)
+        payLoad.exp = new Date(payLoad.exp * 1000)
         request.user = payLoad;
         return true;
-  
+
         }catch(err){
          throw new UnauthorizedException("Token invalid");
         }

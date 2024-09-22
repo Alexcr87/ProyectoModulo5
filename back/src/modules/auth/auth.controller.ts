@@ -3,7 +3,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { AuthService } from "./auth.services";
 import { CredentialUserDto, newChangePasswordDto } from "src/dto/credentialUserDto";
 import { CreateUserDto } from "src/dto/createUserDto";
-import { AllowedUserIds } from "src/roles/roles.decorator";
+//import { AllowedUserIds } from "src/roles/roles.decorator";
 import { AuthGuard } from "src/Guards/auth.guard";
 import { RolesGuard } from "src/Guards/roles.guard";
 

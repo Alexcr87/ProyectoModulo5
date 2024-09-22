@@ -1,15 +1,16 @@
 import { BadRequestException, Body, ConflictException, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, ParseUUIDPipe, Post, Put, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "src/dto/createUserDto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import * as fs from 'fs';
 import { diskStorage } from "multer";
 import { extname } from "path";
-import { AllowedUserIds } from "src/roles/roles.decorator";
+import { Roles } from "src/roles/roles.decorator";
 import { RolesGuard } from "src/Guards/roles.guard";
 import { AuthGuard } from "src/Guards/auth.guard";
 import { User } from "src/entities/user.entity";
+import { Role } from "src/entities/roles.entity";
 
 
 
@@ -30,10 +31,12 @@ export class UserController{
       throw new NotFoundException(error.message)
     }
   }
+  
 
+  @ApiBearerAuth()
   @Get(":id")
   @HttpCode(200)
-  @AllowedUserIds(1)
+  @Roles('admin')
   @UseGuards( AuthGuard , RolesGuard)
   async getUserById(@Param("id", ParseUUIDPipe) id:string){
     try {
@@ -48,8 +51,10 @@ export class UserController{
   }
   
   
-
+  @ApiBearerAuth()
   @Get("/dni/:dni")
+  @Roles('moderator')
+  @UseGuards( AuthGuard , RolesGuard)
   @HttpCode(200)
   async findUserByDni(@Param("dni") dni:number ){
     try {
@@ -68,7 +73,10 @@ export class UserController{
     }
   }
 
+  @ApiBearerAuth()
   @Get("/email/:email")
+  @Roles('moderator')
+  @UseGuards( AuthGuard , RolesGuard)
   @HttpCode(200)
   async findUserByEmail(@Param("email") email:string ){
     try {
