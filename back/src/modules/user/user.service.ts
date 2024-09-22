@@ -196,20 +196,29 @@ export class UserService{
     return users;
   }
   
-  async importUsers(filePath: string): Promise<void> {
+  async importUsers(filePath: string): Promise<{ addedUsers: string[], skippedUsers: string[] }>{
     if (!filePath) {
       throw new BadRequestException('file not selected')
     }
     const users = await this.readExcelFile(filePath);
+    const addedUsers: string[] = [];
+    const skippedUsers: string[] = [];
     for (const user of users) {
         const existingUser = await this.findUserByEmailxlsx(user.email);
         if (!existingUser) {
             await this.createUser(user);
             console.log(`User ${user.email} added successfully.`);
+            addedUsers.push(user.email);
         } else {
             console.log(`User ${user.email} already exists. Skipping...`);
+            skippedUsers.push(user.email);
         }
+        
     }
+    return {
+      addedUsers,
+      skippedUsers,
+    };
 }
 
 
