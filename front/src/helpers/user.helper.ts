@@ -4,8 +4,8 @@ const APIURL = "http://localhost:3000"
 
 export async function getUsers(): Promise<IUser[]> {
     try {
-        const res = await fetch(`${APIURL}/user`,{
-            next: {revalidate: 1200}
+        const res = await fetch(`${APIURL}/candidates`,{
+            cache: 'no-cache' 
         })
         const users = await res.json()
         return users
