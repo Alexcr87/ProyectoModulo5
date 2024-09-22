@@ -5,7 +5,8 @@ const APIURL = "http://localhost:3000"
 export async function getCandidates(): Promise<ICandidate[]> {
     try {
         const res = await fetch(`${APIURL}/candidates`,{
-            next: {revalidate: 1200}
+            //next: {revalidate: 1200}
+            cache: 'no-cache'
         })
         const candidates = res.json()
         return candidates
