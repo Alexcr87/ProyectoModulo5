@@ -1,4 +1,4 @@
-import { BadRequestException, Body, ConflictException, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, ParseUUIDPipe, Post, Put, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, ConflictException, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, ParseUUIDPipe, Post, Put, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "src/dto/createUserDto";
@@ -9,6 +9,7 @@ import { extname } from "path";
 import { AllowedUserIds } from "src/roles/roles.decorator";
 import { RolesGuard } from "src/Guards/roles.guard";
 import { AuthGuard } from "src/Guards/auth.guard";
+import { User } from "src/entities/user.entity";
 
 
 
@@ -32,11 +33,9 @@ export class UserController{
 
   @Get(":id")
   @HttpCode(200)
-  async getUserById(@Param("id", ParseUUIDPipe) id:string){
   @AllowedUserIds(1)
   @UseGuards( AuthGuard , RolesGuard)
-  getUserById(@Param("id", ParseUUIDPipe) id:string){
-
+  async getUserById(@Param("id", ParseUUIDPipe) id:string){
     try {
       return await this.userService.getUserById(id)
     } catch (error) {
@@ -47,7 +46,7 @@ export class UserController{
       }
     }
   }
-
+  
   
 
   @Get("/dni/:dni")
