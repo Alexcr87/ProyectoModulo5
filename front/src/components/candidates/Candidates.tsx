@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import Cartrender from '../candidaterender/Candidaterender';
 import { getCandidates } from '@/helpers/candidate.helper';
+import Link from "next/link";
 
 const OrderList = async () => {
-
     const usersResponse = await getCandidates()
     const usersarr = usersResponse.map(item => ({
        imgUrl: item.imgUrl,
+       id:item.id,
       user: {
         id: item.user.id,
       name: item.user.name,
@@ -21,7 +22,6 @@ const OrderList = async () => {
 
 
 console.log (usersarr)
-
                 return (
 
                   <div className="flex justify-center flex-wrap m-8 p-4 bg-gray-100 rounded-lg shadow-md">
@@ -30,7 +30,9 @@ console.log (usersarr)
       usersarr && usersarr.length > 0 ? 
       usersarr.map((item) => {
           return (
-            <Cartrender key={item.user.id} {...item} />
+            <Link href={`/candidates/${item.id}`} key={item.id}>
+            <Cartrender key={item.id} {...item} />
+            </Link>
           )
         })
       :   <p className="text-lg text-gray-600 font-medium">You don't have any products in your cart</p>

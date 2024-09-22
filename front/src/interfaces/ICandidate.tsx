@@ -1,7 +1,12 @@
 
 
 interface ICandidate{
-     imgUrl?: string
+    id?: string,
+    postulation?: string,
+    imgUrl: string,
+    list?: string,
+    campaignDescription?: string,
+    proposals?:string[],
 user: {
     id: string,
     name: string,

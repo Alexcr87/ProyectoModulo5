@@ -12,8 +12,8 @@ const OrderList = async () => {
   // const router = useRouter()
     const usersResponse = await getCandidates()
     const usersarr = usersResponse.map(item => ({
-      //  id: item.id,
-      // imgUrl: item.imgUrl,
+        id: item.id,
+       imgUrl: item.imgUrl,
       user: {
         id: item.user.id,
       name: item.user.name,
@@ -37,7 +37,7 @@ console.log (usersarr)
       usersarr && usersarr.length > 0 ? 
       usersarr.map((item) => {
           return (
-            <Cartrender key={item.user.id} {...item} />
+            <Cartrender key={item.id} {...item} />
           )
         })
       :   <p className="text-lg text-gray-600 font-medium">You don't have any products in your cart</p>

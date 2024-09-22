@@ -19,7 +19,8 @@ export async function getCandidates(): Promise<ICandidate[]> {
 export async function getCandidatesByID(id:string): Promise<ICandidate> {
     try {
         const res = await fetch(`${APIURL}/candidates/${id}`,{
-            next: {revalidate: 1200}
+            //next: {revalidate: 1200}
+             cache: 'no-cache'
         })
         const candidate = res.json()
         return candidate

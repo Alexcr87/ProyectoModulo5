@@ -12,7 +12,7 @@ return (
   <div className="p-6">
     <div className="flex items-center justify-between mb-2">
       <p className="block font-sans text-base antialiased font-medium leading-relaxed text-blue-gray-900">
-      {candidate.user.id}
+      {candidate.id}
       </p>
       <p className="block font-sans text-base antialiased font-medium leading-relaxed text-blue-gray-900">
       {candidate.user.name} 
@@ -27,9 +27,6 @@ return (
 </div>
 
     </div>
-
-
-
 )
 }
 

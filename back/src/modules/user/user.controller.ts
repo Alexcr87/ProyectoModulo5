@@ -53,7 +53,7 @@ export class UserController{
   
   @ApiBearerAuth()
   @Get("/dni/:dni")
-  @Roles('moderator')
+  @Roles()
   @UseGuards( AuthGuard , RolesGuard)
   @HttpCode(200)
   async findUserByDni(@Param("dni") dni:number ){

@@ -52,8 +52,8 @@ export class CandidateController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.candidateService.findOne(id);
+  async findOne(@Param('id') id: string) {
+     return await this.candidateService.findOne(id);
   }
 
   @Patch(':id')

@@ -78,7 +78,7 @@ export class CandidateService {
       });
   }
   
-  findOne(id: string): Promise<Candidate> {
+  findOne(id: string): Promise<Candidate> {  
     return this.candidateRepository.findOne({
       where: { id },
       relations: ['user', 'votes'],
