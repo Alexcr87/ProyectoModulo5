@@ -2,7 +2,7 @@ import IUser from "@/interfaces/IUser";
 
 const APIURL = "http://localhost:3000"
 
-export async function getUsers(): Promise<IUser[]> {
+export async function getCandidates(): Promise<IUser[]> {
     try {
         const res = await fetch(`${APIURL}/candidates`,{
             cache: 'no-cache' 

@@ -1,5 +1,5 @@
 import React from 'react';
-import Cart from "@/components/cart/Cart";
+import Cart from "@/components/candidate/Candidates";
 import ICandidate from "@/interfaces/ICandidate";
 import { getCandidates } from '@/helpers/candidate.helper';
 import Link from 'next/link';
