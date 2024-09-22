@@ -155,15 +155,25 @@ export class UserService{
       }
     }
   
-    const newUser = this.userRepository.create({
-      ...createUserDto,
-      password: hashedPassword,
-      roles: userRoles,  // Asignamos los roles aquí
-    });
-    await this.userRepository.save(newUser);
+    
+    let newUser= this.userRepository.create({})
+    
     if(passwordGenerated){
+       newUser = this.userRepository.create({
+        ...createUserDto,
+        password: hashedPassword,
+        roles: userRoles,  // Asignamos los roles aquí
+      });
+      await this.userRepository.save(newUser);
       await this.mailService.sendPasswordEmail(newUser.email, newUser.name, password)
     }else{
+       newUser = this.userRepository.create({
+        ...createUserDto,
+        password: hashedPassword,
+        isFirstLogin:false,
+        roles: userRoles,  // Asignamos los roles aquí
+      });
+      await this.userRepository.save(newUser);
       await this.mailService.sendWelcomeEmail(newUser.email, newUser.name);
     }
   
@@ -187,6 +197,9 @@ export class UserService{
   }
   
   async importUsers(filePath: string): Promise<void> {
+    if (!filePath) {
+      throw new BadRequestException('file not selected')
+    }
     const users = await this.readExcelFile(filePath);
     for (const user of users) {
         const existingUser = await this.findUserByEmailxlsx(user.email);

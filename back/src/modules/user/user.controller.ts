@@ -1,4 +1,4 @@
-import { Body, ConflictException, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, NotFoundException, Param, ParseUUIDPipe, Post, Put, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, ConflictException, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, NotFoundException, Param, ParseUUIDPipe, Post, Put, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "src/dto/createUserDto";
@@ -10,13 +10,6 @@ import { AllowedUserIds } from "src/roles/roles.decorator";
 import { RolesGuard } from "src/Guards/roles.guard";
 import { AuthGuard } from "src/Guards/auth.guard";
 
-
-const ApiFile = (fileName: string) => (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
-  ApiConsumes('multipart/form-data')(target, propertyKey, descriptor);
-  ApiOperation({ summary: 'Upload file' })(target, propertyKey, descriptor);
-  ApiResponse({ status: 200, description: 'File uploaded successfully' })(target, propertyKey, descriptor);
-  ApiResponse({ status: 400, description: 'Bad request' })(target, propertyKey, descriptor);
-};
 
 
 @ApiTags("Users")
@@ -160,9 +153,25 @@ export class UserController{
   })
   @ApiResponse({ status: 200, description: 'Archivo cargado correctamente' })
   @ApiResponse({ status: 400, description: 'Solicitud incorrecta' })
-  async importUsers(@UploadedFile() file: Express.Multer.File): Promise<void> {
-    const filePath = file.path; // Ruta del archivo guardado
-    await this.userService.importUsers(filePath);
+  async importUsers(@UploadedFile() file: Express.Multer.File) {
+    try {
+      if (!file || !file.path) {
+        throw new BadRequestException('No se ha seleccionado ningún archivo');
+      }
+      const filePath = file.path; // Ruta del archivo guardado
+      await this.userService.importUsers(filePath);
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        const status = error.getStatus();
+          return {
+          statusCode: status ,
+          message: error.message
+          }
+      }else{
+        throw new InternalServerErrorException(error.message)
+      }
+    }
+   
   }
 
 }
