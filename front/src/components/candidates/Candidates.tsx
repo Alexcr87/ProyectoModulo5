@@ -21,9 +21,6 @@ const OrderList = async () => {
         suffrage: item.user.suffrage,
     }}));
 
-
-
-console.log (usersarr)
                 return (
 
                   <div className="flex justify-center flex-wrap m-8 p-4 bg-gray-100 rounded-lg shadow-md">

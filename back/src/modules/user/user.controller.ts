@@ -170,9 +170,9 @@ export class UserController{
           maxSize: 2000000, // 2Mb
           message: 'The file is too large; must be less than 2Mb',
         }),
-        new FileTypeValidator({
+        /*new FileTypeValidator({
           fileType: /(xls|xlsx)$/,
-        }),
+        }),*/
       ],
     }),
   ) file: Express.Multer.File) {
