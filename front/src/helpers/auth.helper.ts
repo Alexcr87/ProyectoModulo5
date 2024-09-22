@@ -4,7 +4,7 @@ const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 export async function register(userData: IRegisterProps) {
     try {
-      const res = await fetch(`${APIURL}/users/register`, {
+      const res = await fetch(`${APIURL}/auth/sigUp`, {
           method:"POST",
           headers:{
               "Content-type": "application/json"

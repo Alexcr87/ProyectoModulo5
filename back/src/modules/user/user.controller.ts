@@ -6,7 +6,10 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import * as fs from 'fs';
 import { diskStorage } from "multer";
 import { extname } from "path";
-import { User } from "src/entities/user.entity";
+import { AllowedUserIds } from "src/roles/roles.decorator";
+import { RolesGuard } from "src/Guards/roles.guard";
+import { AuthGuard } from "src/Guards/auth.guard";
+
 
 
 
@@ -30,6 +33,10 @@ export class UserController{
   @Get(":id")
   @HttpCode(200)
   async getUserById(@Param("id", ParseUUIDPipe) id:string){
+  @AllowedUserIds(1)
+  @UseGuards( AuthGuard , RolesGuard)
+  getUserById(@Param("id", ParseUUIDPipe) id:string){
+
     try {
       return await this.userService.getUserById(id)
     } catch (error) {
@@ -40,6 +47,8 @@ export class UserController{
       }
     }
   }
+
+  
 
   @Get("/dni/:dni")
   @HttpCode(200)
