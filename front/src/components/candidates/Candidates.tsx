@@ -6,17 +6,19 @@ import Link from "next/link";
 const OrderList = async () => {
     const usersResponse = await getCandidates()
     const usersarr = usersResponse.map(item => ({
-       imgUrl: item.imgUrl,
-       id:item.id,
+      list:item.list,
+      postulation:item.postulation,
+      imgUrl: item.imgUrl,
+      id:item.id,
       user: {
         id: item.user.id,
-      name: item.user.name,
-      dni: item.user.dni,
-      email: item.user.email,
-      address: item.user.address,
-      city: item.user.city,
-      country: item.user.country,
-      suffrage: item.user.suffrage,
+        name: item.user.name,
+        dni: item.user.dni,
+        email: item.user.email,
+        address: item.user.address,
+        city: item.user.city,
+        country: item.user.country,
+        suffrage: item.user.suffrage,
     }}));
 
 

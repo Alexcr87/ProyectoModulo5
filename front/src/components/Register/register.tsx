@@ -73,6 +73,17 @@ const Register = () => {
     setErrors(errors);
   }, [dataUser]);
 
+
+  const handleDownloadExcel = () => {
+    // Cambia 'ruta/del/archivo.xlsx' por la ruta real de tu archivo Excel
+    const link = document.createElement("a");
+    link.href = `${window.location.origin}/images/ExcelDeMuestra.xlsx`; // URL del archivo Excel
+    link.download = "ExcelDeMuesta.xlsx"; // Nombre del archivo que se descargará
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">
       <div className="col-start-1 col-end-13">
@@ -193,6 +204,15 @@ const Register = () => {
             >
               Register
             </button>
+            <div className="flex flex-col mt-4">
+        <button
+          type="button"
+          onClick={handleDownloadExcel}
+          className="border rounded-full h-10 bg-tertiaryColor text-white"
+        >
+          Descargar Excel
+        </button>
+      </div>
           </div>
         </div>
       </div>

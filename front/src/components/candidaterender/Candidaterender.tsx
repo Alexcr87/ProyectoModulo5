@@ -1,6 +1,7 @@
 import ICandidate from "@/interfaces/ICandidate";
 
 const Cartrender:React.FC<ICandidate> = ({...candidate}) => {
+  
 return (
     <div className="flex flex-row  justify-between mx-4 my-4 rounded-2xl bg-white shadow dark:bg-gray-800 dark:border-gray-700 "  >
 
@@ -11,15 +12,15 @@ return (
   </div>
   <div className="p-6">
     <div className="flex items-center justify-between mb-2">
+       <p className="block font-sans text-base antialiased font-medium leading-relaxed text-blue-gray-900">
+      Postulacion: {candidate.postulation}
+      </p> 
       <p className="block font-sans text-base antialiased font-medium leading-relaxed text-blue-gray-900">
-      {candidate.id}
-      </p>
-      <p className="block font-sans text-base antialiased font-medium leading-relaxed text-blue-gray-900">
-      {candidate.user.name} 
+      Nombre: {candidate.user.name} 
       </p>
     </div>
     <p className="block font-sans text-sm antialiased font-normal leading-normal text-gray-700 opacity-75">
-       ` Dni: {candidate.user.dni}`
+       {candidate.list}`
     </p>
   </div>
   <div className="p-6 pt-0">
