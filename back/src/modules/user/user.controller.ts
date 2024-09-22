@@ -171,11 +171,12 @@ export class UserController{
           message: 'The file is too large; must be less than 2Mb',
         }),
         new FileTypeValidator({
-          fileType: /(xlx|xlsx)$/,
+          fileType: /(xls|xlsx)$/,
         }),
       ],
     }),
   ) file: Express.Multer.File) {
+    console.log(file)
     if (!file) {
       throw new BadRequestException('No file provided');
     }

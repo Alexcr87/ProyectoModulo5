@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IRegisterError, IRegisterProps } from "./TypesRegister";
-import { register } from "@/helpers/auth.helper";
+import { importUsers, register } from "@/helpers/auth.helper";
 import { validateRegisterForm } from "@/helpers/validateRegister";
 
 const Register = () => {
@@ -23,6 +23,28 @@ const Register = () => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [countries, setCountries] = useState<string[]>(["Argentina", "Chile", "Colombia"]);
   const [cities, setCities] = useState<string[]>([]);
+  const [file, setFile] = useState<File | null>(null);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0] || null;
+    setFile(selectedFile);
+  };
+
+  const handleUpload = async () => {
+    if (!file) {
+        alert("Por favor, selecciona un archivo.");
+        return;
+    }
+
+    try {
+        const response = await importUsers(file);
+        console.log(response);
+        alert("Archivo subido con éxito");
+        router.push("/login");
+    } catch (error) {
+        alert(`Error al subir el archivo`);
+    }
+};
 
   const fetchCitiesByCountry = (country: string) => {
     const countryCitiesMap: Record<string, string[]> = {
@@ -75,16 +97,15 @@ const Register = () => {
 
 
   const handleDownloadExcel = () => {
-    // Cambia 'ruta/del/archivo.xlsx' por la ruta real de tu archivo Excel
     const link = document.createElement("a");
-    link.href = `${window.location.origin}/images/ExcelDeMuestra.xlsx`; // URL del archivo Excel
-    link.download = "ExcelDeMuesta.xlsx"; // Nombre del archivo que se descargará
+    link.href = `${window.location.origin}/images/ExcelDeMuestra.xlsx`; 
+    link.download = "ExcelDeMuesta.xlsx"; 
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
-  return (
+  return (<>
     <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">
       <div className="col-start-1 col-end-13">
         <div className="grid grid-cols-12">
@@ -212,12 +233,27 @@ const Register = () => {
         >
           Descargar Excel
         </button>
+        <div className="mt-4">
+        <input
+          type="file"
+          accept=".xls,.xlsx"
+          onChange={handleFileChange}
+        />
+      </div>
       </div>
           </div>
         </div>
       </div>
     </form>
+    <button
+    onClick={handleUpload}
+    className="border rounded-full h-10 bg-tertiaryColor text-white m-4"
+    >
+    Subir Excel
+    </button>
+    </>
   );
 };
 
 export default Register;
+
