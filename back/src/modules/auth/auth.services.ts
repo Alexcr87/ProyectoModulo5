@@ -28,7 +28,10 @@ export class AuthService {
             throw new BadRequestException ("missing data")
         };
     
-        const user = await this.userService.findUserByEmail(login.email);
+        const user = await this.userRepository.findOne({
+          where: { email: login.email },
+          relations: ['roles'],
+        });
 
         const userHashedPassword= await bcrypt.compare(login.password ,user.password);
         
@@ -42,10 +45,11 @@ export class AuthService {
                 sub: user.id,
                 id:user.id,
                 email:user.email,
-                roles:user.roles
+                roles:user.roles.map(role => role.name)
             }
+            console.log(userPayload.roles, "payload.rol");
             const token =this.jwtService.sign(userPayload)
-            return {succes: 'Login Successful, Your session will expire in 1 hour', token, user}
+            return {succes: 'Login Successful, Your session will expire in 1 hour', token}
         }else{
             return {message: 'you need to change your password to log in'}
         }
