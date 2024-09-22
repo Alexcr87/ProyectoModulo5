@@ -22,25 +22,34 @@ export async function register(userData: IRegisterProps) {
         }
       }
 
-export async function importUsers(file: File) {
-    const formData = new FormData();
-    formData.append("file", file);
-    console.log(file);
-    
-    try {
-        const res = await fetch(`${APIURL}/user/import`, {
-            method: "POST",
+      export async function importUser (file: File) {
+        const formData = new FormData();
+        formData.append('file', file);
+      
+        try {
+          const response = await fetch('http://localhost:3000/user/import', {
+            method: 'POST',
             body: formData,
-        });
-
-        if (!res.ok) {
-            const errorData = await res.json(); // Obtener los detalles del error
-            throw new Error(`Error ${res.status}: ${errorData.message || "Failed to upload file"}`);
+            headers: {
+              // No incluyas el encabezado 'Content-Type'
+            },
+          });
+      
+          if (!response.ok) {
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
+          }
+      
+          // Verifica si la respuesta tiene contenido antes de intentar parsearla
+          const contentType = response.headers.get("content-type");
+          if (contentType && contentType.includes("application/json")) {
+            return await response.json();
+          } else {
+            throw new Error("Respuesta no es JSON");
+          }
+      
+        } catch (error) {
+          console.error('File upload error:', error);
+          throw error;
         }
-        
-        return await res.json();
-    } catch (error: any) {
-        console.error("File upload error:", error.message);
-        throw new Error(error.message || `Unknown error occurred during file upload.`);
-    }
-}
+      };
+      

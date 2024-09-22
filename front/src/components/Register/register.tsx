@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IRegisterError, IRegisterProps } from "./TypesRegister";
-import { importUsers, register } from "@/helpers/auth.helper";
+import { importUser, register } from "@/helpers/auth.helper";
 import { validateRegisterForm } from "@/helpers/validateRegister";
 
 const Register = () => {
@@ -28,6 +28,7 @@ const Register = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] || null;
     setFile(selectedFile);
+    console.log("Archivo seleccionado:", selectedFile)
   };
 
   const handleUpload = async () => {
@@ -35,9 +36,9 @@ const Register = () => {
         alert("Por favor, selecciona un archivo.");
         return;
     }
-
+    console.log(file);
     try {
-        const response = await importUsers(file);
+        const response = await importUser(file);
         console.log(response);
         alert("Archivo subido con éxito");
         router.push("/login");
@@ -233,18 +234,17 @@ const Register = () => {
         >
           Descargar Excel
         </button>
-        <div className="mt-4">
-        <input
-          type="file"
-          accept=".xls,.xlsx"
-          onChange={handleFileChange}
-        />
-      </div>
       </div>
           </div>
         </div>
       </div>
     </form>
+    <div className="mt-4">
+        <input
+          type="file"
+          onChange={handleFileChange}
+        />
+      </div>
     <button
     onClick={handleUpload}
     className="border rounded-full h-10 bg-tertiaryColor text-white m-4"
