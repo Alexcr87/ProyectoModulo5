@@ -1,4 +1,4 @@
-import { BadRequestException, Body, ConflictException, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, NotFoundException, Param, ParseUUIDPipe, Post, Put, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, ConflictException, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, ParseUUIDPipe, Post, Put, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "src/dto/createUserDto";
@@ -12,6 +12,7 @@ import { AuthGuard } from "src/Guards/auth.guard";
 
 
 
+
 @ApiTags("Users")
 @Controller("user")
 export class UserController{
@@ -21,9 +22,9 @@ export class UserController{
 
   @Get()
   @HttpCode(200)
-  getUsers(){
+  async getUsers(): Promise<User[]>{
     try {
-      return this.userService.getUsers()
+      return await this.userService.getUsers()
     } catch (error) {
       throw new NotFoundException(error.message)
     }
@@ -31,11 +32,13 @@ export class UserController{
 
   @Get(":id")
   @HttpCode(200)
+  async getUserById(@Param("id", ParseUUIDPipe) id:string){
   @AllowedUserIds(1)
   @UseGuards( AuthGuard , RolesGuard)
   getUserById(@Param("id", ParseUUIDPipe) id:string){
+
     try {
-      return this.userService.getUserById(id)
+      return await this.userService.getUserById(id)
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
@@ -49,9 +52,9 @@ export class UserController{
 
   @Get("/dni/:dni")
   @HttpCode(200)
-  findUserByDni(@Param("dni") dni:number ){
+  async findUserByDni(@Param("dni") dni:number ){
     try {
-      return this.userService.findUserByDni(dni)
+      return await this.userService.findUserByDni(dni)
     } catch (error) {
       if(error instanceof NotFoundException){
         const status = error.getStatus();
@@ -68,9 +71,9 @@ export class UserController{
 
   @Get("/email/:email")
   @HttpCode(200)
-  findUserByEmail(@Param("email") email:string ){
+  async findUserByEmail(@Param("email") email:string ){
     try {
-      return this.userService.findUserByEmail(email)
+      return await this.userService.findUserByEmail(email)
     } catch (error) {
         if (error instanceof NotFoundException){
           const status = error.getStatus();
@@ -86,9 +89,9 @@ export class UserController{
 
   @Put(":id")
   @HttpCode(200)
-  updateUserById(@Param("id", ParseUUIDPipe) id:string, @Body() createUserDto:CreateUserDto){
+  async updateUserById(@Param("id", ParseUUIDPipe) id:string, @Body() createUserDto:CreateUserDto){
     try {
-      return this.userService.updateUserById(id, createUserDto)
+      return await this.userService.updateUserById(id, createUserDto)
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
@@ -137,10 +140,10 @@ export class UserController{
       },
     }),
   }))
-  @ApiOperation({ summary: 'Importa usuarios desde un archivo Excel' })
+  @ApiOperation({ summary: 'Import users from an Excel file' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'Archivo Excel para importar usuarios',
+    description: 'Excel file to import users',
     schema: {
       type: 'object',
       properties: {
@@ -151,27 +154,26 @@ export class UserController{
       },
     },
   })
-  @ApiResponse({ status: 200, description: 'Archivo cargado correctamente' })
-  @ApiResponse({ status: 400, description: 'Solicitud incorrecta' })
-  async importUsers(@UploadedFile() file: Express.Multer.File) {
-    try {
-      if (!file || !file.path) {
-        throw new BadRequestException('No se ha seleccionado ningún archivo');
-      }
-      const filePath = file.path; // Ruta del archivo guardado
-      await this.userService.importUsers(filePath);
-    } catch (error) {
-      if (error instanceof BadRequestException) {
-        const status = error.getStatus();
-          return {
-          statusCode: status ,
-          message: error.message
-          }
-      }else{
-        throw new InternalServerErrorException(error.message)
-      }
+  @ApiResponse({ status: 200, description: 'File uploaded successfully' })
+  @ApiResponse({ status: 400, description: 'Incorrect request' })
+  async importUsers(@UploadedFile(
+    new ParseFilePipe({
+      validators: [
+        new MaxFileSizeValidator({
+          maxSize: 2000000, // 2Mb
+          message: 'The file is too large; must be less than 2Mb',
+        }),
+        new FileTypeValidator({
+          fileType: /(xlx|xlsx)$/,
+        }),
+      ],
+    }),
+  ) file: Express.Multer.File) {
+    if (!file) {
+      throw new BadRequestException('No file provided');
     }
-   
+      const filePath = file.path; // Ruta del archivo guardado
+      return await this.userService.importUsers(filePath);  
   }
 
 }
