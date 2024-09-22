@@ -1,6 +1,6 @@
 import { Body, ConflictException, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, NotFoundException, Param, ParseUUIDPipe, Post, Put, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "src/dto/createUserDto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import * as fs from 'fs';
@@ -9,6 +9,15 @@ import { extname } from "path";
 import { AllowedUserIds } from "src/roles/roles.decorator";
 import { RolesGuard } from "src/Guards/roles.guard";
 import { AuthGuard } from "src/Guards/auth.guard";
+
+
+const ApiFile = (fileName: string) => (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
+  ApiConsumes('multipart/form-data')(target, propertyKey, descriptor);
+  ApiOperation({ summary: 'Upload file' })(target, propertyKey, descriptor);
+  ApiResponse({ status: 200, description: 'File uploaded successfully' })(target, propertyKey, descriptor);
+  ApiResponse({ status: 400, description: 'Bad request' })(target, propertyKey, descriptor);
+};
+
 
 @ApiTags("Users")
 @Controller("user")
@@ -113,12 +122,12 @@ export class UserController{
 
   @Post()
   @HttpCode(201)
-  createUser(@Body() createUserDto:CreateUserDto){
+  async createUser(@Body() createUserDto:CreateUserDto){
     try {     
-      return this.userService.createUser(createUserDto)
+      return await this.userService.createUser(createUserDto)
     } catch (error) {
-      if (error.code === '23505') { // Unique constraint violation
-        throw new ConflictException('User with this email already exists');
+      if (error.response && error.response.error === 'Unauthorized') {
+        throw new ConflictException(error.response.message);
       } else {
         throw new InternalServerErrorException('Error creating user');
       }
@@ -135,8 +144,25 @@ export class UserController{
       },
     }),
   }))
+  @ApiOperation({ summary: 'Importa usuarios desde un archivo Excel' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Archivo Excel para importar usuarios',
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: 'Archivo cargado correctamente' })
+  @ApiResponse({ status: 400, description: 'Solicitud incorrecta' })
   async importUsers(@UploadedFile() file: Express.Multer.File): Promise<void> {
     const filePath = file.path; // Ruta del archivo guardado
     await this.userService.importUsers(filePath);
   }
+
 }
