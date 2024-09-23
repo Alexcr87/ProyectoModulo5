@@ -25,11 +25,23 @@ const Register = () => {
   const [countries, setCountries] = useState<string[]>(["Argentina", "Chile", "Colombia"]);
   const [cities, setCities] = useState<string[]>([]);
   const [file, setFile] = useState<File | null>(null);
+  const [touched, setTouched] = useState<IRegisterError>(initialState);
 
+  const handleBlur = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name } = event.target;
+    setTouched({
+      ...touched,
+      [name]: true,
+    });
+  };
+  
+  
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] || null;
     setFile(selectedFile);
   };
+
+  
 
   const handleUpload = async () => {
     if (!file) {
@@ -148,11 +160,12 @@ const Register = () => {
                 name="password"
                 type="password"
                 value={dataUser.password}
+                onBlur={handleBlur}
                 onChange={handleChange}
                 placeholder="**********"
                 className="border rounded-full bg-secundaryColor text-black placeholder:text-black text-left p-2 pl-3 mt-1 outline-none focus:border-tertiaryColor shadow-xl"
               />
-              {errors.password && <span className="text-red-500 text-sm">{errors.password}</span>}
+              {touched.password && errors.password && <span className="text-red-500 text-sm">{errors.password}</span>}
             </div>
 
             <div className="flex flex-col mt-4">
