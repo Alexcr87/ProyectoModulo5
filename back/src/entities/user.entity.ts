@@ -37,7 +37,7 @@ export class User{
   @Column({default: false})
   suffrage:boolean
 
-  @Column({ default: true })
+  @Column({ default: false })
   isFirstLogin: boolean;
 
   @OneToOne(() => Candidate, candidate => candidate.user, { cascade: ['remove'], onDelete: 'CASCADE' })
