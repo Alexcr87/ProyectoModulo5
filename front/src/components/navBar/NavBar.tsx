@@ -4,8 +4,10 @@ import Image from 'next/image'
 import Link from "next/link"
 import { usePathname } from 'next/navigation'
 import { IloginProps } from '@/interfaces/ILogin'
+import { useRouter } from 'next/navigation' 
 
 const NavBar = () => {
+    const router = useRouter()
     const [userSesion, setUserSesion] = useState<IloginProps>()
     const pathname = usePathname()
 
@@ -19,6 +21,7 @@ const NavBar = () => {
         localStorage.clear()
         setUserSesion(undefined);
         alert("Gracias por visitar nuestra web, vuelve pronto")
+        router.push("/")
     }
 
     return (
