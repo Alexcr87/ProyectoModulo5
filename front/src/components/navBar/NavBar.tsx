@@ -1,8 +1,27 @@
-import React from 'react'
+'use client'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from "next/link"
+import { usePathname } from 'next/navigation'
+import { IloginProps } from '@/interfaces/ILogin'
 
 const NavBar = () => {
+    
+    const [userSesion, setUserSesion] = useState<IloginProps>()
+    const pathname = usePathname()
+
+    useEffect(()=>{
+        const localUser = localStorage.getItem("userSesion")
+        setUserSesion(JSON.parse(localUser!));
+        console.log(userSesion);
+    },[pathname])
+
+    const handleClose = ()=>{
+        localStorage.clear()
+        setUserSesion(undefined);
+        alert("Gracias por visitar nuestra web, vuelve pronto")
+    }
+
   return (
     <nav className='bg-primaryColor h-14 pl-8 flex items-center justify-between fixed w-full z-50'>
         <div className='flex items-center'>
@@ -25,10 +44,18 @@ const NavBar = () => {
                         About Us
                     </Link>
                 </li>
-                <li>
-                <Link href="/login" >Iniciar Sesión</Link>
-                    
-                </li>
+
+                    {
+                        userSesion?.token ? (
+                            <li>
+                                <button onClick={handleClose}>Cerrar Sesion</button>
+                            </li>
+                        ):(
+                            <li>
+                                <Link href="/login" >Iniciar Sesión</Link>
+                            </li>
+                        )
+                    }
             </ul>
         </div>
     </nav>
