@@ -11,7 +11,8 @@ import { OrganizationalStructure } from "src/entities/organizationalStructure.en
 @Module({
   imports:[TypeOrmModule.forFeature([User, Role,OrganizationalStructure])],
   providers:[UserService, MailService],
-  controllers:[UserController]
+  controllers:[UserController],
+  exports: [TypeOrmModule],
 })
 
 export class UserModule{}

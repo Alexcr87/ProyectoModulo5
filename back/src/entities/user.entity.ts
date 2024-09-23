@@ -51,6 +51,12 @@ export class User{
   })
   roles: Role[];
 
+  @ManyToMany(() => Campaign, (campaign) => campaign.voters)
+  @JoinTable({
+     name: 'votó'
+  })  
+  votedCampaigns: Campaign[];
+
   @OneToMany(() => Campaign, (campaign) => campaign.user)
   campaigns: Campaign[];
 }

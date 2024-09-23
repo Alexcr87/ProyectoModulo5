@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, OneToMany } from 'typeorm';
 import { User } from 'src/entities/user.entity';
+import { Candidate } from './candidate.entity';
 
 @Entity('campaigns')
 export class Campaign {
@@ -20,4 +21,11 @@ export class Campaign {
 
   @ManyToOne(() => User, (user) => user.campaigns)
   user: User;
+
+  @ManyToMany(() => User, (user) => user.votedCampaigns)
+  voters: User[];
+
+  @OneToMany(() => Candidate, (candidate) => candidate.campaign)
+  candidates: Candidate[];
 }
+
