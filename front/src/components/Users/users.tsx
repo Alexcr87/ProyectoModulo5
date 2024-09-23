@@ -1,35 +1,52 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import IUsers from "@/interfaces/IUsers";
-//AQUI HAY QUE COLOCAR EL USUARIO LOGUEADO"
-const actualUser="ad7d27c5-0309-4ff8-a8ca-75bcfd4d0cfb"
+import { IloginProps } from "@/interfaces/ILogin";
+import { usePathname } from "next/navigation";
+
 const Users = () => {
+  const [userSesion, setUserSesion] = useState<IloginProps>();
+  const pathname = usePathname();
   const [users, setUsers] = useState<IUsers[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Función para obtener los usuarios desde tu backend
-  const fetchUsers = async () => {
-    try {
-      const response = await fetch(`http://localhost:3000/user?parentId=${actualUser}`, {
-        method: "GET",
-      });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      setUsers(data);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    const localUser = localStorage.getItem("userSesion");
+    if (localUser) {
+      setUserSesion(JSON.parse(localUser));
     }
-  };
+  }, [pathname]);
 
   useEffect(() => {
+    const fetchUsers = async () => {
+      if (!userSesion?.result?.id) {
+        setLoading(false); // Termina la carga si no hay ID
+        return;
+      }
+
+      const actualUser = String(userSesion.result.id);
+
+      try {
+        const response = await fetch(`http://localhost:3000/user?parentId=${actualUser}`, {
+          method: "GET",
+        });
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        setUsers(data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchUsers();
-  }, []);
+  }, [userSesion]); // Solo se ejecuta cuando userSesion cambia
 
   if (loading) {
     return <p className="text-center text-gray-500">Cargando...</p>;
@@ -54,25 +71,15 @@ const Users = () => {
           <tbody>
             {users.length > 0 ? (
               users.map((user, idx) => (
-                <tr
-                  key={user.id}
-                  className={`${
-                    idx % 2 === 0 ? "bg-gray-50" : "bg-white"
-                  } border-t border-gray-200`}
-                >
+                <tr key={user.id} className={`${idx % 2 === 0 ? "bg-gray-50" : "bg-white"} border-t border-gray-200`}>
                   <td className="py-3 px-6 text-sm text-gray-700">{user.name}</td>
                   <td className="py-3 px-6 text-sm text-gray-700">{user.email}</td>
                   <td className="py-3 px-6 text-sm text-gray-700">{user.dni}</td>
-                  <td className="py-3 px-6 text-sm text-gray-700">
-                    {user.address || "N/A"}
-                  </td>
+                  <td className="py-3 px-6 text-sm text-gray-700">{user.address || "N/A"}</td>
                   <td className="py-3 px-6 text-sm text-gray-700">{user.city || "N/A"}</td>
                   <td className="py-3 px-6 text-sm text-gray-700">{user.country || "N/A"}</td>
                   <td className="py-3 px-6 text-sm text-gray-700">
-                    <a
-                      href={`/candidate/${user.id}`}
-                      className="text-blue-500 hover:text-blue-700 font-medium"
-                    >
+                    <a href={`/candidate/${user.id}`} className="text-blue-500 hover:text-blue-700 font-medium">
                       Postular Candidato
                     </a>
                   </td>
