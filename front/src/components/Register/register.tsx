@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { IRegisterError, IRegisterProps } from "./TypesRegister";
 import { importUser, register } from "@/helpers/auth.helper";
 import { validateRegisterForm } from "@/helpers/validateRegister";
+import Boton from "../boton/Boton";
 
 const Register = () => {
   const router = useRouter();
@@ -180,11 +181,18 @@ const Register = () => {
               />
               {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
             </div>
+            <div className="flex mt-4 gap-4">
+            <input
+              type="file"
+              onChange={handleFileChange}
+            />
+            <Boton text="Subir Excel" onClick={handleUpload} />
+          </div>
 
           </div>
 
           <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
-            <div className="flex flex-col mt-4">
+            <div className="flex flex-col">
               <select
                 name="country"
                 value={dataUser.country}
@@ -213,44 +221,26 @@ const Register = () => {
               </select>
               {errors.city && <span className="text-red-500 text-sm">{errors.city}</span>}
             </div>
-
-            <img
-              src="/path-to-your-image.jpg"
-              alt="Small icon"
-              className="w-5 h-5 mx-auto"
-            />
             <button
-              className="border rounded-full h-10 bg-tertiaryColor text-white m-10 disabled:opacity-50"
+              className="border rounded-full h-10 bg-tertiaryColor text-white my-4 disabled:opacity-50 hover:scale-105 hover:bg-primaryColor ease-in-out duration-300"
               type="submit"
               disabled={!isFormValid}
             >
               Register
             </button>
-            <div className="flex flex-col mt-4">
-        <button
-          type="button"
-          onClick={handleDownloadExcel}
-          className="border rounded-full h-10 bg-tertiaryColor text-white"
-        >
-          Descargar Excel
-        </button>
+            <img
+              src="/images/registerImage.png"
+              alt="Small icon"
+              className="w-52 mx-auto mb-4"
+            />
+            <div className="flex flex-col">
+        <Boton text="Descargar Excel" onClick={handleDownloadExcel}/>
       </div>
           </div>
         </div>
       </div>
     </form>
-    <div className="mt-4">
-        <input
-          type="file"
-          onChange={handleFileChange}
-        />
-      </div>
-    <button
-    onClick={handleUpload}
-    className="border rounded-full h-10 bg-tertiaryColor text-white m-4"
-    >
-    Subir Excel
-    </button>
+    
     </>
   );
 };
