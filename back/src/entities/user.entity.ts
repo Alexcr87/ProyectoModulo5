@@ -1,9 +1,10 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm"
 import {v4 as uuid} from 'uuid'
 import { Candidate } from "./candidate.entity"
 import { Role } from "./roles.entity"
 import { ApiProperty } from "@nestjs/swagger"
 import { IsBoolean } from "class-validator"
+import { Campaign } from "./campaign.entity"
 
 
 @Entity({name: 'users'})
@@ -49,4 +50,7 @@ export class User{
     inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
   })
   roles: Role[];
+
+  @OneToMany(() => Campaign, (campaign) => campaign.user)
+  campaigns: Campaign[];
 }

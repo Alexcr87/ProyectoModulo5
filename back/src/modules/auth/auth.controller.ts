@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, HttpException, HttpStatus, NotFoundException, Post, Request as Req , Res, UnauthorizedException, UseGuards } from "@nestjs/common";
+import { BadRequestException, Body, Controller, HttpException, HttpStatus, NotFoundException, Post, Query, Request as Req , Res, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { AuthService } from "./auth.services";
 import { CredentialUserDto, newChangePasswordDto } from "src/dto/credentialUserDto";
@@ -78,9 +78,11 @@ export class AuthController {
    
 
     @Post("sigUp")
-    async sigUp (@Body() userRegister:CreateUserDto){
+    async createUser(
+        @Query("parentId") parentId: string,
+        @Body() userRegister: CreateUserDto){
         try{
-     return  this.authservice.sigUp(userRegister)
+     return  this.authservice.sigUp(userRegister,parentId)
         }catch(error){
             if(error instanceof BadRequestException){
                 const status = error.getStatus();

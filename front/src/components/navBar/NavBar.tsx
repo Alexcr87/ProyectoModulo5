@@ -7,7 +7,7 @@ const NavBar = () => {
     <nav className='bg-primaryColor h-14 pl-8 flex items-center justify-between fixed w-full z-50'>
         <div className='flex items-center'>
             <Image src="/images/logo.png" alt="imagenLogo" width={40} height={40}/>
-            <h2 className='text-cuartiaryColor'>VotingSistem</h2>
+            <h2 className='text-cuartiaryColor'>VotingSystem</h2>
         </div>
         <div>
             <ul className='flex gap-4 pr-8 text-cuartiaryColor'>
@@ -17,16 +17,21 @@ const NavBar = () => {
                 </li>
                 <li>
                     <Link href="/candidates">
-                        Cadidates
+                        Candidatos
+                    </Link>
+                </li>
+                <li>
+                    <Link href="/users">
+                        Usuarios
                     </Link>
                 </li>
                 <li>
                     <Link href="/">
-                        About Us
+                        ¿Quiénes somos?
                     </Link>
                 </li>
                 <li>
-                <Link href="/login" >Iniciar Sesión</Link>
+                <Link href="/login" >Iniciar sesión</Link>
                     
                 </li>
             </ul>
