@@ -49,7 +49,8 @@ export class AuthService {
             }
             console.log(userPayload.roles, "payload.rol");
             const token =this.jwtService.sign(userPayload)
-            return {succes: 'Login Successful, Your session will expire in 1 hour', token}
+            const { password: excludedPassword, ...result } = user;
+            return {succes: 'Login Successful, Your session will expire in 1 hour', token, result}
         }else{
             return {message: 'you need to change your password to log in'}
         }
