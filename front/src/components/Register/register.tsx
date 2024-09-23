@@ -29,7 +29,6 @@ const Register = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] || null;
     setFile(selectedFile);
-    console.log("Archivo seleccionado:", selectedFile)
   };
 
   const handleUpload = async () => {
@@ -37,10 +36,9 @@ const Register = () => {
         alert("Por favor, selecciona un archivo.");
         return;
     }
-    console.log(file);
+    
     try {
         const response = await importUser(file);
-        console.log(response);
         alert("Archivo subido con éxito");
         router.push("/login");
     } catch (error) {
@@ -181,13 +179,7 @@ const Register = () => {
               />
               {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
             </div>
-            <div className="flex mt-4 gap-4">
-            <input
-              type="file"
-              onChange={handleFileChange}
-            />
-            <Boton text="Subir Excel" onClick={handleUpload} />
-          </div>
+           
 
           </div>
 
@@ -232,15 +224,22 @@ const Register = () => {
               src="/images/registerImage.png"
               alt="Small icon"
               className="w-52 mx-auto mb-4"
-            />
-            <div className="flex flex-col">
-        <Boton text="Descargar Excel" onClick={handleDownloadExcel}/>
-      </div>
+            />  
           </div>
         </div>
       </div>
     </form>
-    
+    <div className="flex mt-4 gap-4">
+            <input
+              type="file"
+              onChange={handleFileChange}
+            />
+            <Boton text="Subir Excel" onClick={handleUpload} />
+          </div>
+          
+            <div className="flex flex-col">
+        <Boton text="Descargar Excel" onClick={handleDownloadExcel}/>
+      </div>
     </>
   );
 };
