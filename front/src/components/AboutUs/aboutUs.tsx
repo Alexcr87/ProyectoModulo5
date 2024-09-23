@@ -1,7 +1,7 @@
 const AboutUs = () => {
   return (
     <div className="bg-gray-100 p-6">
-      <header className="bg-green-600 text-white p-6 text-center">
+      <header className="text-black p-6 text-center">
         <h1 className="text-3xl font-bold">Sobre Nosotros</h1>
       </header>
       <section className="text-center mt-6">
@@ -17,7 +17,7 @@ const AboutUs = () => {
 
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">Contacto</h2>
         <p className="text-gray-600">
-          Si tienes preguntas, no dudes en contactarnos a través de <a href="mailto:contacto@votaciones.com" className="text-blue-500 hover:underline">contacto@votaciones.com</a>.
+          Si tienes preguntas, no dudes en contactarnos a través de <a href="mailto:gestionelectoral2024m5@gmail.com" className="text-blue-500 hover:underline">gestionelectoral2024m5@gmail.com</a>.
         </p>
       </section>
     </div>
