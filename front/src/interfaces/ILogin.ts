@@ -5,6 +5,11 @@ export interface IloginProps {
     token? : string
     result?:{
         id?:string
+        roles?:[
+            {
+                id?:string
+            },
+        ]
     }
 }
 

@@ -6,68 +6,67 @@ import { usePathname } from 'next/navigation'
 import { IloginProps } from '@/interfaces/ILogin'
 
 const NavBar = () => {
-    
     const [userSesion, setUserSesion] = useState<IloginProps>()
     const pathname = usePathname()
 
-    useEffect(()=>{
+    useEffect(() => {
         const localUser = localStorage.getItem("userSesion")
         setUserSesion(JSON.parse(localUser!));
         console.log(userSesion);
-    },[pathname])
+    }, [pathname])
 
-    const handleClose = ()=>{
+    const handleClose = () => {
         localStorage.clear()
         setUserSesion(undefined);
         alert("Gracias por visitar nuestra web, vuelve pronto")
     }
 
-  return (
-    <nav className='bg-primaryColor h-14 pl-8 flex items-center justify-between fixed w-full z-50'>
-        <div className='flex items-center'>
-            <Image src="/images/logo.png" alt="imagenLogo" width={40} height={40}/>
-            <h2 className='text-cuartiaryColor'>VotingSystem</h2>
-        </div>
-        <div>
-            <ul className='flex gap-4 pr-8 text-cuartiaryColor'>
-            <li>
-                <Link href="/registerUser" >Registrarme</Link>
-                </li>
- 
-                <li>
-                <Link href="/register" >Registrar</Link>
-                </li>
-                <li>
-                    <Link href="/candidates">
-                        Candidatos
-                    </Link>
-                </li>
-                <li>
-                    <Link href="/users">
-                        Usuarios
-                    </Link>
-                </li>
-                <li>
-                    <Link href="/aboutus">
-                        ¿Quiénes somos?
-                    </Link>
-                </li>
-                    {
-                        userSesion?.token ? (
+    return (
+        <nav className='bg-primaryColor h-14 pl-8 flex items-center justify-between fixed w-full z-50'>
+            <div className='flex items-center'>
+                <Image src="/images/logo.png" alt="imagenLogo" width={40} height={40} />
+                <h2 className='text-cuartiaryColor'>VotingSystem</h2>
+            </div>
+            <div>
+                <ul className='flex gap-4 pr-8 text-cuartiaryColor'>
+                    {/* Si no hay sesión de usuario, mostrar solo las opciones básicas */}
+                    {!userSesion ? (
+                        <>
                             <li>
-                                <button onClick={handleClose}>Cerrar Sesion</button>
+                                <Link href="/registerUser">Registrarme</Link>
                             </li>
-                        ):(
                             <li>
-                                <Link href="/login" >Iniciar Sesión</Link>
+                                <Link href="/login">Iniciar Sesión</Link>
                             </li>
-                        )
-                    }
-
-            </ul>
-        </div>
-    </nav>
-  )
+                            <li>
+                                <Link href="/aboutus">¿Quiénes somos?</Link>
+                            </li>
+                        </>
+                    ) : (
+                        <>
+                            {/* Opciones que solo se ven cuando hay un usuario logueado */}
+                            <li>
+                                <Link href="/register">Registrar</Link>
+                            </li>
+                            <li>
+                                <Link href="/candidates">Candidatos</Link>
+                            </li>
+                            <li>
+                                <Link href="/users">Usuarios</Link>
+                            </li>
+                           
+                            <li>
+                                <Link href="/aboutus">¿Quiénes somos?</Link>
+                            </li>
+                            <li>
+                                <button onClick={handleClose}>Cerrar Sesión</button>
+                            </li>
+                        </>
+                    )}
+                </ul>
+            </div>
+        </nav>
+    )
 }
 
 export default NavBar
