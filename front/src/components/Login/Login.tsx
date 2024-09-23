@@ -6,6 +6,7 @@ import { validateFields } from '@/helpers/validateLogin';
 import { IloginError, IloginProps } from '@/interfaces/ILogin';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 
 const LoginForm = () => {
@@ -50,11 +51,12 @@ const LoginForm = () => {
       }, [dataUser])
     
         return (
-            <div className='mt-40 text-center'>
-            <h1>INICIAR SESION</h1>
+            <div className='my-4 text-center flex flex-col items-center bg-white shadow-lg px-4 rounded-2xl'>
+            <Image src="/images/busto.png" alt="representacion inicio" width={200} height={200}/>
+            <h1 className='font-bold text-2xl mt-4'>INICIAR SESION</h1>
             <form
               onSubmit={handleSubmit}
-              className="max-w-lg mx-auto px-28 py-20 rounded-lg shadow-lg"
+              className="mx-auto px-28 pb-20 rounded-lg"
             >
 
                <div className="flex flex-col mt-4">
@@ -63,8 +65,8 @@ const LoginForm = () => {
                   name='email'
                   value={dataUser.email}
                   onChange={handleChange}
-                  placeholder="email"
-                  className="border rounded-full bg-secundaryColor text-black placeholder:text-black text-left p-2 pl-3 mt-1 outline-none focus:border-tertiaryColor shadow-xl"
+                  placeholder="Email"
+                  className="border rounded-full bg-secundaryColor text-black placeholder:text-black text-left p-2 pl-3 mt-1 outline-none focus:border-tertiaryColor shadow-xl hover:scale-105"
                 />
                 </div>
 
@@ -79,7 +81,7 @@ const LoginForm = () => {
                   value={dataUser.password}
                   onChange={handleChange}
                   placeholder="Password"
-                  className="border rounded-full bg-secundaryColor text-black placeholder:text-black text-left p-2 pl-3 mt-1 outline-none focus:border-tertiaryColor shadow-xl"
+                  className="border rounded-full bg-secundaryColor text-black placeholder:text-black text-left p-2 pl-3 mt-1 outline-none focus:border-tertiaryColor shadow-xl hover:scale-105"
                 />
             </div>
 
@@ -90,7 +92,7 @@ const LoginForm = () => {
               <button
                 type="submit"
                 disabled={errors ? false :true}
-                className="border rounded-full w-40 h-12 bg-tertiaryColor text-white m-20 "
+                className="border rounded-full w-40 h-12 bg-tertiaryColor text-cuartiaryColor m-20 hover:scale-105 hover:bg-primaryColor ease-in-out duration-300"
               >
                     INICIAR SESION
               </button>

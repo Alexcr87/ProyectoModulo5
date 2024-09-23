@@ -17,7 +17,7 @@ const Boton: React.FC<BotonProps> = ({ text, link, onClick }) => {
 
   if (link) {
     return (
-      <div className='bg-tertiaryColor text-cuartiaryColor py-2 px-8 w-32 flex justify-center rounded-full uppercase hover:scale-105' 
+      <div className='bg-tertiaryColor text-cuartiaryColor py-2 px-8 flex justify-center rounded-full hover:scale-105 hover:bg-primaryColor' 
             onClick={handleClick} >
         <Link href={link} passHref>
           <p>{text}</p>
@@ -28,7 +28,7 @@ const Boton: React.FC<BotonProps> = ({ text, link, onClick }) => {
 
   return (
     <button
-      className='bg-tertiaryColor text-cuartiaryColor py-2 px-8 w-32 flex justify-center rounded-full uppercase hover:scale-105'
+      className='bg-tertiaryColor text-cuartiaryColor py-2 px-8 flex justify-center rounded-full hover:scale-105 hover:bg-primaryColor duration-300'
       onClick={handleClick} 
     >
       {text}
