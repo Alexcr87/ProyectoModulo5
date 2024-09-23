@@ -45,7 +45,7 @@ const NavBar = () => {
                     </Link>
                 </li>
                 <li>
-                    <Link href="/">
+                    <Link href="/aboutus">
                         ¿Quiénes somos?
                     </Link>
                 </li>
