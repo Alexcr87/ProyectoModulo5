@@ -10,6 +10,7 @@ import { RoleModule } from './modules/role/role.module';
 import { RoleSeedService } from './seeder/seed.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
+import { CampaignModule } from './modules/campaign/campaign.module';
 
 
 @Module({
@@ -27,6 +28,7 @@ import { JwtModule } from '@nestjs/jwt';
   CandidateModule,
   CloudinaryModule,
   RoleModule,
+  CampaignModule,
   JwtModule.register({
     global:true,
     signOptions:{expiresIn:"1h"},

@@ -89,9 +89,9 @@ export class AuthService {
 
 
 
-  async sigUp(userRegister: CreateUserDto){
+  async sigUp(userRegister: CreateUserDto, parentId:string){
    
-   return this.userService.createUser(userRegister);
+   return this.userService.createUser(userRegister,parentId);
 
 };
 

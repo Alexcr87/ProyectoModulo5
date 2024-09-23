@@ -1,6 +1,6 @@
 import ICandidate from "@/interfaces/ICandidate"
 
-const APIURL = "http://localhost:3000"
+const APIURL = "http://localhost:3000" 
 
 export async function getCandidates(): Promise<ICandidate[]> {
     try {

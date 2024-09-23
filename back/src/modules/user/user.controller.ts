@@ -1,4 +1,4 @@
-import { BadRequestException, Body, ConflictException, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, ParseUUIDPipe, Post, Put, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, ConflictException, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, ParseUUIDPipe, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "src/dto/createUserDto";
@@ -24,13 +24,14 @@ export class UserController{
 
   @Get()
   @HttpCode(200)
-  async getUsers(): Promise<User[]>{
+  async getUsers(@Query("parentId") parentId?: string): Promise<User[]> {
     try {
-      return await this.userService.getUsers()
+      return await this.userService.getUsers(parentId);
     } catch (error) {
-      throw new NotFoundException(error.message)
+      throw new NotFoundException(error.message);
     }
   }
+
   
 
   @ApiBearerAuth()
@@ -125,9 +126,12 @@ export class UserController{
 
   @Post()
   @HttpCode(201)
-  async createUser(@Body() createUserDto:CreateUserDto){
+  async createUser(
+    @Query("parentId") parentId: string,
+    @Body() createUserDto: CreateUserDto
+  ) {
     try {     
-      return await this.userService.createUser(createUserDto)
+      return await this.userService.createUser(createUserDto,parentId)
     } catch (error) {
       if (error.response && error.response.error === 'Unauthorized') {
         throw new ConflictException(error.response.message);

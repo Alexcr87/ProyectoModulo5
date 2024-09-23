@@ -9,6 +9,7 @@ import * as XLSX from 'xlsx';
 import * as fs from 'fs';
 import { MailService } from "../mail/mail.service";
 import { generateRandomPassword } from "src/helpers/password.helper"
+import { OrganizationalStructure} from "src/entities/organizationalStructure.entity";
 
 
 
@@ -21,22 +22,54 @@ export class UserService{
     private readonly userRepository: Repository<User>,
     @InjectRepository(Role) 
     private roleRepository: Repository<Role>,
-    private readonly mailService: MailService 
-    
+    private readonly mailService: MailService, 
+    @InjectRepository(OrganizationalStructure)
+    private structureRepository: Repository<OrganizationalStructure>,
   ) {}
 
   
 
-  async getUsers():Promise<User[]> {
+  async getUsers(parentId?: string): Promise<User[]> {
     try {
+      if (parentId) {
+        const parentUser = await this.userRepository.findOne({ where: { id: parentId } });
+  
+        if (!parentUser) {
+          throw new NotFoundException(`User with id ${parentId} not found`);
+        }
+  
+        // Obtén las relaciones donde este usuario es el padre
+        const childRelations = await this.structureRepository.find({
+          where: { parent: parentUser }, // Usando la relación
+          relations: ['child'], // Carga la relación child
+        });
+  
+        console.log(childRelations, "CR");
+  
+        // Accede a childId
+        const childIds = childRelations.map(rel => rel.child.id); // Accede a child.id
       
-      return await this.userRepository.find({relations: ['roles']})
+  
+        // Solo busca si childIds tiene elementos
+        if (childIds.length > 0) {
+          return await this.userRepository.find({
+            where: { id: In(childIds) },
+            relations: ['roles'], 
+          });
+        } else {
+          return []; // No hay hijos
+        }
+      }
+  
+      // Si no se proporciona parentId, devuelve todos los usuarios
+      return await this.userRepository.find({relations: ['roles']});
     } catch (error) {
-      throw new InternalServerErrorException('Error retrieving users')
+      throw new InternalServerErrorException('Error retrieving users');
     }
-
   }
-
+  
+  
+  
   async deteleUserById(id: string):Promise <string> {
     try {
       const userToRemove = await this.userRepository.findOneBy({id})
@@ -90,9 +123,6 @@ export class UserService{
     }
   }
   
-
-
-  
   async getUserById(id: string) {
     try {
       const user = await this.userRepository.findOne({
@@ -128,25 +158,31 @@ export class UserService{
    return user;
   }
 
-  async createUser(createUserDto: CreateUserDto): Promise<Omit<User, 'password'>> {
-    const user = await this.userRepository.findOneBy({dni:createUserDto.dni})
+  async createUser(createUserDto: CreateUserDto, parentId?: string): Promise<Omit<User, 'password'>> {
+    console.log(parentId)
+    // Verificar si el usuario ya existe por DNI
+    const user = await this.userRepository.findOneBy({ dni: createUserDto.dni });
     if (user) {
-      throw new UnauthorizedException(`User with dni: ${createUserDto.dni} alredy exist`)
+      throw new UnauthorizedException(`User with dni: ${createUserDto.dni} already exists`);
     }
-
-    const userbyemail = await this.userRepository.findOneBy({email:createUserDto.email})
-    if (userbyemail) {
-      throw new UnauthorizedException(`User with email:${createUserDto.email} alredy exist`)
+  
+    // Verificar si el usuario ya existe por email
+    const userByEmail = await this.userRepository.findOneBy({ email: createUserDto.email });
+    if (userByEmail) {
+      throw new UnauthorizedException(`User with email: ${createUserDto.email} already exists`);
     }
+  
     const passwordGenerated = !createUserDto.password;
     const password = createUserDto.password || generateRandomPassword();
     const hashedPassword = await bcrypt.hash(password, 10);
   
+    // Asignar rol predeterminado
     const defaultRole = await this.roleRepository.findOne({ where: { id: 3 } });
     if (!defaultRole) {
       throw new BadRequestException('Default role not found');
     }
   
+    // Verificar roles opcionales
     let userRoles: Role[] = [defaultRole];
     if (createUserDto.roles && createUserDto.roles.length > 0) {
       userRoles = await this.roleRepository.findBy({ id: In(createUserDto.roles) });
@@ -155,32 +191,53 @@ export class UserService{
       }
     }
   
-    
-    let newUser= this.userRepository.create({})
-    
-    if(passwordGenerated){
-       newUser = this.userRepository.create({
-        ...createUserDto,
-        password: hashedPassword,
-        roles: userRoles,  // Asignamos los roles aquí
-      });
-      await this.userRepository.save(newUser);
-      await this.mailService.sendPasswordEmail(newUser.email, newUser.name, password)
-    }else{
-       newUser = this.userRepository.create({
-        ...createUserDto,
-        password: hashedPassword,
-        isFirstLogin:false,
-        roles: userRoles,  // Asignamos los roles aquí
-      });
-      await this.userRepository.save(newUser);
+    // Crear el nuevo usuario
+    let newUser = this.userRepository.create({
+      ...createUserDto,
+      password: hashedPassword,
+      roles: userRoles,
+      isFirstLogin: !passwordGenerated ? false : undefined,
+    });
+  
+    // Guardar el usuario en la base de datos
+    await this.userRepository.save(newUser);
+  
+    // Enviar emails según si la contraseña fue generada o no
+    if (passwordGenerated) {
+      await this.mailService.sendPasswordEmail(newUser.email, newUser.name, password);
+    } else {
       await this.mailService.sendWelcomeEmail(newUser.email, newUser.name);
     }
   
+    // Si se proporcionó `parentId`, crear la relación en `StructureOrganization`
+    if (parentId) {
+      const parentUser = await this.userRepository.findOneBy({ id: parentId });
+      if (!parentUser) {
+        throw new BadRequestException(`Parent user with id: ${parentId} not found`);
+      }
+      console.log(parentUser)
+  
+      // Verificar si el nuevo usuario ya está relacionado como hijo en otra estructura
+      const existingRelation = await this.structureRepository.findOne({
+        where: { child: { id: newUser.id } },
+      });
+  
+      if (existingRelation) {
+        throw new BadRequestException(`User with id: ${newUser.id} is already related to another parent`);
+      }
+  
+      // Crear la relación padre-hijo
+      const structureRelation = this.structureRepository.create({
+        parent: parentUser,
+        child: newUser,
+      });
+      await this.structureRepository.save(structureRelation);
+    }
+  
     const { password: excludedPassword, ...result } = newUser;
-    return  result;
+    return result;
   }
-
+  
   async readExcelFile(filePath: string): Promise<CreateUserDto[]> {
     const data = fs.readFileSync(filePath);
     const workbook = XLSX.read(data, { type: 'buffer' });
@@ -225,8 +282,5 @@ export class UserService{
   async findUserByEmailxlsx(email: string): Promise<User | undefined> {
     return await this.userRepository.findOne({ where: { email } });
   }
-
-
-
 
 }

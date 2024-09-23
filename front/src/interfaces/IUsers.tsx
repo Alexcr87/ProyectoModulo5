@@ -1,8 +1,7 @@
 import ICandidate from "./ICandidate"
 
-interface IUser {
-    
-    user: {
+interface IUsers {
+
     id: number,
     name: string,
     dni: number,
@@ -15,7 +14,7 @@ interface IUser {
     suffrage?: boolean,
     candidate?: ICandidate
 }
-}
 
-export default IUser;
+
+export default IUsers;
 
