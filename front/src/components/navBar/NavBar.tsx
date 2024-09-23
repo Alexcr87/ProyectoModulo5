@@ -30,6 +30,9 @@ const NavBar = () => {
         </div>
         <div>
             <ul className='flex gap-4 pr-8 text-cuartiaryColor'>
+            <li>
+                <Link href="/registerUser" >Registrarme</Link>
+                </li>
  
                 <li>
                 <Link href="/register" >Registrar</Link>
