@@ -2,7 +2,6 @@
 import React from 'react'
 import ICandidate from '@/interfaces/ICandidate'
 import Image from 'next/image'
-import Boton from '../boton/Boton'
 
 
 const CandidateDetails = async (props:ICandidate) => {
