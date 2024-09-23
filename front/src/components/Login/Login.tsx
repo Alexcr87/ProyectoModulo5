@@ -6,6 +6,7 @@ import { IloginError, IloginProps } from '@/interfaces/ILogin';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { login } from '@/helpers/auth.helper';
 
 
 const LoginForm = () => {
@@ -15,12 +16,7 @@ const LoginForm = () => {
       password:"",
       token: ""
     }
-    const Login = {
-      "email" : "ramongonzalez101@gmail.com",
-      "password": "12345678",
-      "token" : "123456678"
-   }
-        
+    
     const [dataUser, SetdataUser] = useState<IloginProps> (initialState);
     const [errors, SetErrors] = useState<IloginError>(initialState);
     
@@ -32,7 +28,7 @@ const LoginForm = () => {
     })
     }
     
-      // ENVIO LOS DATOS AL BACK O GUARDO LOS DATOS EN EL ARRAY
+      // ENVIO LOS DATOS AL BACK O GUARDO LOS DATOS EN EL ARRAY   
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault ();
     
@@ -41,7 +37,8 @@ const LoginForm = () => {
     } else {
     //   const response = await login (dataUser);
     //   const {token, user} = response;
-      const clearUser = Login
+      const clearUser = await login(dataUser);
+       
       // AQUI ES DONDE GUARDO LOS NUEVOS DATOS DEL USUARIO EN EL NAVEGADOR PARA QUE SEA PERSISTENTE
        localStorage.setItem ('userSesion', JSON.stringify (clearUser))
        router.push ('/');

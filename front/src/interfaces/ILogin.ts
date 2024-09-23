@@ -2,7 +2,7 @@
 export interface IloginProps {
     email : string
     password : string
-    token : string
+    token? : string
 }
 
 export interface IloginError {
