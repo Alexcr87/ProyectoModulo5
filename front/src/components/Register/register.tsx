@@ -229,17 +229,20 @@ const Register = () => {
         </div>
       </div>
     </form>
-    <div className="flex mt-4 gap-4">
+    <div className="flex items-center justify-between mx-14">
+      <div className="flex mt-4 gap-4">
             <input
               type="file"
               onChange={handleFileChange}
             />
             <Boton text="Subir Excel" onClick={handleUpload} />
-          </div>
+      </div>
           
-            <div className="flex flex-col">
+      <div className="self-end">
         <Boton text="Descargar Excel" onClick={handleDownloadExcel}/>
       </div>
+    </div>
+    
     </>
   );
 };
