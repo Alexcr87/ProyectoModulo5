@@ -8,22 +8,17 @@ return (
         <div className="relative flex flex-col text-gray-700 bg-white shadow-md bg-clip-border rounded-xl w-96">
   <div className="relative mx-4 mt-4 overflow-hidden text-gray-700 bg-white bg-clip-border rounded-xl h-60">
     <img className="h-60 w-72 m-auto"
-   src={candidate.imgUrl} alt={`imagen del producto ${candidate.user.name}`} />
+   src={candidate.imgUrl} alt={`imagen del candidato ${candidate.user.name}`} />
   </div>
-  <div className="p-6">
-    <div className="flex items-center justify-between mb-2">
-       <p className="block font-sans text-base antialiased font-medium leading-relaxed text-blue-gray-900">
-      Postulacion: {candidate.postulation}
-      </p> 
-      <p className="block font-sans text-base antialiased font-medium leading-relaxed text-blue-gray-900">
-      Nombre: {candidate.user.name} 
-      </p>
+  <div className="px-6 pt-2">
+    <div className="flex justify-center">
+      <p className="font-bold text-2xl">{candidate.user.name}</p>
     </div>
-    <p className="block font-sans text-sm antialiased font-normal leading-normal text-gray-700 opacity-75">
-       {candidate.list}`
-    </p>
-  </div>
-  <div className="p-6 pt-0">
+      <div className="flex flex-col">
+        <p className="font-bold">Postulacion:</p>
+        <p>{candidate.postulation}</p>
+        <p className="self-center my-4">{candidate.list}</p>
+      </div>
   </div>
 </div>
 
