@@ -1,5 +1,5 @@
 import { BadRequestException, Body, Controller, HttpException, HttpStatus, NotFoundException, Post, Query, Request as Req , Res, UnauthorizedException, UseGuards } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiQuery, ApiTags } from "@nestjs/swagger";
 import { AuthService } from "./auth.services";
 import { CredentialUserDto, newChangePasswordDto } from "src/dto/credentialUserDto";
 import { CreateUserDto } from "src/dto/createUserDto";
@@ -78,6 +78,7 @@ export class AuthController {
    
 
     @Post("sigUp")
+    @ApiQuery({ name: 'parentId', required: false, description: 'Optional parent ID to filter users' })
     async createUser(
         @Query("parentId") parentId: string,
         @Body() userRegister: CreateUserDto){

@@ -191,23 +191,33 @@ export class UserService{
       }
     }
   
-    // Crear el nuevo usuario
-    let newUser = this.userRepository.create({
+   
+  
+    // Guardar el usuario en la base de datos
+
+  let newUser = this.userRepository.create({})
+    // Enviar emails según si la contraseña fue generada o no
+    if (passwordGenerated) {
+       // Crear el nuevo usuario
+    newUser = this.userRepository.create({
       ...createUserDto,
       password: hashedPassword,
       roles: userRoles,
       isFirstLogin: !passwordGenerated ? false : undefined,
     });
-  
-    // Guardar el usuario en la base de datos
     await this.userRepository.save(newUser);
-  
-    // Enviar emails según si la contraseña fue generada o no
-    if (passwordGenerated) {
       await this.mailService.sendPasswordEmail(newUser.email, newUser.name, password);
     } else {
+      newUser = this.userRepository.create({
+        ...createUserDto,
+        password: hashedPassword,
+        roles: userRoles,
+        isFirstLogin: !passwordGenerated ? false : undefined,
+      });
+      await this.userRepository.save(newUser);
       await this.mailService.sendWelcomeEmail(newUser.email, newUser.name);
     }
+    
   
     // Si se proporcionó `parentId`, crear la relación en `StructureOrganization`
     if (parentId) {

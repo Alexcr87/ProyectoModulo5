@@ -1,6 +1,6 @@
 import { BadRequestException, Body, ConflictException, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, ParseUUIDPipe, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "src/dto/createUserDto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import * as fs from 'fs';
@@ -17,13 +17,14 @@ import { Role } from "src/entities/roles.entity";
 
 @ApiTags("Users")
 @Controller("user")
-export class UserController{
+export class UserController {
   constructor(
     private readonly userService: UserService
   ) {}
 
   @Get()
   @HttpCode(200)
+  @ApiQuery({ name: 'parentId', required: false, description: 'Optional parent ID to filter users' })
   async getUsers(@Query("parentId") parentId?: string): Promise<User[]> {
     try {
       return await this.userService.getUsers(parentId);
@@ -31,6 +32,7 @@ export class UserController{
       throw new NotFoundException(error.message);
     }
   }
+
 
   
 
@@ -126,6 +128,7 @@ export class UserController{
 
   @Post()
   @HttpCode(201)
+  @ApiQuery({ name: 'parentId', required: false, description: 'Optional parent ID to filter users' })
   async createUser(
     @Query("parentId") parentId: string,
     @Body() createUserDto: CreateUserDto
