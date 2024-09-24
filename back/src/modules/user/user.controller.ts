@@ -11,6 +11,8 @@ import { RolesGuard } from "src/Guards/roles.guard";
 import { AuthGuard } from "src/Guards/auth.guard";
 import { User } from "src/entities/user.entity";
 import { Role } from "src/entities/roles.entity";
+import { CreateUserDtoByAdmin } from "src/dto/createUserByAdminDto";
+
 
 
 
@@ -156,6 +158,7 @@ export class UserController {
   }))
   @ApiOperation({ summary: 'Import users from an Excel file' })
   @ApiConsumes('multipart/form-data')
+  //@ApiQuery({ name: 'parentId', required: false, description: 'Optional parent ID to filter users' })
   @ApiBody({
     description: 'Excel file to import users',
     schema: {
@@ -182,13 +185,32 @@ export class UserController {
         }),*/
       ],
     }),
-  ) file: Express.Multer.File) {
+  ) file: Express.Multer.File)
+   {
     console.log(file)
     if (!file) {
       throw new BadRequestException('No file provided');
     }
       const filePath = file.path; // Ruta del archivo guardado
       return await this.userService.importUsers(filePath);  
+  }
+
+  @Post("/byadmin")
+  @HttpCode(201)
+  @ApiQuery({ name: 'parentId', required: false, description: 'Optional parent ID to filter users' })
+  async createUserByAdmin(
+    @Query("parentId") parentId: string,
+    @Body() createUserDto: CreateUserDtoByAdmin
+  ) {
+    try {     
+      return await this.userService.createUserByAdmin(createUserDto,parentId)
+    } catch (error) {
+      if (error.response && error.response.error === 'Unauthorized') {
+        throw new ConflictException(error.response.message);
+      } else {
+        throw new InternalServerErrorException('Error creating user');
+      }
+    }
   }
 
 }
