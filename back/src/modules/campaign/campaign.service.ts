@@ -25,10 +25,11 @@ export class CampaignService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    const hasModeratorRole = user.roles.some((role) => role.name === 'moderator');
-    if (!hasModeratorRole) {
-      throw new ForbiddenException('Only moderators can create campaigns');
-    }
+    // logica para que solo los moderadores puedan crear campañas
+    // const hasModeratorRole = user.roles.some((role) => role.name === 'moderator');
+    // if (!hasModeratorRole) {
+    //   throw new ForbiddenException('Only moderators can create campaigns');
+    // }
     const campaign = this.campaignRepository.create({
       ...campaignData,
       user,

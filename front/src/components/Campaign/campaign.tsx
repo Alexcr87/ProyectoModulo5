@@ -2,10 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import ICampaign from '@/interfaces/ICampaign'; 
-import { useRouter } from 'next/navigation'; // Cambia a 'next/navigation'
 
 const CampaignForm = () => {
-  const router = useRouter();
   const [userSesion, setUserSesion] = useState<any>(); 
 
   const [formData, setFormData] = useState<ICampaign>({
@@ -53,9 +51,34 @@ const CampaignForm = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-   
+
+    const data = {
+      "name": formData.name,
+      "description": formData.description,
+      "location": formData.location,
+      "date": formData.date.toISOString(),
+      "user": {
+        "id": formData.userId
+      }
+    }
+    console.log("Data to send:", data); // Verifica los datos que estás enviando
+    try {
+      const response = await fetch("http://localhost:3000/campaigns", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error en la creación de la campaña");
+      }
+
+      window.location.href = "/campaigns";    
+    } catch (error) {
+      console.error("Error al crear la campaña:", error);
+    }
+
   };
 
   return (
