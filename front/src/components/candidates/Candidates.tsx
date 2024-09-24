@@ -1,3 +1,4 @@
+'use client'
 import React from "react";
 import Cartrender from "../candidaterender/Candidaterender";
 import { getCandidates } from "@/helpers/candidate.helper";
@@ -23,21 +24,25 @@ const OrderList = async () => {
   }));
 
   return (
-    <div className="grid grid-cols-5 bg-cuartiaryColor min-h-[82vh]">
+    <>
       {usersarr && usersarr.length > 0 ? (
         usersarr.map((item) => {
           return (
-            <Link href={`/candidates/${item.id}`} key={item.id}>
-              <Cartrender key={item.id} {...item} />
-            </Link>
+            <div className="grid grid-cols-5 bg-cuartiaryColor min-h-[82vh]">
+              <Link href={`/candidates/${item.id}`} key={item.id}>
+                <Cartrender key={item.id} {...item} />
+              </Link>
+            </div>
           );
         })
       ) : (
-        <p className="text-lg text-gray-600 font-medium">
-          You don't have any products in your cart
-        </p>
+        <div className="flex justify-center items-center bg-cuartiaryColor min-h-[82vh]">
+          <p className="text-lg text-gray-600 font-medium">
+            You don't have any Candidates in this moment
+          </p>
+        </div>
       )}
-    </div>
+    </>
   );
 };
 
