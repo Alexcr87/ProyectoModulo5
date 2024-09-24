@@ -78,7 +78,7 @@ const Users = () => {
                   <td className="py-3 px-6 text-sm text-gray-700">{user.city || "N/A"}</td>
                   <td className="py-3 px-6 text-sm text-gray-700">{user.country || "N/A"}</td>
                   <td className="py-3 px-6 text-sm text-gray-700">
-                    <a href={`/candidate/${user.id}`} className="text-blue-500 hover:text-blue-700 font-medium">
+                    <a href={`/createCandidate/${user.id}`} className="text-blue-500 hover:text-blue-700 font-medium">
                       Postular Candidato
                     </a>
                   </td>

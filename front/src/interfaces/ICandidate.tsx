@@ -5,6 +5,7 @@ interface ICandidate{
     list?: string,
     campaignDescription?: string,
     proposals?:string[],
+    campaignId?:string,
 user: {
     id: string,
     name: string,
