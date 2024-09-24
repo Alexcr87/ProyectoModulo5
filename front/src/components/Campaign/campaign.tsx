@@ -25,6 +25,7 @@ const CampaignForm = () => {
     const localUser = localStorage.getItem("userSesion");
     if (localUser) {
       const parsedUser = JSON.parse(localUser);
+      
       setUserSesion(parsedUser);
       if (parsedUser?.result?.id) {
         setFormData((prevData) => ({
@@ -59,15 +60,18 @@ const CampaignForm = () => {
       "description": formData.description,
       "location": formData.location,
       "date": formData.date.toISOString(),
-      "user": {
-        "id": formData.userId
-      }
-    }
-    console.log("Data to send:", data); // Verifica los datos que estás enviando
+      "userId": formData.userId
+    }  
+
     try {
+      const json_data = JSON.stringify(data);
+
       const response = await fetch("http://localhost:3000/campaigns", {
         method: "POST",
-        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: json_data,
       });
 
       if (!response.ok) {
