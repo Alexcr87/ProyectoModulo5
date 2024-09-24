@@ -1,5 +1,6 @@
 "use client";
 
+import Link from 'next/link';
 import React from 'react';
 
 export default function Home() {
@@ -18,9 +19,11 @@ export default function Home() {
         <p className="text-lg mb-6">
           Explora los candidatos, participa en votaciones y mantente al tanto de los resultados, todo desde una única plataforma.
         </p>
+        <Link href="/guia">
         <button className="bg-primary-color text-white px-6 py-3 rounded-md shadow-md hover:bg-orange-600 transition duration-300">
         Guía de votación
         </button>
+        </Link>
       </div>
 
       <style jsx>{`
