@@ -1,19 +1,28 @@
+"use client";
+
+import Link from 'next/link';
+import React from 'react';
+
 export default function Home() {
   return (
-    <div className="bg-cuartiaryColor h-full flex justify-center">
-      <div className="bg-white w-11/12 mt-4 rounded-t-2xl p-8 drop-shadow-2xl border-2">
-        <h1 style={{ textAlign: "center", fontSize: "24px", fontWeight: "bold", textDecoration: "underline", marginBottom: "20px" }}>
+    <div className="relative h-full w-full bg-cover bg-center" style={{ backgroundImage: "url('https://img.freepik.com/premium-zdjecie/wyborczyni-wkladajaca-kartke-do-urny-wyborczej-wybory-i-koncepcja-glosowania_77190-18358.jpg')" }}>
+      {/* Overlay para oscurecer la imagen y mejorar la legibilidad del texto */}
+      <div className="absolute inset-0 bg-black opacity-50"></div>
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white p-4">
+        <h1 className="text-4xl font-bold mb-6">
           Bienvenido a la Plataforma de Votación
         </h1>
-        <p style={{ textAlign: "center", fontSize: "18px", fontWeight: "bold", marginTop: "10px", marginBottom: "10px" }}>
-          En nuestra plataforma, te ofrecemos una experiencia sencilla y accesible para gestionar tus elecciones y candidatos. Desde el momento en que ingresas, podrás registrar nuevos candidatos, ver la lista de aquellos que ya están registrados y participar en votaciones activas.
+        <p className="text-lg mb-4">
+          Nuestra plataforma ofrece una experiencia intuitiva y accesible para que puedas gestionar elecciones de manera eficiente.
         </p>
-        <p style={{ textAlign: "center", fontSize: "18px", fontWeight: "bold", marginTop: "10px", marginBottom: "10px" }}>
-          Nuestra misión es facilitar el proceso de votación, asegurando que cada voz sea escuchada y cada voto cuente. Aquí encontrarás un entorno amigable donde podrás explorar propuestas, conocer a los candidatos y hacer tu elección informada.
+        <p className="text-lg mb-6">
+          Explora los candidatos, participa en votaciones y mantente al tanto de los resultados, todo desde una única plataforma.
         </p>
-        <p style={{ textAlign: "center", fontSize: "18px", fontWeight: "bold", marginTop: "10px", marginBottom: "10px" }}>
-          Mantente informado sobre las últimas noticias y anuncios relacionados con las votaciones. Te invitamos a registrarte como usuario y a participar activamente en el futuro de nuestra comunidad.
-        </p>
+        <Link href="/guia">
+        <button className="bg-primaryColor text-white px-6 py-3 rounded-md shadow-md hover:bg-orange-600 transition duration-300">
+        Guía de votación
+        </button>
+        </Link>
       </div>
     </div>
   );

@@ -1,11 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IRegisterError, IRegisterProps } from "./TypesRegister";
 import { importUser, register } from "@/helpers/auth.helper";
 import { validateRegisterForm } from "@/helpers/validateRegister";
 import Boton from "../boton/Boton";
+import Swal from "sweetalert2";
+import { IloginProps } from "@/interfaces/ILogin";
 
 const Register = () => {
   const router = useRouter();
@@ -26,6 +28,8 @@ const Register = () => {
   const [cities, setCities] = useState<string[]>([]);
   const [file, setFile] = useState<File | null>(null);
   const [touched, setTouched] = useState<IRegisterError>(initialState);
+  const [userSesion, setUserSesion] = useState<IloginProps>();
+  const pathname = usePathname();
 
   const handleBlur = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name } = event.target;
@@ -35,6 +39,15 @@ const Register = () => {
     });
   };
   
+  useEffect(() => {
+    const localUser = localStorage.getItem("userSesion");
+    if (localUser) {
+      setUserSesion(JSON.parse(localUser));
+    }
+  }, [pathname]);
+
+  const parentId = userSesion?.result?.id
+
   const fetchCitiesByCountry = (country: string) => {
     const countryCitiesMap: Record<string, string[]> = {
       "Argentina": ["Buenos Aires", "Córdoba", "Rosario"],
@@ -75,7 +88,13 @@ const Register = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     await register(dataUser);
-    alert("Usted se registró con éxito");
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Usted se registró un usuario con éxito",
+      showConfirmButton: false,
+      timer: 1500
+    });
     router.push("/login");
   };
 

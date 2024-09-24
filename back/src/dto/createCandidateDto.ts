@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsString, MinLength, MaxLength, IsArray } from "class-validator";
 import { User } from "../entities/user.entity";
+import { Campaign } from "src/entities/campaign.entity";
 
 export class CreateCandidateDto {
 
@@ -27,4 +28,8 @@ export class CreateCandidateDto {
   @IsNotEmpty()
   @ApiProperty({ type: () => User, description: 'ID del usuario creador', example: '123e4567-e89b-12d3-a456-426614174000' })
   userId: string; 
+
+  @IsNotEmpty()
+  @ApiProperty({ type: () => Campaign, description: 'ID de la campaña' })
+  campaignId: string; 
 }

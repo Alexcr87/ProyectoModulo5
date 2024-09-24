@@ -4,15 +4,23 @@ import { IloginProps } from "@/interfaces/ILogin";
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
-export async function register(userData: IRegisterProps) {
+export async function register(userData: IRegisterProps, parentId?: string) {
   try {
-    const res = await fetch(`${APIURL}/auth/sigUp`, {
+    const url = new URL(`${APIURL}/auth/sigUp`);
+    
+    // Añadir parentId como parámetro de consulta si está disponible
+    if (parentId) {
+      url.searchParams.append("parentId", parentId);
+    }
+
+    const res = await fetch(url.toString(), {
       method: "POST",
       headers: {
         "Content-type": "application/json",
       },
       body: JSON.stringify(userData),
     });
+
     if (!res.ok) {
       const errorData = await res.json(); // Obtener los detalles del error
       throw new Error(
@@ -28,40 +36,19 @@ export async function register(userData: IRegisterProps) {
   }
 }
 
-export async function registerCandidate(userData: IRegisterCandidate) {
-  try {
-    const res = await fetch(`${APIURL}/candidates`, {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
-    if (!res.ok) {
-      const errorData = await res.json(); // Obtener los detalles del error
-      throw new Error(
-        `Error ${res.status}: ${errorData.message || "Failed to register"}`
-      );
-    }
-    return await res.json();
-  } catch (error: any) {
-    console.error("Registration error:", error.message);
-    throw new Error(
-      error.message || `Unknown error occurred during registration.`
-    );
-  }
-}
-
-export async function importUser(file: File) {
+export async function importUser(file: File, parentId?: string) {
   const formData = new FormData();
   formData.append("file", file);
 
   try {
-    const response = await fetch(`${APIURL}/user/import`, {
+    // Construir la URL con el parentId como parámetro de consulta
+    const url = parentId ? `${APIURL}/user/import?parentId=${parentId}` : `${APIURL}/user/import`;
+
+    const response = await fetch(url, {
       method: "POST",
       body: formData,
       headers: {
-        // No incluyas el encabezado 'Content-Type'
+        // No es necesario incluir el encabezado 'Content-Type' porque fetch lo maneja automáticamente
       },
     });
 
@@ -69,18 +56,18 @@ export async function importUser(file: File) {
       throw new Error(`Error ${response.status}: ${response.statusText}`);
     }
 
-    // Verifica si la respuesta tiene contenido antes de intentar parsearla
     const contentType = response.headers.get("content-type");
     if (contentType && contentType.includes("application/json")) {
       return await response.json();
     } else {
-      throw new Error("Respuesta no es JSON");
+      throw new Error("La respuesta no es JSON");
     }
   } catch (error) {
-    console.error("File upload error:", error);
+    console.error("Error al subir el archivo:", error);
     throw error;
   }
 }
+
 
 export async function login (userData: IloginProps){
   try{

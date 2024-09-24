@@ -11,6 +11,8 @@ import { RolesGuard } from "src/Guards/roles.guard";
 import { AuthGuard } from "src/Guards/auth.guard";
 import { User } from "src/entities/user.entity";
 import { Role } from "src/entities/roles.entity";
+import { CreateUserDtoByAdmin } from "src/dto/createUserByAdminDto";
+
 
 
 
@@ -36,11 +38,11 @@ export class UserController {
 
   
 
-  @ApiBearerAuth()
+
   @Get(":id")
   @HttpCode(200)
-  @Roles('admin')
-  @UseGuards( AuthGuard , RolesGuard)
+ 
+  
   async getUserById(@Param("id", ParseUUIDPipe) id:string){
     try {
       return await this.userService.getUserById(id)
@@ -54,10 +56,10 @@ export class UserController {
   }
   
   
-  @ApiBearerAuth()
+  
   @Get("/dni/:dni")
-  @Roles()
-  @UseGuards( AuthGuard , RolesGuard)
+  
+ 
   @HttpCode(200)
   async findUserByDni(@Param("dni") dni:number ){
     try {
@@ -76,10 +78,10 @@ export class UserController {
     }
   }
 
-  @ApiBearerAuth()
+  
   @Get("/email/:email")
-  @Roles('moderator')
-  @UseGuards( AuthGuard , RolesGuard)
+ 
+  
   @HttpCode(200)
   async findUserByEmail(@Param("email") email:string ){
     try {
@@ -134,6 +136,8 @@ export class UserController {
     @Body() createUserDto: CreateUserDto
   ) {
     try {     
+      console.log(parentId, "parentid");
+      
       return await this.userService.createUser(createUserDto,parentId)
     } catch (error) {
       if (error.response && error.response.error === 'Unauthorized') {
@@ -156,6 +160,7 @@ export class UserController {
   }))
   @ApiOperation({ summary: 'Import users from an Excel file' })
   @ApiConsumes('multipart/form-data')
+  @ApiQuery({ name: 'parentId', required: false, description: 'Optional parent ID to filter users' })
   @ApiBody({
     description: 'Excel file to import users',
     schema: {
@@ -182,13 +187,32 @@ export class UserController {
         }),*/
       ],
     }),
-  ) file: Express.Multer.File) {
+  ) file: Express.Multer.File, @Query("parentId") parentId: string )
+  {
     console.log(file)
     if (!file) {
       throw new BadRequestException('No file provided');
     }
       const filePath = file.path; // Ruta del archivo guardado
-      return await this.userService.importUsers(filePath);  
+      return await this.userService.importUsers(filePath, parentId);  
+  }
+
+  @Post("/byadmin")
+  @HttpCode(201)
+  @ApiQuery({ name: 'parentId', required: false, description: 'Optional parent ID to filter users' })
+  async createUserByAdmin(
+    @Query("parentId") parentId: string,
+    @Body() createUserDto: CreateUserDtoByAdmin
+  ) {
+    try {     
+      return await this.userService.createUserByAdmin(createUserDto,parentId)
+    } catch (error) {
+      if (error.response && error.response.error === 'Unauthorized') {
+        throw new ConflictException(error.response.message);
+      } else {
+        throw new InternalServerErrorException('Error creating user');
+      }
+    }
   }
 
 }

@@ -15,28 +15,25 @@ export class UserSeedService {
   ) {}
 
   async seed() {
-    // Verifica si el usuario admin ya existe
     const existingUser = await this.userRepository.findOne({
-      where: { email: 'admin@example.com' }, // Puedes cambiar este email según prefieras
+      where: { email: 'admin@example.com' }, 
     });
 
     if (!existingUser) {
       // Busca el rol "admin"
       const adminRole = await this.roleRepository.findOne({ where: { name: 'admin' } });
 
-      // Crea el usuario admin
+    
       const adminUser = this.userRepository.create({
         name: 'Admin User',
-        dni: 12345678, // Cambia por un DNI que prefieras
+        dni: 12345678,
         email: 'admin@example.com',
-        password: await bcrypt.hash('AdminPassword123!', 10), // Cambia la contraseña y asegúrate de encriptarla
+        password: await bcrypt.hash('developer', 10),
         address: '123 Admin St',
         city: 'Admin City',
         country: 'Admin Country',
-        roles: [adminRole], // Relaciona el rol admin
+        roles: [adminRole], 
       });
-
-      // Guarda el usuario en la base de datos
       await this.userRepository.save(adminUser);
     }
   }

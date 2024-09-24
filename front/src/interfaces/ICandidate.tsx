@@ -1,5 +1,3 @@
-
-
 interface ICandidate{
     id?: string,
     postulation?: string,

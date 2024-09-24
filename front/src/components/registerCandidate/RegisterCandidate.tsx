@@ -4,7 +4,6 @@ import Boton from "../boton/Boton";
 import Image from "next/image";
 import { IRegisterCandidate, IRegisterCandidateError, IRegisterCandidateProps } from "./TypesRegisterCandidate";
 import { ValidateFormCandidate } from "@/helpers/validateRegisterCandidate";
-import { registerCandidate } from "@/helpers/auth.helper";
 
 const RegisterCandidate = () => {
     const initialState = {
@@ -46,7 +45,6 @@ const RegisterCandidate = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
-        await registerCandidate(proposalOther)
     }
     //funcion para ir cargando las propuestas antes de enviar el formulario
     const handleAddProporsal = ()=>{
