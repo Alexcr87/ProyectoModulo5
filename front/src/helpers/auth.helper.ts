@@ -1,4 +1,5 @@
-import { IRegisterProps } from "@/components/Register/TypesRegister";
+import {  IRegisterProps } from "@/components/Register/TypesRegister";
+import { IRegisterCandidate } from "@/components/registerCandidate/TypesRegisterCandidate";
 import { IloginProps } from "@/interfaces/ILogin";
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;

@@ -12,7 +12,7 @@ return (
   </div>
   <div className="px-6 pt-2">
     <div className="flex justify-center">
-      <p className="font-bold text-2xl">{candidate.user.name}</p>
+      <p className="font-bold text-2xl capitalize">{candidate.user.name}</p>
     </div>
       <div className="flex flex-col">
         <p className="font-bold">Postulacion:</p>

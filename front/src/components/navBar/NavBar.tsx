@@ -20,8 +20,8 @@ const NavBar = () => {
     useEffect(() => {
         const localUser = localStorage.getItem("userSesion")
         setUserSesion(JSON.parse(localUser!));
+    },[pathname])
 
-    }, [pathname])
 
     const handleClose = () => {
         localStorage.clear()
@@ -48,6 +48,11 @@ const NavBar = () => {
         setDropdownOpen(!isDropdownOpen) // Alterna el estado del dropdown de Usuarios
     }
 
+    const closeDropdown = ()=>{
+        setCampaignDropdownOpen(false)
+        setDropdownOpen(false)
+    }
+
     const toggleCampaignDropdown = () => {
         setCampaignDropdownOpen(!isCampaignDropdownOpen) // Alterna el estado del dropdown de Campañas
     }
@@ -72,10 +77,12 @@ const NavBar = () => {
 
     return (
         <nav className='bg-primaryColor h-14 pl-8 flex items-center justify-between fixed w-full z-50'>
-            <div className='flex items-center'>
-                <Image src="/images/logo.png" alt="imagenLogo" width={40} height={40} />
-                <h2 className='text-cuartiaryColor'>VotingSystem</h2>
-            </div>
+            <Link href="/">
+                <div className='flex items-center'>
+                    <Image src="/images/logo.png" alt="imagenLogo" width={40} height={40} />
+                    <h2 className='text-cuartiaryColor'>VotingSystem</h2>
+                </div>
+            </Link>
             <div>
                 <ul className='flex gap-4 pr-8 text-cuartiaryColor'>
                     {!userSesion ? (
@@ -99,8 +106,8 @@ const NavBar = () => {
                                 </button>
                                 {isCampaignDropdownOpen && (
                                     <div className="dropdown-menu absolute bg-white text-black p-2 shadow-md">
-                                        <Link href="/campaign" className="block px-4 py-2 hover:bg-gray-200">Crear campaña</Link>
-                                        <Link href="/campaigns" className="block px-4 py-2 hover:bg-gray-200">Mis campañas</Link>
+                                        <Link href="/campaign" className="block px-4 py-2 hover:bg-primaryColor hover:text-cuartiaryColor" onClick={closeDropdown}>Crear campaña</Link>
+                                        <Link href="/campaigns" className="block px-4 py-2 hover:bg-primaryColor hover:text-cuartiaryColor" onClick={closeDropdown}>Mis campañas</Link>
                                     </div>
                                 )}
                             </li>
@@ -111,8 +118,8 @@ const NavBar = () => {
                                 </button>
                                 {isDropdownOpen && (
                                     <div className="dropdown-menu absolute bg-white text-black p-2 shadow-md">
-                                        <Link href="/register" className="block px-4 py-2 hover:bg-gray-200">Crear usuario</Link>
-                                        <Link href="/users" className="block px-4 py-2 hover:bg-gray-200">Mis usuarios</Link>
+                                        <Link href="/register" className="block px-4 py-2 hover:bg-primaryColor hover:text-cuartiaryColor" onClick={closeDropdown}>Crear usuario</Link>
+                                        <Link href="/users" className="block px-4 py-2 hover:bg-primaryColor hover:text-cuartiaryColor" onClick={closeDropdown}>Mis usuarios</Link>
                                     </div>
                                 )}
                             </li>
