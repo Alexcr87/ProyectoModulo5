@@ -11,10 +11,6 @@ import { MailService } from "../mail/mail.service";
 import { generateRandomPassword } from "src/helpers/password.helper"
 import { OrganizationalStructure} from "src/entities/organizationalStructure.entity";
 
-
-
-
-
 @Injectable()
 export class UserService{
   constructor(

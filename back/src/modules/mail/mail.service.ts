@@ -15,12 +15,27 @@ export class MailService {
   }
 
   async sendWelcomeEmail(email: string, name: string) {
+    const htmlContent1=
+   `<h1>Estimado/a ${name},</h1>
+    <p>¡Bienvenido/a a Gestion Electoral 2024! Estamos encantados de tenerte con nosotros.</p>
+    <p>Para comenzar a utilizar tu cuenta, por favor solo opta por el email y password que haz ingresado al registrarte</p>
+    <p>Atentamente,</p>
+    <p><strong>El Equipo de Gestion Electoral 2024</strong></p>`;
     const mailOptions = {
       from: process.env.EMAIL_FROM,
       to: email,
       subject: '¡Bienvenido Gestion Electoral 2024!',
       template: './welcome',
+      text: `Estimado/a ${name},
+
+¡Bienvenido/a a Gestion Electoral 2024! Estamos encantados de tenerte con nosotros.
+
+Para comenzar a utilizar tu cuenta, por favor solo opta por el email y password que haz ingresado al registrarte.
+
+Atentamente,
+El Equipo de Gestion Electoral 2024`,
       context: { name },
+      html: htmlContent1
     };
 
     await transporter.sendMail(mailOptions);
@@ -50,8 +65,27 @@ export class MailService {
       from: process.env.EMAIL_FROM,
       to: email,
       subject: 'Bienvenido a Gestion Electoral 2024 - Información Importante de Acceso',
-      text: 'Tu cuenta ha sido creada. Por favor revisa este correo para más instrucciones.',  // Texto alternativo si el cliente de correo no admite HTML
-      html: htmlContent,
+      text:`¡Bienvenido/a a Gestion Electoral 2024! Estamos encantados de tenerte con nosotros.
+
+  Para comenzar a utilizar tu cuenta, por favor usa la siguiente contraseña temporal para tu primer inicio de sesión:
+
+  Contraseña Temporal: ${password}
+
+  Por razones de seguridad, te solicitamos que cambies esta contraseña temporal inmediatamente después de iniciar sesión por primera vez.
+
+  ¿Cómo cambiar tu contraseña?
+  1. Inicia sesión en tu cuenta.
+  2. Dirígete a la sección de 'Configuración' o 'Mi Perfil'.
+  3. Selecciona la opción 'Cambiar Contraseña'.
+  4. Sigue las instrucciones para establecer una nueva contraseña.
+
+  Si tienes alguna pregunta o necesitas asistencia, no dudes en contactar a nuestro equipo de soporte en gestion electoral 2024.
+
+  Gracias por elegir Gestion Electoral 2024. ¡Esperamos que disfrutes de nuestra plataforma!
+
+  Atentamente,
+  El Equipo de Gestion Electoral 2024`,
+       html: htmlContent,
     };
 
     await transporter.sendMail(mailOptions);

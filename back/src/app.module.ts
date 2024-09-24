@@ -11,6 +11,8 @@ import { RoleSeedService } from './seeder/seed.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { CampaignModule } from './modules/campaign/campaign.module';
+import { SeedModule } from './seeder/seed.module';
+import { UserSeedService } from './seeder/user.seed.service';
 
 
 @Module({
@@ -29,6 +31,7 @@ import { CampaignModule } from './modules/campaign/campaign.module';
   CloudinaryModule,
   RoleModule,
   CampaignModule,
+  SeedModule,
   JwtModule.register({
     global:true,
     signOptions:{expiresIn:"1h"},
@@ -40,10 +43,14 @@ import { CampaignModule } from './modules/campaign/campaign.module';
   exports: [],
 })
 export class AppModule implements OnModuleInit {
-  constructor(private readonly roleSeedService: RoleSeedService) {}
+  constructor(
+    private readonly roleSeedService: RoleSeedService,
+    private readonly userSeedService: UserSeedService,
+  ) {}
 
-  // Ejecutamos la precarga al iniciar el módulo
   async onModuleInit() {
+    // Ejecuta el seed de roles y usuarios cuando la app se inicie
     await this.roleSeedService.seed();
+    await this.userSeedService.seed();
   }
 }
