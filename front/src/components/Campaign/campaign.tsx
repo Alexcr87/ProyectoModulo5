@@ -120,7 +120,7 @@ const CampaignForm = () => {
           padding: 1rem;
           border-radius: 8px;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-          background-color: #f9f9f9; /* Color de fondo */
+          background-color: var(--cuartiary-color); /* Color de fondo */
         }
 
         label {
@@ -137,13 +137,13 @@ const CampaignForm = () => {
         }
 
         input:focus, textarea:focus {
-          border-color: #0070f3; /* Cambia el color del borde al enfocar */
+          border-color: var(--primary-color); /* Cambia el color del borde al enfocar */
           outline: none; /* Quita el contorno por defecto */
         }
 
         button {
           padding: 0.5rem 1rem;
-          background-color: #0070f3;
+          background-color: var(--primary-color);
           color: white;
           border: none;
           border-radius: 4px;
@@ -152,7 +152,7 @@ const CampaignForm = () => {
         }
 
         button:hover {
-          background-color: #005bb5; /* Color de fondo al pasar el mouse */
+          background-color: #c54e03; /* Color de fondo al pasar el mouse */
         }
       `}</style>
     </form>
