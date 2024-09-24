@@ -1,6 +1,6 @@
 import {  IRegisterProps } from "@/components/Register/TypesRegister";
-import { IRegisterCandidate } from "@/components/registerCandidate/TypesRegisterCandidate";
 import { IloginProps } from "@/interfaces/ILogin";
+import Swal from 'sweetalert2';
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
@@ -88,7 +88,22 @@ export async function login (userData: IloginProps){
       }
 
   } catch (error: any){
-      alert("Usuario o contraseña no coincide con usuario registrado")
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });
+    Toast.fire({
+      icon: "error",
+      title: "incorrect username and/or password"
+    });
+    return
   }
   
 }
