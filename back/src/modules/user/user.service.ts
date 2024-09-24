@@ -155,14 +155,12 @@ export class UserService{
   }
 
   async createUser(createUserDto: CreateUserDto, parentId?: string): Promise<Omit<User, 'password'>> {
-    console.log(parentId)
-    // Verificar si el usuario ya existe por DNI
+
     const user = await this.userRepository.findOneBy({ dni: createUserDto.dni });
     if (user) {
       throw new UnauthorizedException(`User with dni: ${createUserDto.dni} already exists`);
     }
   
-    // Verificar si el usuario ya existe por email
     const userByEmail = await this.userRepository.findOneBy({ email: createUserDto.email });
     if (userByEmail) {
       throw new UnauthorizedException(`User with email: ${createUserDto.email} already exists`);
@@ -172,13 +170,12 @@ export class UserService{
     const password = createUserDto.password || generateRandomPassword();
     const hashedPassword = await bcrypt.hash(password, 10);
   
-    // Asignar rol predeterminado
     const defaultRole = await this.roleRepository.findOne({ where: { id: 3 } });
     if (!defaultRole) {
       throw new BadRequestException('Default role not found');
     }
   
-    // Verificar roles opcionales
+  
     let userRoles: Role[] = [defaultRole];
     if (createUserDto.roles && createUserDto.roles.length > 0) {
       userRoles = await this.roleRepository.findBy({ id: In(createUserDto.roles) });
@@ -187,9 +184,7 @@ export class UserService{
       }
     }
   
-   
   
-    // Guardar el usuario en la base de datos
 
   let newUser = this.userRepository.create({})
     // Enviar emails según si la contraseña fue generada o no
@@ -214,16 +209,13 @@ export class UserService{
       await this.mailService.sendWelcomeEmail(newUser.email, newUser.name);
     }
     
-  
-    // Si se proporcionó `parentId`, crear la relación en `StructureOrganization`
+
     if (parentId) {
       const parentUser = await this.userRepository.findOneBy({ id: parentId });
       if (!parentUser) {
         throw new BadRequestException(`Parent user with id: ${parentId} not found`);
       }
-      console.log(parentUser)
   
-      // Verificar si el nuevo usuario ya está relacionado como hijo en otra estructura
       const existingRelation = await this.structureRepository.findOne({
         where: { child: { id: newUser.id } },
       });
@@ -270,7 +262,6 @@ export class UserService{
         const existingUser = await this.findUserByEmailxlsx(user.email);
         if (!existingUser) {
             await this.createUser(user);
-            console.log(`User ${user.email} added successfully.`);
             addedUsers.push(user.email);
         } else {
             console.log(`User ${user.email} already exists. Skipping...`);

@@ -1,5 +1,3 @@
-import ICandidate from "./ICandidate"
-
 interface IUsers {
 
     id: number,
@@ -10,9 +8,7 @@ interface IUsers {
     address?: string,
     city?: string,
     country?: string,
-    rol?: string,
-    suffrage?: boolean,
-    candidate?: ICandidate
+    rol?: string
 }
 
 

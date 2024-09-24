@@ -39,7 +39,6 @@ const Users = () => {
         const data = await response.json();
         setUsers(data);
       } catch (error) {
-        console.error("Error fetching users:", error);
       } finally {
         setLoading(false);
       }

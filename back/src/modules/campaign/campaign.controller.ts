@@ -21,4 +21,9 @@ export class CampaignController {
   async findOne(@Param('id') id: string): Promise<Campaign> {
     return this.campaignService.findOne(id);
   }
+
+  @Get('user/:userId')
+    async getCampaignsByUserId(@Param('userId') userId: string): Promise<Campaign[]> {
+        return this.campaignService.getCampaignsByUserId(userId);
+    }
 }
