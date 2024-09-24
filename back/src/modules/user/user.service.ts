@@ -172,7 +172,7 @@ export class UserService{
     const password = createUserDto.password || generateRandomPassword();
     const hashedPassword = await bcrypt.hash(password, 10);
   
-    const defaultRole = await this.roleRepository.findOne({ where: { id: 3 } });
+    const defaultRole = await this.roleRepository.findOne({ where: { id: 4 } });
     if (!defaultRole) {
       throw new BadRequestException('Default role not found');
     }
@@ -253,7 +253,7 @@ export class UserService{
     return users;
   }
   
-  async importUsers(filePath: string): Promise<{ addedUsers: string[], skippedUsers: string[] }>{
+  async importUsers(filePath: string, parentId:string): Promise<{ addedUsers: string[], skippedUsers: string[] }>{
     if (!filePath) {
       throw new BadRequestException('file not selected')
     }
@@ -263,7 +263,7 @@ export class UserService{
     for (const user of users) {
         const existingUser = await this.findUserByEmailxlsx(user.email);
         if (!existingUser) {
-            await this.createUser(user);
+            await this.createUser(user, parentId);
             addedUsers.push(user.email);
         } else {
             console.log(`User ${user.email} already exists. Skipping...`);
@@ -310,8 +310,6 @@ export class UserService{
         throw new BadRequestException('Some roles not found');
       }
     }
-  
-  
 
   let newUser = this.userRepository.create({})
     // Enviar emails según si la contraseña fue generada o no
@@ -326,8 +324,6 @@ export class UserService{
     await this.userRepository.save(newUser);
       await this.mailService.sendPasswordEmail(newUser.email, newUser.name, password);
    
-    
-
     if (parentId) {
       const parentUser = await this.userRepository.findOneBy({ id: parentId });
       if (!parentUser) {
