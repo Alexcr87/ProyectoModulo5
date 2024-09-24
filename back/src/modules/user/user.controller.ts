@@ -136,8 +136,6 @@ export class UserController {
     @Body() createUserDto: CreateUserDto
   ) {
     try {     
-      console.log(parentId, "parentid");
-      
       return await this.userService.createUser(createUserDto,parentId)
     } catch (error) {
       if (error.response && error.response.error === 'Unauthorized') {
@@ -189,7 +187,6 @@ export class UserController {
     }),
   ) file: Express.Multer.File, @Query("parentId") parentId: string )
   {
-    console.log(file)
     if (!file) {
       throw new BadRequestException('No file provided');
     }

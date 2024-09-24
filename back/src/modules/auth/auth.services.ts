@@ -47,7 +47,6 @@ export class AuthService {
                 email:user.email,
                 roles:user.roles.map(role => role.name)
             }
-            console.log(userPayload.roles, "payload.rol");
             const token =this.jwtService.sign(userPayload)
             const { password: excludedPassword, ...result } = user;
             return {succes: 'Login Successful, Your session will expire in 1 hour', token, result}

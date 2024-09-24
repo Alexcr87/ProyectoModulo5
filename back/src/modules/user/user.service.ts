@@ -42,7 +42,7 @@ export class UserService{
           relations: ['child'], // Carga la relación child
         });
   
-        console.log(childRelations, "CR");
+
   
         // Accede a childId
         const childIds = childRelations.map(rel => rel.child.id); // Accede a child.id
