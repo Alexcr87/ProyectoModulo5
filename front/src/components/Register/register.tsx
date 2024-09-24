@@ -1,12 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IRegisterError, IRegisterProps } from "./TypesRegister";
 import { importUser, register } from "@/helpers/auth.helper";
 import { validateRegisterForm } from "@/helpers/validateRegister";
 import Boton from "../boton/Boton";
 import Swal from 'sweetalert2'
+import { IloginProps } from "@/interfaces/ILogin";
 
 
 
@@ -29,6 +30,8 @@ const Register = () => {
   const [cities, setCities] = useState<string[]>([]);
   const [file, setFile] = useState<File | null>(null);
   const [touched, setTouched] = useState<IRegisterError>(initialState);
+  const [userSesion, setUserSesion] = useState<IloginProps>();
+  const pathname = usePathname();
 
   const handleBlur = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name } = event.target;
@@ -43,8 +46,14 @@ const Register = () => {
     const selectedFile = event.target.files?.[0] || null;
     setFile(selectedFile);
   };
+  useEffect(() => {
+    const localUser = localStorage.getItem("userSesion");
+    if (localUser) {
+      setUserSesion(JSON.parse(localUser));
+    }
+  }, [pathname]);
 
-  
+  const parentId = userSesion?.result?.id
 
   const handleUpload = async () => {
     if (!file) {
@@ -53,19 +62,19 @@ const Register = () => {
         title: "Oops...",
         text: "Por favor, selecciona un archivo.",
       });
-        return;
+      return;
     }
-    
+  
     try {
-        const response = await importUser(file);
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Archivo subido con éxito",
-          showConfirmButton: false,
-          timer: 1500
-        });
-        router.push("/users");
+      await importUser(file, parentId); // Pasa el parentId como argumento
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Archivo subido con éxito",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      router.push("/users");
     } catch (error) {
       Swal.fire({
         position: "center",
@@ -75,7 +84,7 @@ const Register = () => {
         timer: 1500
       });
     }
-};
+  };
 
   const fetchCitiesByCountry = (country: string) => {
     const countryCitiesMap: Record<string, string[]> = {
@@ -116,16 +125,33 @@ const Register = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await register(dataUser);
-    Swal.fire({
-      position: "top-end",
-      icon: "success",
-      title: "Usted se registró con éxito",
-      showConfirmButton: false,
-      timer: 1500
-    });
-    router.push("/login");
+    
+    const userDataWithParentId = {
+      ...dataUser,
+    };
+  
+    try {
+      const result = await register(userDataWithParentId, parentId); // Pasa parentId aquí
+      console.log(result, "Resultado del registro");
+  
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Usted se registró con éxito",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      
+      router.push("/users");
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "error.message", // Mostrar mensaje de error en caso de que falle
+      });
+    }
   };
+  
 
   useEffect(() => {
     const errors = validateRegisterForm(dataUser);
@@ -256,7 +282,7 @@ const Register = () => {
               type="submit"
               disabled={!isFormValid}
             >
-              Register
+              Registrar
             </button>
             <img
               src="/images/registerImage.png"
