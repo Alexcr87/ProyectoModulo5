@@ -22,6 +22,7 @@ const NavBar = () => {
         setUserSesion(JSON.parse(localUser!));
     },[pathname])
 
+
     const handleClose = () => {
         localStorage.clear()
         setUserSesion(undefined);
