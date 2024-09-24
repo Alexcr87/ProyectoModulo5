@@ -6,6 +6,9 @@ import { IRegisterError, IRegisterProps } from "./TypesRegister";
 import { importUser, register } from "@/helpers/auth.helper";
 import { validateRegisterForm } from "@/helpers/validateRegister";
 import Boton from "../boton/Boton";
+import Swal from 'sweetalert2'
+
+
 
 const Register = () => {
   const router = useRouter();
@@ -45,16 +48,32 @@ const Register = () => {
 
   const handleUpload = async () => {
     if (!file) {
-        alert("Por favor, selecciona un archivo.");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Por favor, selecciona un archivo.",
+      });
         return;
     }
     
     try {
         const response = await importUser(file);
-        alert("Archivo subido con éxito");
-        router.push("/login");
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Archivo subido con éxito",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        router.push("/users");
     } catch (error) {
-        alert(`Error al subir el archivo`);
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error al subir el archivo",
+        showConfirmButton: false,
+        timer: 1500
+      });
     }
 };
 
@@ -98,7 +117,13 @@ const Register = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     await register(dataUser);
-    alert("Usted se registró con éxito");
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: "Usted se registró con éxito",
+      showConfirmButton: false,
+      timer: 1500
+    });
     router.push("/login");
   };
 

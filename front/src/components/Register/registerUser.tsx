@@ -6,6 +6,7 @@ import { IRegisterError, IRegisterProps } from "./TypesRegister";
 import { importUser, register } from "@/helpers/auth.helper";
 import { validateRegisterForm } from "@/helpers/validateRegister";
 import Boton from "../boton/Boton";
+import Swal from "sweetalert2";
 
 const Register = () => {
   const router = useRouter();
@@ -75,7 +76,13 @@ const Register = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     await register(dataUser);
-    alert("Usted se registró con éxito");
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: "Usted se registró con éxito",
+      showConfirmButton: false,
+      timer: 1500
+    });
     router.push("/login");
   };
 
