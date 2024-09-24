@@ -6,6 +6,7 @@ import { CreateCandidateDto } from "../../dto/createCandidateDto";
 import { User } from "../../entities/user.entity";
 import { CloudinaryService } from '../../cloudinary/cloudinary.service';
 import { Role } from "src/entities/roles.entity";
+import { Campaign } from "src/entities/campaign.entity";
 
 
 @Injectable()
@@ -18,15 +19,23 @@ export class CandidateService {
     private readonly cloudinaryService: CloudinaryService,
     @InjectRepository(Role) 
     private roleRepository: Repository<Role>,
+    @InjectRepository(Campaign) 
+    private campaignRepository: Repository<Campaign>,
   ) {}
 
   async create(createCandidateDto: CreateCandidateDto, file: Express.Multer.File): Promise<Candidate> {
-    const { userId, ...candidateData } = createCandidateDto;
+    const { userId, campaignId, ...candidateData } = createCandidateDto;
   
     const user = await this.userRepository.findOne({
       where: { id: userId },
       relations: ['roles'],  
     });
+
+    const campaign = await this.campaignRepository.findOne({
+      where: { id: campaignId },
+    });
+
+  
   
     if (!user) {
       throw new NotFoundException('User not found');
@@ -55,13 +64,14 @@ export class CandidateService {
       const uploadResult = await this.cloudinaryService.uploadFile(file.buffer, file.originalname);
       imageUrl = uploadResult;  // URL segura de Cloudinary
     }
-    console.log(imageUrl)
 
+    
     const candidate = this.candidateRepository.create({
       ...candidateData,
       proposals: proposalString,  
       imgUrl: imageUrl,  // Almacenar la URL de la imagen si existe
-      user,  
+      user, 
+      campaign 
     });
     return this.candidateRepository.save(candidate);
   }

@@ -19,5 +19,6 @@ export class CreateCampaignDto {
 
   @IsUUID()
   @IsNotEmpty()
-  userId: string;  // El ID del usuario que crea la campaña
+  userId: string;  
+  
 }

@@ -1,15 +1,20 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Image from 'next/image'
 import Link from "next/link"
 import { usePathname } from 'next/navigation'
 import { IloginProps } from '@/interfaces/ILogin'
-import { useRouter } from 'next/navigation' 
+import { useRouter } from 'next/navigation'
 
 const NavBar = () => {
     const router = useRouter()
     const [userSesion, setUserSesion] = useState<IloginProps>()
+    const [isDropdownOpen, setDropdownOpen] = useState(false) // Estado para el dropdown de Usuarios
+    const [isCampaignDropdownOpen, setCampaignDropdownOpen] = useState(false) // Estado para el dropdown de Campañas
     const pathname = usePathname()
+
+    const campaignDropdownRef = useRef<HTMLLIElement>(null); // Referencia al li del dropdown de campañas
+    const usersDropdownRef = useRef<HTMLLIElement>(null); // Referencia al li del dropdown de usuarios
 
     useEffect(() => {
         const localUser = localStorage.getItem("userSesion")
@@ -24,6 +29,32 @@ const NavBar = () => {
         router.push("/")
     }
 
+    const toggleDropdown = () => {
+        setDropdownOpen(!isDropdownOpen) // Alterna el estado del dropdown de Usuarios
+    }
+
+    const toggleCampaignDropdown = () => {
+        setCampaignDropdownOpen(!isCampaignDropdownOpen) // Alterna el estado del dropdown de Campañas
+    }
+
+    const handleClickOutside = (event: MouseEvent) => {
+        // Si se hace clic fuera del dropdown de campañas
+        if (campaignDropdownRef.current && !campaignDropdownRef.current.contains(event.target as Node)) {
+            setCampaignDropdownOpen(false);
+        }
+        // Si se hace clic fuera del dropdown de usuarios
+        if (usersDropdownRef.current && !usersDropdownRef.current.contains(event.target as Node)) {
+            setDropdownOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
     return (
         <nav className='bg-primaryColor h-14 pl-8 flex items-center justify-between fixed w-full z-50'>
             <div className='flex items-center'>
@@ -32,7 +63,6 @@ const NavBar = () => {
             </div>
             <div>
                 <ul className='flex gap-4 pr-8 text-cuartiaryColor'>
-                    {/* Si no hay sesión de usuario, mostrar solo las opciones básicas */}
                     {!userSesion ? (
                         <>
                             <li>
@@ -47,19 +77,32 @@ const NavBar = () => {
                         </>
                     ) : (
                         <>
-                            {/* Opciones que solo se ven cuando hay un usuario logueado */}
-                            <li>
-                                <Link href="/register">Registrar</Link>
+                            {/* Dropdown de Campañas */}
+                            <li className="relative" ref={campaignDropdownRef}>
+                                <button onClick={toggleCampaignDropdown} className="dropdown-toggle">
+                                    Campañas
+                                </button>
+                                {isCampaignDropdownOpen && (
+                                    <div className="dropdown-menu absolute bg-white text-black p-2 shadow-md">
+                                        <Link href="/campaign" className="block px-4 py-2 hover:bg-gray-200">Crear campaña</Link>
+                                        <Link href="/campaigns" className="block px-4 py-2 hover:bg-gray-200">Mis campañas</Link>
+                                    </div>
+                                )}
+                            </li>
+                            {/* Dropdown de Usuarios */}
+                            <li className="relative" ref={usersDropdownRef}>
+                                <button onClick={toggleDropdown} className="dropdown-toggle">
+                                    Usuarios
+                                </button>
+                                {isDropdownOpen && (
+                                    <div className="dropdown-menu absolute bg-white text-black p-2 shadow-md">
+                                        <Link href="/register" className="block px-4 py-2 hover:bg-gray-200">Crear usuario</Link>
+                                        <Link href="/users" className="block px-4 py-2 hover:bg-gray-200">Mis usuarios</Link>
+                                    </div>
+                                )}
                             </li>
                             <li>
                                 <Link href="/candidates">Candidatos</Link>
-                            </li>
-                            <li>
-                                <Link href="/users">Usuarios</Link>
-                            </li>
-                           
-                            <li>
-                                <Link href="/aboutus">¿Quiénes somos?</Link>
                             </li>
                             <li>
                                 <button onClick={handleClose}>Cerrar Sesión</button>
@@ -68,6 +111,23 @@ const NavBar = () => {
                     )}
                 </ul>
             </div>
+            {/* Estilos para la lista desplegable */}
+            <style jsx>{`
+                .dropdown-toggle {
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    color: inherit;
+                    font: inherit;
+                    outline: inherit;
+                }
+
+                .dropdown-menu {
+                    min-width: 160px;
+                    z-index: 10;
+                    flex-direction: column;
+                }
+            `}</style>
         </nav>
     )
 }
