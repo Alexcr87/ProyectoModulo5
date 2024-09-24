@@ -13,7 +13,6 @@ const NavBar = () => {
     useEffect(()=>{
         const localUser = localStorage.getItem("userSesion")
         setUserSesion(JSON.parse(localUser!));
-        console.log(userSesion);
     },[pathname])
 
     const handleClose = ()=>{
