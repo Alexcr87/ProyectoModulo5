@@ -3,12 +3,13 @@ import React from 'react';
 import Link from 'next/link';
 
 interface BotonProps {
-  text: string;
-  link?: string;
-  onClick?: () => void; 
+  text: string,
+  link?: string,
+  type?: 'button' | 'submit' | 'reset',
+  onClick?: () => void
 }
 
-const Boton: React.FC<BotonProps> = ({ text, link, onClick }) => {
+const Boton: React.FC<BotonProps> = ({ text, link, type, onClick }) => {
   const handleClick = () => {
     if (onClick) {
       onClick(); 
@@ -28,6 +29,7 @@ const Boton: React.FC<BotonProps> = ({ text, link, onClick }) => {
 
   return (
     <button
+      type={type}
       className='bg-tertiaryColor text-cuartiaryColor py-2 px-8 flex justify-center rounded-full hover:scale-105 hover:bg-primaryColor duration-300'
       onClick={handleClick} 
     >
