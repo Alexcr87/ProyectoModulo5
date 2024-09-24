@@ -132,7 +132,7 @@ const Register = () => {
   
     try {
       const result = await register(userDataWithParentId, parentId); // Pasa parentId aquí
-      console.log(result, "Resultado del registro");
+ 
   
       Swal.fire({
         position: "center",
