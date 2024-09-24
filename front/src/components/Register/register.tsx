@@ -179,7 +179,7 @@ const Register = () => {
               {errors.dni && <span className="text-red-500 text-sm">{errors.dni}</span>}
             </div>
 
-            <div className="flex flex-col mt-4">
+            {/* <div className="flex flex-col mt-4">
               <input
                 id="password"
                 name="password"
@@ -191,7 +191,7 @@ const Register = () => {
                 className="border rounded-full bg-secundaryColor text-black placeholder:text-black text-left p-2 pl-3 mt-1 outline-none focus:border-tertiaryColor shadow-xl"
               />
               {touched.password && errors.password && <span className="text-red-500 text-sm">{errors.password}</span>}
-            </div>
+            </div> */}
 
             <div className="flex flex-col mt-4">
               <input
