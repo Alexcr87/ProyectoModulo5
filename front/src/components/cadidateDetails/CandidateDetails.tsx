@@ -2,11 +2,18 @@
 import React from 'react'
 import ICandidate from '@/interfaces/ICandidate'
 import Image from 'next/image'
+import Swal from 'sweetalert2'
 
 
 const CandidateDetails = async (props:ICandidate) => {
     const handleVotar = ()=>{
-        alert("se ha generado una votacion");
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Votación generada correctamente",
+        showConfirmButton: false,
+        timer: 1500
+      });
     }
     
   return (
