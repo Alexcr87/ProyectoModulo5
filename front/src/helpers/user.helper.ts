@@ -1,6 +1,6 @@
 import IUser from "@/interfaces/IUser";
 
-const APIURL = "http://localhost:3000"
+const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 export async function getCandidates(): Promise<IUser[]> {
     try {

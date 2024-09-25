@@ -12,6 +12,6 @@ export interface IRegisterCandidate {
     list:string,
     campaignDescription:string,
     proposals: string[],
-    file: string,
+    file: File | null,
     userId:string | undefined
 }
