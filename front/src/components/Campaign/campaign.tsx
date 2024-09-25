@@ -91,7 +91,7 @@ const CampaignForm = () => {
   return (
     <>
     <div className="col-start-5 col-end-9 mt-[2.5em] my-[2em] text-center text-xl">
-            REGISTRO USUARIO
+            CREAR CAMPAÑA
     </div>
     <form onSubmit={handleSubmit} className="campaign-form flex justify-center">
       <div className='flex flex-col items-center w-[40%] gap-4'>
