@@ -74,7 +74,7 @@ const CreateCandidate = ({ userId }: { userId: string }) => {
     <div className="flex max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
       <div className="w-1/2 pr-4">
         <img 
-          src="https://via.placeholder.com/300" // Reemplaza esta URL con la imagen que quieras
+          src="https://nevada.cooperatornews.com/_data/nv/articles/8302_image1.jpg?w=350" // Reemplaza esta URL con la imagen que quieras
           alt="Descripción de la imagen"
           className="rounded-lg h-full object-cover"
         />
