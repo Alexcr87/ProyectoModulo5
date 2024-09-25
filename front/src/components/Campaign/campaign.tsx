@@ -2,10 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import ICampaign from '@/interfaces/ICampaign'; 
+import Boton from '../boton/Boton';
 
 const CampaignForm = () => {
-  const [userSesion, setUserSesion] = useState<any>(); 
 
+  const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
+
+  const [userSesion, setUserSesion] = useState<any>(); 
   const [formData, setFormData] = useState<ICampaign>({
     name: '',
     description: '',
@@ -66,7 +69,7 @@ const CampaignForm = () => {
     try {
       const json_data = JSON.stringify(data);
 
-      const response = await fetch("http://localhost:3000/campaigns", {
+      const response = await fetch(`${APIURL}/campaigns`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -86,103 +89,58 @@ const CampaignForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="campaign-form">
-      <div>
-        <label htmlFor="name">Nombre de la campaña:</label>
+    <>
+    <div className="col-start-5 col-end-9 mt-[2.5em] my-[2em] text-center text-xl">
+            REGISTRO USUARIO
+    </div>
+    <form onSubmit={handleSubmit} className="campaign-form flex justify-center">
+      <div className='flex flex-col items-center w-[40%] gap-4'>
         <input
           type="text"
           id="name"
           name="name"
+          placeholder='Nombre de la campaña'
           value={formData.name}
           onChange={handleInputChange}
+          className="w-full border rounded-full bg-secundaryColor text-black placeholder:text-black text-left p-2 pl-3 mt-1 
+          outline-none focus:border-tertiaryColor shadow-xl hover:scale-105"
           required
         />
-      </div>
-
-      <div>
-        <label htmlFor="description">Descripción:</label>
         <textarea
           id="description"
           name="description"
+          placeholder='Descripción'
           value={formData.description}
           onChange={handleInputChange}
+          className="w-full border rounded-lg bg-secundaryColor h-40 text-black placeholder:text-black text-left p-2 pl-3 mt-1 
+          outline-none focus:border-tertiaryColor shadow-xl hover:scale-105"
           required
         />
-      </div>
-
-      <div>
-        <label htmlFor="location">Ubicación:</label>
         <input
           type="text"
           id="location"
           name="location"
+          placeholder='Ubicacion:'
           value={formData.location}
           onChange={handleInputChange}
+          className="w-full border rounded-full bg-secundaryColor text-black placeholder:text-black text-left p-2 pl-3 mt-1 
+          outline-none focus:border-tertiaryColor shadow-xl hover:scale-105"
           required
         />
-      </div>
-
-      <div>
-        <label htmlFor="date">Fecha:</label>
         <input
           type="date"
-          id="date"
           name="date"
+          id="date"
           value={formData.date.toISOString().substring(0, 10)}
           onChange={handleDateChange}
+          className="w-full border rounded-full bg-secundaryColor text-black placeholder:text-black text-left p-2 pl-3 mt-1 
+          outline-none focus:border-tertiaryColor shadow-xl hover:scale-105"
           required
         />
+        <Boton text="Crear Campaña" type="submit"/>
       </div>
-      <button type="submit">Crear campaña</button>
-
-      {/* Estilos básicos */}
-      <style jsx>{`
-        .campaign-form {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-          max-width: 400px;
-          margin: auto;
-          border: 1px solid #ccc;
-          padding: 1rem;
-          border-radius: 8px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-          background-color: var(--cuartiary-color); /* Color de fondo */
-        }
-
-        label {
-          font-weight: bold;
-          margin-bottom: 0.5rem; /* Margen inferior para separación */
-        }
-
-        input, textarea {
-          padding: 0.5rem;
-          border-radius: 4px;
-          border: 1px solid #ccc;
-          width: 100%;
-          transition: border-color 0.3s; /* Efecto de transición */
-        }
-
-        input:focus, textarea:focus {
-          border-color: var(--primary-color); /* Cambia el color del borde al enfocar */
-          outline: none; /* Quita el contorno por defecto */
-        }
-
-        button {
-          padding: 0.5rem 1rem;
-          background-color: var(--primary-color);
-          color: white;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          transition: background-color 0.3s; /* Efecto de transición */
-        }
-
-        button:hover {
-          background-color: #c54e03; /* Color de fondo al pasar el mouse */
-        }
-      `}</style>
     </form>
+    </>
   );
 };
 
