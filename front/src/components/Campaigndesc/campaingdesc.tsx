@@ -74,28 +74,35 @@ const Campaingdesc = () => {
         
         {/* Lógica para agregar información de candidatos */}
         {campaign.candidates && campaign.candidates.length > 0 ? (
-          campaign.candidates.map((candidate) => (
-            <div key={candidate.id} className="flex flex-row justify-between mx-4 my-4 rounded-2xl bg-white shadow dark:bg-gray-800 dark:border-gray-700">
-              <div className="relative flex flex-col text-gray-700 bg-white shadow-md bg-clip-border rounded-xl w-96">
-                <div className="relative mx-4 mt-4 overflow-hidden text-gray-700 bg-white bg-clip-border rounded-xl h-60">
-                  <img className="h-60 w-72 m-auto" src={candidate.imgUrl} alt={`imagen del candidato ${campaign.user.name}`} />
+          <div className="flex flex-wrap justify-center gap-2"> {/* Flex container con menor gap */}
+            {campaign.candidates.map((candidate) => (
+              <div
+                key={candidate.id}
+                className="flex flex-col justify-between p-4 rounded-2xl bg-white shadow-md w-72 dark:border-gray-700" // w-72 para reducir el tamaño
+              >
+                <div className="relative overflow-hidden rounded-xl h-25"> {/* Altura de imagen reducida */}
+                  <img
+                    className="h-full w-full object-cover"
+                    src={candidate.imgUrl}
+                    alt={`imagen del candidato ${campaign.user.name}`}
+                    style={{ objectFit: 'cover', height: '100%' }}
+                  />
                 </div>
-                <div className="px-6 pt-2">
-                  <div className="flex justify-center">
-                    <p className="font-bold text-2xl">{campaign.user.name}</p> {/* Nombre del usuario de la campaña */}
-                  </div>
-                  <div className="flex flex-col">
+                <div className="pt-4 text-center">
+                  <p className="font-bold text-xl">{campaign.user.name}</p> {/* Ajuste del tamaño de fuente */}
+                  <div className="mt-2">
                     <p className="font-bold">Postulación:</p>
                     <p>{candidate.postulation}</p>
-                    <p className="self-center my-4">{candidate.list}</p>
+                    <p className="my-2">{candidate.list}</p>
                   </div>
                 </div>
               </div>
-            </div>
-          ))
+            ))}
+          </div>
         ) : (
           <p>No hay candidatos disponibles.</p>
         )}
+
       </div>
     ) : (
       <p>No se encontró la campaña.</p>
