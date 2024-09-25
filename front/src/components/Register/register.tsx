@@ -298,6 +298,7 @@ const Register = () => {
             <input
               type="file"
               onChange={handleFileChange}
+              className="block p-2 text-sm text-gray-900 border border-gray-300 rounded-full cursor-pointer bg-secundaryColor hover:scale-105 focus:outline-none"
             />
             <Boton text="Subir Excel" onClick={handleUpload} />
       </div>

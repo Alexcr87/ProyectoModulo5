@@ -119,11 +119,16 @@ const RegisterCandidate = () => {
             className="border rounded-full bg-secundaryColor text-black placeholder:text-black text-left p-2 pl-3 mt-1 outline-none focus:border-tertiaryColor shadow-xl hover:scale-105"
             required
           />
+          <div>
           <input 
             type="file" 
-            value={dataCandidate.file}
             onChange={handleFileChange}
-        />
+            aria-describedby="file_input_help"  
+            id="file"
+            className="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-full cursor-pointer bg-secundaryColor hover:scale-105 focus:outline-none"
+            />
+          <p className="text-sm text-gray-500 dark:text-gray-300" id="file_input_help">PNG or JPG</p>
+          </div>
           <textarea
             id="campaignDescription"
             name="campaignDescription"
