@@ -11,8 +11,8 @@ const PricingTable = () => {
                 There are many variations of passages of Lorem Ipsum available <br/>  but the majority have suffered alteration in some form.
             </h3>
         </div>
-        <div className='grid grid-cols-3 justify-items-center w-full'>
-            <div className='w-[20vw] h-auto rounded-3xl py-4 px-16 shadow-2xl border-2'>
+        <div className='flex justify-center w-full mt-8 gap-16'>
+            <div className='w-[20vw] duration-300 ease-in-out hover:scale-110 h-auto rounded-3xl py-4 px-16 shadow-2xl border-2'>
                 <h2 className='text-lg font-bold mt-8'>Starter</h2>
                 <h3>$<span className='text-4xl font-bold'>25.00</span> Per Month</h3>
                 <h2 className='text-lg font-bold mt-12 mb-4'>Features</h2>
@@ -24,7 +24,7 @@ const PricingTable = () => {
                     <Boton>Purcharse Now</Boton>
                 </div>
             </div>
-            <div className='w-[20vw] bg-primaryColor text-white h-auto rounded-3xl py-4 px-16 shadow-2xl border-2 overflow-hidden relative'>
+            <div className='w-[20vw] duration-300 ease-in-out hover:scale-110 bg-primaryColor text-white h-auto rounded-3xl py-4 px-16 shadow-2xl border-2 overflow-hidden relative'>
                 <p
                     className='bg-white text-primaryColor p-2 absolute -rotate-90 pr-6 -right-14 font-bold top-10 rounded-lg'
                 >
@@ -40,7 +40,7 @@ const PricingTable = () => {
                     <Boton2>Purcharse Now</Boton2>
                 </div>
             </div>
-            <div className='w-[20vw] h-auto rounded-3xl py-4 px-16 shadow-2xl border-2'>
+            <div className='w-[20vw] duration-300 ease-in-out hover:scale-110 h-auto rounded-3xl py-4 px-16 shadow-2xl border-2'>
                 <h2 className='text-lg font-bold mt-8'>Premium</h2>
                 <h3>$<span className='text-4xl font-bold'>99.00</span> Per Month</h3>
                 <h2 className='text-lg font-bold mt-12 mb-4'>Features</h2>
