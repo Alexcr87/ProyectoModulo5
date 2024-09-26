@@ -3,6 +3,7 @@ import "./globals.css";
 
 import NavBar from "@/components/navBar/NavBar";
 import Footer from "@/components/footer/Footer";
+import { AuthProvider } from "@/context/Authontext";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,7 +18,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* se creo las etiquetas herder, main y footer para organizar los diferentes componentes mateniendo el footer siempre en la parte de abajo */}
+<AuthProvider>
+        
         <div className="containerPrincipal">
           <header>
             <NavBar />
@@ -29,6 +31,7 @@ export default function RootLayout({
             <Footer/>
           </footer>
         </div>
+</AuthProvider>
       </body>
     </html>
   );
