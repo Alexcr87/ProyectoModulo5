@@ -5,9 +5,11 @@ import { useEffect, useState } from "react";
 import { IRegisterError, IRegisterProps } from "./TypesRegister";
 import { importUser, register } from "@/helpers/auth.helper";
 import { validateRegisterForm } from "@/helpers/validateRegister";
-import Boton from "../boton/Boton";
+import Boton from "../ui/Boton";
 import Swal from 'sweetalert2'
 import { IloginProps } from "@/interfaces/ILogin";
+import Input from "../ui/Input";
+import InputFile from "../ui/InputFile";
 
 
 
@@ -180,114 +182,94 @@ const Register = () => {
         <div className="flex">
           <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
             <div className="flex flex-col">
-              <input
+              <Input
                 id="name"
                 name="name"
                 type="text"
                 value={dataUser.name}
                 onChange={handleChange}
                 placeholder="Nombre"
-                className="border rounded-full bg-secundaryColor text-black placeholder:text-black text-left p-2 pl-3 mt-1 outline-none focus:border-tertiaryColor shadow-xl"
               />
               {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
             </div>
 
             <div className="flex flex-col mt-4">
-              <input
+              <Input
                 id="dni"
                 name="dni"
                 type="text"
                 value={dataUser.dni}
                 onChange={handleChange}
                 placeholder="DNI"
-                className="border rounded-full bg-secundaryColor text-black placeholder:text-black text-left p-2 pl-3 mt-1 outline-none focus:border-tertiaryColor shadow-xl"
               />
               {errors.dni && <span className="text-red-500 text-sm">{errors.dni}</span>}
             </div>
-
-            {/* <div className="flex flex-col mt-4">
-              <input
-                id="password"
-                name="password"
-                type="password"
-                value={dataUser.password}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                placeholder="**********"
-                className="border rounded-full bg-secundaryColor text-black placeholder:text-black text-left p-2 pl-3 mt-1 outline-none focus:border-tertiaryColor shadow-xl"
-              />
-              {touched.password && errors.password && <span className="text-red-500 text-sm">{errors.password}</span>}
-            </div> */}
-
             <div className="flex flex-col mt-4">
-              <input
+              <Input
                 name="address"
                 type="text"
                 value={dataUser.address}
                 onChange={handleChange}
                 placeholder="Dirección"
-                className="border rounded-full bg-secundaryColor text-black placeholder:text-black text-left p-2 pl-3 mt-1 outline-none focus:border-tertiaryColor shadow-xl"
               />
               {errors.address && <span className="text-red-500 text-sm">{errors.address}</span>}
             </div>
 
             <div className="flex flex-col mt-4">
-              <input
+              <Input
                 id="email-address"
                 name="email"
                 type="email"
                 value={dataUser.email}
                 onChange={handleChange}
                 placeholder="Correo Electrónico"
-                className="border rounded-full bg-secundaryColor text-black placeholder:text-black text-left p-2 pl-3 mt-1 outline-none focus:border-tertiaryColor shadow-xl"
               />
               {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
             </div>
-           
-
           </div>
-
           <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
             <div className="flex flex-col">
               <select
                 name="country"
                 value={dataUser.country}
                 onChange={handleCountryChange}
-                className="border rounded-full bg-secundaryColor text-black p-2 pl-3 mt-1 outline-none focus:border-tertiaryColor shadow-xl"
+                className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
+                border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
+                dark:focus:border-primaryColor focus-visible:shadow-none" 
               >
-                <option value="">Selecciona un país</option>
+              <option value="">Selecciona un país</option>
                 {countries.map(country => (
                   <option key={country} value={country}>{country}</option>
                 ))}
               </select>
               {errors.country && <span className="text-red-500 text-sm">{errors.country}</span>}
             </div>
-
             <div className="flex flex-col mt-4">
               <select
                 name="city"
                 value={dataUser.city}
                 onChange={handleChange}
-                className="border rounded-full bg-secundaryColor text-black p-2 pl-3 mt-1 outline-none focus:border-tertiaryColor shadow-xl"
+                className="w-full px-5 py-3 mb-4 text-base transition bg-transparent border rounded-md outline-none 
+                border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
+                dark:focus:border-primaryColor focus-visible:shadow-none"  
               >
-                <option value="">Selecciona una ciudad</option>
+              <option value="">Selecciona una ciudad</option>
                 {cities.map(city => (
                   <option key={city} value={city}>{city}</option>
                 ))}
               </select>
               {errors.city && <span className="text-red-500 text-sm">{errors.city}</span>}
             </div>
-            <button
-              className="border rounded-full h-10 bg-tertiaryColor text-white my-4 disabled:opacity-50 hover:scale-105 hover:bg-primaryColor ease-in-out duration-300"
+            <Boton
               type="submit"
               disabled={!isFormValid}
             >
               Registrar
-            </button>
+            </Boton>
             <img
               src="/images/registerImage.png"
               alt="Small icon"
-              className="w-52 mx-auto mb-4"
+              className="w-52 mx-auto my-4"
             />  
           </div>
         </div>
@@ -295,16 +277,18 @@ const Register = () => {
     </form>
     <div className="flex items-center justify-between mx-14">
       <div className="flex mt-4 gap-4">
-            <input
+        <div>
+            <InputFile
               type="file"
               onChange={handleFileChange}
-              className="block p-2 text-sm text-gray-900 border border-gray-300 rounded-full cursor-pointer bg-secundaryColor hover:scale-105 focus:outline-none"
             />
-            <Boton text="Subir Excel" onClick={handleUpload} />
+        </div>
+        <div>
+            <Boton onClick={handleUpload}>Subir Excel</Boton>
+        </div>
       </div>
-          
       <div className="self-end">
-        <Boton text="Descargar Excel" onClick={handleDownloadExcel}/>
+        <Boton onClick={handleDownloadExcel}>Descargar Excel</Boton>
       </div>
     </div>
     
