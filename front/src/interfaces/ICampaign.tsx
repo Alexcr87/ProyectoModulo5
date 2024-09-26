@@ -1,3 +1,5 @@
+import ICandidate from "./ICandidate"
+
 interface ICampaign {
     id?: string;
     name: string;
@@ -17,14 +19,7 @@ interface ICampaign {
       suffrage?: boolean;
       isFirstLogin?: boolean;
     };
-    candidates?: Array<{
-      id?: string;
-      postulation?: string;
-      imgUrl: string;
-      list?: string;
-      campaignDescription?: string;
-      proposals?: string[]; // Cambiarlo a array en lugar de string
-    }>;
+    candidates?: Array<ICandidate>;
   }
   
   export default ICampaign;
