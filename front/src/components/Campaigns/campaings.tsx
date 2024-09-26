@@ -60,10 +60,11 @@ const CampaignsTable = () => {
 
     return (
         <div className="mt-4">
-            {campaigns.length > 0 ? (
+            <h1 className="text-2xl font-bold mb-4 text-center">Mis Campañas</h1>
+            {campaigns.length > 0 ? (   
                 <table className="min-w-full border-collapse">
                     <thead>
-                        <tr className="bg-gray-100 text-left">
+                        <tr className="bg-primaryColor text-left text-white">
                             <th className="border p-2">Nombre</th>
                             <th className="border p-2">Descripción</th>
                             <th className="border p-2">Ubicación</th>

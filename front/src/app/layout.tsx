@@ -18,8 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-<AuthProvider>
-        
+        <AuthProvider>
         <div className="containerPrincipal">
           <header>
             <NavBar />
@@ -31,7 +30,7 @@ export default function RootLayout({
             <Footer/>
           </footer>
         </div>
-</AuthProvider>
+      </AuthProvider>
       </body>
     </html>
   );
