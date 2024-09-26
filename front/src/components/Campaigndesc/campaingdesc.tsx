@@ -84,12 +84,12 @@ const Campaingdesc = () => {
                   <img
                     className="h-full w-full object-cover"
                     src={candidate.imgUrl}
-                    alt={`imagen del candidato ${campaign.user.name}`}
+                    alt={`imagen del candidato ${candidate.user.name}`}
                     style={{ objectFit: 'cover', height: '100%' }}
                   />
                 </div>
                 <div className="pt-4 text-center">
-                  <p className="font-bold text-xl">{campaign.user.name}</p> {/* Ajuste del tamaño de fuente */}
+                  <p className="font-bold text-xl">{candidate.user.name}</p> {/* Ajuste del tamaño de fuente */}
                   <div className="mt-2">
                     <p className="font-bold">Postulación:</p>
                     <p>{candidate.postulation}</p>
