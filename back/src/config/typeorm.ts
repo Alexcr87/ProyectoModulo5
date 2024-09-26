@@ -8,12 +8,12 @@ const config ={
   type:'postgres',
   database: process.env.POSTGRES_DB,
   host:process.env.DB_HOST,
-  port:process.env.DB_PORT,
+  port:process.env.DB_PORT as unknown as number,
   username:process.env.DB_USERNAME,
   password:process.env.POSTGRES_PASSWORD,
-  /*ssl: {
-    rejectUnauthorized: false 
-  },*/  
+  ssl: {
+    rejectUnauthorized: true 
+  },  
   autoLoadEntities: true,
   dropSchema:false,     
   synchronize:true,
