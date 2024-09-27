@@ -1,4 +1,4 @@
-import { BadRequestException, Body, ConflictException, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, ParseUUIDPipe, Post, Put, Query, Req, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, ConflictException, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, ParseUUIDPipe, Post, Put, Query, Req, Res, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "src/dto/createUserDto";
@@ -211,4 +211,9 @@ export class UserController {
     return JSON.stringify(req.oidc.user)
   }
   
+ /* @Get('logout')
+  logout(@Req() req: Request, @Res() res: Response) {
+    req.logout({ returnTo: process.env.AUTH0_LOGOUT_REDIRECT });
+  }*/
+
 }
