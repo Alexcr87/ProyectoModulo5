@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Campaign } from "src/entities/campaign.entity";
 import { Candidate } from "src/entities/candidate.entity";
@@ -17,52 +17,78 @@ export class VoteService {
     @InjectRepository(User) private userRepository: Repository<User>
   ) {}
 
-  async votar(userId: string, campaignId: string, candidateId: string): Promise<string> {
-    // Verificar si el usuario ya ha votado en esta campaña
+  async votar(userId: string, candidateId: string): Promise<string> {
+    const candidate = await this.candidateRepository.findOne({
+      where: { id: candidateId },
+      relations: ['campaign'],  // Incluimos la campaña en la búsqueda
+    });
+  
+    if (!candidate) {
+      throw new BadRequestException('El candidato no existe');
+    }
+    
+    const campaignId = candidate.campaign.id;
     const existingVote = await this.voteUserRepository.findOne({
       where: { user: { id: userId }, campaign: { id: campaignId } },
     });
-
     if (existingVote) {
       throw new BadRequestException('Ya has votado en esta campaña');
     }
-
-    // Registrar el voto del usuario en la campaña
-    const voteUser = new VoteUser();
-    const user = await this.userRepository.findOne({ where: { id: userId } }); // Usar el objeto para buscar
-    const campaign = await this.campaignRepository.findOne({ where: { id: campaignId } }); // Usar el objeto para buscar
-
-    voteUser.user = user;
-    voteUser.campaign = campaign;
-    await this.voteUserRepository.save(voteUser);
-
-    // Incrementar el conteo de votos para el candidato
-    let voteCandidate = await this.voteCandidateRepository.findOne({
+  
+    const votoUsuario = new VoteUser();
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    const campaign = await this.campaignRepository.findOne({ where: { id: campaignId } });
+  
+    votoUsuario.user = user;
+    votoUsuario.campaign = campaign;
+    await this.voteUserRepository.save(votoUsuario);
+  
+    let votoCandidato = await this.voteCandidateRepository.findOne({
       where: { candidate: { id: candidateId }, campaign: { id: campaignId } },
     });
-
-    // Si aún no hay registro de votos para el candidato en esta campaña, creamos uno
-    if (!voteCandidate) {
-      voteCandidate = new VoteCandidate();
-      const candidate = await this.candidateRepository.findOne({ where: { id: candidateId } }); // Usar el objeto para buscar
-      voteCandidate.candidate = candidate;
-      voteCandidate.campaign = campaign;
-      voteCandidate.count = 1;  // Primer voto
+  
+    if (!votoCandidato) {
+      votoCandidato = new VoteCandidate();
+      votoCandidato.candidate = candidate;
+      votoCandidato.campaign = campaign;
+      votoCandidato.count = 1;  
     } else {
-      voteCandidate.count += 1;  // Incrementamos el conteo de votos
+      votoCandidato.count += 1;  
     }
-
-    await this.voteCandidateRepository.save(voteCandidate);
-
-    return 'Voto registrado con éxito';  // No exponemos a quién votó
+    await this.voteCandidateRepository.save(votoCandidato);
+    return 'Voto registrado con éxito';
   }
 
-  // Verificar si un usuario ya ha votado en una campaña
-  async verificarVoto(userId: string, campaignId: string): Promise<boolean> {
-    const vote = await this.voteUserRepository.findOne({
-      where: { user: { id: userId }, campaign: { id: campaignId } },
-    });
+  async getCandidatesWithVotes(campaignId: string) {
+    const campaign = await this.campaignRepository.findOne({ where: { id: campaignId } });
+    if (!campaign) {
+      throw new NotFoundException('Campaña no encontrada');
+    }
+    const candidates = await this.candidateRepository.find({ where: { campaign: { id: campaignId } } });
 
-    return !!vote;  // Devuelve true si ya votó, false si no
+    const candidatesWithVotes = await Promise.all(
+      candidates.map(async candidate => {
+        const voteRecord = await this.voteCandidateRepository.findOne({
+          where: { candidate: { id: candidate.id }, campaign: { id: campaignId } },
+        });
+        const votes = voteRecord ? voteRecord.count : 0;
+        return {
+          candidate,
+          votes,
+        };
+      }),
+    );
+    return candidatesWithVotes;
   }
-}
+
+ 
+  async getTotalUsersInCampaign(campaignId: string) {
+    const campaign = await this.campaignRepository.findOne({ where: { id: campaignId } });
+    if (!campaign) {
+      throw new NotFoundException('Campaña no encontrada');
+    }
+    const totalUsers = await this.voteUserRepository.count({ where: { campaign: { id: campaignId } } });
+    return totalUsers;
+  }
+}  
+ 
