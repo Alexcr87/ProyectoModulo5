@@ -3,14 +3,18 @@ import { AppModule } from './app.module';
 import { connectionSource } from './config/typeorm';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { loggerGlobal } from './middleware/logger.middleware';
+import { auth } from 'express-openid-connect';
+import {config as auth0Config, config} from './config/auth0'
 
-if (process.env.ALLOW_INSECURE_TLS === 'true') {
+
+/*if (process.env.ALLOW_INSECURE_TLS === 'true') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-}
+}*/
 
 async function bootstrap() {
   await connectionSource.initialize()
   const app = await NestFactory.create(AppModule);
+  app.use(auth(auth0Config))
   app.use(loggerGlobal)
   const swaggerConfig = new DocumentBuilder()
   .setTitle('Votaciones 2024')

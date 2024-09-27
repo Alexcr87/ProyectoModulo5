@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, HttpException, HttpStatus, NotFoundException, Post, Query, Request as Req , Res, UnauthorizedException, UseGuards } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, HttpException, HttpStatus, NotFoundException, Post, Query, Req, Res, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { ApiQuery, ApiTags } from "@nestjs/swagger";
 import { AuthService } from "./auth.services";
 import { CredentialUserDto, newChangePasswordDto } from "src/dto/credentialUserDto";
@@ -6,6 +6,10 @@ import { CreateUserDto } from "src/dto/createUserDto";
 //import { AllowedUserIds } from "src/roles/roles.decorator";
 import { AuthGuard } from "src/Guards/auth.guard";
 import { RolesGuard } from "src/Guards/roles.guard";
+import { Request, Response } from "express";
+
+import { Auth0Guard } from "src/Guards/auth0.guard";
+import { requiresAuth } from "express-openid-connect";
 
 
 
@@ -97,5 +101,36 @@ export class AuthController {
             }
          }
     }
+
+    @Get('logout')
+  logout(@Res() res: Response) {
+    const logoutUrl = `https://dev-xk4piwty04btc53j.us.auth0.com/v2/logout?client_id=g9sKo4CvuWqmz3614QAgfv3EDMvCSBOQ&returnTo=http://localhost:3000/api`;
+    res.redirect(logoutUrl);
+
+}
+
+@Get('login')
+login(@Res() res: Response) {
+  const auth0LoginUrl = `https://dev-xk4piwty04btc53j.us.auth0.com/authorize?response_type=code&client_id=g9sKo4CvuWqmz3614QAgfv3EDMvCSBOQ&redirect_uri=http://localhost:3000/callback&scope=openid profile email`;
+
+  // Redirigir al usuario a la página de login de Auth0
+  res.redirect(auth0LoginUrl);
+}
+
+
+
+@Get('profile')
+@UseGuards(Auth0Guard) // Usa tu guardia personalizado
+getProfile(@Req() req: Request) {
+    console.log(req.oidc.accessToken);
+    return JSON.stringify(req.oidc.user)
+    
+}
+
+@Get('protected')
+getAuth0Protected(@Req() req:Request){
+  console.log(req.oidc.accessToken);
+  return JSON.stringify(req.oidc.user)
+}
 
 }
