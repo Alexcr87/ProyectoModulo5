@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, HttpException, HttpStatus, NotFoundException, Post, Query, Request as Req , Res, UnauthorizedException, UseGuards } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, HttpException, HttpStatus, NotFoundException, Post, Query, Req, Res, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { ApiQuery, ApiTags } from "@nestjs/swagger";
 import { AuthService } from "./auth.services";
 import { CredentialUserDto, newChangePasswordDto } from "src/dto/credentialUserDto";
@@ -7,8 +7,9 @@ import { CreateUserDto } from "src/dto/createUserDto";
 import { AuthGuard } from "src/Guards/auth.guard";
 import { RolesGuard } from "src/Guards/roles.guard";
 import { Request, Response } from "express";
-import { requiresAuth } from "express-openid-connect";
+
 import { Auth0Guard } from "src/Guards/auth0.guard";
+import { requiresAuth } from "express-openid-connect";
 
 
 
@@ -116,10 +117,13 @@ login(@Res() res: Response) {
   res.redirect(auth0LoginUrl);
 }
 
+
+
 @Get('profile')
-@UseGuards(Auth0Guard) // guardia de auth0 se necesita para manejar la informacion del usuario que se logueo
-getProfile(@Req() req:Request){
-    return{user:req.oidc.user}
+@UseGuards(Auth0Guard) // Usa tu guardia personalizado
+getProfile(@Req() req: Request, @Res() res: Response) {
+    // Aquí usamos el middleware de express-openid-connect para acceder al usuario
+    res.send(JSON.stringify(req.oidc.user));
 }
 
 }

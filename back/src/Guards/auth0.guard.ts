@@ -5,8 +5,7 @@ import { Request } from 'express';
 export class Auth0Guard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request: Request = context.switchToHttp().getRequest();
-    
-    // Verifica si el usuario está autenticado a través de Auth0
-    return !!request.oidc?.user;
+    // Aquí puedes verificar si el usuario está autenticado
+    return !!(request.oidc && request.oidc.user);// Asegúrate de que el usuario esté presente
   }
 }
