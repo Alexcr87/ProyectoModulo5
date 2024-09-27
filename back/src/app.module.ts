@@ -13,6 +13,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { CampaignModule } from './modules/campaign/campaign.module';
 import { SeedModule } from './seeder/seed.module';
 import { UserSeedService } from './seeder/user.seed.service';
+import { PaymentModule } from './modules/payments/payment.module';
 
 
 @Module({
@@ -26,6 +27,7 @@ import { UserSeedService } from './seeder/user.seed.service';
       useFactory:(configService: ConfigService)=> configService.get('typeorm')
     }),
   AuthModule,
+  PaymentModule,
   UserModule,
   CandidateModule,
   CloudinaryModule,

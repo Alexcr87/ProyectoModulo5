@@ -1,4 +1,4 @@
-import { BadRequestException, Body, ConflictException, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, ParseUUIDPipe, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, ConflictException, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, ParseUUIDPipe, Patch, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "src/dto/createUserDto";
@@ -12,6 +12,7 @@ import { AuthGuard } from "src/Guards/auth.guard";
 import { User } from "src/entities/user.entity";
 import { Role } from "src/entities/roles.entity";
 import { CreateUserDtoByAdmin } from "src/dto/createUserByAdminDto";
+
 
 
 
@@ -98,6 +99,7 @@ export class UserController {
       }
     }
   }
+
 
   @Put(":id")
   @HttpCode(200)
@@ -210,6 +212,14 @@ export class UserController {
         throw new InternalServerErrorException('Error creating user');
       }
     }
+  }
+  @Patch(':userId/assign-package')
+  async assignPackage(
+    @Param('userId') userId: string,
+    @Body() packageId: number,
+  ) {
+    const updatedUser = await this.userService.assignPackageToUser(userId, packageId );
+    return updatedUser;
   }
 
 }

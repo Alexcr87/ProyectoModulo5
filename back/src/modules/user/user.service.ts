@@ -11,6 +11,7 @@ import { MailService } from "../mail/mail.service";
 import { generateRandomPassword } from "src/helpers/password.helper"
 import { OrganizationalStructure} from "src/entities/organizationalStructure.entity";
 import { CreateUserDtoByAdmin } from "src/dto/createUserByAdminDto";
+import { Package,servicePackages } from "../payments/services.package";
 
 @Injectable()
 export class UserService{
@@ -64,6 +65,27 @@ export class UserService{
     } catch (error) {
       throw new InternalServerErrorException('Error retrieving users');
     }
+  }
+
+  async assignPackageToUser(userId: string, packageId : number): Promise<User> {
+   
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+
+   
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const selectedPackage = servicePackages.find(pkg => pkg.id === packageId);
+   
+
+    user.accounts.push(selectedPackage);
+
+ 
+    await this.userRepository.save(user);
+
+    
+    return user;
   }
   
   
