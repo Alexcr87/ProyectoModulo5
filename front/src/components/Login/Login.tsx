@@ -92,7 +92,8 @@ const LoginForm = () => {
     
         return (
             <div className='my-4 text-center flex flex-col items-center bg-white shadow-lg px-4 rounded-lg'>
-            <Image src="/images/busto.png" alt="representacion inicio" width={200} height={200}/>
+            {/* <Image src="/images/busto.png" alt="representacion inicio" width={200} height={200}/> */}
+            <Image src="/images/logo.png" alt="imagenLogo" width={350} height={350} className='m-10' />
             <h1 className='font-bold text-2xl mt-4'>INICIAR SESION</h1>
             <form
               onSubmit={handleSubmit}
