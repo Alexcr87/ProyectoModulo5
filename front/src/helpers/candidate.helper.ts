@@ -1,4 +1,5 @@
-import { IRegisterCandidate } from "@/components/registerCandidate/TypesRegisterCandidate"
+import IRegisterCandidate  from "@/interfaces/IRegisterCandidate"
+
 import ICandidate from "@/interfaces/ICandidate"
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
