@@ -1,4 +1,4 @@
-import { BadRequestException, Body, ConflictException, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, ParseUUIDPipe, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, ConflictException, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, ParseUUIDPipe, Post, Put, Query, Req, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "src/dto/createUserDto";
@@ -12,6 +12,7 @@ import { AuthGuard } from "src/Guards/auth.guard";
 import { User } from "src/entities/user.entity";
 import { Role } from "src/entities/roles.entity";
 import { CreateUserDtoByAdmin } from "src/dto/createUserByAdminDto";
+import { Request } from "express";
 
 
 @ApiTags("Users")
@@ -203,4 +204,11 @@ export class UserController {
       const filePath = file.path; // Ruta del archivo guardado
       return await this.userService.importUsers(filePath, parentId);  
   }
+
+  @Get('auth0/protected')
+  getAuth0Protected(@Req() req:Request){
+    console.log(req.oidc.accessToken);
+    return JSON.stringify(req.oidc.user)
+  }
+  
 }
