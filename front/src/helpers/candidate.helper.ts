@@ -23,7 +23,7 @@ export async function getCandidatesByID(id:string): Promise<ICandidate> {
             //next: {revalidate: 1200}
              cache: 'no-cache'
         })
-        const candidate = res.json()
+        const candidate = await res.json()
         return candidate
 
     } catch (error:any) {
