@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from "@nestjs/common";
+import { Controller, Post, Body, Get, Param } from "@nestjs/common";
 import { VoteService } from "./vote.service";
 import { VoteDto } from "src/dto/vote.dto";
 
@@ -8,6 +8,16 @@ export class VoteController {
 
   @Post()
   async vote(@Body() voteDto: VoteDto): Promise<string> {
-    return this.voteService.votar(voteDto.userId, voteDto.campaignId, voteDto.candidateId);
+    return this.voteService.votar(voteDto.userId, voteDto.candidateId);
   }
+
+  @Get('/campaign/:campaignId/candidates')
+    async getCandidatesWithVotes(@Param('campaignId') campaignId: string) {
+      return this.voteService.getCandidatesWithVotes(campaignId);
+    }
+
+    @Get('/campaign/:campaignId/total-users')
+    async getTotalUsersInCampaign(@Param('campaignId') campaignId: string) {
+      return this.voteService.getTotalUsersInCampaign(campaignId);
+    }
 }
