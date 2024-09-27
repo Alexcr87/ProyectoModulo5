@@ -76,11 +76,11 @@ const NavBar = () => {
     }, []);
 
     return (
-        <nav className='bg-primaryColor h-14 pl-8 flex items-center justify-between fixed w-full z-50'>
+        <nav className='bg-primaryColor h-20 pl-8 flex items-center justify-between fixed w-full z-50  text-xl' >
             <Link href="/">
                 <div className='flex items-center'>
-                    <Image src="/images/logo.png" alt="imagenLogo" width={40} height={40} />
-                    <h2 className='text-cuartiaryColor'>VotingSystem</h2>
+                    <Image src="/images/logo.png" alt="imagenLogo" width={230} height={230} />
+                    {/* <h2 className='text-cuartiaryColor'>VotingSystem</h2> */}
                 </div>
             </Link>
             <div>
