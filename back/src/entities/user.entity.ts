@@ -2,9 +2,8 @@ import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne,
 import {v4 as uuid} from 'uuid'
 import { Candidate } from "./candidate.entity"
 import { Role } from "./roles.entity"
-import { ApiProperty } from "@nestjs/swagger"
-import { IsBoolean } from "class-validator"
 import { Campaign } from "./campaign.entity"
+import { VoteUser } from "./voteUser.entity"
 
 
 @Entity({name: 'users'})
@@ -34,9 +33,6 @@ export class User{
   @Column({type: "varchar", length: 50})
   country: string
   
-  @Column({default: false})
-  suffrage:boolean
-
   @Column({ default: false })
   isFirstLogin: boolean;
 
@@ -51,12 +47,9 @@ export class User{
   })
   roles: Role[];
 
-  @ManyToMany(() => Campaign, (campaign) => campaign.voters)
-  @JoinTable({
-     name: 'votó'
-  })  
-  votedCampaigns: Campaign[];
-
   @OneToMany(() => Campaign, (campaign) => campaign.user)
   campaigns: Campaign[];
+
+  @OneToMany(() => VoteUser, votoUsuario => votoUsuario.user)
+  votes: VoteUser[];
 }
