@@ -17,10 +17,6 @@ export class CreateCandidateDto {
   @ApiProperty({ description: 'Lista a la que pertenece el candidato', example: 'Lista 123' })
   list: string;
 
-  @IsString()
-  @ApiProperty({ description: 'Descripción de la campaña', example: 'Campaña centrada en educación y empleo juvenil' })
-  campaignDescription: string;
-
   @IsArray()
   @ApiProperty({ description: 'Propuestas del candidato', example: ['Crear nuevas plazas de empleo'] })
   proposals: string[];

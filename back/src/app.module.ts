@@ -13,6 +13,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { CampaignModule } from './modules/campaign/campaign.module';
 import { SeedModule } from './seeder/seed.module';
 import { UserSeedService } from './seeder/user.seed.service';
+import { VoteModule } from './modules/vote/vote.module';
 
 
 @Module({
@@ -32,6 +33,7 @@ import { UserSeedService } from './seeder/user.seed.service';
   RoleModule,
   CampaignModule,
   SeedModule,
+  VoteModule,
   JwtModule.register({
     global:true,
     signOptions:{expiresIn:"1h"},

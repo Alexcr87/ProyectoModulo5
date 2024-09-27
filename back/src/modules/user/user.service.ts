@@ -41,25 +41,18 @@ export class UserService{
           where: { parent: parentUser }, // Usando la relación
           relations: ['child'], // Carga la relación child
         });
-  
 
-  
-        // Accede a childId
-        const childIds = childRelations.map(rel => rel.child.id); // Accede a child.id
+        const childIds = childRelations.map(rel => rel.child.id); 
       
-  
-        // Solo busca si childIds tiene elementos
         if (childIds.length > 0) {
           return await this.userRepository.find({
             where: { id: In(childIds) },
             relations: ['roles'], 
           });
         } else {
-          return []; // No hay hijos
+          return []; 
         }
       }
-  
-      // Si no se proporciona parentId, devuelve todos los usuarios
       return await this.userRepository.find({relations: ['roles']});
     } catch (error) {
       throw new InternalServerErrorException('Error retrieving users');
