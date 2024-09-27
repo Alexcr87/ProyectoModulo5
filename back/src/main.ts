@@ -7,9 +7,9 @@ import { auth } from 'express-openid-connect';
 import {config as auth0Config, config} from './config/auth0'
 
 
-if (process.env.ALLOW_INSECURE_TLS === 'true') {
+/*if (process.env.ALLOW_INSECURE_TLS === 'true') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-}
+}*/
 
 async function bootstrap() {
   await connectionSource.initialize()

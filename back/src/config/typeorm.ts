@@ -13,7 +13,7 @@ const config ={
   password:process.env.POSTGRES_PASSWORD,
   ssl: {
     rejectUnauthorized: true 
-  },  
+  },
   autoLoadEntities: true,
   dropSchema:false,     
   synchronize:true,
