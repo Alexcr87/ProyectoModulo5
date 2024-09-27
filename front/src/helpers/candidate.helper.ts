@@ -9,7 +9,7 @@ export async function getCandidates(): Promise<ICandidate[]> {
             //next: {revalidate: 1200},
             cache: 'no-cache'
         })
-        const candidates = res.json()
+        const candidates = await res.json()
         return candidates
 
     } catch (error:any) {
