@@ -1,5 +1,5 @@
 "use client";
-
+const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 import { useEffect, useState } from "react";
 import IUsers from "@/interfaces/IUsers";
 import { IloginProps } from "@/interfaces/ILogin";
@@ -28,7 +28,7 @@ const Users = () => {
       const actualUser = String(userSesion.result.id);
 
       try {
-        const response = await fetch(`http://localhost:3000/user?parentId=${actualUser}`, {
+        const response = await fetch(`${APIURL}/user?parentId=${actualUser}`, {
           method: "GET",
         });
 

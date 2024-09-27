@@ -1,4 +1,4 @@
-import { IRegisterCandidate } from "@/components/registerCandidate/TypesRegisterCandidate"
+
 import ICandidate from "@/interfaces/ICandidate"
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
@@ -31,7 +31,7 @@ export async function getCandidatesByID(id:string): Promise<ICandidate> {
     }
 }
 
-export async function registerCandidate(userData: IRegisterCandidate) {
+export async function registerCandidate(userData: ICandidate) {
     try {
       const res = await fetch(`${APIURL}/candidates`, {
         method: "POST",
@@ -42,7 +42,7 @@ export async function registerCandidate(userData: IRegisterCandidate) {
       });
   
       if (!res.ok) {
-        const errorData = await res.json(); // Obtener los detalles del error
+        const errorData = await res.json(); 
         throw new Error(
           `Error ${res.status}: ${errorData.message || "Failed to register"}`
         );

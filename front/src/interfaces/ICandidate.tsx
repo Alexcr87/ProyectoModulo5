@@ -1,4 +1,4 @@
-interface ICandidate{
+interface   ICandidate{
     id?: string,
     postulation?: string,
     imgUrl: string,

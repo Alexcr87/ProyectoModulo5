@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import ICampaign from '@/interfaces/ICampaign'
 import { IloginProps } from '@/interfaces/ILogin'
 import { usePathname } from 'next/navigation'
-
+const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 const CampaignsTable = () => {
     const [campaigns, setCampaigns] = useState<ICampaign[]>([]) 
     const [loading, setLoading] = useState(true) 
@@ -33,7 +33,7 @@ const CampaignsTable = () => {
            
 
             try {
-                const response = await fetch(`http://localhost:3000/campaigns/user/${actualUser}`)
+                const response = await fetch(`${APIURL}/campaigns/user/${actualUser}`)
              
 
                 if (!response.ok) {

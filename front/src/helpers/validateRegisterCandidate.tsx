@@ -1,4 +1,4 @@
-import { IRegisterCandidateError, IRegisterCandidateProps } from "@/components/registerCandidate/TypesRegisterCandidate";
+/*import { IRegisterCandidateError, IRegisterCandidateProps } from "@/components/registerCandidate/TypesRegisterCandidate";
 
 export function ValidateFormCandidate(values: IRegisterCandidateProps): IRegisterCandidateError {
     const errors: IRegisterCandidateError = {}
@@ -10,4 +10,4 @@ export function ValidateFormCandidate(values: IRegisterCandidateProps): IRegiste
     }
 
     return errors;
-}
+} */
