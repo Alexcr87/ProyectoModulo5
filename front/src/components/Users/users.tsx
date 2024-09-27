@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import IUsers from "@/interfaces/IUsers";
 import { IloginProps } from "@/interfaces/ILogin";
 import { usePathname } from "next/navigation";
+const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 const Users = () => {
   const [userSesion, setUserSesion] = useState<IloginProps>();
@@ -28,7 +29,7 @@ const Users = () => {
       const actualUser = String(userSesion.result.id);
 
       try {
-        const response = await fetch(`http://localhost:3000/user?parentId=${actualUser}`, {
+        const response = await fetch(`${APIURL}/user?parentId=${actualUser}`, {
           method: "GET",
         });
 

@@ -205,15 +205,6 @@ export class UserController {
       return await this.userService.importUsers(filePath, parentId);  
   }
 
-  @Get('auth0/protected')
-  getAuth0Protected(@Req() req:Request){
-    console.log(req.oidc.accessToken);
-    return JSON.stringify(req.oidc.user)
-  }
-  
- /* @Get('logout')
-  logout(@Req() req: Request, @Res() res: Response) {
-    req.logout({ returnTo: process.env.AUTH0_LOGOUT_REDIRECT });
-  }*/
+ 
 
 }

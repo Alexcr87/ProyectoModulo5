@@ -121,9 +121,16 @@ login(@Res() res: Response) {
 
 @Get('profile')
 @UseGuards(Auth0Guard) // Usa tu guardia personalizado
-getProfile(@Req() req: Request, @Res() res: Response) {
-    // Aquí usamos el middleware de express-openid-connect para acceder al usuario
-    res.send(JSON.stringify(req.oidc.user));
+getProfile(@Req() req: Request) {
+    console.log(req.oidc.accessToken);
+    return JSON.stringify(req.oidc.user)
+    
+}
+
+@Get('protected')
+getAuth0Protected(@Req() req:Request){
+  console.log(req.oidc.accessToken);
+  return JSON.stringify(req.oidc.user)
 }
 
 }
