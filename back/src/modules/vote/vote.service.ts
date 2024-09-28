@@ -14,23 +14,14 @@ export class VoteService {
     @InjectRepository(VoteCandidate) private voteCandidateRepository: Repository<VoteCandidate>,
     @InjectRepository(Candidate) private candidateRepository: Repository<Candidate>,
     @InjectRepository(Campaign) private campaignRepository: Repository<Campaign>,
-    @InjectRepository(User) private userRepository: Repository<User>
+    @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  async votar(userId: string, candidateId: string): Promise<string> {
-    const candidate = await this.candidateRepository.findOne({
-      where: { id: candidateId },
-      relations: ['campaign'],  // Incluimos la campaña en la búsqueda
-    });
-  
-    if (!candidate) {
-      throw new BadRequestException('El candidato no existe');
-    }
-    
-    const campaignId = candidate.campaign.id;
+  async votar(userId: string, campaignId: string, candidateId?: string): Promise<string> {
     const existingVote = await this.voteUserRepository.findOne({
       where: { user: { id: userId }, campaign: { id: campaignId } },
     });
+  
     if (existingVote) {
       throw new BadRequestException('Ya has votado en esta campaña');
     }
@@ -41,24 +32,22 @@ export class VoteService {
   
     votoUsuario.user = user;
     votoUsuario.campaign = campaign;
-    await this.voteUserRepository.save(votoUsuario);
   
-    let votoCandidato = await this.voteCandidateRepository.findOne({
-      where: { candidate: { id: candidateId }, campaign: { id: campaignId } },
-    });
-  
-    if (!votoCandidato) {
-      votoCandidato = new VoteCandidate();
+    if (candidateId) {
+      let votoCandidato = new VoteCandidate();
+      const candidate = await this.candidateRepository.findOne({ where: { id: candidateId } });
       votoCandidato.candidate = candidate;
       votoCandidato.campaign = campaign;
-      votoCandidato.count = 1;  
+      await this.voteCandidateRepository.save(votoCandidato);
     } else {
-      votoCandidato.count += 1;  
+      // Guardar voto en blanco (sin candidateId)
+      votoUsuario.blankVote = true;
     }
-    await this.voteCandidateRepository.save(votoCandidato);
+  
+    await this.voteUserRepository.save(votoUsuario);
     return 'Voto registrado con éxito';
   }
-
+  
   async getCandidatesWithVotes(campaignId: string) {
     const campaign = await this.campaignRepository.findOne({ where: { id: campaignId } });
     if (!campaign) {
@@ -89,6 +78,17 @@ export class VoteService {
     }
     const totalUsers = await this.voteUserRepository.count({ where: { campaign: { id: campaignId } } });
     return totalUsers;
+  }
+
+
+  async getBlankVotes(campaignId: string): Promise<number> {
+    const blankVotesCount = await this.voteUserRepository.count({
+      where: {
+        campaign: { id: campaignId },
+        blankVote: true,
+      },
+    });
+    return blankVotesCount;
   }
 }  
  
