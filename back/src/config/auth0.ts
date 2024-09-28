@@ -1,6 +1,4 @@
-import {config as dotenvConfig} from 'dotenv'
 
-dotenvConfig({path: '.env.development'})
 
 export const config={
   authRequired:false,
@@ -8,5 +6,10 @@ export const config={
   secret: process.env.AUTH0_SECRET,
   baseURL:process.env.AUTH0_AUDIENCE,
   clientID:process.env.AUTH0_CLIENT_ID,
-  issuerBaseURL: process.env.AUTH0_BASE_URL
+  issuerBaseURL: process.env.AUTH0_BASE_URL,
+  /*authorizationParams: {
+    response_type: 'code',
+    scope: 'openid profile email',
+  },*/
 }
+

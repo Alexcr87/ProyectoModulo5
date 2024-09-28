@@ -8,10 +8,12 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Role } from "src/entities/roles.entity";
 import { User } from "src/entities/user.entity";
+import { CreateUserDtoByAuth0 } from "src/dto/createUserByAuth0Dto";
 
 
 @Injectable()
 export class AuthService {
+    
     constructor (private readonly userService: UserService , 
       private readonly jwtService: JwtService,
       @InjectRepository(Role) 
@@ -86,13 +88,22 @@ export class AuthService {
 
   };
 
-
-
-
   async sigUp(userRegister: CreateUserDto, parentId:string){
    
    return this.userService.createUser(userRegister,parentId);
 
 };
+
+async createUserByAuth0(user: Partial<CreateUserDtoByAuth0>) {
+  const newUser = await this.userService.findUserByEmailxlsx(user.email)
+  console.log(newUser, "newUSer");
+  
+  if (!newUser) {
+    await this.userRepository.create(user);
+    await this.userRepository.save(user)
+    return `${newUser.email}, Usuario creado exitosamente`
+  }
+        return `${newUser.email}, Ud. ya posee una cuenta`; 
+}
 
 }

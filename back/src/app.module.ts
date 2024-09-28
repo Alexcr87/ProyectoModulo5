@@ -22,10 +22,12 @@ import { VoteModule } from './modules/vote/vote.module';
 
 
 @Module({
+  
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load:[typeOrmConfig]
+      load:[typeOrmConfig],
+      envFilePath:'.env.development'
     }),
     TypeOrmModule.forRootAsync({
       inject:[ConfigService],
@@ -48,6 +50,7 @@ import { VoteModule } from './modules/vote/vote.module';
     secret:process.env.JWT_SECRET
   })
   ],
+  
   controllers: [],
   providers: [],
   exports: [],

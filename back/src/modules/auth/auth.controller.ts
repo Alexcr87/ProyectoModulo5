@@ -9,6 +9,7 @@ import { RolesGuard } from "src/Guards/roles.guard";
 import { Request, Response } from "express";
 
 import { requiresAuth } from "express-openid-connect";
+import { CreateUserDtoByAuth0 } from "src/dto/createUserByAuth0Dto";
 
 
 
@@ -100,10 +101,34 @@ export class AuthController {
             }
          }
     }
+ 
 
-    @Get("protected")
-      userByAuth (@Req() req:Request){
-     return JSON.stringify(req.oidc.user)
-      }
+    @Get('protected')
+    userby(@Req() req:Request){
+        return JSON.stringify(req.oidc.user)
+    }
 
+@Get('profile')
+async userByAuth (@Req() req:Request):Promise<CreateUserDtoByAuth0 | string> {
+
+    const user = req.oidc.user
+
+    if (!user) {
+        throw new BadRequestException("User not found in request")
+    }
+
+    if(!user.email){
+        throw new BadRequestException("Email not found in request")
+    }
+
+    const newUser:Partial<CreateUserDtoByAuth0>={
+        email:user.email,
+        name:user.name,
+        dni:5487748,
+        password:"google"
+    }
+    console.log(newUser, "controller");
+    
+    return this.authservice.createUserByAuth0(newUser)
+     }
 }
