@@ -1,12 +1,11 @@
-import PasarelaPago from "@/components/pasarelapago/Pasarelapago";
+ 
+import Pasarelapago from "@/components/Pasarelapago/Pasarelapago";
 
-
-
-const LoginPage =()=>{
+const paymentGatewayPage =()=>{
     return(
         <div className="bg-cuartiaryColor h-full flex justify-center">
-         <PasarelaPago/>
+         <Pasarelapago/>
         </div>
     )
 };
-export default LoginPage
+export default paymentGatewayPage
