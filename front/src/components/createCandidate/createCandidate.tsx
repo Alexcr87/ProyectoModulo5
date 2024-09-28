@@ -1,6 +1,10 @@
 'use client';
 import { useEffect, useState } from "react";
-import Boton from "../boton/Boton";
+import Boton from "../ui/Boton";
+import Input from "../ui/Input";
+import InputFile from "../ui/InputFile";
+import Textarea from "../ui/Textarea";
+import Select from "../ui/Select";
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
@@ -74,70 +78,66 @@ const CreateCandidate = ({ userId }: { userId: string }) => {
   };
 
   return (
-    <div className="flex w-[60%] justify-center p-6 bg-white shadow-lg rounded-lg">
+    <div className="flex w-[60%] justify-center  p-6 bg-white shadow-lg rounded-lg">
       <form onSubmit={handleSubmit} className="w-11/12 space-y-4">
-        <h1 className="text-lg font-bold text-center text-tertiaryColor">Crear Candidato</h1>
-          <input
+        <h1 className="text-lg font-bold text-center">Crear Candidato</h1>
+          <Input
             type="text"
             placeholder="Postulación"
             value={postulation}
             onChange={(e) => setPostulation(e.target.value)}
-            className="mt-1 p-2 pl-6 bg-secundaryColor rounded-full placeholder:text-tertiaryColor hover:scale-105 w-full"
             required
           />
-          <input
+          <Input
             type="text"
             placeholder="Lista"
             value={list}
             onChange={(e) => setList(e.target.value)}
-            className="mt-1 p-2 pl-6 bg-secundaryColor rounded-full placeholder:text-tertiaryColor hover:scale-105 w-full"
             required
           />
 
-          <textarea
+          <Textarea
             value={campaignDescription}
             placeholder="Descripción de la campaña"
             onChange={(e) => setCampaignDescription(e.target.value)}
-            className="mt-1 p-2 pl-6 bg-secundaryColor rounded-lg placeholder:text-tertiaryColor hover:scale-105 w-full"
             required
           />
 
-        <div className="bg-gray-100 rounded-md">
+        <div className="rounded-md">
           <label className="block text-sm font-medium text-gray-700">Propuestas</label>
-          <textarea
+          <Textarea
             value={proposals.join("\n")}
             onChange={handleProposalsChange}
-            className="mt-1 p-2 pl-6 bg-secundaryColor rounded-lg placeholder:text-tertiaryColor hover:scale-105 w-full"
             placeholder="Escribe cada propuesta en una nueva línea"
           />
         </div>
 
-        <div className="bg-gray-100 rounded-md">
+        <div className="rounded-md">
           <label className="block text-sm font-medium text-gray-700">Campaña</label>
-          <select
+          <Select
             value={selectedCampaignId}
             onChange={(e) => setSelectedCampaignId(e.target.value)}
-            className="mt-1 p-2 pl-6 bg-secundaryColor rounded-lg placeholder:text-tertiaryColor hover:scale-105 w-full"
             required
           >
             <option value="">Seleccione una campaña</option>
             {campaigns.map(campaign => (
               <option key={campaign.id} value={campaign.id}>{campaign.name}</option>
             ))}
-          </select>
+          </Select>
         </div>
 
-        <div className="bg-gray-100 rounded-md">
+        <div className=" rounded-md">
           <label className="block text-sm font-medium text-gray-700">Imagen del candidato (JPG)</label>
-          <input
+          <InputFile
             type="file"
             accept="image/jpeg"
             onChange={handleFileChange}
-            className="mt-1 p-2 pl-6 bg-secundaryColor rounded-full placeholder:text-tertiaryColor hover:scale-105 w-full"
           />
         </div>
         <div className="flex justify-center">
-          <Boton text="Crear Candidato" />
+          <div className="w-[20%]">
+            <Boton>Crear Candidato </Boton>
+          </div>
          </div>
           
       </form>

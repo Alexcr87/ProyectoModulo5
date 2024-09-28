@@ -13,6 +13,18 @@ const PricingTable = () => {
         </div>
         <div className='flex justify-center w-full mt-8 gap-16'>
             <div className='w-[20vw] duration-300 ease-in-out hover:scale-110 h-auto rounded-3xl py-4 px-16 shadow-2xl border-2'>
+                <h2 className='text-lg font-bold mt-8'>Free</h2>
+                <h3>$<span className='text-4xl font-bold'>00.00</span> Per Month</h3>
+                <h2 className='text-lg font-bold mt-12 mb-4'>Features</h2>
+                <h4>Up to 30 User</h4>
+                <h4>All UI components</h4>
+                <h4>Lifetime access</h4>
+                <h4>Free updates</h4>
+                <div className='my-16'>
+                    <Boton>Purcharse Now</Boton>
+                </div>
+            </div>
+            <div className='w-[20vw] duration-300 ease-in-out hover:scale-110 h-auto rounded-3xl py-4 px-16 shadow-2xl border-2'>
                 <h2 className='text-lg font-bold mt-8'>Starter</h2>
                 <h3>$<span className='text-4xl font-bold'>25.00</span> Per Month</h3>
                 <h2 className='text-lg font-bold mt-12 mb-4'>Features</h2>
