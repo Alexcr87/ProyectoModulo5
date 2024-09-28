@@ -80,7 +80,7 @@ const NavBar = () => {
         <nav className='bg-primaryColor opacity-80 h-14 pl-8 flex items-center justify-between fixed w-full z-50'>
             <Link href="/">
                 <div className='flex items-center'>
-                    <Image src="/images/logo.png" alt="imagenLogo" width={230} height={230} />
+                    <Image src="/images/logo.png" alt="imagenLogo" width={180} height={230} className='invert'/>
                     {/* <h2 className='text-cuartiaryColor'>VotingSystem</h2> */}
                 </div>
             </Link>
