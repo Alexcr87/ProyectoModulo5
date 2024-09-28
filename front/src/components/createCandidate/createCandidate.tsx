@@ -1,5 +1,8 @@
 'use client';
 import { useEffect, useState } from "react";
+import Boton from "../boton/Boton";
+
+const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 const CreateCandidate = ({ userId }: { userId: string }) => {
   const [postulation, setPostulation] = useState<string>("");
@@ -17,7 +20,7 @@ const CreateCandidate = ({ userId }: { userId: string }) => {
       const actualUserId = localUserParsed.result.id
    
       try {
-        const response = await fetch(`http://localhost:3000/campaigns/user/${actualUserId}`);
+        const response = await fetch(`${APIURL}/campaigns/user/${actualUserId}`);
         if (!response.ok) throw new Error("Error al obtener campañas");
         const data = await response.json();
         setCampaigns(data); // Asegúrate de que el formato de data sea el correcto
@@ -55,7 +58,7 @@ const CreateCandidate = ({ userId }: { userId: string }) => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/candidates", {
+      const response = await fetch(`${APIURL}/candidates`, {
         method: "POST",
         body: formData,
       });
@@ -71,65 +74,50 @@ const CreateCandidate = ({ userId }: { userId: string }) => {
   };
 
   return (
-    <div className="flex max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-      <div className="w-1/2 pr-4">
-        <img 
-          src="https://nevada.cooperatornews.com/_data/nv/articles/8302_image1.jpg?w=350" // Reemplaza esta URL con la imagen que quieras
-          alt="Descripción de la imagen"
-          className="rounded-lg h-full object-cover"
-        />
-      </div>
-      <form onSubmit={handleSubmit} className="w-1/2 space-y-4">
-        <h1 className="text-lg font-bold text-center text-gray-800">Crear Candidato</h1>
-
-        <div className="bg-gray-100 p-4 rounded-md">
-          <label className="block text-sm font-medium text-gray-700">Postulación</label>
+    <div className="flex w-[60%] justify-center p-6 bg-white shadow-lg rounded-lg">
+      <form onSubmit={handleSubmit} className="w-11/12 space-y-4">
+        <h1 className="text-lg font-bold text-center text-tertiaryColor">Crear Candidato</h1>
           <input
             type="text"
+            placeholder="Postulación"
             value={postulation}
             onChange={(e) => setPostulation(e.target.value)}
-            className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+            className="mt-1 p-2 pl-6 bg-secundaryColor rounded-full placeholder:text-tertiaryColor hover:scale-105 w-full"
             required
           />
-        </div>
-
-        <div className="bg-gray-100 p-4 rounded-md">
-          <label className="block text-sm font-medium text-gray-700">Lista</label>
           <input
             type="text"
+            placeholder="Lista"
             value={list}
             onChange={(e) => setList(e.target.value)}
-            className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+            className="mt-1 p-2 pl-6 bg-secundaryColor rounded-full placeholder:text-tertiaryColor hover:scale-105 w-full"
             required
           />
-        </div>
 
-        <div className="bg-gray-100 p-4 rounded-md">
-          <label className="block text-sm font-medium text-gray-700">Descripción de la campaña</label>
           <textarea
             value={campaignDescription}
+            placeholder="Descripción de la campaña"
             onChange={(e) => setCampaignDescription(e.target.value)}
-            className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+            className="mt-1 p-2 pl-6 bg-secundaryColor rounded-lg placeholder:text-tertiaryColor hover:scale-105 w-full"
             required
           />
-        </div>
 
-        <div className="bg-gray-100 p-4 rounded-md">
+        <div className="bg-gray-100 rounded-md">
           <label className="block text-sm font-medium text-gray-700">Propuestas</label>
           <textarea
             value={proposals.join("\n")}
             onChange={handleProposalsChange}
-            className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+            className="mt-1 p-2 pl-6 bg-secundaryColor rounded-lg placeholder:text-tertiaryColor hover:scale-105 w-full"
             placeholder="Escribe cada propuesta en una nueva línea"
           />
         </div>
 
-        <div className="bg-gray-100 p-4 rounded-md">
+        <div className="bg-gray-100 rounded-md">
           <label className="block text-sm font-medium text-gray-700">Campaña</label>
           <select
             value={selectedCampaignId}
             onChange={(e) => setSelectedCampaignId(e.target.value)}
-            className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+            className="mt-1 p-2 pl-6 bg-secundaryColor rounded-lg placeholder:text-tertiaryColor hover:scale-105 w-full"
             required
           >
             <option value="">Seleccione una campaña</option>
@@ -139,21 +127,19 @@ const CreateCandidate = ({ userId }: { userId: string }) => {
           </select>
         </div>
 
-        <div className="bg-gray-100 p-4 rounded-md">
+        <div className="bg-gray-100 rounded-md">
           <label className="block text-sm font-medium text-gray-700">Imagen del candidato (JPG)</label>
           <input
             type="file"
             accept="image/jpeg"
             onChange={handleFileChange}
-            className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+            className="mt-1 p-2 pl-6 bg-secundaryColor rounded-full placeholder:text-tertiaryColor hover:scale-105 w-full"
           />
         </div>
-
-        <div className="text-center">
-          <button type="submit" className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200">
-            Crear Candidato
-          </button>
-        </div>
+        <div className="flex justify-center">
+          <Boton text="Crear Candidato" />
+         </div>
+          
       </form>
     </div>
   );

@@ -1,4 +1,5 @@
-import { BadRequestException, Body, ConflictException, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, ParseUUIDPipe, Patch, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+
+import { BadRequestException, Body, ConflictException, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, ParseUUIDPipe, Patch, Post, Put, Query, Req, Res, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "src/dto/createUserDto";
@@ -12,9 +13,7 @@ import { AuthGuard } from "src/Guards/auth.guard";
 import { User } from "src/entities/user.entity";
 import { Role } from "src/entities/roles.entity";
 import { CreateUserDtoByAdmin } from "src/dto/createUserByAdminDto";
-
-
-
+import { Request } from "express";
 
 
 
@@ -24,6 +23,7 @@ export class UserController {
   constructor(
     private readonly userService: UserService
   ) {}
+
 
   @Get()
   @HttpCode(200)
@@ -37,13 +37,8 @@ export class UserController {
   }
 
 
-  
-
-
   @Get(":id")
   @HttpCode(200)
- 
-  
   async getUserById(@Param("id", ParseUUIDPipe) id:string){
     try {
       return await this.userService.getUserById(id)
@@ -57,10 +52,7 @@ export class UserController {
   }
   
   
-  
   @Get("/dni/:dni")
-  
- 
   @HttpCode(200)
   async findUserByDni(@Param("dni") dni:number ){
     try {
@@ -81,8 +73,6 @@ export class UserController {
 
   
   @Get("/email/:email")
- 
-  
   @HttpCode(200)
   async findUserByEmail(@Param("email") email:string ){
     try {
@@ -130,6 +120,7 @@ export class UserController {
     }
   }
 
+
   @Post()
   @HttpCode(201)
   @ApiQuery({ name: 'parentId', required: false, description: 'Optional parent ID to filter users' })
@@ -148,6 +139,26 @@ export class UserController {
     }
   }
 
+
+  @Post("/byadmin")
+  @HttpCode(201)
+  @ApiQuery({ name: 'parentId', required: false, description: 'Optional parent ID to filter users' })
+  async createUserByAdmin(
+    @Query("parentId") parentId: string,
+    @Body() createUserDto: CreateUserDtoByAdmin
+  ) {
+    try {     
+      return await this.userService.createUserByAdmin(createUserDto,parentId)
+    } catch (error) {
+      if (error.response && error.response.error === 'Unauthorized') {
+        throw new ConflictException(error.response.message);
+      } else {
+        throw new InternalServerErrorException('Error creating user');
+      }
+    }
+  }
+
+  //EXCELL
   @Post('import')
   @UseInterceptors(FileInterceptor('file', {
     storage: diskStorage({
@@ -196,23 +207,6 @@ export class UserController {
       return await this.userService.importUsers(filePath, parentId);  
   }
 
-  @Post("/byadmin")
-  @HttpCode(201)
-  @ApiQuery({ name: 'parentId', required: false, description: 'Optional parent ID to filter users' })
-  async createUserByAdmin(
-    @Query("parentId") parentId: string,
-    @Body() createUserDto: CreateUserDtoByAdmin
-  ) {
-    try {     
-      return await this.userService.createUserByAdmin(createUserDto,parentId)
-    } catch (error) {
-      if (error.response && error.response.error === 'Unauthorized') {
-        throw new ConflictException(error.response.message);
-      } else {
-        throw new InternalServerErrorException('Error creating user');
-      }
-    }
-  }
   @Patch(':userId/assign-package')
   async assignPackage(
     @Param('userId') userId: string,

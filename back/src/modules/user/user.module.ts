@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "src/entities/user.entity";
 import { UserService } from "./user.service";
@@ -8,6 +8,8 @@ import { OrganizationalStructure } from "src/entities/organizationalStructure.en
 import { Account } from "src/entities/account.entity";
 import { MailModule } from "../mail/mail.module";
 import { MailService } from "../mail/mail.service";
+import { requiresAuth } from "express-openid-connect";
+
 
 
 @Module({
@@ -17,4 +19,4 @@ import { MailService } from "../mail/mail.service";
   exports: [TypeOrmModule , UserService],
 })
 
-export class UserModule{}
+export class UserModule {}

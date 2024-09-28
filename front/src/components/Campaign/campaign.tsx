@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import ICampaign from '@/interfaces/ICampaign'; 
-import Boton from '../boton/Boton';
+import Input from '../ui/Input';
+import Boton from '../ui/Boton';
 
 const CampaignForm = () => {
 
@@ -95,15 +96,13 @@ const CampaignForm = () => {
     </div>
     <form onSubmit={handleSubmit} className="campaign-form flex justify-center">
       <div className='flex flex-col items-center w-[40%] gap-4'>
-        <input
+        <Input
           type="text"
           id="name"
           name="name"
           placeholder='Nombre de la campaña'
           value={formData.name}
           onChange={handleInputChange}
-          className="w-full border rounded-full bg-secundaryColor text-black placeholder:text-black text-left p-2 pl-3 mt-1 
-          outline-none focus:border-tertiaryColor shadow-xl hover:scale-105"
           required
         />
         <textarea
@@ -112,32 +111,29 @@ const CampaignForm = () => {
           placeholder='Descripción'
           value={formData.description}
           onChange={handleInputChange}
-          className="w-full border rounded-lg bg-secundaryColor h-40 text-black placeholder:text-black text-left p-2 pl-3 mt-1 
-          outline-none focus:border-tertiaryColor shadow-xl hover:scale-105"
+          className="w-full h-40 px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
+          border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
+          dark:focus:border-primaryColor focus-visible:shadow-none"
           required
         />
-        <input
+        <Input
           type="text"
           id="location"
           name="location"
           placeholder='Ubicacion:'
           value={formData.location}
           onChange={handleInputChange}
-          className="w-full border rounded-full bg-secundaryColor text-black placeholder:text-black text-left p-2 pl-3 mt-1 
-          outline-none focus:border-tertiaryColor shadow-xl hover:scale-105"
           required
         />
-        <input
+        <Input
           type="date"
           name="date"
           id="date"
           value={formData.date.toISOString().substring(0, 10)}
           onChange={handleDateChange}
-          className="w-full border rounded-full bg-secundaryColor text-black placeholder:text-black text-left p-2 pl-3 mt-1 
-          outline-none focus:border-tertiaryColor shadow-xl hover:scale-105"
           required
         />
-        <Boton text="Crear Campaña" type="submit"/>
+        <Boton type="submit">Crear Campaña</Boton>
       </div>
     </form>
     </>

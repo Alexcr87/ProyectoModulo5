@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, HttpException, HttpStatus, NotFoundException, Post, Query, Request as Req , Res, UnauthorizedException, UseGuards } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, HttpException, HttpStatus, NotFoundException, Post, Query, Req, Res, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { ApiQuery, ApiTags } from "@nestjs/swagger";
 import { AuthService } from "./auth.services";
 import { CredentialUserDto, newChangePasswordDto } from "src/dto/credentialUserDto";
@@ -6,6 +6,9 @@ import { CreateUserDto } from "src/dto/createUserDto";
 //import { AllowedUserIds } from "src/roles/roles.decorator";
 import { AuthGuard } from "src/Guards/auth.guard";
 import { RolesGuard } from "src/Guards/roles.guard";
+import { Request, Response } from "express";
+
+import { requiresAuth } from "express-openid-connect";
 
 
 
@@ -97,5 +100,10 @@ export class AuthController {
             }
          }
     }
+
+    @Get("protected")
+      userByAuth (@Req() req:Request){
+     return JSON.stringify(req.oidc.user)
+      }
 
 }

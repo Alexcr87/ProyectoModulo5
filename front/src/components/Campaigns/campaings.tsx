@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import ICampaign from '@/interfaces/ICampaign'
 import { IloginProps } from '@/interfaces/ILogin'
 import { usePathname } from 'next/navigation'
+const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 const CampaignsTable = () => {
     const [campaigns, setCampaigns] = useState<ICampaign[]>([]) 
@@ -33,7 +34,7 @@ const CampaignsTable = () => {
            
 
             try {
-                const response = await fetch(`http://localhost:3000/campaigns/user/${actualUser}`)
+                const response = await fetch(`${APIURL}/campaigns/user/${actualUser}`)
              
 
                 if (!response.ok) {
@@ -60,10 +61,11 @@ const CampaignsTable = () => {
 
     return (
         <div className="mt-4">
-            {campaigns.length > 0 ? (
+            <h1 className="text-2xl font-bold mb-4 text-center">Mis Campañas</h1>
+            {campaigns.length > 0 ? (   
                 <table className="min-w-full border-collapse">
                     <thead>
-                        <tr className="bg-gray-100 text-left">
+                        <tr className="bg-primaryColor text-left text-white">
                             <th className="border p-2">Nombre</th>
                             <th className="border p-2">Descripción</th>
                             <th className="border p-2">Ubicación</th>

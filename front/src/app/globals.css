@@ -8,8 +8,8 @@
     min-height: 100dvh;
 }
 :root{
-    --primary-color: #F45D01;
-    --secundary-color: #5BC0EB;
-    --tertiary-color: #2C3D55;
-    --cuartiary-color: #ecfee8;
+    --primary-color: #3758F9;
+    --secundary-color: #838bfa;
+    --tertiary-color: #13C296;
+    --cuartiary-color: #e8ebfd;
 }

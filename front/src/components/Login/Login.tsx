@@ -1,6 +1,5 @@
 
 'use client'
-
 import { validateFields } from '@/helpers/validateLogin';
 import { IloginError, IloginProps } from '@/interfaces/ILogin';
 import { useRouter } from 'next/navigation';
@@ -8,6 +7,8 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { login } from '@/helpers/auth.helper';
 import Swal from 'sweetalert2';
+import Input from '../ui/Input';
+import Boton from '../ui/Boton';
 
 
 const LoginForm = () => {
@@ -90,8 +91,9 @@ const LoginForm = () => {
       }, [dataUser])
     
         return (
-            <div className='my-4 text-center flex flex-col items-center bg-white shadow-lg px-4 rounded-2xl'>
-            <Image src="/images/busto.png" alt="representacion inicio" width={200} height={200}/>
+            <div className='my-4 text-center flex flex-col items-center bg-white shadow-lg px-4 rounded-lg'>
+            {/* <Image src="/images/busto.png" alt="representacion inicio" width={200} height={200}/> */}
+            <Image src="/images/logo.png" alt="imagenLogo" width={350} height={350} className='m-10' />
             <h1 className='font-bold text-2xl mt-4'>INICIAR SESION</h1>
             <form
               onSubmit={handleSubmit}
@@ -99,13 +101,13 @@ const LoginForm = () => {
             >
 
                <div className="flex flex-col mt-4">
-                <input
+                
+                <Input
                   type="text"
                   name='email'
                   value={dataUser.email}
                   onChange={handleChange}
                   placeholder="Email"
-                  className="border rounded-full bg-secundaryColor text-black placeholder:text-black text-left p-2 pl-3 mt-1 outline-none focus:border-tertiaryColor shadow-xl hover:scale-105"
                 />
                 </div>
 
@@ -113,29 +115,25 @@ const LoginForm = () => {
                   <div className="text-red-500 text-xs mt-2">{errors.email}</div>
                 )}
         
-        <div className="flex flex-col mt-4">
-                <input
+        <div className="flex flex-col my-4">
+                <Input
                   type="password"
                   name='password'
                   value={dataUser.password}
                   onChange={handleChange}
                   placeholder="Password"
-                  className="border rounded-full bg-secundaryColor text-black placeholder:text-black text-left p-2 pl-3 mt-1 outline-none focus:border-tertiaryColor shadow-xl hover:scale-105"
                 />
             </div>
 
                 {errors.password && (
                   <div className="text-red-500 text-xs mt-2">{errors.password}</div>
                 )}
-
-              <button
-                type="submit"
-                disabled={errors ? false :true}
-                className="border rounded-full w-40 h-12 bg-tertiaryColor text-cuartiaryColor m-20 hover:scale-105 hover:bg-primaryColor ease-in-out duration-300"
-              >
-                    INICIAR SESION
-              </button>
-              
+              <Boton 
+                type='submit'
+                disabled={errors ? false: true}>
+                  Iniciar Sesion
+              </Boton>
+             
             </form>
             </div>
           );

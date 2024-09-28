@@ -11,12 +11,14 @@ import { RoleSeedService } from './seeder/userSeeder/seed.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { CampaignModule } from './modules/campaign/campaign.module';
-import { SeedModule } from './seeder/userSeeder/seed.module';
-import { UserSeedService } from './seeder/userSeeder/user.seed.service';
 import { PaymentModule } from './modules/payments/payment.module';
 import { AccountSeedModule } from './seeder/accountSeeder/seed.module';
 import { MailModule } from './modules/mail/mail.module';
 import { AccountSeeder } from './seeder/accountSeeder/seed.service';
+import { SeedModule } from './seeder/userSeeder/seed.module';
+import { UserSeedService } from './seeder/userSeeder/user.seed.service';
+import { VoteModule } from './modules/vote/vote.module';
+
 
 
 @Module({
@@ -39,6 +41,7 @@ import { AccountSeeder } from './seeder/accountSeeder/seed.service';
   CampaignModule,
   AccountSeedModule,
   SeedModule,
+  VoteModule,
   JwtModule.register({
     global:true,
     signOptions:{expiresIn:"1h"},

@@ -28,7 +28,6 @@ export class UserService{
     @InjectRepository(Account) private readonly accountRepository:Repository<Account>,
   ) {}
 
-  
 
   async getUsers(parentId?: string): Promise<User[]> {
     try {
@@ -38,31 +37,23 @@ export class UserService{
         if (!parentUser) {
           throw new NotFoundException(`User with id ${parentId} not found`);
         }
-  
-        // Obtén las relaciones donde este usuario es el padre
+  // Obtén las relaciones donde este usuario es el padre
         const childRelations = await this.structureRepository.find({
           where: { parent: parentUser }, // Usando la relación
           relations: ['child'], // Carga la relación child
         });
-  
 
-  
-        // Accede a childId
-        const childIds = childRelations.map(rel => rel.child.id); // Accede a child.id
+        const childIds = childRelations.map(rel => rel.child.id); 
       
-  
-        // Solo busca si childIds tiene elementos
         if (childIds.length > 0) {
           return await this.userRepository.find({
             where: { id: In(childIds) },
             relations: ['roles'], 
           });
         } else {
-          return []; // No hay hijos
+          return []; 
         }
       }
-  
-      // Si no se proporciona parentId, devuelve todos los usuarios
       return await this.userRepository.find({relations: ['roles']});
     } catch (error) {
       throw new InternalServerErrorException('Error retrieving users');
@@ -90,7 +81,6 @@ export class UserService{
     
     return user;
   }
-  
   
   
   async deteleUserById(id: string):Promise <string> {
@@ -146,6 +136,7 @@ export class UserService{
     }
   }
   
+
   async getUserById(id: string) {
     try {
       const user = await this.userRepository.findOne({
@@ -164,6 +155,7 @@ export class UserService{
     }
   }
  
+
   async findUserByEmail(email:string):Promise<User>{
       const user = await this.userRepository.findOneBy({ email })
       if (!user) {
@@ -181,18 +173,16 @@ export class UserService{
    return user;
   }
 
-  async createUser(createUserDto: CreateUserDto, parentId?: string): Promise<Omit<User, 'password'>> {
 
+  async createUser(createUserDto: CreateUserDto, parentId?: string): Promise<Omit<User, 'password'>> {
     const user = await this.userRepository.findOneBy({ dni: createUserDto.dni });
     if (user) {
       throw new UnauthorizedException(`User with dni: ${createUserDto.dni} already exists`);
     }
-  
     const userByEmail = await this.userRepository.findOneBy({ email: createUserDto.email });
     if (userByEmail) {
       throw new UnauthorizedException(`User with email: ${createUserDto.email} already exists`);
     }
-  
     const passwordGenerated = !createUserDto.password;
     const password = createUserDto.password || generateRandomPassword();
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -201,8 +191,7 @@ export class UserService{
     if (!defaultRole) {
       throw new BadRequestException('Default role not found');
     }
-  
-  
+    
     let userRoles: Role[] = [defaultRole];
     if (createUserDto.roles && createUserDto.roles.length > 0) {
       userRoles = await this.roleRepository.findBy({ id: In(createUserDto.roles) });
@@ -214,6 +203,7 @@ export class UserService{
   if (!withoutAccount) {
     throw new BadRequestException('Default account not found');
   }
+
   
 
   let newUser = this.userRepository.create({})
@@ -283,30 +273,57 @@ export class UserService{
     return users;
   }
   
-  async importUsers(filePath: string, parentId:string): Promise<{ addedUsers: string[], skippedUsers: string[] }>{
+  async importUsers(
+    filePath: string, 
+    parentId: string
+  ): Promise<{ addedUsers: string[], errors: string[] }> {
     if (!filePath) {
-      throw new BadRequestException('file not selected')
+      throw new BadRequestException('File not selected');
     }
+  
     const users = await this.readExcelFile(filePath);
     const addedUsers: string[] = [];
-    const skippedUsers: string[] = [];
+    const errors: string[] = [];
+  
     for (const user of users) {
-        const existingUser = await this.findUserByEmailxlsx(user.email);
-        if (!existingUser) {
-            await this.createUser(user, parentId);
-            addedUsers.push(user.email);
-        } else {
-            console.log(`User ${user.email} already exists. Skipping...`);
-            skippedUsers.push(user.email);
+      // Validar si todos los campos necesarios están presentes
+      const missingFields = this.validateUserFields(user);
+      if (missingFields.length > 0) {
+        errors.push(`Fallo en carga de datos del usuario ${user.email} (Nombre: ${user.name || 'N/A'}, DNI: ${user.dni || 'N/A'}): faltan los siguientes campos: ${missingFields.join(', ')}, registrar manualmente`);
+        continue;  // Salta al siguiente usuario
+      }
+  
+      // Verificar si el usuario ya existe
+      const existingUser = await this.findUserByEmailxlsx(user.email);
+      if (!existingUser) {
+        try {
+          await this.createUser(user, parentId);
+          addedUsers.push(user.email);
+        } catch (err) {
+          errors.push(`Fallo en la creación del usuario ${user.email}: ${err.message}`);
         }
-        
+      } else {
+        errors.push(`El usuario ${user.email} (Nombre: ${user.name || 'N/A'}, DNI: ${user.dni || 'N/A'}) ya existe.`);
+      }
     }
+  
     return {
       addedUsers,
-      skippedUsers,
+      errors  
     };
-}
-
+  }
+  
+  
+  private validateUserFields(user: CreateUserDto): string[] {
+    const missingFields = [];
+  
+    if (!user.name) missingFields.push('nombre');
+    if (!user.dni) missingFields.push('dni');
+    if (!user.email) missingFields.push('correo');
+  
+    return missingFields;
+  }
+  
 
   async findUserByEmailxlsx(email: string): Promise<User | undefined> {
     return await this.userRepository.findOne({ where: { email } });

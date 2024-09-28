@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import IUsers from "@/interfaces/IUsers";
 import { IloginProps } from "@/interfaces/ILogin";
 import { usePathname } from "next/navigation";
+const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 const Users = () => {
   const [userSesion, setUserSesion] = useState<IloginProps>();
@@ -28,7 +29,7 @@ const Users = () => {
       const actualUser = String(userSesion.result.id);
 
       try {
-        const response = await fetch(`http://localhost:3000/user?parentId=${actualUser}`, {
+        const response = await fetch(`${APIURL}/user?parentId=${actualUser}`, {
           method: "GET",
         });
 
@@ -57,14 +58,14 @@ const Users = () => {
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
           <thead>
-            <tr className="bg-gray-100 text-left">
-              <th className="py-3 px-6 text-sm font-medium text-gray-700">Nombre</th>
-              <th className="py-3 px-6 text-sm font-medium text-gray-700">Email</th>
-              <th className="py-3 px-6 text-sm font-medium text-gray-700">DNI</th>
-              <th className="py-3 px-6 text-sm font-medium text-gray-700">Domicilio</th>
-              <th className="py-3 px-6 text-sm font-medium text-gray-700">Ciudad</th>
-              <th className="py-3 px-6 text-sm font-medium text-gray-700">País</th>
-              <th className="py-3 px-6 text-sm font-medium text-gray-700">Accion</th>
+            <tr className="bg-primaryColor text-white text-left">
+              <th className="py-3 px-6 text-sm font-medium">Nombre</th>
+              <th className="py-3 px-6 text-sm font-medium">Email</th>
+              <th className="py-3 px-6 text-sm font-medium">DNI</th>
+              <th className="py-3 px-6 text-sm font-medium">Domicilio</th>
+              <th className="py-3 px-6 text-sm font-medium">Ciudad</th>
+              <th className="py-3 px-6 text-sm font-medium">País</th>
+              <th className="py-3 px-6 text-sm font-medium">Accion</th>
             </tr>
           </thead>
           <tbody>

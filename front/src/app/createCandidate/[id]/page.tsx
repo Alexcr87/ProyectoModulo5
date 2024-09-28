@@ -9,7 +9,7 @@ const CreateCandidateById = () => {
   const userId = Array.isArray(id) ? id[0] : id; 
 
   return (
-    <div>
+    <div className='bg-cuartiaryColor flex justify-center '>
       <CreateCandidate userId={userId} />
     </div>
   );
