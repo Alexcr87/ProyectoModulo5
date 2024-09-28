@@ -5,7 +5,7 @@ import { Role } from "./roles.entity"
 import { ApiProperty } from "@nestjs/swagger"
 import { IsBoolean } from "class-validator"
 import { Campaign } from "./campaign.entity"
-import { Package } from "src/modules/payments/services.package"
+import { Account } from "./account.entity"
 
 
 @Entity({name: 'users'})
@@ -41,8 +41,6 @@ export class User{
   @Column({ default: false })
   isFirstLogin: boolean;
 
-  @Column({ default: [{ id: 0, name: 'No Account', maxParticipants: 0, price: 0 }] , nullable: true, })
-  accounts: Package[]
 
   @OneToOne(() => Candidate, candidate => candidate.user, { cascade: ['remove'], onDelete: 'CASCADE' })
   candidate: Candidate;
@@ -63,4 +61,8 @@ export class User{
 
   @OneToMany(() => Campaign, (campaign) => campaign.user)
   campaigns: Campaign[];
+
+  
+  @OneToMany(()=>Account , account =>account.user)
+  accounts: Account[]
 }

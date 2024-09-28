@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CreateUserDto} from "src/dto/createUserDto";
 import { User } from "src/entities/user.entity";
@@ -11,7 +11,8 @@ import { MailService } from "../mail/mail.service";
 import { generateRandomPassword } from "src/helpers/password.helper"
 import { OrganizationalStructure} from "src/entities/organizationalStructure.entity";
 import { CreateUserDtoByAdmin } from "src/dto/createUserByAdminDto";
-import { Package,servicePackages } from "../payments/services.package";
+import { Account } from "src/entities/account.entity";
+
 
 @Injectable()
 export class UserService{
@@ -24,6 +25,7 @@ export class UserService{
     private readonly mailService: MailService, 
     @InjectRepository(OrganizationalStructure)
     private structureRepository: Repository<OrganizationalStructure>,
+    @InjectRepository(Account) private readonly accountRepository:Repository<Account>,
   ) {}
 
   
@@ -76,12 +78,13 @@ export class UserService{
       throw new NotFoundException('User not found');
     }
 
-    const selectedPackage = servicePackages.find(pkg => pkg.id === packageId);
+    const selectedPackage = await this.accountRepository.findOne({where:{id:packageId}});
    
-
-    user.accounts.push(selectedPackage);
-
- 
+    if (!user.accounts.some(account => account.id === selectedPackage.id)) {
+      user.accounts.push(selectedPackage);
+    } else {
+      throw new ConflictException('Package already assigned to user');
+    }
     await this.userRepository.save(user);
 
     
@@ -207,7 +210,10 @@ export class UserService{
         throw new BadRequestException('Some roles not found');
       }
     }
-  
+  const withoutAccount = await this.accountRepository.findOne({where:{id:0}});
+  if (!withoutAccount) {
+    throw new BadRequestException('Default account not found');
+  }
   
 
   let newUser = this.userRepository.create({})
@@ -218,6 +224,7 @@ export class UserService{
       ...createUserDto,
       password: hashedPassword,
       roles: userRoles,
+      accounts:[withoutAccount],
       isFirstLogin: !passwordGenerated ? false : undefined,
     });
     await this.userRepository.save(newUser);
@@ -227,6 +234,7 @@ export class UserService{
         ...createUserDto,
         password: hashedPassword,
         roles: userRoles,
+        accounts:[withoutAccount],
         isFirstLogin: !passwordGenerated ? false : undefined,
       });
       await this.userRepository.save(newUser);
