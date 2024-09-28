@@ -24,13 +24,13 @@ export class User{
   @Column({type: "varchar",nullable: false})
   password:string
 
-  @Column({type: "text"})
+  @Column({type: "text", nullable: true})
   address: string
 
-  @Column({type: "varchar", length: 50})
+  @Column({type: "varchar", nullable: true, length: 50})
   city: string
 
-  @Column({type: "varchar", length: 50})
+  @Column({type: "varchar", nullable: true, length: 50})
   country: string
   
   @Column({ default: false })

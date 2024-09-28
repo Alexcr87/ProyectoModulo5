@@ -1,8 +1,9 @@
 import { IsBoolean, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, Length, Matches, } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Role } from 'src/entities/roles.entity';
 
 
-export class CreateUserDtoByAdmin{
+export class CreateUserDtoByAuth0{
   @ApiProperty({
     example:"nameuser"
   })
@@ -26,28 +27,20 @@ export class CreateUserDtoByAdmin{
   email:string
 
 
-  @ApiProperty({
-    example:"12345aS@"
-  })
-  @Length(8,15, {message: "password property must contain a minimum of 8 to 15 characters"})
   @IsString()
   @IsOptional()
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,100}$/ , {
-    message: "password must contain at least one lowercase letter, one uppercase letter, one number, and one special character (!@#$%^&*)"
-})
-  password:string
-
-  @IsString()
-  @IsNotEmpty({message:"address must not be empty"})
   @Length(3,80, {message: "address property must contain a minimum of 3 to 80 characters"})
   @ApiProperty({
     example: "Saavedra 4353"
 })
   address:string
 
+  @IsString()
+  @IsOptional()
+  password:string
 
  @IsString()
- @IsNotEmpty({message:"city must not be empty"})
+ @IsOptional()
  @Length(5,50, {message:"city property must contain a minimum of 5 to 50 characters"})
  @ApiProperty({
     example: "Cap. Fed."
@@ -55,7 +48,7 @@ export class CreateUserDtoByAdmin{
   city:string
 
 @IsString()
-@IsNotEmpty({message:"country must not be empty"})
+@IsOptional()
 @Length(5,50, {message:"country property must contain a minimum of 5 to 50 characters"})
 @ApiProperty({
     example: "Argentina"
@@ -67,7 +60,7 @@ export class CreateUserDtoByAdmin{
     description: 'Optional list of role IDs to assign to the user',
     example: [1, 2],
   })
-  roles?: number[];
+  roles?: Role[];
 
 }
 

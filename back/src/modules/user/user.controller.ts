@@ -11,8 +11,9 @@ import { RolesGuard } from "src/Guards/roles.guard";
 import { AuthGuard } from "src/Guards/auth.guard";
 import { User } from "src/entities/user.entity";
 import { Role } from "src/entities/roles.entity";
-import { CreateUserDtoByAdmin } from "src/dto/createUserByAdminDto";
+
 import { Request } from "express";
+import { CreateUserDtoByAuth0 } from "src/dto/createUserByAuth0Dto";
 
 
 @ApiTags("Users")
@@ -137,24 +138,6 @@ export class UserController {
     }
   }
 
-
-  @Post("/byadmin")
-  @HttpCode(201)
-  @ApiQuery({ name: 'parentId', required: false, description: 'Optional parent ID to filter users' })
-  async createUserByAdmin(
-    @Query("parentId") parentId: string,
-    @Body() createUserDto: CreateUserDtoByAdmin
-  ) {
-    try {     
-      return await this.userService.createUserByAdmin(createUserDto,parentId)
-    } catch (error) {
-      if (error.response && error.response.error === 'Unauthorized') {
-        throw new ConflictException(error.response.message);
-      } else {
-        throw new InternalServerErrorException('Error creating user');
-      }
-    }
-  }
 
   //EXCELL
   @Post('import')
