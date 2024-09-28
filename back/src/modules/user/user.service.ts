@@ -56,7 +56,7 @@ export class UserService{
       throw new InternalServerErrorException('Error retrieving users');
     }
   }
-  
+   
   
   async deteleUserById(id: string):Promise <string> {
     try {
@@ -103,7 +103,7 @@ export class UserService{
         password: hashedPassword,
         roles,  
       });
-  
+
       const { password, ...userToShow } = updatedUser
       return userToShow
     } catch (error) {
@@ -122,7 +122,6 @@ export class UserService{
       if (!user) {
         throw new NotFoundException(`User with id: ${id} not found`)
       }
-
       const { password, ...userToShow } = user
       return userToShow
     } catch (error) {
@@ -174,12 +173,9 @@ export class UserService{
         throw new BadRequestException('Some roles not found');
       }
     }
-  
 
   let newUser = this.userRepository.create({})
-    // Enviar emails según si la contraseña fue generada o no
     if (passwordGenerated) {
-       // Crear el nuevo usuario
     newUser = this.userRepository.create({
       ...createUserDto,
       password: hashedPassword,
@@ -198,30 +194,24 @@ export class UserService{
       await this.userRepository.save(newUser);
       await this.mailService.sendWelcomeEmail(newUser.email, newUser.name);
     }
-    
 
     if (parentId) {
       const parentUser = await this.userRepository.findOneBy({ id: parentId });
       if (!parentUser) {
         throw new BadRequestException(`Parent user with id: ${parentId} not found`);
       }
-  
       const existingRelation = await this.structureRepository.findOne({
         where: { child: { id: newUser.id } },
       });
-  
       if (existingRelation) {
         throw new BadRequestException(`User with id: ${newUser.id} is already related to another parent`);
       }
-  
-      // Crear la relación padre-hijo
       const structureRelation = this.structureRepository.create({
         parent: parentUser,
         child: newUser,
       });
       await this.structureRepository.save(structureRelation);
     }
-  
     const { password: excludedPassword, ...result } = newUser;
     return result;
   }
@@ -240,7 +230,6 @@ export class UserService{
   
     return users;
   }
-  
   async importUsers(
     filePath: string, 
     parentId: string
@@ -254,14 +243,12 @@ export class UserService{
     const errors: string[] = [];
   
     for (const user of users) {
-      // Validar si todos los campos necesarios están presentes
       const missingFields = this.validateUserFields(user);
       if (missingFields.length > 0) {
         errors.push(`Fallo en carga de datos del usuario ${user.email} (Nombre: ${user.name || 'N/A'}, DNI: ${user.dni || 'N/A'}): faltan los siguientes campos: ${missingFields.join(', ')}, registrar manualmente`);
-        continue;  // Salta al siguiente usuario
+        continue;
       }
   
-      // Verificar si el usuario ya existe
       const existingUser = await this.findUserByEmailxlsx(user.email);
       if (!existingUser) {
         try {
@@ -280,8 +267,6 @@ export class UserService{
       errors  
     };
   }
-  
-  
   private validateUserFields(user: CreateUserDto): string[] {
     const missingFields = [];
   
