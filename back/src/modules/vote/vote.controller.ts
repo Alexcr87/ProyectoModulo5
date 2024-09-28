@@ -14,10 +14,15 @@ export class VoteController {
   @Get('/campaign/:campaignId/candidates')
     async getCandidatesWithVotes(@Param('campaignId') campaignId: string) {
       return this.voteService.getCandidatesWithVotes(campaignId);
-    }
+  }
 
-    @Get('/campaign/:campaignId/total-users')
+  @Get('/campaign/:campaignId/total-users')
     async getTotalUsersInCampaign(@Param('campaignId') campaignId: string) {
       return this.voteService.getTotalUsersInCampaign(campaignId);
+  }
+
+  @Get('/blankVote/:campaignId/total-black-votes')
+    async getBlankVotes(@Param('campaignId') campaignId: string) {
+      return this.voteService.getBlankVotes(campaignId);
     }
 }

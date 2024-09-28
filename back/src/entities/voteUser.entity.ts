@@ -1,4 +1,4 @@
-import { CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user.entity";
 import { Campaign } from "./campaign.entity";
 
@@ -12,6 +12,9 @@ export class VoteUser {
 
   @ManyToOne(() => Campaign, campaign => campaign.votes)
   campaign: Campaign;
+
+  @Column({ default: false })
+  blankVote: boolean;
 
   @CreateDateColumn()
   createdAt: Date;  // Fecha y hora del voto
