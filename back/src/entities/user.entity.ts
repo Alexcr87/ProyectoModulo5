@@ -3,7 +3,9 @@ import {v4 as uuid} from 'uuid'
 import { Candidate } from "./candidate.entity"
 import { Role } from "./roles.entity"
 import { Campaign } from "./campaign.entity"
+import { Account } from "./account.entity"
 import { VoteUser } from "./voteUser.entity"
+
 
 
 @Entity({name: 'users'})
@@ -24,17 +26,18 @@ export class User{
   @Column({type: "varchar",nullable: false})
   password:string
 
-  @Column({type: "text"})
+  @Column({type: "text", nullable: true})
   address: string
 
-  @Column({type: "varchar", length: 50})
+  @Column({type: "varchar", nullable: true, length: 50})
   city: string
 
-  @Column({type: "varchar", length: 50})
+  @Column({type: "varchar", nullable: true, length: 50})
   country: string
   
   @Column({ default: false })
   isFirstLogin: boolean;
+
 
   @OneToOne(() => Candidate, candidate => candidate.user, { cascade: ['remove'], onDelete: 'CASCADE' })
   candidate: Candidate;
@@ -50,6 +53,10 @@ export class User{
   @OneToMany(() => Campaign, (campaign) => campaign.user)
   campaigns: Campaign[];
 
+  @OneToMany(()=>Account , account =>account.user)
+  accounts: Account[]
+
   @OneToMany(() => VoteUser, votoUsuario => votoUsuario.user)
   votes: VoteUser[];
+
 }

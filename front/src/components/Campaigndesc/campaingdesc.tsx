@@ -4,6 +4,7 @@ import React, { Suspense, useEffect, useState } from 'react';
 import ICampaign from '@/interfaces/ICampaign';
 import { IloginProps } from '@/interfaces/ILogin';
 import { useSearchParams } from 'next/navigation';
+const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 const Campaingdesc = () => {
   const [campaign, setCampaign] = useState<ICampaign | null>(null);
@@ -39,7 +40,7 @@ const Campaingdesc = () => {
       }
 
       try {
-        const response = await fetch(`http://localhost:3000/campaigns/${campaignId}`);
+        const response = await fetch(`${APIURL}/campaigns/${campaignId}`);
       
 
         if (!response.ok) {

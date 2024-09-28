@@ -1,4 +1,4 @@
-import { IRegisterCandidate } from "@/components/registerCandidate/TypesRegisterCandidate"
+
 import ICandidate from "@/interfaces/ICandidate"
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
@@ -6,10 +6,10 @@ const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 export async function getCandidates(): Promise<ICandidate[]> {
     try {
         const res = await fetch(`${APIURL}/candidates`,{
-            //next: {revalidate: 1200}
+            //next: {revalidate: 1200},
             cache: 'no-cache'
         })
-        const candidates = res.json()
+        const candidates = await res.json()
         return candidates
 
     } catch (error:any) {
@@ -23,7 +23,7 @@ export async function getCandidatesByID(id:string): Promise<ICandidate> {
             //next: {revalidate: 1200}
              cache: 'no-cache'
         })
-        const candidate = res.json()
+        const candidate = await res.json()
         return candidate
 
     } catch (error:any) {
@@ -31,7 +31,7 @@ export async function getCandidatesByID(id:string): Promise<ICandidate> {
     }
 }
 
-export async function registerCandidate(userData: IRegisterCandidate) {
+export async function registerCandidate(userData: ICandidate) {
     try {
       const res = await fetch(`${APIURL}/candidates`, {
         method: "POST",

@@ -4,20 +4,19 @@ import { User } from "src/entities/user.entity";
 import { UserService } from "./user.service";
 import { UserController } from "./user.controller";
 import { Role } from "src/entities/roles.entity";
-import { MailService } from "../mail/mail.service";
 import { OrganizationalStructure } from "src/entities/organizationalStructure.entity";
+import { Account } from "src/entities/account.entity";
+import { MailModule } from "../mail/mail.module";
+import { MailService } from "../mail/mail.service";
 import { requiresAuth } from "express-openid-connect";
 
 
+
 @Module({
-  imports:[TypeOrmModule.forFeature([User, Role,OrganizationalStructure])],
-  providers:[UserService, MailService],
+  imports:[TypeOrmModule.forFeature([User, Role,OrganizationalStructure,Account]) ,MailModule],
+  providers:[UserService],
   controllers:[UserController],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule , UserService],
 })
 
-export class UserModule implements NestModule{
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(requiresAuth()).forRoutes('user/auth0/protected')
-  }
-}
+export class UserModule {}

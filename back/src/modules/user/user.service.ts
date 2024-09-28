@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CreateUserDto} from "src/dto/createUserDto";
 import { User } from "src/entities/user.entity";
@@ -10,7 +10,9 @@ import * as fs from 'fs';
 import { MailService } from "../mail/mail.service";
 import { generateRandomPassword } from "src/helpers/password.helper"
 import { OrganizationalStructure} from "src/entities/organizationalStructure.entity";
-import { CreateUserDtoByAdmin } from "src/dto/createUserByAdminDto";
+
+import { Account } from "src/entities/account.entity";
+
 
 @Injectable()
 export class UserService{
@@ -23,6 +25,7 @@ export class UserService{
     private readonly mailService: MailService, 
     @InjectRepository(OrganizationalStructure)
     private structureRepository: Repository<OrganizationalStructure>,
+    @InjectRepository(Account) private readonly accountRepository:Repository<Account>,
   ) {}
 
 
@@ -56,7 +59,33 @@ export class UserService{
       throw new InternalServerErrorException('Error retrieving users');
     }
   }
+<<<<<<< HEAD
    
+=======
+
+  async assignPackageToUser(userId: string, packageId : number): Promise<User> {
+   
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+
+   
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const selectedPackage = await this.accountRepository.findOne({where:{id:packageId}});
+   
+    if (!user.accounts.some(account => account.id === selectedPackage.id)) {
+      user.accounts.push(selectedPackage);
+    } else {
+      throw new ConflictException('Package already assigned to user');
+    }
+    await this.userRepository.save(user);
+
+    
+    return user;
+  }
+  
+>>>>>>> 6227629c02b9f025eaaa0e0b3fd03359ad13d673
   
   async deteleUserById(id: string):Promise <string> {
     try {
@@ -173,6 +202,15 @@ export class UserService{
         throw new BadRequestException('Some roles not found');
       }
     }
+<<<<<<< HEAD
+=======
+  const withoutAccount = await this.accountRepository.findOne({where:{id:0}});
+  if (!withoutAccount) {
+    throw new BadRequestException('Default account not found');
+  }
+
+  
+>>>>>>> 6227629c02b9f025eaaa0e0b3fd03359ad13d673
 
   let newUser = this.userRepository.create({})
     if (passwordGenerated) {
@@ -180,6 +218,7 @@ export class UserService{
       ...createUserDto,
       password: hashedPassword,
       roles: userRoles,
+      accounts:[withoutAccount],
       isFirstLogin: !passwordGenerated ? false : undefined,
     });
     await this.userRepository.save(newUser);
@@ -189,6 +228,7 @@ export class UserService{
         ...createUserDto,
         password: hashedPassword,
         roles: userRoles,
+        accounts:[withoutAccount],
         isFirstLogin: !passwordGenerated ? false : undefined,
       });
       await this.userRepository.save(newUser);
@@ -282,72 +322,5 @@ export class UserService{
     return await this.userRepository.findOne({ where: { email } });
   }
 
-  async createUserByAdmin(createUserDto: CreateUserDtoByAdmin, parentId: string) {
-    const user = await this.userRepository.findOneBy({ dni: createUserDto.dni });
-    if (user) {
-      throw new UnauthorizedException(`User with dni: ${createUserDto.dni} already exists`);
-    }
-  
-    const userByEmail = await this.userRepository.findOneBy({ email: createUserDto.email });
-    if (userByEmail) {
-      throw new UnauthorizedException(`User with email: ${createUserDto.email} already exists`);
-    }
-  
-    const passwordGenerated = !createUserDto.password;
-    const password = createUserDto.password || generateRandomPassword();
-    const hashedPassword = await bcrypt.hash(password, 10);
-  
-    const defaultRole = await this.roleRepository.findOne({ where: { id: 3 } });
-    if (!defaultRole) {
-      throw new BadRequestException('Default role not found');
-    }
-  
-  
-    let userRoles: Role[] = [defaultRole];
-    if (createUserDto.roles && createUserDto.roles.length > 0) {
-      userRoles = await this.roleRepository.findBy({ id: In(createUserDto.roles) });
-      if (userRoles.length !== createUserDto.roles.length) {
-        throw new BadRequestException('Some roles not found');
-      }
-    }
-
-  let newUser = this.userRepository.create({})
-    // Enviar emails según si la contraseña fue generada o no
-
-       // Crear el nuevo usuario
-    newUser = this.userRepository.create({
-      ...createUserDto,
-      password: hashedPassword,
-      roles: userRoles,
-      isFirstLogin: !passwordGenerated ? false : undefined,
-    });
-    await this.userRepository.save(newUser);
-      await this.mailService.sendPasswordEmail(newUser.email, newUser.name, password);
-   
-    if (parentId) {
-      const parentUser = await this.userRepository.findOneBy({ id: parentId });
-      if (!parentUser) {
-        throw new BadRequestException(`Parent user with id: ${parentId} not found`);
-      }
-  
-      const existingRelation = await this.structureRepository.findOne({
-        where: { child: { id: newUser.id } },
-      });
-  
-      if (existingRelation) {
-        throw new BadRequestException(`User with id: ${newUser.id} is already related to another parent`);
-      }
-  
-      // Crear la relación padre-hijo
-      const structureRelation = this.structureRepository.create({
-        parent: parentUser,
-        child: newUser,
-      });
-      await this.structureRepository.save(structureRelation);
-    }
-  
-    const { password: excludedPassword, ...result } = newUser;
-    return result;
-  }
 
 }
