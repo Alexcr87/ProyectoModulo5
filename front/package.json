@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.6.0",
+    "@mercadopago/sdk-js": "^0.0.3",
+    "mercadopago": "^2.0.15",
     "next": "^14.2.11",
     "openai": "^4.63.0",
     "react": "^18",
