@@ -3,11 +3,9 @@ import {v4 as uuid} from 'uuid'
 import { Candidate } from "./candidate.entity"
 import { Role } from "./roles.entity"
 import { Campaign } from "./campaign.entity"
-<<<<<<< HEAD
 import { Account } from "./account.entity"
-=======
 import { VoteUser } from "./voteUser.entity"
->>>>>>> development
+
 
 
 @Entity({name: 'users'})
@@ -55,12 +53,10 @@ export class User{
   @OneToMany(() => Campaign, (campaign) => campaign.user)
   campaigns: Campaign[];
 
-<<<<<<< HEAD
-  
   @OneToMany(()=>Account , account =>account.user)
   accounts: Account[]
-=======
+
   @OneToMany(() => VoteUser, votoUsuario => votoUsuario.user)
   votes: VoteUser[];
->>>>>>> development
+
 }
