@@ -3,7 +3,9 @@ import {v4 as uuid} from 'uuid'
 import { Candidate } from "./candidate.entity"
 import { Role } from "./roles.entity"
 import { Campaign } from "./campaign.entity"
+import { Account } from "./account.entity"
 import { VoteUser } from "./voteUser.entity"
+
 
 
 @Entity({name: 'users'})
@@ -36,6 +38,7 @@ export class User{
   @Column({ default: false })
   isFirstLogin: boolean;
 
+
   @OneToOne(() => Candidate, candidate => candidate.user, { cascade: ['remove'], onDelete: 'CASCADE' })
   candidate: Candidate;
 
@@ -50,6 +53,10 @@ export class User{
   @OneToMany(() => Campaign, (campaign) => campaign.user)
   campaigns: Campaign[];
 
+  @OneToMany(()=>Account , account =>account.user)
+  accounts: Account[]
+
   @OneToMany(() => VoteUser, votoUsuario => votoUsuario.user)
   votes: VoteUser[];
+
 }

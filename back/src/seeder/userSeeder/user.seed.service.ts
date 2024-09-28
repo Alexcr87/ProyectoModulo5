@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '../entities/user.entity'; // Asegúrate de que el archivo user.entity.ts exista
-import { Role } from '../entities/roles.entity';
+import { User } from '../../entities/user.entity'; // Asegúrate de que el archivo user.entity.ts exista
+import { Role } from '../../entities/roles.entity';
 import * as bcrypt from 'bcrypt'; // Para encriptar la contraseña
 
 @Injectable()
