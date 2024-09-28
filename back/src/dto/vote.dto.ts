@@ -1,9 +1,12 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from "class-validator";
 
 export class VoteDto {
   @IsNotEmpty()
-  userId: string;
+  userId: string; 
 
   @IsNotEmpty()
-  candidateId: string;
+  campaignId: string; 
+  
+  @IsOptional()
+  candidateId?: string; 
 }
