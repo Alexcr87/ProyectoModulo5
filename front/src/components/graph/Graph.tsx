@@ -7,11 +7,13 @@ import {
   Legend,
 } from 'chart.js';
 import colors from '@/helpers/colors.helper';
+import ICampaign from '@/interfaces/ICampaign';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Graph = () => {
     const colorType = colors
+    
 
   const data = {
     labels: ['Juan', 'Pedro', 'Simon', 'En Blanco'],
