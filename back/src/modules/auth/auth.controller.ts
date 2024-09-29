@@ -105,7 +105,8 @@ export class AuthController {
 
     @Get('protected')
     userby(@Req() req:Request){
-        return JSON.stringify(req.oidc.user)
+        const user= req.oidc.user
+        return user
     }
 
 @Get('profile')

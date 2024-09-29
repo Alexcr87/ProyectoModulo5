@@ -17,3 +17,8 @@ export interface IloginError {
     email?: string
     password?: string
 }
+
+export interface IloginAuth0{
+    email:string,
+    name:string
+}

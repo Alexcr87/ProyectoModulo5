@@ -11,6 +11,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.6.0",
     "@mercadopago/sdk-js": "^0.0.3",
+    "jwt-decode": "^4.0.0",
     "mercadopago": "^2.0.15",
     "next": "^14.2.11",
     "openai": "^4.63.0",
@@ -19,6 +20,7 @@
     "sweetalert2": "^11.14.1"
   },
   "devDependencies": {
+    "@types/jwt-decode": "^3.1.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

@@ -13,10 +13,18 @@ import { AuthGuard } from "src/Guards/auth.guard";
 import { User } from "src/entities/user.entity";
 import { Role } from "src/entities/roles.entity";
 
-import { Request } from "express";
+import { Request, Response } from "express";
 import { CreateUserDtoByAuth0 } from "src/dto/createUserByAuth0Dto";
 
 
+
+@Controller('/')
+export class RedirectController {
+  @Get('')
+  redirectToFrontend(@Res() res: Response) {
+    res.redirect('http://localhost:4000');
+  }
+}
 
 @ApiTags("Users")
 @Controller("user")
@@ -79,17 +87,10 @@ export class UserController {
     try {
       return await this.userService.findUserByEmail(email)
     } catch (error) {
-        if (error instanceof NotFoundException){
-          const status = error.getStatus();
-          return {
-          statusCode: status ,
-          message: error.message
-          }
-        } else {
         throw new InternalServerErrorException('Error retrieving user by email')
       }
     }
-  }
+  
 
 
   @Put(":id")
