@@ -1,5 +1,7 @@
+import Pasarelapago from "@/components/pasarelapago/Pasarelapago";
+
  
-import Pasarelapago from "@/components/Pasarelapago/Pasarelapago";
+
 
 const paymentGatewayPage =()=>{
     return(
