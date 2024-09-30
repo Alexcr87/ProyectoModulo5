@@ -11,7 +11,11 @@ export class VoteController {
   @Post()
   @ApiResponse({ status: 201, description: 'Vote registered successfully.' })
   async vote(@Body() voteDto: VoteDto): Promise<string> {
-    return this.voteService.votar(voteDto.userId, voteDto.campaignId, voteDto.candidateId);
+    return this.voteService.votar(
+      voteDto.userId,
+      voteDto.campaignId,
+      voteDto.candidateId,
+    );
   }
 
   @Get('/campaign/:campaignId/candidates')
