@@ -204,8 +204,6 @@ export class UserService{
     throw new BadRequestException('Default account not found');
   }
 
-  
-
   let newUser = this.userRepository.create({})
     // Enviar emails según si la contraseña fue generada o no
     if (passwordGenerated) {
@@ -218,7 +216,7 @@ export class UserService{
       isFirstLogin: !passwordGenerated ? false : undefined,
     });
     await this.userRepository.save(newUser);
-      await this.mailService.sendPasswordEmail(newUser.email, newUser.name, password);
+      await this.mailService.sendWelcomeEmail(newUser.email, newUser.name, password);
     } else {
       newUser = this.userRepository.create({
         ...createUserDto,
@@ -228,7 +226,7 @@ export class UserService{
         isFirstLogin: !passwordGenerated ? false : undefined,
       });
       await this.userRepository.save(newUser);
-      await this.mailService.sendWelcomeEmail(newUser.email, newUser.name);
+      await this.mailService.sendWelcomeEmail(newUser.email, newUser.name, password);
     }
     
 
