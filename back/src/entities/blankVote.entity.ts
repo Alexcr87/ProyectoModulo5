@@ -1,6 +1,11 @@
-import { CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Campaign } from "./campaign.entity";
-import { User } from "./user.entity";
+import {
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Campaign } from './campaign.entity';
+import { User } from './user.entity';
 
 @Entity()
 export class BlankVote {

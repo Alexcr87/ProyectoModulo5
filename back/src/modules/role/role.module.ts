@@ -5,7 +5,7 @@ import { RoleSeedService } from '../../seeder/userSeeder/seed.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Role])],
-  providers: [RoleSeedService], 
-  exports: [RoleSeedService],  
+  providers: [RoleSeedService],
+  exports: [RoleSeedService],
 })
 export class RoleModule {}
