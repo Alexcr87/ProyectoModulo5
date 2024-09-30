@@ -24,10 +24,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode}> = ({children}:
       }
     },[userData])
 
-    useEffect(()=>{
-        const userData = localStorage.getItem("userSession")
-        setUserData(JSON.parse(userData!))
-    },[])
+    useEffect(() => {
+      const storedUserData = localStorage.getItem("userSession");
+      if (storedUserData) {
+        setUserData(JSON.parse(storedUserData));
+      }
+    }, []);
   return (
     <AuthContext.Provider value={{userData, setUserData}}>{children}</AuthContext.Provider>
   )

@@ -1,61 +1,55 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IRegisterError, IRegisterProps } from "./TypesRegister";
 import { importUser, register } from "@/helpers/auth.helper";
 import { validateRegisterForm } from "@/helpers/validateRegister";
-import Boton from "../ui/Boton";
-import Swal from 'sweetalert2'
-import { IloginProps } from "@/interfaces/ILogin";
+import Swal from "sweetalert2";
 import Input from "../ui/Input";
 import InputFile from "../ui/InputFile";
-
+import Boton from "../ui/Boton";
+import { useAuth } from "@/context/Authontext";
 
 
 const Register = () => {
   const router = useRouter();
-  const initialState = {
+  const { userData, setUserData } = useAuth(); // Usamos userData y setUserData del AuthContext
+
+  const initialState: IRegisterProps = {
     name: "",
     dni: "",
     address: "",
     email: "",
     password: "",
     country: "",
-    city: ""
+    city: "",
   };
 
   const [dataUser, setDataUser] = useState<IRegisterProps>(initialState);
   const [errors, setErrors] = useState<IRegisterError>(initialState);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [countries, setCountries] = useState<string[]>(["Argentina", "Chile", "Colombia"]);
+  const [countries] = useState<string[]>(["Argentina", "Chile", "Colombia"]);
   const [cities, setCities] = useState<string[]>([]);
   const [file, setFile] = useState<File | null>(null);
   const [touched, setTouched] = useState<IRegisterError>(initialState);
-  const [userSesion, setUserSesion] = useState<IloginProps>();
-  const pathname = usePathname();
 
-  const handleBlur = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const parentId = userData?.userData?.id; // Obtenemos el id del usuario autenticado desde el contexto
+
+  const handleBlur = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name } = event.target;
-    setTouched({
-      ...touched,
+    setTouched((prevTouched) => ({
+      ...prevTouched,
       [name]: true,
-    });
+    }));
   };
-  
-  
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] || null;
     setFile(selectedFile);
   };
-  useEffect(() => {
-    const localUser = localStorage.getItem("userSesion");
-    if (localUser) {
-      setUserSesion(JSON.parse(localUser));
-    }
-  }, [pathname]);
-
-  const parentId = userSesion?.result?.id
 
   const handleUpload = async () => {
     if (!file) {
@@ -66,15 +60,15 @@ const Register = () => {
       });
       return;
     }
-  
+
     try {
-      await importUser(file, parentId); // Pasa el parentId como argumento
+      await importUser(file, parentId);
       Swal.fire({
         position: "center",
         icon: "success",
         title: "Archivo subido con éxito",
         showConfirmButton: false,
-        timer: 1500
+        timer: 1500,
       });
       router.push("/users");
     } catch (error) {
@@ -83,88 +77,87 @@ const Register = () => {
         icon: "error",
         title: "Error al subir el archivo",
         showConfirmButton: false,
-        timer: 1500
+        timer: 1500,
       });
     }
   };
 
   const fetchCitiesByCountry = (country: string) => {
     const countryCitiesMap: Record<string, string[]> = {
-      "Argentina": ["Buenos Aires", "Córdoba", "Rosario"],
-      "Chile": ["Santiago", "Valparaíso", "Concepción"],
-      "Colombia": ["Bogotá", "Medellín", "Cali"],
+      Argentina: ["Buenos Aires", "Córdoba", "Rosario"],
+      Chile: ["Santiago", "Valparaíso", "Concepción"],
+      Colombia: ["Bogotá", "Medellín", "Cali"],
     };
     return countryCitiesMap[country] || [];
   };
-   
-    useEffect(() => {
+
+  useEffect(() => {
     setIsFormValid(
-      dataUser.name.trim() !== '' &&
-      dataUser.email.trim() !== '' &&
-      dataUser.dni.trim() !== '' &&
-      dataUser.address.trim() !== '' &&
-      dataUser.country.trim() !== '' &&
-      dataUser.city.trim() !== ''
+      dataUser.name.trim() !== "" &&
+        dataUser.email.trim() !== "" &&
+        dataUser.dni.trim() !== "" &&
+        dataUser.address.trim() !== "" &&
+        dataUser.country.trim() !== "" &&
+        dataUser.city.trim() !== ""
     );
   }, [dataUser]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = event.target;
-    setDataUser({
-      ...dataUser,
+    setDataUser((prevDataUser) => ({
+      ...prevDataUser,
       [name]: value,
-    });
+    }));
   };
 
-  const handleCountryChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleCountryChange = async (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const selectedCountry = event.target.value;
-    setDataUser({ ...dataUser, country: selectedCountry });
+    setDataUser((prevDataUser) => ({ ...prevDataUser, country: selectedCountry }));
 
-    // Fetch cities based on the selected country
     const fetchedCities = fetchCitiesByCountry(selectedCountry);
     setCities(fetchedCities);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
-    const userDataWithParentId = {
-      ...dataUser,
-    };
-  
+
     try {
-      const result = await register(userDataWithParentId, parentId); // Pasa parentId aquí
- 
-  
+      const result = await register(dataUser, parentId);
+
+      // Guardamos los datos del usuario en el contexto de autenticación
+      setUserData(result);
+
       Swal.fire({
         position: "center",
         icon: "success",
         title: "Usted se registró con éxito",
         showConfirmButton: false,
-        timer: 1500
+        timer: 1500,
       });
-      
+
       router.push("/users");
-    } catch (error) {
+    } catch (error: any) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "error.message", // Mostrar mensaje de error en caso de que falle
+        text: error.message || "Error al registrarse",
       });
     }
   };
-  
 
   useEffect(() => {
-    const errors = validateRegisterForm(dataUser);
-    setErrors(errors);
+    const validationErrors = validateRegisterForm(dataUser);
+    setErrors(validationErrors);
   }, [dataUser]);
-
 
   const handleDownloadExcel = () => {
     const link = document.createElement("a");
-    link.href = `${window.location.origin}/images/ExcelDeMuestra.xlsx`; 
-    link.download = "ExcelDeMuesta.xlsx"; 
+    link.href = `${window.location.origin}/images/ExcelDeMuestra.xlsx`;
+    link.download = "ExcelDeMuestra.xlsx";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -297,4 +290,3 @@ const Register = () => {
 };
 
 export default Register;
-

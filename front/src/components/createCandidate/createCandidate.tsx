@@ -5,10 +5,13 @@ import Input from "../ui/Input";
 import InputFile from "../ui/InputFile";
 import Textarea from "../ui/Textarea";
 import Select from "../ui/Select";
+import { useAuth } from '@/context/Authontext';
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
-const CreateCandidate = ({ userId }: { userId: string }) => {
+const CreateCandidate = () => {
+  const { userData } = useAuth(); // Obtener datos del usuario desde el contexto
+  const userId = userData?.userData?.id; // Extraer el userId
   const [postulation, setPostulation] = useState<string>("");
   const [list, setList] = useState<string>("");
   const [campaignDescription, setCampaignDescription] = useState<string>("");
@@ -19,12 +22,10 @@ const CreateCandidate = ({ userId }: { userId: string }) => {
 
   useEffect(() => {
     const fetchCampaigns = async () => {
-      const localUser = localStorage.getItem("userSesion")
-      const localUserParsed = JSON.parse(localUser!);
-      const actualUserId = localUserParsed.result.id
-   
+      if (!userId) return; // Asegúrate de que userId esté disponible
+
       try {
-        const response = await fetch(`${APIURL}/campaigns/user/${actualUserId}`);
+        const response = await fetch(`${APIURL}/campaigns/user/${userId}`);
         if (!response.ok) throw new Error("Error al obtener campañas");
         const data = await response.json();
         setCampaigns(data); // Asegúrate de que el formato de data sea el correcto
@@ -34,7 +35,7 @@ const CreateCandidate = ({ userId }: { userId: string }) => {
     };
 
     fetchCampaigns();
-  }, []);
+  }, [userId]); // Dependencia del userId
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -55,7 +56,7 @@ const CreateCandidate = ({ userId }: { userId: string }) => {
     formData.append("list", list);
     formData.append("campaignDescription", campaignDescription);
     formData.append("proposals", JSON.stringify(proposals));
-    formData.append("userId", userId);
+    formData.append("userId", userId!); // Usar el userId del contexto
     formData.append("campaignId", selectedCampaignId); // Usar el campaignId seleccionado
     if (file) {
       formData.append("file", file);
@@ -78,7 +79,7 @@ const CreateCandidate = ({ userId }: { userId: string }) => {
   };
 
   return (
-    <div className="flex w-[60%] justify-center  p-6 bg-white shadow-lg rounded-lg">
+    <div className="flex w-[60%] justify-center p-6 bg-white shadow-lg rounded-lg">
       <form onSubmit={handleSubmit} className="w-11/12 space-y-4">
         <h1 className="text-lg font-bold text-center">Crear Candidato</h1>
           <Input
@@ -126,7 +127,7 @@ const CreateCandidate = ({ userId }: { userId: string }) => {
           </Select>
         </div>
 
-        <div className=" rounded-md">
+        <div className="rounded-md">
           <label className="block text-sm font-medium text-gray-700">Imagen del candidato (JPG)</label>
           <InputFile
             type="file"
@@ -139,7 +140,6 @@ const CreateCandidate = ({ userId }: { userId: string }) => {
             <Boton>Crear Candidato </Boton>
           </div>
          </div>
-          
       </form>
     </div>
   );
