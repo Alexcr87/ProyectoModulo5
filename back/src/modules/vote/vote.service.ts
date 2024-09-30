@@ -64,34 +64,31 @@ export class VoteService {
     return 'Voto registrado con éxito';
   }
 
-  async getCandidatesWithVotes(campaignId: string) {
-    const campaign = await this.campaignRepository.findOne({
-      where: { id: campaignId },
-    });
-    if (!campaign) {
-      throw new NotFoundException('Campaña no encontrada');
-    }
-    const candidates = await this.candidateRepository.find({
-      where: { campaign: { id: campaignId } },
-    });
 
-    const candidatesWithVotes = await Promise.all(
-      candidates.map(async (candidate) => {
-        const voteRecord = await this.voteCandidateRepository.findOne({
-          where: {
-            candidate: { id: candidate.id },
-            campaign: { id: campaignId },
-          },
-        });
-        const votes = voteRecord ? voteRecord.count : 0;
-        return {
-          candidate,
-          votes,
-        };
-      }),
-    );
+  async getCandidatesWithVotes(campaignId: string) {
+    const candidates = await this.candidateRepository.find({
+      where: {
+        campaign: { id: campaignId },
+      },
+      relations: ['user'], 
+    });
+  
+    const candidatesWithVotes = await Promise.all(candidates.map(async (candidate) => {
+      const votes = await this.voteCandidateRepository.count({ 
+        where: { 
+          candidate: { id: candidate.id }, 
+        },
+      });
+      return {
+        ...candidate,
+        votes,
+        user: candidate.user, 
+      };
+    }));
+  
     return candidatesWithVotes;
   }
+  
 
   async getTotalUsersInCampaign(campaignId: string) {
     const campaign = await this.campaignRepository.findOne({
