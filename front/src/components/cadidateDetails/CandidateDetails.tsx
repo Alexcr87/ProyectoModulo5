@@ -30,7 +30,6 @@ const CandidateDetails = async (props:ICandidate) => {
     <div className='w-full flex flex-col items-center'>
       <div className='bg-white w-11/12 p-4 flex flex-col items-center rounded-t-2xl drop-shadow-2xl border-2 mt-4'>
         <h1 className='text-2xl font-bold capitalize'>Candidato a Votacion {props.postulation}</h1>
-        <p>{props.campaignDescription}</p>
       </div>
       <div className='grid grid-cols-2 w-11/12 justify-center gap-2 h-[65vh]'>
         <div className='bg-white flex justify-center items-center mt-2 drop-shadow-2xl border-2 p-8 rounded-b-2xl'>
