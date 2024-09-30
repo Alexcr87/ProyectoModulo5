@@ -18,6 +18,7 @@ import { AccountSeeder } from './seeder/accountSeeder/seed.service';
 import { SeedModule } from './seeder/userSeeder/seed.module';
 import { UserSeedService } from './seeder/userSeeder/user.seed.service';
 import { VoteModule } from './modules/vote/vote.module';
+import { RedirectController } from './redirectController';
 
 @Module({
   imports: [
@@ -48,8 +49,7 @@ import { VoteModule } from './modules/vote/vote.module';
       secret: process.env.JWT_SECRET,
     }),
   ],
-
-  controllers: [],
+  controllers: [RedirectController],
   providers: [],
   exports: [],
 })

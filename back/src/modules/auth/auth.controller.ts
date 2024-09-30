@@ -85,6 +85,7 @@ export class AuthController {
         throw new HttpException('unexpected error', HttpStatus.CONFLICT);
       }
     }
+
   }
 
   @Post('sigUp')
@@ -109,6 +110,7 @@ export class AuthController {
       } else {
         throw new HttpException('unexpected error', HttpStatus.BAD_REQUEST);
       }
+
     }
   }
 
