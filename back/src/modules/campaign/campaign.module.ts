@@ -6,9 +6,7 @@ import { CampaignController } from 'src/modules/campaign/campaign.controller';
 import { User } from 'src/entities/user.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Campaign, User]),
-  ],
+  imports: [TypeOrmModule.forFeature([Campaign, User])],
   controllers: [CampaignController],
   providers: [CampaignService],
 })
