@@ -16,6 +16,7 @@ import { Account } from "src/entities/account.entity";
 
 @Injectable()
 export class UserService{
+  private isCreatingUser = false;
   
   constructor(
     @InjectRepository(User)
@@ -59,9 +60,6 @@ export class UserService{
       throw new InternalServerErrorException('Error retrieving users');
     }
   }
-<<<<<<< HEAD
-   
-=======
 
   async assignPackageToUser(userId: string, packageId : number): Promise<User> {
    
@@ -85,7 +83,6 @@ export class UserService{
     return user;
   }
   
->>>>>>> 6227629c02b9f025eaaa0e0b3fd03359ad13d673
   
   async deteleUserById(id: string):Promise <string> {
     try {
@@ -177,85 +174,113 @@ export class UserService{
   }
 
 
-  async createUser(createUserDto: CreateUserDto, parentId?: string): Promise<Omit<User, 'password'>> {
-    const user = await this.userRepository.findOneBy({ dni: createUserDto.dni });
-    if (user) {
-      throw new UnauthorizedException(`User with dni: ${createUserDto.dni} already exists`);
-    }
-    const userByEmail = await this.userRepository.findOneBy({ email: createUserDto.email });
-    if (userByEmail) {
-      throw new UnauthorizedException(`User with email: ${createUserDto.email} already exists`);
-    }
-    const passwordGenerated = !createUserDto.password;
-    const password = createUserDto.password || generateRandomPassword();
-    const hashedPassword = await bcrypt.hash(password, 10);
-  
-    const defaultRole = await this.roleRepository.findOne({ where: { id: 4 } });
-    if (!defaultRole) {
-      throw new BadRequestException('Default role not found');
+  async createUser(
+    createUserDto: CreateUserDto,
+    parentId?: string,
+): Promise<Omit<User, 'password'>> {
+    if (this.isCreatingUser) {
+        throw new ConflictException('User creation is already in progress.');
     }
     
-    let userRoles: Role[] = [defaultRole];
-    if (createUserDto.roles && createUserDto.roles.length > 0) {
-      userRoles = await this.roleRepository.findBy({ id: In(createUserDto.roles) });
-      if (userRoles.length !== createUserDto.roles.length) {
-        throw new BadRequestException('Some roles not found');
-      }
-    }
-<<<<<<< HEAD
-=======
-  const withoutAccount = await this.accountRepository.findOne({where:{id:0}});
-  if (!withoutAccount) {
-    throw new BadRequestException('Default account not found');
-  }
+    this.isCreatingUser = true;
 
-  
->>>>>>> 6227629c02b9f025eaaa0e0b3fd03359ad13d673
+    try {
+        console.log('Starting user creation at:', new Date());
 
-  let newUser = this.userRepository.create({})
-    if (passwordGenerated) {
-    newUser = this.userRepository.create({
-      ...createUserDto,
-      password: hashedPassword,
-      roles: userRoles,
-      accounts:[withoutAccount],
-      isFirstLogin: !passwordGenerated ? false : undefined,
-    });
-    await this.userRepository.save(newUser);
-      await this.mailService.sendPasswordEmail(newUser.email, newUser.name, password);
-    } else {
-      newUser = this.userRepository.create({
-        ...createUserDto,
-        password: hashedPassword,
-        roles: userRoles,
-        accounts:[withoutAccount],
-        isFirstLogin: !passwordGenerated ? false : undefined,
-      });
-      await this.userRepository.save(newUser);
-      await this.mailService.sendWelcomeEmail(newUser.email, newUser.name);
-    }
+        console.log('Checking existing user with dni:', createUserDto.dni);
+        const user = await this.userRepository.findOneBy({
+            dni: createUserDto.dni,
+        });
+        if (user) {
+            throw new UnauthorizedException(`User with dni: ${createUserDto.dni} already exists`);
+        }
+        
+        console.log('Checking existing user with email:', createUserDto.email);
+        const userByEmail = await this.userRepository.findOneBy({
+            email: createUserDto.email,
+        });
+        if (userByEmail) {
+            throw new UnauthorizedException(`User with email: ${createUserDto.email} already exists`);
+        }
 
-    if (parentId) {
-      const parentUser = await this.userRepository.findOneBy({ id: parentId });
-      if (!parentUser) {
-        throw new BadRequestException(`Parent user with id: ${parentId} not found`);
-      }
-      const existingRelation = await this.structureRepository.findOne({
-        where: { child: { id: newUser.id } },
-      });
-      if (existingRelation) {
-        throw new BadRequestException(`User with id: ${newUser.id} is already related to another parent`);
-      }
-      const structureRelation = this.structureRepository.create({
-        parent: parentUser,
-        child: newUser,
-      });
-      await this.structureRepository.save(structureRelation);
+        // Generación de contraseña y encriptación
+        const passwordGenerated = !createUserDto.password;
+        const password = createUserDto.password || generateRandomPassword();
+        const hashedPassword = await bcrypt.hash(password, 10);
+        console.log('Password generated and hashed.');
+
+        // Roles y cuentas por defecto
+        const defaultRole = await this.roleRepository.findOne({ where: { id: 4 } });
+        if (!defaultRole) {
+            throw new BadRequestException('Default role not found');
+        }
+
+        let userRoles: Role[] = [defaultRole];
+        if (createUserDto.roles && createUserDto.roles.length > 0) {
+            userRoles = await this.roleRepository.findBy({
+                id: In(createUserDto.roles),
+            });
+            if (userRoles.length !== createUserDto.roles.length) {
+                throw new BadRequestException('Some roles not found');
+            }
+        }
+
+        console.log('Fetching default account.');
+        const withoutAccount = await this.accountRepository.findOne({
+            where: { id: 0 },
+        });
+        if (!withoutAccount) {
+            throw new BadRequestException('Default account not found');
+        }
+
+        let newUser = this.userRepository.create({
+            ...createUserDto,
+            password: hashedPassword,
+            roles: userRoles,
+            accounts: [withoutAccount],
+            isFirstLogin: !passwordGenerated ? false : undefined,
+        });
+
+        console.log('Saving new user to the database.');
+        await this.userRepository.save(newUser);
+        console.log('User saved successfully.');
+
+        // Enviar el correo de bienvenida
+        console.log('Sending welcome email to:', newUser.email);
+        await this.mailService.sendWelcomeEmail(newUser.email, newUser.name, password);
+        console.log('Welcome email sent.');
+
+        // Manejo de la relación con parentId
+        if (parentId) {
+            console.log('Handling parentId relation with id:', parentId);
+            const parentUser = await this.userRepository.findOneBy({ id: parentId });
+            if (!parentUser) {
+                throw new BadRequestException(`Parent user with id: ${parentId} not found`);
+            }
+            const existingRelation = await this.structureRepository.findOne({
+                where: { child: { id: newUser.id } },
+            });
+            if (existingRelation) {
+                throw new BadRequestException(`User with id: ${newUser.id} is already related to another parent`);
+            }
+            const structureRelation = this.structureRepository.create({
+                parent: parentUser,
+                child: newUser,
+            });
+            await this.structureRepository.save(structureRelation);
+            console.log('Structure relation saved successfully.');
+        }
+
+        const { password: excludedPassword, ...result } = newUser;
+        return result;
+    } catch (error) {
+        console.error('Error during user creation:', error);
+        throw error; // O manejarlo según tus necesidades
+    } finally {
+        this.isCreatingUser = false; // Reset flag after processing.
     }
-    const { password: excludedPassword, ...result } = newUser;
-    return result;
-  }
-  
+}
+
   async readExcelFile(filePath: string): Promise<CreateUserDto[]> {
     const data = fs.readFileSync(filePath);
     const workbook = XLSX.read(data, { type: 'buffer' });

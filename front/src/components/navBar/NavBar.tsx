@@ -128,6 +128,9 @@ const NavBar = () => {
                                 <Link href="/candidates">Candidatos</Link>
                             </li>
                             <li>
+                                <Link href="/results">Resultados</Link>
+                            </li>
+                            <li>
                                 <button onClick={handleClose}>Cerrar Sesión</button>
                             </li>
                         </>

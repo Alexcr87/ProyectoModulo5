@@ -19,7 +19,21 @@ interface ICampaign {
       suffrage?: boolean;
       isFirstLogin?: boolean;
     };
-    candidates?: Array<ICandidate>;
+    candidates?: [
+      {
+        user?: {
+          id: string,
+          name: string,
+          dni: number,
+          email: string,
+          password: string,
+          address: string,
+          city: string,
+          country: string,
+          isFirstLogin: false
+        }
+      }
+    ]
   }
   
   export default ICampaign;

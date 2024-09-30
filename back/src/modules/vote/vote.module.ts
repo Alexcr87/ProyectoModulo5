@@ -10,7 +10,13 @@ import { User } from 'src/entities/user.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([VoteUser, VoteCandidate, Candidate, Campaign, User]),
+    TypeOrmModule.forFeature([
+      VoteUser,
+      VoteCandidate,
+      Candidate,
+      Campaign,
+      User,
+    ]),
   ],
   controllers: [VoteController],
   providers: [VoteService],

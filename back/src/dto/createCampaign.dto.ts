@@ -12,14 +12,15 @@ export class CreateCampaignDto {
 
   @ApiProperty({
     description: 'A brief description of the campaign',
-    example: 'A campaign focused on raising awareness about environmental issues.',
+    example:
+      'A campaign focused on raising awareness about environmental issues.',
   })
   @IsString()
   @IsNotEmpty()
   description: string;
 
   @ApiProperty({
-    description: 'The location where the campaign will take place',
+    description: 'The location where the campaign will take place.',
     example: 'Central Park, New York',
   })
   @IsString()
@@ -40,5 +41,5 @@ export class CreateCampaignDto {
   })
   @IsUUID()
   @IsNotEmpty()
-  userId: string;  
+  userId: string;
 }

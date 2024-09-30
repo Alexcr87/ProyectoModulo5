@@ -1,6 +1,6 @@
-import { Controller, Post, Body, Get, Param } from "@nestjs/common";
-import { VoteService } from "./vote.service";
-import { VoteDto } from "src/dto/vote.dto";
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { VoteService } from './vote.service';
+import { VoteDto } from 'src/dto/vote.dto';
 
 @Controller('votes')
 export class VoteController {
@@ -8,21 +8,25 @@ export class VoteController {
 
   @Post()
   async vote(@Body() voteDto: VoteDto): Promise<string> {
-    return this.voteService.votar(voteDto.userId, voteDto.campaignId, voteDto.candidateId);
+    return this.voteService.votar(
+      voteDto.userId,
+      voteDto.campaignId,
+      voteDto.candidateId,
+    );
   }
 
   @Get('/campaign/:campaignId/candidates')
-    async getCandidatesWithVotes(@Param('campaignId') campaignId: string) {
-      return this.voteService.getCandidatesWithVotes(campaignId);
+  async getCandidatesWithVotes(@Param('campaignId') campaignId: string) {
+    return this.voteService.getCandidatesWithVotes(campaignId);
   }
 
   @Get('/campaign/:campaignId/total-users')
-    async getTotalUsersInCampaign(@Param('campaignId') campaignId: string) {
-      return this.voteService.getTotalUsersInCampaign(campaignId);
+  async getTotalUsersInCampaign(@Param('campaignId') campaignId: string) {
+    return this.voteService.getTotalUsersInCampaign(campaignId);
   }
 
   @Get('/blankVote/:campaignId/total-black-votes')
-    async getBlankVotes(@Param('campaignId') campaignId: string) {
-      return this.voteService.getBlankVotes(campaignId);
-    }
+  async getBlankVotes(@Param('campaignId') campaignId: string) {
+    return this.voteService.getBlankVotes(campaignId);
+  }
 }
