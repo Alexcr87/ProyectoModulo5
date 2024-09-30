@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
-import { User } from './user.entity'; 
+import { User } from './user.entity';
 
 @Entity()
 export class OrganizationalStructure {
@@ -11,6 +11,6 @@ export class OrganizationalStructure {
   parent: User;
 
   @ManyToOne(() => User, { nullable: false })
-  @JoinColumn({ name: 'childId' }) 
+  @JoinColumn({ name: 'childId' })
   child: User;
 }

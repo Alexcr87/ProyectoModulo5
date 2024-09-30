@@ -17,15 +17,17 @@ const CampaignForm = () => {
     date: new Date(),
     userId: userData?.userData?.id || '', // Usar el ID del usuario desde userData
     user: { 
+
       id: userData?.userData?.id || '', 
       name: userData?.userData?.name || '', 
+
       dni: 0, 
       email: '' 
     },
     candidates: [], // Mantener la estructura, pero vacía
   });
 
-  useEffect(() => {
+  /*useEffect(() => {
     // Si los datos del usuario cambian, actualizar el formData
     if (userData?.userData?.id) {
       setFormData((prevData) => ({
@@ -34,7 +36,7 @@ const CampaignForm = () => {
         user: { ...prevData.user, id: userData.userData.id, name: userData.userData.name },
       }));
     }
-  }, [userData]);
+  }, [userData]);*/
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;

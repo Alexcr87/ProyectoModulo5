@@ -1,4 +1,5 @@
 import ICandidate from "./ICandidate"
+import IUsers from "./IUsers";
 
 interface ICampaign {
     id?: string;
@@ -7,19 +8,10 @@ interface ICampaign {
     location: string;
     date: Date;
     userId:string
-    user: {
-      id: string;
-      name: string;
-      dni: number;
-      email: string;
-      password?: string;
-      address?: string;
-      city?: string;
-      country?: string;
-      suffrage?: boolean;
-      isFirstLogin?: boolean;
-    };
-    candidates?: Array<ICandidate>;
+    user: IUsers;
+    candidates?: [
+      ICandidate?
+    ]
   }
   
   export default ICampaign;
