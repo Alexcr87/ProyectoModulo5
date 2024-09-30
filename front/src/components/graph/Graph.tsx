@@ -1,4 +1,4 @@
-"use client"
+/*"use client"
 import { Doughnut } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -43,4 +43,4 @@ const Graph = () => {
   return <Doughnut data={data} options={options} />;
 };
 
-export default Graph;
+export default Graph;*/

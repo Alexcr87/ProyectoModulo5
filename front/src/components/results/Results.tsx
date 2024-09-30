@@ -1,4 +1,4 @@
-'use client'
+/*'use client'
 import React, { useEffect, useState } from 'react'
 import Graph from '../graph/Graph'
 import Image from 'next/image'
@@ -76,4 +76,4 @@ const Results = () => {
   )
 }
 
-export default Results
+export default Results*/
