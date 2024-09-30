@@ -8,7 +8,9 @@ export class CampaignController {
   constructor(private readonly campaignService: CampaignService) {}
 
   @Post()
-  async create(@Body() createCampaignDto: CreateCampaignDto): Promise<Campaign> {
+  async create(
+    @Body() createCampaignDto: CreateCampaignDto,
+  ): Promise<Campaign> {
     return this.campaignService.createCampaign(createCampaignDto);
   }
 
@@ -23,7 +25,9 @@ export class CampaignController {
   }
 
   @Get('user/:userId')
-    async getCampaignsByUserId(@Param('userId') userId: string): Promise<Campaign[]> {
-        return this.campaignService.getCampaignsByUserId(userId);
-    }
+  async getCampaignsByUserId(
+    @Param('userId') userId: string,
+  ): Promise<Campaign[]> {
+    return this.campaignService.getCampaignsByUserId(userId);
+  }
 }
