@@ -83,13 +83,14 @@ export class UserController {
   
   @Get("/email/:email")
   @HttpCode(200)
-  async findUserByEmail(@Param("email") email:string ){
-    try {
-      return await this.userService.findUserByEmail(email)
-    } catch (error) {
-        throw new InternalServerErrorException('Error retrieving user by email')
-      }
+  async findUserByEmail(@Param("email") email:string ): Promise<User | { message: string }>{
+   
+      const user = await this.userService.findUserByEmail(email)
+      if (!user) {
+        throw new NotFoundException(`User with email ${email} not found`);
     }
+    return user;
+  }
   
 
 
