@@ -8,7 +8,8 @@ interface IUsers {
     address?: string,
     city?: string,
     country?: string,
-    rol?: string
+    rol?: string,
+    isFirstLogin?: boolean
 }
 
 

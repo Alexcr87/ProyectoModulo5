@@ -17,7 +17,8 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "allowJs":true
-  }
+    "allowJs": true
+  },
+  "include": ["src/**/*.ts"],  // Incluye todos los archivos TS dentro de src
+  "exclude": ["node_modules", "dist"]  // Excluye node_modules y dist
 }
-

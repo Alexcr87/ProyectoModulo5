@@ -18,7 +18,6 @@ const OrderList = async () => {
       address: item.user.address,
       city: item.user.city,
       country: item.user.country,
-      suffrage: item.user.suffrage,
     },
   }));
 
