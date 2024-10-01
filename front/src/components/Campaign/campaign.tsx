@@ -17,7 +17,7 @@ const CampaignForm = () => {
     date: new Date(),
     userId: '', // Se llenará automáticamente
     user: { 
-      id: '', 
+      id: 0, 
       name: '', 
       dni: 0, 
       email: '' 
@@ -138,7 +138,7 @@ const CampaignForm = () => {
     </form>
     </>
   );
-};
+}
 
 
 export default CampaignForm;

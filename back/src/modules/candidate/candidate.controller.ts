@@ -1,10 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from "@nestjs/common";
-import { CandidateService } from "./candidate.service";
-import { CreateCandidateDto } from "../../dto/createCandidateDto";
-import { ApiBody, ApiConsumes, ApiExtraModels, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { Candidate } from "src/entities/candidate.entity";
-import { FileInterceptor } from "@nestjs/platform-express";
-
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
+import { CandidateService } from './candidate.service';
+import { CreateCandidateDto } from '../../dto/createCandidateDto';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiExtraModels,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
+import { Candidate } from 'src/entities/candidate.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Candidates')
 @ApiExtraModels(CreateCandidateDto)
@@ -29,7 +44,10 @@ export class CandidateController {
           items: { type: 'string' },
           example: ['Educación gratuita', 'Plazas de empleo'],
         },
-        userId: { type: 'string', example: '123e4567-e89b-12d3-a456-426614174000' },
+        userId: {
+          type: 'string',
+          example: '123e4567-e89b-12d3-a456-426614174000',
+        },
         file: {
           type: 'string',
           format: 'binary',
@@ -45,7 +63,6 @@ export class CandidateController {
     return this.candidateService.create(createCandidateDto, file);
   }
 
-
   @Get()
   findAll() {
     return this.candidateService.findAll();
@@ -53,16 +70,15 @@ export class CandidateController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-     return await this.candidateService.findOne(id);
+    return await this.candidateService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateData: Partial<Candidate>) {
     return this.candidateService.updateCandidate(id, updateData);
   }
-  
 
-   @Delete(':id')
+  @Delete(':id')
   async remove(@Param('id') id: string) {
     await this.candidateService.deleteCandidate(id);
     return { message: 'Candidate deleted successfully' };
