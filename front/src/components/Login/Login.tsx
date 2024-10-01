@@ -139,6 +139,7 @@ const LoginForm = () => {
                     onClick={handleAuth0Login}>
                     <i className="fa-brands fa-google mr-2"></i>
                     Continuar Con Google
+
                 </Boton>
             </form>
         </div>

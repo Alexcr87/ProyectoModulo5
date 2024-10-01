@@ -1,3 +1,4 @@
+
 'use client'
 import React, { useEffect, useState } from 'react'
 import Graph from '../graph/Graph'
@@ -6,7 +7,9 @@ import { getCampañaByID } from '@/helpers/campaña.helper'
 import { IDataVote, IVotesResult } from '@/interfaces/IVotesResult'
 import colors from '@/helpers/colors.helper'
 
-const Results = () => {
+
+// const Results = () => {
+
 
   const [dataCan, setDataCan] =  useState<IDataVote[]>([]);
   const [totalVotes, setTotalVotes] = useState<number>(0)
@@ -84,4 +87,5 @@ const Results = () => {
   )
 }
 
-export default Results
+
+// export default Results

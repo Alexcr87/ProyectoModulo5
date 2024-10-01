@@ -139,7 +139,7 @@ const CampaignForm = () => {
     </form>
     </>
   );
-};
+}
 
 
 export default CampaignForm;

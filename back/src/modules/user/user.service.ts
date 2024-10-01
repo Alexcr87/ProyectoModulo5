@@ -11,7 +11,7 @@ import { MailService } from "../mail/mail.service";
 import { generateRandomPassword } from "src/helpers/password.helper"
 import { OrganizationalStructure} from "src/entities/organizationalStructure.entity";
 
-import { Account } from "src/entities/account.entity";
+// import { Account } from "src/entities/account.entity";
 
 
 @Injectable()
@@ -26,7 +26,7 @@ export class UserService{
     private readonly mailService: MailService, 
     @InjectRepository(OrganizationalStructure)
     private structureRepository: Repository<OrganizationalStructure>,
-    @InjectRepository(Account) private readonly accountRepository:Repository<Account>,
+    // @InjectRepository(Account) private readonly accountRepository:Repository<Account>,
   ) {}
 
 
@@ -70,14 +70,14 @@ export class UserService{
       throw new NotFoundException('User not found');
     }
 
-    const selectedPackage = await this.accountRepository.findOne({where:{id:packageId}});
+    // const selectedPackage = await this.accountRepository.findOne({where:{id:packageId}});
    
-    if (!user.accounts.some(account => account.id === selectedPackage.id)) {
-      user.accounts.push(selectedPackage);
-    } else {
-      throw new ConflictException('Package already assigned to user');
-    }
-    await this.userRepository.save(user);
+    // if (!user.accounts.some(account => account.id === selectedPackage.id)) {
+    //   user.accounts.push(selectedPackage);
+    // } else {
+    //   throw new ConflictException('Package already assigned to user');
+    // }
+    // await this.userRepository.save(user);
 
     
     return user;
@@ -221,19 +221,19 @@ export class UserService{
             }
         }
 
-        console.log('Fetching default account.');
-        const withoutAccount = await this.accountRepository.findOne({
-            where: { id: 0 },
-        });
-        if (!withoutAccount) {
-            throw new BadRequestException('Default account not found');
-        }
+        // console.log('Fetching default account.');
+        // const withoutAccount = await this.accountRepository.findOne({
+        //     where: { id: 0 },
+        // });
+        // if (!withoutAccount) {
+        //     throw new BadRequestException('Default account not found');
+        // }
 
         let newUser = this.userRepository.create({
             ...createUserDto,
             password: hashedPassword,
             roles: userRoles,
-            accounts: [withoutAccount],
+            // accounts: [withoutAccount],
             isFirstLogin: !passwordGenerated ? false : undefined,
         });
 

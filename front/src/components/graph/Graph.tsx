@@ -1,3 +1,4 @@
+
 "use client"
 import { Doughnut } from 'react-chartjs-2';
 import {
@@ -10,7 +11,9 @@ import colors from '@/helpers/colors.helper';
 import { IDataVote } from '@/interfaces/IVotesResult';
 import { useState } from 'react';
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+
+// ChartJS.register(ArcElement, Tooltip, Legend);
+
 
 const Graph = ({dataCan}:{dataCan:IDataVote[]}) => {
   
@@ -53,7 +56,8 @@ const Graph = ({dataCan}:{dataCan:IDataVote[]}) => {
     },
   };
 
-  return <Doughnut data={data} options={options} />;
-};
 
-export default Graph;
+//   return <Doughnut data={data} options={options} />;
+// };
+
+// export default Graph;

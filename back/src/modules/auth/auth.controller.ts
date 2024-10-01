@@ -111,9 +111,6 @@ export class AuthController {
         throw new HttpException('unexpected error', HttpStatus.BAD_REQUEST);
       }
 
-    }
-  }
-
   @Get('protected')
   userby(@Req() req: Request) {
     return JSON.stringify(req.oidc.user);
