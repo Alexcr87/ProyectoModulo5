@@ -3,7 +3,7 @@ export interface IloginProps {
     email : string
     password : string
     token? : string
-    result?:{
+    userData?:{
         id?:string
         roles?:[
             {
@@ -16,4 +16,9 @@ export interface IloginProps {
 export interface IloginError {
     email?: string
     password?: string
+}
+
+export interface IloginAuth0{
+    email:string,
+    name:string
 }

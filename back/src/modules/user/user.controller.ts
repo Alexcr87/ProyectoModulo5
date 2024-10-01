@@ -1,5 +1,5 @@
 
-import { BadRequestException, Body, ConflictException, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, ParseUUIDPipe, Patch, Post, Put, Query, Req, Res, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, ConflictException, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, ParseUUIDPipe, Patch, Post, Put, Query, Req, Res, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "src/dto/createUserDto";
@@ -13,10 +13,18 @@ import { AuthGuard } from "src/Guards/auth.guard";
 import { User } from "src/entities/user.entity";
 import { Role } from "src/entities/roles.entity";
 
-import { Request } from "express";
+import { Request, Response } from "express";
 import { CreateUserDtoByAuth0 } from "src/dto/createUserByAuth0Dto";
 
 
+
+@Controller('/')
+export class RedirectController {
+  @Get('')
+  redirectToFrontend(@Res() res: Response) {
+    res.redirect('http://localhost:4000');
+  }
+}
 
 @ApiTags("Users")
 @Controller("user")
@@ -79,17 +87,10 @@ export class UserController {
     try {
       return await this.userService.findUserByEmail(email)
     } catch (error) {
-        if (error instanceof NotFoundException){
-          const status = error.getStatus();
-          return {
-          statusCode: status ,
-          message: error.message
-          }
-        } else {
         throw new InternalServerErrorException('Error retrieving user by email')
       }
     }
-  }
+  
 
 
   @Put(":id")
@@ -129,13 +130,19 @@ export class UserController {
     @Query("parentId") parentId: string,
     @Body() createUserDto: CreateUserDto
   ) {
-    try {     
-      return await this.userService.createUser(createUserDto,parentId)
+    try {
+      return await this.userService.createUser(createUserDto, parentId);
     } catch (error) {
-      if (error.response && error.response.error === 'Unauthorized') {
-        throw new ConflictException(error.response.message);
-      } else {
-        throw new InternalServerErrorException('Error creating user');
+      // Si es un error esperado que ya tiene una respuesta, la devolvemos
+      if (error.response) {
+        if (error.response.statusCode === 409) {
+          // Conflicto, por ejemplo si ya existe el usuario
+          throw new ConflictException(error.response.message || 'User already exists');
+        }
+        if (error.response.statusCode === 401) {
+          // No autorizado
+          throw new UnauthorizedException(error.response.message || 'Unauthorized');
+        }
       }
     }
   }

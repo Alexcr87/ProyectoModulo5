@@ -1,21 +1,23 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IRegisterError, IRegisterProps } from "./TypesRegister";
 import { importUser, register } from "@/helpers/auth.helper";
 import { validateRegisterForm } from "@/helpers/validateRegister";
 import Boton from "../ui/Boton";
 import Swal from 'sweetalert2'
-import { IloginProps } from "@/interfaces/ILogin";
+
 import Input from "../ui/Input";
 import InputFile from "../ui/InputFile";
+import { useAuth } from "@/context/Authontext";
 
 
 
 const Register = () => {
   const router = useRouter();
-  const initialState = {
+  const { userData, setUserData } = useAuth();
+  const initialState: IRegisterProps = {
     name: "",
     dni: "",
     address: "",
@@ -28,34 +30,17 @@ const Register = () => {
   const [dataUser, setDataUser] = useState<IRegisterProps>(initialState);
   const [errors, setErrors] = useState<IRegisterError>(initialState);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [countries, setCountries] = useState<string[]>(["Argentina", "Chile", "Colombia"]);
+  const [countries, ] = useState<string[]>(["Argentina", "Chile", "Colombia"]);
   const [cities, setCities] = useState<string[]>([]);
   const [file, setFile] = useState<File | null>(null);
   const [touched, setTouched] = useState<IRegisterError>(initialState);
-  const [userSesion, setUserSesion] = useState<IloginProps>();
-  const pathname = usePathname();
 
-  const handleBlur = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name } = event.target;
-    setTouched({
-      ...touched,
-      [name]: true,
-    });
-  };
-  
+  const parentId = userData?.userData?.id 
   
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] || null;
     setFile(selectedFile);
   };
-  useEffect(() => {
-    const localUser = localStorage.getItem("userSesion");
-    if (localUser) {
-      setUserSesion(JSON.parse(localUser));
-    }
-  }, [pathname]);
-
-  const parentId = userSesion?.result?.id
 
   const handleUpload = async () => {
     if (!file) {
@@ -90,35 +75,35 @@ const Register = () => {
 
   const fetchCitiesByCountry = (country: string) => {
     const countryCitiesMap: Record<string, string[]> = {
-      "Argentina": ["Buenos Aires", "Córdoba", "Rosario"],
-      "Chile": ["Santiago", "Valparaíso", "Concepción"],
-      "Colombia": ["Bogotá", "Medellín", "Cali"],
+      Argentina: ["Buenos Aires", "Córdoba", "Rosario"],
+      Chile: ["Santiago", "Valparaíso", "Concepción"],
+      Colombia: ["Bogotá", "Medellín", "Cali"],
     };
     return countryCitiesMap[country] || [];
   };
    
     useEffect(() => {
     setIsFormValid(
-      dataUser.name.trim() !== '' &&
-      dataUser.email.trim() !== '' &&
-      dataUser.dni.trim() !== '' &&
-      dataUser.address.trim() !== '' &&
-      dataUser.country.trim() !== '' &&
-      dataUser.city.trim() !== ''
+      dataUser.name.trim() !== "" &&
+      dataUser.email.trim() !== "" &&
+      dataUser.dni.trim() !== "" &&
+      dataUser.address.trim() !== "" &&
+      dataUser.country.trim() !== "" &&
+      dataUser.city.trim() !== ""
     );
   }, [dataUser]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
-    setDataUser({
-      ...dataUser,
+    setDataUser((prevDataUser) => ({
+      ...prevDataUser,
       [name]: value,
-    });
+    }));
   };
 
   const handleCountryChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCountry = event.target.value;
-    setDataUser({ ...dataUser, country: selectedCountry });
+    setDataUser((prevDataUser) => ({ ...prevDataUser, country: selectedCountry }));
 
     // Fetch cities based on the selected country
     const fetchedCities = fetchCitiesByCountry(selectedCountry);
@@ -128,13 +113,12 @@ const Register = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     
-    const userDataWithParentId = {
-      ...dataUser,
-    };
-  
+
     try {
-      const result = await register(userDataWithParentId, parentId); // Pasa parentId aquí
- 
+      const result = await register(dataUser, parentId);
+
+       // Guardamos los datos del usuario en el contexto de autenticación
+       setUserData(result);
   
       Swal.fire({
         position: "center",
@@ -145,7 +129,7 @@ const Register = () => {
       });
       
       router.push("/users");
-    } catch (error) {
+    } catch (error:any) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -156,8 +140,8 @@ const Register = () => {
   
 
   useEffect(() => {
-    const errors = validateRegisterForm(dataUser);
-    setErrors(errors);
+    const validationErrors = validateRegisterForm(dataUser);
+    setErrors(validationErrors);
   }, [dataUser]);
 
 

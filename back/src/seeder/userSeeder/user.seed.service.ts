@@ -16,14 +16,15 @@ export class UserSeedService {
 
   async seed() {
     const existingUser = await this.userRepository.findOne({
-      where: { email: 'admin@example.com' }, 
+      where: { email: 'admin@example.com' },
     });
 
     if (!existingUser) {
       // Busca el rol "admin"
-      const adminRole = await this.roleRepository.findOne({ where: { name: 'admin' } });
+      const adminRole = await this.roleRepository.findOne({
+        where: { name: 'admin' },
+      });
 
-    
       const adminUser = this.userRepository.create({
         name: 'Admin User',
         dni: 12345678,
@@ -32,7 +33,7 @@ export class UserSeedService {
         address: '123 Admin St',
         city: 'Admin City',
         country: 'Admin Country',
-        roles: [adminRole], 
+        roles: [adminRole],
       });
       await this.userRepository.save(adminUser);
     }

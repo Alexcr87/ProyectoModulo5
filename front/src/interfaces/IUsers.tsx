@@ -1,6 +1,6 @@
 interface IUsers {
 
-    id: number,
+    id: string,
     name: string,
     dni: number,
     email: string,
@@ -8,7 +8,8 @@ interface IUsers {
     address?: string,
     city?: string,
     country?: string,
-    rol?: string
+    rol?: string,
+    isFirstLogin?: boolean
 }
 
 

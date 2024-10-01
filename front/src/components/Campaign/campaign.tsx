@@ -4,9 +4,10 @@ import React, { useState, useEffect } from 'react';
 import ICampaign from '@/interfaces/ICampaign'; 
 import Input from '../ui/Input';
 import Boton from '../ui/Boton';
+import { useAuth } from '@/context/Authontext';
 
 const CampaignForm = () => {
-
+  const { userData } = useAuth(); 
   const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
   const [userSesion, setUserSesion] = useState<any>(); 
@@ -15,17 +16,17 @@ const CampaignForm = () => {
     description: '',
     location: '',
     date: new Date(),
-    userId: '', // Se llenará automáticamente
+    userId: userData?.userData.id || '', // Se llenará automáticamente
     user: { 
-      id: '', 
-      name: '', 
+      id: userData?.userData.id || '', 
+      name: userData?.userData.name || '', 
       dni: 0, 
       email: '' 
     },
     candidates: [], // Mantener la estructura, pero vacía
   });
 
-  useEffect(() => {
+  /*useEffect(() => {
     const localUser = localStorage.getItem("userSesion");
     if (localUser) {
       const parsedUser = JSON.parse(localUser);
@@ -39,7 +40,7 @@ const CampaignForm = () => {
         }));
       }
     }
-  }, []);
+  }, []);*/ // si no funciona hay q hacer otra cosa pero este codigo no!!!
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -60,11 +61,11 @@ const CampaignForm = () => {
     e.preventDefault();
 
     const data = {
-      "name": formData.name,
-      "description": formData.description,
-      "location": formData.location,
-      "date": formData.date.toISOString(),
-      "userId": formData.userId
+      name: formData.name,
+      description: formData.description,
+      location: formData.location,
+      date: formData.date.toISOString(),
+      userId: formData.userId,
     }  
 
     try {
