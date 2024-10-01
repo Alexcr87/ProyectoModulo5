@@ -109,8 +109,8 @@ export class AuthController {
         };
       } else {
         throw new HttpException('unexpected error', HttpStatus.BAD_REQUEST);
-      }
-
+      }}
+  }
 
   @Get('protected')
   userby(@Req() req: Request) {
