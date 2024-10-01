@@ -25,31 +25,36 @@ const Callback = () => {
           
           // Verificar si el correo electrónico está en la base de datos
           const emailCheckResponse = await fetch(`${APIURL}/user/email/${userEmail}`);
-          const user = await emailCheckResponse.json()
           
-          
-          
-            const userData = {
-              token: data.token,
-              userData: {
-                id:user.id,
-                user:user,
-                email: data.email,
-                name: data.name,
-              },
-            };
+          // Comprobar si la respuesta fue correcta
+          if (emailCheckResponse.ok) {
+            const user = await emailCheckResponse.json();
             
-            // Guardar los datos del usuario en el contexto de autenticación
-            setUserData(userData);
-
-            console.log(data);
-            
-            if (emailCheckResponse) {
-
-            router.push('/'); // Redirigir a la página de inicio
+            if (user.id) { // Verifica si el usuario fue encontrado
+              const userData = {
+                token: data.token,
+                userData: {
+                  id: user.id,
+                  user: user,
+                  email: data.email,
+                  name: data.name,
+                },
+              };
+              
+              // Guardar los datos del usuario en el contexto de autenticación
+              setUserData(userData);
+              console.log(data);
+              
+              // Redirigir a la página de inicio
+              router.push('/');
+            } else {
+              // Manejar el caso en el que el correo no existe en la base de datos
+              router.push('/registerByAuth0');
+            }
           } else {
-            router.push('/registerByAuth0')
-            // Manejar el caso en el que el correo no existe en la base de datos
+            console.error('Error fetching user data:', emailCheckResponse.statusText);
+            // Puedes manejar aquí el error si no se puede verificar el correo
+            router.push('/registerByAuth0'); // Redirige si la verificación falla
           }
         } else {
           console.error('Error fetching protected data:', response.statusText);
