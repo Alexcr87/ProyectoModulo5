@@ -133,12 +133,12 @@ const LoginForm = () => {
                     disabled={Object.keys(errors).length > 0}>
                     Iniciar Sesion
                 </Boton>
-                <div></div>
-                {/* Botón para iniciar sesión con Auth0 */}
+                <hr className='my-4'/>
                 <Boton 
                     type='button'
                     onClick={handleAuth0Login}>
-                    Iniciar Sesión con Google
+                    <i className="fa-brands fa-google mr-2"></i>
+                    Continuar Con Google
                 </Boton>
             </form>
         </div>

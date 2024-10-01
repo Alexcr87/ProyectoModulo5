@@ -1,11 +1,14 @@
 export interface IVotesResult{
-   candidate:{
     id:string,
     imgUrl: string,
     list: string,
     postulation: string,
     proporsal: string,
-   },
+    user:{
+      name:string
+      country:string
+    }
+   ,
    votes:number,
 }
 
