@@ -1,11 +1,12 @@
-import OrderList from "@/components/candidates/Candidates";
+import Candidates from '@/components/candidates/Candidates'
+import React from 'react'
 
+const candidatesPage = () => {
+  return (
+    <div>
+      <Candidates/>
+    </div>
+  )
+}
 
-const LoginPage =()=>{
-    return(
-        <div className="bg-cuartiaryColor h-full flex justify-center">
-         <OrderList/>
-        </div>
-    )
-};
-export default LoginPage
+export default candidatesPage
