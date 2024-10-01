@@ -3,7 +3,7 @@ import { VoteService } from "./vote.service";
 import { VoteDto } from "src/dto/vote.dto";
 import { ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 
-@ApiTags('votes') // Agrupamos los endpoints bajo la categoría 'votes'
+@ApiTags('votes')
 @Controller('votes')
 export class VoteController {
   constructor(private readonly voteService: VoteService) {}
