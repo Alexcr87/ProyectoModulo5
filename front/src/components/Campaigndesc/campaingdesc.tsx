@@ -2,8 +2,8 @@
 
 import React, { Suspense, useEffect, useState } from 'react';
 import ICampaign from '@/interfaces/ICampaign';
-import { IloginProps } from '@/interfaces/ILogin';
 import { useSearchParams } from 'next/navigation';
+import { useAuth } from '@/context/Authontext';
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 const Campaingdesc = () => {
@@ -11,22 +11,11 @@ const Campaingdesc = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const searchParams = useSearchParams(); // Obtener parámetros de la URL
-
-  const [userSesion, setUserSesion] = useState<IloginProps | null>(null);
-
- 
-  useEffect(() => {
-    const localUser = localStorage.getItem('userSesion');
-    if (localUser) {
-      const parsedUser = JSON.parse(localUser);
-      setUserSesion(parsedUser);
-      
-    }
-  }, []);
+  const {userData} = useAuth()
 
   useEffect(() => {
     const fetchCampaignDetails = async () => {
-      if (!userSesion?.result?.id) {
+      if (!userData?.userData.id) {
         setLoading(false);
         return;
       }
@@ -56,10 +45,10 @@ const Campaingdesc = () => {
       }
     };
 
-    if (userSesion?.result?.id) {
+    if (userData?.userData?.id) {
       fetchCampaignDetails();
     }
-  }, [userSesion, searchParams]);
+  }, [userData, searchParams]);
 
   if (loading) return <p>Cargando campaña...</p>;
   if (error) return <p>{error}</p>;
