@@ -23,10 +23,11 @@ const CreateCandidate = () => {
 
   useEffect(() => {
     const fetchCampaigns = async () => {
-      const localUser = localStorage.getItem("userSesion")
+      const localUser = localStorage.getItem("userSession")
       const localUserParsed = JSON.parse(localUser!);
-      const actualUserId = localUserParsed.result.id
-
+      const actualUserId = localUserParsed.userData.id
+      console.log(actualUserId, "localUserParsed");
+      
       try {
         const response = await fetch(`${APIURL}/campaigns/user/${actualUserId}`);
         if (!response.ok) throw new Error("Error al obtener campañas");

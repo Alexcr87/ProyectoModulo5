@@ -10,6 +10,7 @@ const Users = () => {
   const {userData} = useAuth()
   const [users, setUsers] = useState<IUsers[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+console.log(userData, "userdata user");
 
   useEffect(() => {
     const fetchUsers = async () => {

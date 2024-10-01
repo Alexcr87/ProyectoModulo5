@@ -59,11 +59,11 @@ export class AuthService {
         roles: user.roles.map((role) => role.name),
       };
       const token = this.jwtService.sign(userPayload);
-      const { password: excludedPassword, ...result } = user;
+      const { password: excludedPassword, ...userData } = user;
       return {
         succes: 'Login Successful, Your session will expire in 1 hour',
         token,
-        result,
+        userData,
       };
     } else {
       return { message: 'you need to change your password to log in' };
