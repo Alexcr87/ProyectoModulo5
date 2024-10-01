@@ -69,7 +69,7 @@ const Results = () => {
                       <p>{candidate.name}</p>
                       <div className={`w-full bg-blue-200 rounded-full dark:bg-gray-700 ml-4 h-4`}>
                         <div style={{ backgroundColor:candidate.borderColor }} 
-                        className={` text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full w-[0%]`}
+                        className={` text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full w-[${porcentage}%]`}
                         > {candidate.votes} </div>
                       </div>
                     </div>
