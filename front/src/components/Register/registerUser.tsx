@@ -117,7 +117,7 @@ const Register = () => {
 
 
 
-  return (
+  return (<>
     <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">
       <div className="col-start-1 col-end-13">
         <div className="grid grid-cols-12">
@@ -240,6 +240,7 @@ const Register = () => {
         </div>
       </div>
     </form>
+    </>
   );
 };
 }
