@@ -8,7 +8,7 @@ export class VoteController {
 
   @Post()
   async vote(@Body() voteDto: VoteDto): Promise<string> {
-    return this.voteService.votar(voteDto.userId, voteDto.candidateId);
+    return this.voteService.votar(voteDto.userId, voteDto.campaignId, voteDto.candidateId);
   }
 
   @Get('/campaign/:campaignId/candidates')
