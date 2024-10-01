@@ -7,12 +7,12 @@ import { UserService } from '../user/user.service';
 import { Role } from 'src/entities/roles.entity';
 import { MailService } from '../mail/mail.service';
 import { OrganizationalStructure } from 'src/entities/organizationalStructure.entity';
-import { Account } from 'src/entities/account.entity';
+// import { Account } from 'src/entities/account.entity';
 import { requiresAuth } from 'express-openid-connect';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Role, OrganizationalStructure, Account]),
+    TypeOrmModule.forFeature([User, Role, OrganizationalStructure]),
   ],
   controllers: [AuthController],
   providers: [AuthService, UserService, MailService],

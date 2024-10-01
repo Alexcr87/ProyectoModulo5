@@ -7,17 +7,17 @@ dotenvConfig({ path: '.env.development' });
 const config = {
   type: 'postgres',
   database: process.env.POSTGRES_DB,
-  host:process.env.DB_HOST,
-  port:process.env.DB_PORT as unknown as number,
-  username:process.env.DB_USERNAME,
-  password:process.env.POSTGRES_PASSWORD,
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT as unknown as number,
+  username: process.env.DB_USERNAME,
+  password: process.env.POSTGRES_PASSWORD,
   ssl: false,
-  autoLoadEntities: true,
+  autoLoadEntities: true, // Esto cargará automáticamente las entidades
   dropSchema: false,
   synchronize: true,
   logging: false,
-  entities: ['dist/**/*.entity{.ts,.js}'],
-  migrations: ['dist/migrations/*{.ts,.js}'],
+  entities: ["dist/entities/*.js"], // Asegúrate de que los archivos .js están aquí
+  migrations: ['dist/migrations/*{.ts,.js}'],  
 };
 
 export default registerAs('typeorm', () => config);
