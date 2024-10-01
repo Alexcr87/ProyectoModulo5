@@ -3,7 +3,7 @@ export interface IloginProps {
     email : string
     password : string
     token? : string
-    result?:{
+    userData?:{
         id?:string
         roles?:[
             {
