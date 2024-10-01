@@ -1,9 +1,12 @@
+import IUser from "./IUser";
+
 export interface userSession {
     token: string,
     userData:{
-        id: number;
-        address: string;
+        id: string;
+        address?: string;
         email: string;
         name: string;
+        user?:IUser
     }
 }
