@@ -3,38 +3,40 @@ import React, { useEffect, useState } from 'react'
 import Graph from '../graph/Graph'
 import Image from 'next/image'
 import { getCampañaByID } from '@/helpers/campaña.helper'
-import ICampaign from '@/interfaces/ICampaign'
+import { IDataVote, IVotesResult } from '@/interfaces/IVotesResult'
 import colors from '@/helpers/colors.helper'
-import { IVotosResult } from '@/helpers/campaña.helper'
 
 const Results = () => {
 
-  const[candidates, setCandidates] = useState<IVotosResult[]>([])
-  const [campaña, setCampaña] = useState<ICampaign>()
+  const[candidates, setCandidates] = useState<IVotesResult[]>([])
+  const [dataCan, setDataCan] = useState<IDataVote[]>([])
+  const [totalVotes, setTotalVotes] = useState<number> (0)
 
   const fetchData = async ()=>{
     try {
-      const data = await getCampañaByID()
-      setCampaña(data)
-      const candidatesCampaña = data.candidates
+      const datas = await getCampañaByID()
 
-      if(candidatesCampaña){
-        candidatesCampaña.map((data, index)=>{
-          if(data.user){
-          const obj:IVotosResult = {
-            name: data.user?.name,
-            votes: 0,
-            image: "",
-            backgroundColor: colors.backgroundColor[index],
-            borderColor: colors.borderColor[index]
-          }
+      if(datas){
+        datas.map((data, index)=>{
+
           
-          setCandidates(prev => [
+          if(data.candidate){
+            const obj= {
+              name: "",
+              votes: 5,
+              image: data.candidate.imgUrl,
+              backgroundColor: colors.backgroundColor[index],
+              borderColor: colors.borderColor[index],
+          }
+            
+          setTotalVotes(prev=> prev + data.votes)
+          
+          setDataCan(prev => [
             ...prev,
             obj
           ])}
         })
-      }
+      } 
     } catch (error) {
       console.error(error)
     }
@@ -54,21 +56,22 @@ const Results = () => {
             <Graph/>
           </div>
           <div className='w-[50%] justify-center flex flex-col mr-2'>
-            {              
-              candidates && candidates.map((candidate)=>{
+           {              
+              dataCan && dataCan.map((candidate, index)=>{
+            
                 return(
                   <div className='flex w-full items-center'>
                     <Image src="/images/busto.png" alt="" width={100} height={50} />
                     <div className='flex flex-col w-full mr-4 items-center'>
-                      <p>{candidate.name}</p>
+                      <p>Nombre</p>
                       <div className={`w-full bg-white rounded-full dark:bg-gray-700 ml-4 h-4`}>
-                        <div style={{ backgroundColor: candidate.borderColor }} className={` text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full w-[45%]`}> 150 </div>
+                        <div style={{ backgroundColor:candidate.borderColor }} className={` text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full w-[${totalVotes}%]`}> {candidate.votes} </div>
                       </div>
                     </div>
                   </div>
                 )
               })
-            }
+            } 
           </div>
         </div>
       </div>

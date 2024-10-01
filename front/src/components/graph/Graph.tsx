@@ -7,7 +7,6 @@ import {
   Legend,
 } from 'chart.js';
 import colors from '@/helpers/colors.helper';
-import ICampaign from '@/interfaces/ICampaign';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -29,15 +28,16 @@ const Graph = () => {
 
   const options = {
     responsive: true,
-    plugins:{
-        legend: {
-            position: 'left', // Cambia la posición de la leyenda a la izquierda
-            labels: {
-            boxWidth: 30, // Ajusta el ancho del cuadro de la leyenda
-            padding: 15,  // Espaciado entre etiquetas
-            },
+    plugins: {
+      legend: {
+        display: true, // Agrega esta propiedad para mostrar la leyenda
+        position: 'left' as const, // Cambia la posición de la leyenda a la izquierda
+        labels: {
+          boxWidth: 30, // Ajusta el ancho del cuadro de la leyenda
+          padding: 15,  // Espaciado entre etiquetas
         },
-    }
+      },
+    },
   };
 
   return <Doughnut data={data} options={options} />;
