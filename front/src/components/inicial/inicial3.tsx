@@ -16,7 +16,6 @@ const Inicial3 = () => {
 
   useEffect(() => {
     const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-    const APIURL = process.env.NEXT_PUBLIC_API_URL
 
     if (!apiKey) {
       console.error('La clave pública de Mercado Pago no está definida en las variables de entorno.');
