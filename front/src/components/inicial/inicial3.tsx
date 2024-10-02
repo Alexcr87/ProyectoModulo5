@@ -1,12 +1,12 @@
-  "use client";
+"use client";
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 import { useEffect, useState } from 'react';
 import PricingTable2 from '../pricingTable/PricingTable2';
 import Account from '@/interfaces/account';
 import Link from 'next/link';
+import PricingTable3 from '../pricingTable/PricingTable3';
 
-
-const Inicial = () => {
+const Inicial3 = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [preferenceId, setPreferenceId] = useState('');
   const [selectedAccountId, setSelectedAccountId] = useState<number | null>(null);
@@ -16,7 +16,6 @@ const Inicial = () => {
 
   useEffect(() => {
     const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-    const APIURL = process.env.NEXT_PUBLIC_API_URL
 
     if (!apiKey) {
       console.error('La clave pública de Mercado Pago no está definida en las variables de entorno.');
@@ -69,33 +68,36 @@ const Inicial = () => {
       console.error('Error al crear la preferencia:', error);
     }
   };
-
-  return (<>
-   <div>
-      <PricingTable2
+  return (
+    <>
+    <div>
+      <PricingTable3
         accounts={accounts}
         onPlanSelect={handlePlanSelection}
         selectedAccountId={selectedAccountId}
         preferenceId={preferenceId} // Pasamos el preferenceId al componente de tabla
       />
     </div>
-    <div className="relative w-full bg-cover bg-center h-[90vh]" style={{ backgroundImage: "url('https://img.freepik.com/premium-zdjecie/wyborczyni-wkladajaca-kartke-do-urny-wyborczej-wybory-i-koncepcja-glosowania_77190-18358.jpg')" }}>
-      {/* Overlay para oscurecer la imagen y mejorar la legibilidad del texto */}
+    <div
+      className="relative w-full bg-cover bg-center h-[90vh]"
+      style={{ backgroundImage: "url('https://img.freepik.com/premium-zdjecie/wyborczyni-wkladajaca-kartke-do-urny-wyborczej-wybory-i-koncepcja-glosowania_77190-18358.jpg')" }}
+    >
+
       <div className="absolute inset-0 bg-black opacity-50"></div>
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white p-4">
-        <h1 className="text-4xl font-bold mb-6">
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
           Bienvenido a la Plataforma de Votación
         </h1>
-        <p className="text-lg mb-2">
+        <p className="text-lg sm:text-xl mb-2">
           Nuestra plataforma ofrece una experiencia intuitiva y accesible para que puedas gestionar elecciones de manera eficiente.
         </p>
-        <p className="text-lg mb-6">
+        <p className="text-lg sm:text-xl mb-6">
           Explora los candidatos, participa en votaciones y mantente al tanto de los resultados, todo desde una única plataforma.
         </p>
         <Link href="/guia">
-        <button className="bg-primaryColor text-white px-6 py-3 rounded-md shadow-md hover:bg-tertiaryColor transition duration-300">
-        Guía de votación
-        </button>
+          <button className="bg-primaryColor text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md shadow-md hover:bg-tertiaryColor transition duration-300">
+            Guía de votación
+          </button>
         </Link>
       </div>
     </div>
@@ -103,4 +105,4 @@ const Inicial = () => {
   )
 }
 
-export default Inicial
+export default Inicial3
