@@ -3,22 +3,30 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IRegisterError, IRegisterProps } from "./TypesRegister";
-import { importUser, register } from "@/helpers/auth.helper";
+
 import { validateRegisterForm } from "@/helpers/validateRegister";
 import Swal from "sweetalert2";
-import { IloginProps } from "@/interfaces/ILogin";
 import Input from "../ui/Input";
 import Boton from "../ui/Boton";
 import { useAuth } from "@/context/Authontext";
+import { register } from "@/helpers/auth.helper";
 
-const Register = () => {
-  const router = useRouter();
-  const { userData, setUserData } = useAuth()
-  const initialState = {
-    name: "",
+
+const RegisterByAuth0 = () => {
+const router = useRouter();
+const { userData } = useAuth();
+
+
+/*const localUser = localStorage.getItem("userSesion");
+if (localUser) {
+  userAuth = JSON.parse(localUser);
+}*/
+
+const initialState = {
+    name: `${userData?.userData.name}`,
     dni: "",
     address: "",
-    email: "",
+    email: `${userData?.userData.email}`,
     password: "",
     country: "",
     city: ""
@@ -27,22 +35,35 @@ const Register = () => {
   const [dataUser, setDataUser] = useState<IRegisterProps>(initialState);
   const [errors, setErrors] = useState<IRegisterError>(initialState);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [countries, setCountries] = useState<string[]>(["Argentina", "Chile", "Colombia"]);
+  const [countries] = useState<string[]>(["Argentina", "Chile", "Colombia"]);
   const [cities, setCities] = useState<string[]>([]);
-  const [file, setFile] = useState<File | null>(null);
   const [touched, setTouched] = useState<IRegisterError>(initialState);
-  const [userSesion, setUserSesion] = useState<IloginProps>();
-  const pathname = usePathname();
 
   const handleBlur = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name } = event.target;
-    setTouched({
+   const { name } = event.target;
+     setTouched({
       ...touched,
       [name]: true,
     });
-  };
-
-  const parentId = userData?.userData.id
+   };
+  
+  // useEffect(() => {
+  //   // Cargar datos del local storage
+  //   const localUser = localStorage.getItem("userSesion");
+  //   if (localUser) {
+  //     const user = JSON.parse(localUser);
+  //     // Verifica que las propiedades existan antes de asignar
+  //     setDataUser({
+  //       name: user.name || "",
+  //       dni: user.dni || "",
+  //       address:user.address || "",
+  //       email: user.email,
+  //       password:user.password || "asjkd12321S@", // Si decides no usar la contraseña, omítela
+  //       country:"",
+  //       city:""
+  //     });
+  //   }
+  // }, []);
 
   const fetchCitiesByCountry = (country: string) => {
     const countryCitiesMap: Record<string, string[]> = {
@@ -52,8 +73,8 @@ const Register = () => {
     };
     return countryCitiesMap[country] || [];
   };
-   
-    useEffect(() => {
+
+  useEffect(() => {
     setIsFormValid(
       dataUser.name.trim() !== '' &&
       dataUser.email.trim() !== '' &&
@@ -72,7 +93,7 @@ const Register = () => {
     });
   };
 
-  const handleCountryChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCountry = event.target.value;
     setDataUser({ ...dataUser, country: selectedCountry });
 
@@ -83,46 +104,30 @@ const Register = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const newUser = await register(dataUser);
-
-    if (newUser.token) {
-      // Guarda los datos del usuario en el contexto
-      setUserData(newUser);
-      localStorage.setItem("userSesion", JSON.stringify(newUser));
-
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Usted se registró un usuario con éxito",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-
-      // Redirige a otra página después del registro
-      router.push("/login");
-    } else {
-      Swal.fire({
-        position: "center",
-        icon: "error",
-        title: "Error al registrar el usuario",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    }
+    console.log(dataUser);
+    
+    await register(dataUser);
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Usted se registró un usuario con éxito",
+      showConfirmButton: false,
+      timer: 1500
+    });
+    router.push("/login");
+  };
 
   useEffect(() => {
     const errors = validateRegisterForm(dataUser);
     setErrors(errors);
   }, [dataUser]);
 
-
-
   return (
     <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">
       <div className="col-start-1 col-end-13">
         <div className="grid grid-cols-12">
           <div className="col-start-5 col-end-9 mt-[2.5em] my-[2em] text-center text-xl">
-            REGISTRO USUARIO
+            COMPLETAR REGISTRO
           </div>
         </div>
 
@@ -133,7 +138,7 @@ const Register = () => {
                 id="name"
                 name="name"
                 type="text"
-                value={dataUser.name}
+                value={userData?.userData.name}
                 onChange={handleChange}
                 placeholder="Nombre"
               />
@@ -154,6 +159,17 @@ const Register = () => {
 
             <div className="flex flex-col mt-4">
               <Input
+                name="address"
+                type="text"
+                value={dataUser.address}
+                onChange={handleChange}
+                placeholder="Dirección"
+              />
+              {errors.address && <span className="text-red-500 text-sm">{errors.address}</span>}
+            </div>
+
+            <div className="flex flex-col mt-4">
+              <Input
                 id="password"
                 name="password"
                 type="password"
@@ -167,28 +183,15 @@ const Register = () => {
 
             <div className="flex flex-col mt-4">
               <Input
-                name="address"
-                type="text"
-                value={dataUser.address}
-                onChange={handleChange}
-                placeholder="Dirección"
-              />
-              {errors.address && <span className="text-red-500 text-sm">{errors.address}</span>}
-            </div>
-
-            <div className="flex flex-col mt-4">
-              <Input
                 id="email-address"
                 name="email"
                 type="email"
-                value={dataUser.email}
+                value={userData?.userData.email}
                 onChange={handleChange}
                 placeholder="Correo Electrónico"
               />
               {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
             </div>
-           
-
           </div>
 
           <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
@@ -227,20 +230,20 @@ const Register = () => {
             </div>
             <Boton
               type="submit"
-              disabled={!isFormValid}
+              //disabled={!isFormValid}
             >
-              Register
+              Completar Registro
             </Boton>
             <img
               src="/images/registerImage.png"
               alt="Small icon"
               className="w-52 mx-auto mt-12"
-            />  
+            />
           </div>
         </div>
       </div>
     </form>
   );
-  }
-}
-export default Register
+};
+
+export default RegisterByAuth0;
