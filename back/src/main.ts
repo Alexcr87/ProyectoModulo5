@@ -28,7 +28,7 @@ async function bootstrap() {
     // estos dos parametros el primero es para que funcione el despligue el otro es para que funcione local descomentar el que necesiten
     app.enableCors({
       origin: [
-        'https://proyecto-modulo5-i1amrvazu-christians-projects-35503206.vercel.app',  // Dominio de Vercel
+        'https://proyecto-modulo5.vercel.app',  // Dominio de Vercel
         'http://localhost:4000',  // Para entorno local
       ], // Incluye tu dominio de Vercel y localhost
       methods: 'GET,POST,PUT,PATCH,DELETE',
