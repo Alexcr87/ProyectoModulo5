@@ -3,6 +3,7 @@ interface Account {
   name: string;
   maxParticipants: number,
   price: number;  
+  description:string
 }
 
 export default Account

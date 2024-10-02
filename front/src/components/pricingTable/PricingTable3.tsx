@@ -93,6 +93,10 @@ const PricingTable2 = () => {
           >
             <h2 className='text-lg font-bold mt-8'>{account.name}</h2>
             <h3>$<span className='text-4xl font-bold'>{account.price}</span> Per Month</h3>
+            <h4>{account.description}</h4>
+            <h4>All UI components</h4>
+            <h4>Lifetime access</h4>
+            <h4>Free updates</h4>
             <h2 className='text-lg font-bold mt-12 mb-4'>Features</h2>
           </div>
         ))}
