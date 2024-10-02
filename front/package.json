@@ -10,13 +10,10 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.6.0",
-
-    "chart.js": "^4.4.4",
-
     "@mercadopago/sdk-js": "^0.0.3",
+    "chart.js": "^4.4.4",
     "jwt-decode": "^4.0.0",
     "mercadopago": "^2.0.15",
-
     "next": "^14.2.11",
     "openai": "^4.63.0",
     "react": "^18",
