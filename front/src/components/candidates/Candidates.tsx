@@ -27,8 +27,7 @@ const OrderList = async () => {
 
   return (
     <>
-
-      <div className="flex flex-wrap bg-cuartiaryColor h-[85vh] items-center justify-center">
+      <div className="flex flex-wrap bg-cuartiaryColor min-h-[85vh] items-center justify-center">
       {usersarr && usersarr.length > 0 ? (
         usersarr.map((item) => {
           return (
