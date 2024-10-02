@@ -1,36 +1,25 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import ICampaign from '@/interfaces/ICampaign'
-import { IloginProps } from '@/interfaces/ILogin'
 import { usePathname } from 'next/navigation'
+import { useAuth } from '@/context/Authontext';
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 const CampaignsTable = () => {
+    const { userData } = useAuth();
     const [campaigns, setCampaigns] = useState<ICampaign[]>([]) 
     const [loading, setLoading] = useState(true) 
     const [error, setError] = useState<string | null>(null) 
     const pathname = usePathname();
 
-    const [userSesion, setUserSesion] = useState<IloginProps | null>(null);
-
-    // Obtener la sesión del usuario desde el localStorage
-    useEffect(() => {
-        const localUser = localStorage.getItem("userSesion");
-        if (localUser) {
-            const parsedUser = JSON.parse(localUser);
-            setUserSesion(parsedUser);
-           
-        }
-    }, [pathname]);
-
     useEffect(() => {
         const fetchCampaigns = async () => {
-            if (!userSesion?.result?.id) {
+            if (!userData?.userData.id) {
                 setLoading(false); // Termina la carga si no hay ID
                 return;
             }
         
-            const actualUser = String(userSesion.result.id);
+            const actualUser = String(userData?.userData.id);
            
 
             try {
@@ -51,10 +40,10 @@ const CampaignsTable = () => {
             }
         }
 
-        if (userSesion?.result?.id) {
+        if (userData?.userData.id) {
             fetchCampaigns(); // Ejecuta el fetch solo si hay userSesion
         }
-    }, [userSesion]); // Agregar userSesion como dependencia para ejecutar el fetch
+    }, [userData, pathname]); // Agregar userSesion como dependencia para ejecutar el fetch
 
     if (loading) return <p>Cargando campañas...</p>
     if (error) return <p>{error}</p>

@@ -2,31 +2,24 @@
 
 import { useEffect, useState } from "react";
 import IUsers from "@/interfaces/IUsers";
-import { IloginProps } from "@/interfaces/ILogin";
-import { usePathname } from "next/navigation";
+import { useAuth } from "@/context/Authontext";
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 const Users = () => {
-  const [userSesion, setUserSesion] = useState<IloginProps>();
-  const pathname = usePathname();
+
+  const {userData} = useAuth()
   const [users, setUsers] = useState<IUsers[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const localUser = localStorage.getItem("userSesion");
-    if (localUser) {
-      setUserSesion(JSON.parse(localUser));
-    }
-  }, [pathname]);
+console.log(userData, "userdata user");
 
   useEffect(() => {
     const fetchUsers = async () => {
-      if (!userSesion?.result?.id) {
+      if (!userData?.userData.id) {
         setLoading(false); // Termina la carga si no hay ID
         return;
       }
 
-      const actualUser = String(userSesion.result.id);
+      const actualUser = userData?.userData.id
 
       try {
         const response = await fetch(`${APIURL}/user?parentId=${actualUser}`, {
@@ -46,7 +39,7 @@ const Users = () => {
     };
 
     fetchUsers();
-  }, [userSesion]); // Solo se ejecuta cuando userSesion cambia
+  }, [userData]); // Solo se ejecuta cuando userSesion cambia
 
   if (loading) {
     return <p className="text-center text-gray-500">Cargando...</p>;

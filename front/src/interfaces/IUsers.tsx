@@ -1,6 +1,6 @@
 interface IUsers {
 
-    id: number,
+    id: string,
     name: string,
     dni: number,
     email: string,

@@ -9,9 +9,11 @@ import Swal from "sweetalert2";
 import { IloginProps } from "@/interfaces/ILogin";
 import Input from "../ui/Input";
 import Boton from "../ui/Boton";
+import { useAuth } from "@/context/Authontext";
 
 const Register = () => {
   const router = useRouter();
+  const { userData, setUserData } = useAuth()
   const initialState = {
     name: "",
     dni: "",
@@ -39,15 +41,8 @@ const Register = () => {
       [name]: true,
     });
   };
-  
-  useEffect(() => {
-    const localUser = localStorage.getItem("userSesion");
-    if (localUser) {
-      setUserSesion(JSON.parse(localUser));
-    }
-  }, [pathname]);
 
-  const parentId = userSesion?.result?.id
+  const parentId = userData?.userData.id
 
   const fetchCitiesByCountry = (country: string) => {
     const countryCitiesMap: Record<string, string[]> = {
@@ -88,16 +83,32 @@ const Register = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await register(dataUser);
-    Swal.fire({
-      position: "center",
-      icon: "success",
-      title: "Usted se registró un usuario con éxito",
-      showConfirmButton: false,
-      timer: 1500
-    });
-    router.push("/login");
-  };
+    const newUser = await register(dataUser);
+
+    if (newUser.token) {
+      // Guarda los datos del usuario en el contexto
+      setUserData(newUser);
+      localStorage.setItem("userSesion", JSON.stringify(newUser));
+
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Usted se registró un usuario con éxito",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+
+      // Redirige a otra página después del registro
+      router.push("/login");
+    } else {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error al registrar el usuario",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
 
   useEffect(() => {
     const errors = validateRegisterForm(dataUser);
@@ -106,7 +117,7 @@ const Register = () => {
 
 
 
-  return (
+  return (<>
     <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">
       <div className="col-start-1 col-end-13">
         <div className="grid grid-cols-12">
@@ -229,8 +240,9 @@ const Register = () => {
         </div>
       </div>
     </form>
+    </>
   );
 };
-
+}
 export default Register;
 

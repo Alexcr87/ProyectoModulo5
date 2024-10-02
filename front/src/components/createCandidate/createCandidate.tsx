@@ -5,10 +5,14 @@ import Input from "../ui/Input";
 import InputFile from "../ui/InputFile";
 import Textarea from "../ui/Textarea";
 import Select from "../ui/Select";
+import { useAuth } from '@/context/Authontext';
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
-const CreateCandidate = ({ userId }: { userId: string }) => {
+
+const CreateCandidate = () => {
+  const { userData } = useAuth(); // Obtener datos del usuario desde el contexto
+  const userId = userData?.userData?.id; // Extraer el userId
   const [postulation, setPostulation] = useState<string>("");
   const [list, setList] = useState<string>("");
   const [campaignDescription, setCampaignDescription] = useState<string>("");
@@ -19,10 +23,11 @@ const CreateCandidate = ({ userId }: { userId: string }) => {
 
   useEffect(() => {
     const fetchCampaigns = async () => {
-      const localUser = localStorage.getItem("userSesion")
+      const localUser = localStorage.getItem("userSession")
       const localUserParsed = JSON.parse(localUser!);
-      const actualUserId = localUserParsed.result.id
-   
+      const actualUserId = localUserParsed.userData.id
+      console.log(actualUserId, "localUserParsed");
+      
       try {
         const response = await fetch(`${APIURL}/campaigns/user/${actualUserId}`);
         if (!response.ok) throw new Error("Error al obtener campañas");
@@ -41,36 +46,30 @@ const CreateCandidate = ({ userId }: { userId: string }) => {
       setFile(e.target.files[0]);
     }
   };
-
   const handleProposalsChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     setProposals(value.split("\n"));
   };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const formData = new FormData();
     formData.append("postulation", postulation);
     formData.append("list", list);
     formData.append("campaignDescription", campaignDescription);
     formData.append("proposals", JSON.stringify(proposals));
-    formData.append("userId", userId);
+    formData.append("userId", userId!); // Usar el userId del contexto
     formData.append("campaignId", selectedCampaignId); // Usar el campaignId seleccionado
     if (file) {
       formData.append("file", file);
     }
-
     try {
       const response = await fetch(`${APIURL}/candidates`, {
         method: "POST",
         body: formData,
       });
-
       if (!response.ok) {
         throw new Error("Error en la creación del candidato");
       }
-
       window.location.href = "/candidates";    
     } catch (error) {
       console.error("Error al crear candidato:", error);
@@ -78,7 +77,7 @@ const CreateCandidate = ({ userId }: { userId: string }) => {
   };
 
   return (
-    <div className="flex w-[60%] justify-center  p-6 bg-white shadow-lg rounded-lg">
+    <div className="flex w-[60%] justify-center p-6 bg-white shadow-lg rounded-lg">
       <form onSubmit={handleSubmit} className="w-11/12 space-y-4">
         <h1 className="text-lg font-bold text-center">Crear Candidato</h1>
           <Input
@@ -95,14 +94,12 @@ const CreateCandidate = ({ userId }: { userId: string }) => {
             onChange={(e) => setList(e.target.value)}
             required
           />
-
           <Textarea
             value={campaignDescription}
             placeholder="Descripción de la campaña"
             onChange={(e) => setCampaignDescription(e.target.value)}
             required
           />
-
         <div className="rounded-md">
           <label className="block text-sm font-medium text-gray-700">Propuestas</label>
           <Textarea
@@ -111,7 +108,6 @@ const CreateCandidate = ({ userId }: { userId: string }) => {
             placeholder="Escribe cada propuesta en una nueva línea"
           />
         </div>
-
         <div className="rounded-md">
           <label className="block text-sm font-medium text-gray-700">Campaña</label>
           <Select
@@ -125,8 +121,7 @@ const CreateCandidate = ({ userId }: { userId: string }) => {
             ))}
           </Select>
         </div>
-
-        <div className=" rounded-md">
+        <div className="rounded-md">
           <label className="block text-sm font-medium text-gray-700">Imagen del candidato (JPG)</label>
           <InputFile
             type="file"
@@ -139,10 +134,8 @@ const CreateCandidate = ({ userId }: { userId: string }) => {
             <Boton>Crear Candidato </Boton>
           </div>
          </div>
-          
       </form>
     </div>
   );
 };
-
 export default CreateCandidate;

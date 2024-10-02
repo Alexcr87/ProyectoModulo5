@@ -1,44 +1,61 @@
-// "use client"
-// import { Doughnut } from 'react-chartjs-2';
-// import {
-//   Chart as ChartJS,
-//   ArcElement,
-//   Tooltip,
-//   Legend,
-// } from 'chart.js';
-// import colors from '@/helpers/colors.helper';
-// import ICampaign from '@/interfaces/ICampaign';
+
+"use client"
+import { Doughnut } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import colors from '@/helpers/colors.helper';
+import { IDataVote } from '@/interfaces/IVotesResult';
+import { useState } from 'react';
+
 
 // ChartJS.register(ArcElement, Tooltip, Legend);
 
-// const Graph = () => {
-//     const colorType = colors
+
+const Graph = ({dataCan}:{dataCan:IDataVote[]}) => {
+  
+  let names:string[] = []
+  let votes:number[]= []
+  let colorBackground:string[]= []
+  let colorBorder:string[]= []
+  
+  dataCan && dataCan.map((data)=>{
+    names.push(data.name)
+    votes.push(data.votes)
+    colorBackground.push(data.backgroundColor)
+    colorBorder.push(data.borderColor)
+  })
     
 
-//   const data = {
-//     labels: ['Juan', 'Pedro', 'Simon', 'En Blanco'],
-//     datasets: [
-//       {
-//         label: 'Votos',
-//         data: [10, 200, 150, 5],
-//         backgroundColor: colorType.backgroundColor,
-//         borderColor: colorType.borderColor
-//       },
-//     ],
-//   };
+  const data = {
+    labels: names,
+    datasets: [
+      {
+        label: 'Votos',
+        data: votes,
+        backgroundColor: colorBackground,
+        borderColor: colorBorder
+      },
+    ],
+  };
 
-//   const options = {
-//     responsive: true,
-//     plugins:{
-//         legend: {
-//             position: 'left', // Cambia la posición de la leyenda a la izquierda
-//             labels: {
-//             boxWidth: 30, // Ajusta el ancho del cuadro de la leyenda
-//             padding: 15,  // Espaciado entre etiquetas
-//             },
-//         },
-//     }
-//   };
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: true, 
+        position: 'left' as const,
+        labels: {
+          boxWidth: 30,
+          padding: 15,  
+        },
+      },
+    },
+  };
+
 
 //   return <Doughnut data={data} options={options} />;
 // };

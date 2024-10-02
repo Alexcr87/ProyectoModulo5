@@ -16,7 +16,8 @@ const LoginForm = () => {
     const initialState = {
         email: "",
         password: "",
-        token: ""
+        token: "",
+        userData:{}
     };
 
     const [dataUser, SetdataUser] = useState<IloginProps>(initialState);
@@ -45,7 +46,7 @@ const LoginForm = () => {
             if (clearUser.token) {
                 // Aquí es donde guardo los nuevos datos del usuario en el contexto
                 setUserData(clearUser); // Establece el usuario en el contexto
-                localStorage.setItem('userSesion', JSON.stringify(clearUser)); // También guardamos en localStorage
+                localStorage.setItem('userSession', JSON.stringify(clearUser)); // También guardamos en localStorage
                 const Toast = Swal.mixin({
                     toast: true,
                     position: "top-end",
@@ -133,12 +134,12 @@ const LoginForm = () => {
                     disabled={Object.keys(errors).length > 0}>
                     Iniciar Sesion
                 </Boton>
-                <div></div>
-                {/* Botón para iniciar sesión con Auth0 */}
+                <hr className='my-4'/>
                 <Boton 
                     type='button'
                     onClick={handleAuth0Login}>
-                    Iniciar Sesión con Google
+                    <i className="fa-brands fa-google mr-2"></i>
+                    Continuar Con Google
                 </Boton>
             </form>
         </div>
