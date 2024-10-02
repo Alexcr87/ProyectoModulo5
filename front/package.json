@@ -11,7 +11,9 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.6.0",
     "@mercadopago/sdk-js": "^0.0.3",
+    "@mercadopago/sdk-react": "^0.0.19",
     "chart.js": "^4.4.4",
+    "dotenv": "^16.4.5",
     "jwt-decode": "^4.0.0",
     "mercadopago": "^2.0.15",
     "next": "^14.2.11",
