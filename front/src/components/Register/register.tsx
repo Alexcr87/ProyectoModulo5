@@ -186,10 +186,9 @@ const Register = () => {
       title: 'Registro por Excel',
       html: `
         <div>
-          <p>Descarga la plantilla:</p>
-          <button onclick="document.getElementById('excelDownload').click();">Descargar Excel</button>
+          <button onclick="document.getElementById('excelDownload').click();">Descarga la plantilla</button>
           <a id="excelDownload" href="/images/ExcelDeMuestra.xlsx" style="display: none;"></a>
-          <p>Sube tu archivo Excel:</p>
+        
           <input type="file" id="fileUpload" class="swal2-input" accept=".xlsx, .xls" />
         </div>
       `,
