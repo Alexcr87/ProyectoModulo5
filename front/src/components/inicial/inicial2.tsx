@@ -23,7 +23,13 @@ const Inicial2 = () => {
 
     const fetchAccounts = async () => {
       try {
-        const response = await fetch(`${APIURL}/payments/packages`);
+        const response = await fetch(`${APIURL}/payments/packages`,{
+          method: "GET",
+  credentials: "include", // Si necesitas enviar cookies
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
         if (!response.ok) {
           throw new Error('Error al obtener cuentas');
         }
