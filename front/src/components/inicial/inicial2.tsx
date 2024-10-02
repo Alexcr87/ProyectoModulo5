@@ -10,8 +10,11 @@ const Inicial2 = () => {
   const [preferenceId, setPreferenceId] = useState('');
   const [selectedAccountId, setSelectedAccountId] = useState<number | null>(null);
 
+  
+
   useEffect(() => {
     const apiKey = process.env.NEXT_PUBLIC_API_KEY;
+    const APIURL = process.env.NEXT_PUBLIC_API_URL
 
     if (!apiKey) {
       console.error('La clave pública de Mercado Pago no está definida en las variables de entorno.');
@@ -20,7 +23,7 @@ const Inicial2 = () => {
 
     const fetchAccounts = async () => {
       try {
-        const response = await fetch('http://localhost:3000/payments/packages');
+        const response = await fetch(`${APIURL}/payments/packages`);
         if (!response.ok) {
           throw new Error('Error al obtener cuentas');
         }
