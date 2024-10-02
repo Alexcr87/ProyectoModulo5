@@ -17,7 +17,7 @@ const PricingTable = () => {
           <h2 className='text-lg font-bold mt-8'>Free</h2>
           <h3>$<span className='text-4xl font-bold'>00.00</span> Per Month</h3>
           <h2 className='text-lg font-bold mt-12 mb-4'>Features</h2>
-          <h4>Up to 30 User</h4>
+ {/* esto agregarlo variables en el back */}         <h4>Up to 30 User</h4> {/* esto agregarlo variables en el back */}
           <h4>All UI components</h4>
           <h4>Lifetime access</h4>
           <h4>Free updates</h4>
@@ -30,7 +30,7 @@ const PricingTable = () => {
           <h2 className='text-lg font-bold mt-8'>Starter</h2>
           <h3>$<span className='text-4xl font-bold'>25.00</span> Per Month</h3>
           <h2 className='text-lg font-bold mt-12 mb-4'>Features</h2>
-          <h4>Up to 50 User</h4>
+    {/* esto agregarlo variables en el back */}      <h4>Up to 50 User</h4>{/* esto agregarlo variables en el back */}
           <h4>All UI components</h4>
           <h4>Lifetime access</h4>
           <h4>Free updates</h4>
@@ -47,7 +47,7 @@ const PricingTable = () => {
           <h2 className='text-lg font-bold mt-8'>Basic</h2>
           <h3>$<span className='text-4xl font-bold'>59.00</span> Per Month</h3>
           <h2 className='text-lg font-bold mt-12 mb-4'>Features</h2>
-          <h4>Up to 100 User</h4>
+      {/* esto agregarlo variables en el back */}    <h4>Up to 100 User</h4>{/* esto agregarlo variables en el back */}
           <h4>All UI components</h4>
           <h4>Lifetime access</h4>
           <h4>Free updates</h4>
@@ -60,7 +60,7 @@ const PricingTable = () => {
           <h2 className='text-lg font-bold mt-8'>Premium</h2>
           <h3>$<span className='text-4xl font-bold'>99.00</span> Per Month</h3>
           <h2 className='text-lg font-bold mt-12 mb-4'>Features</h2>
-          <h4>Up to more 100 User</h4>
+     {/* esto agregarlo variables en el back */}     <h4>Up to more 100 User</h4>{/* esto agregarlo variables en el back */}
           <h4>All UI components</h4>
           <h4>Lifetime access</h4>
           <h4>Free updates</h4>
