@@ -12,7 +12,7 @@ import { IDataVote } from '@/interfaces/IVotesResult';
 import { useState } from 'react';
 
 
-// ChartJS.register(ArcElement, Tooltip, Legend);
+ ChartJS.register(ArcElement, Tooltip, Legend);
 
 
 const Graph = ({dataCan}:{dataCan:IDataVote[]}) => {
@@ -57,7 +57,7 @@ const Graph = ({dataCan}:{dataCan:IDataVote[]}) => {
   };
 
 
-//   return <Doughnut data={data} options={options} />;
-// };
+  return <Doughnut data={data} options={options} />;
+ };
 
-// export default Graph;
+ export default Graph;
