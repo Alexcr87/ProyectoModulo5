@@ -6,13 +6,10 @@ import { IRegisterError, IRegisterProps } from "./TypesRegister";
 import { importUser, register } from "@/helpers/auth.helper";
 import { validateRegisterForm } from "@/helpers/validateRegister";
 import Boton from "../ui/Boton";
-import Swal from 'sweetalert2'
-
+import Swal from 'sweetalert2';
 import Input from "../ui/Input";
 import InputFile from "../ui/InputFile";
 import { useAuth } from "@/context/Authontext";
-
-
 
 const Register = () => {
   const router = useRouter();
@@ -30,13 +27,12 @@ const Register = () => {
   const [dataUser, setDataUser] = useState<IRegisterProps>(initialState);
   const [errors, setErrors] = useState<IRegisterError>(initialState);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [countries, ] = useState<string[]>(["Argentina", "Chile", "Colombia"]);
+  const [countries] = useState<string[]>(["Argentina", "Chile", "Colombia"]);
   const [cities, setCities] = useState<string[]>([]);
   const [file, setFile] = useState<File | null>(null);
   const [touched, setTouched] = useState<IRegisterError>(initialState);
+  const parentId = userData?.userData?.id;
 
-  const parentId = userData?.userData?.id 
-  
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] || null;
     setFile(selectedFile);
@@ -51,9 +47,9 @@ const Register = () => {
       });
       return;
     }
-  
+
     try {
-      await importUser(file, parentId); // Pasa el parentId como argumento
+      await importUser(file, parentId);
       Swal.fire({
         position: "center",
         icon: "success",
@@ -75,14 +71,14 @@ const Register = () => {
 
   const fetchCitiesByCountry = (country: string) => {
     const countryCitiesMap: Record<string, string[]> = {
-      Argentina: ["Buenos Aires", "Córdoba", "Rosario"],
-      Chile: ["Santiago", "Valparaíso", "Concepción"],
-      Colombia: ["Bogotá", "Medellín", "Cali"],
+      Argentina: ["Buenos Aires", "Córdoba", "Rosario", "Mendoza", "La Plata", "Tucumán"],
+      Chile: ["Santiago", "Valparaíso", "Concepción", "La Serena", "Antofagasta", "Temuco"],
+      Colombia: ["Bogotá", "Medellín", "Cali", "Cartagena", "Barranquilla", "Cúcuta"],
     };
     return countryCitiesMap[country] || [];
   };
-   
-    useEffect(() => {
+
+  useEffect(() => {
     setIsFormValid(
       dataUser.name.trim() !== "" &&
       dataUser.email.trim() !== "" &&
@@ -104,22 +100,17 @@ const Register = () => {
   const handleCountryChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCountry = event.target.value;
     setDataUser((prevDataUser) => ({ ...prevDataUser, country: selectedCountry }));
-
-    // Fetch cities based on the selected country
     const fetchedCities = fetchCitiesByCountry(selectedCountry);
     setCities(fetchedCities);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
 
     try {
       const result = await register(dataUser, parentId);
+      setUserData(result);
 
-       // Guardamos los datos del usuario en el contexto de autenticación
-       setUserData(result);
-  
       Swal.fire({
         position: "center",
         icon: "success",
@@ -127,9 +118,9 @@ const Register = () => {
         showConfirmButton: false,
         timer: 1500
       });
-      
+
       router.push("/users");
-    } catch (error:any) {
+    } catch (error: any) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -137,148 +128,107 @@ const Register = () => {
       });
     }
   };
-  
 
   useEffect(() => {
     const validationErrors = validateRegisterForm(dataUser);
     setErrors(validationErrors);
   }, [dataUser]);
 
-
   const handleDownloadExcel = () => {
     const link = document.createElement("a");
-    link.href = `${window.location.origin}/images/ExcelDeMuestra.xlsx`; 
-    link.download = "ExcelDeMuesta.xlsx"; 
+    link.href = `${window.location.origin}/images/ExcelDeMuestra.xlsx`;
+    link.download = "ExcelDeMuesta.xlsx";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
-  return (<>
-    <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">
-      <div className="col-start-1 col-end-13">
-        <div className="grid grid-cols-12">
-          <div className="col-start-5 col-end-9 mt-[2.5em] my-[2em] text-center text-xl">
-            REGISTRO USUARIO
-          </div>
-        </div>
+  const handleRegisterManually = () => {
+    Swal.fire({
+      title: 'Registro Manual',
+      html: `
+        <form id="manualRegisterForm">
+          <input type="text" name="name" placeholder="Nombre" class="swal2-input" required>
+          <input type="text" name="dni" placeholder="DNI" class="swal2-input" required>
+          <input type="text" name="address" placeholder="Dirección" class="swal2-input" required>
+          <input type="email" name="email" placeholder="Correo Electrónico" class="swal2-input" required>
+          <select name="country" class="swal2-input" required>
+            <option value="">Selecciona un país</option>
+            ${countries.map(country => `<option value="${country}">${country}</option>`).join('')}
+          </select>
+          <select name="city" class="swal2-input" required>
+            <option value="">Selecciona una ciudad</option>
+            ${cities.map(city => `<option value="${city}">${city}</option>`).join('')}
+          </select>
+        </form>
+      `,
+      focusConfirm: false,
+      preConfirm: () => {
+        const form = document.getElementById('manualRegisterForm') as HTMLFormElement;
+        const formData = new FormData(form);
+        const data: IRegisterProps = {
+          name: formData.get('name') as string,
+          dni: formData.get('dni') as string,
+          address: formData.get('address') as string,
+          email: formData.get('email') as string,
+          password: "", // Asigna una contraseña o permite que el usuario la ingrese
+          country: formData.get('country') as string,
+          city: formData.get('city') as string,
+        };
+        setDataUser(data);
+        handleSubmit({ preventDefault: () => {} } as any); // Llama a handleSubmit
+      }
+    });
+  };
 
-        <div className="flex">
-          <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
-            <div className="flex flex-col">
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                value={dataUser.name}
-                onChange={handleChange}
-                placeholder="Nombre"
-              />
-              {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
-            </div>
-
-            <div className="flex flex-col mt-4">
-              <Input
-                id="dni"
-                name="dni"
-                type="text"
-                value={dataUser.dni}
-                onChange={handleChange}
-                placeholder="DNI"
-              />
-              {errors.dni && <span className="text-red-500 text-sm">{errors.dni}</span>}
-            </div>
-            <div className="flex flex-col mt-4">
-              <Input
-                name="address"
-                type="text"
-                value={dataUser.address}
-                onChange={handleChange}
-                placeholder="Dirección"
-              />
-              {errors.address && <span className="text-red-500 text-sm">{errors.address}</span>}
-            </div>
-
-            <div className="flex flex-col mt-4">
-              <Input
-                id="email-address"
-                name="email"
-                type="email"
-                value={dataUser.email}
-                onChange={handleChange}
-                placeholder="Correo Electrónico"
-              />
-              {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
-            </div>
-          </div>
-          <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
-            <div className="flex flex-col">
-              <select
-                name="country"
-                value={dataUser.country}
-                onChange={handleCountryChange}
-                className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
-                border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
-                dark:focus:border-primaryColor focus-visible:shadow-none" 
-              >
-              <option value="">Selecciona un país</option>
-                {countries.map(country => (
-                  <option key={country} value={country}>{country}</option>
-                ))}
-              </select>
-              {errors.country && <span className="text-red-500 text-sm">{errors.country}</span>}
-            </div>
-            <div className="flex flex-col mt-4">
-              <select
-                name="city"
-                value={dataUser.city}
-                onChange={handleChange}
-                className="w-full px-5 py-3 mb-4 text-base transition bg-transparent border rounded-md outline-none 
-                border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
-                dark:focus:border-primaryColor focus-visible:shadow-none"  
-              >
-              <option value="">Selecciona una ciudad</option>
-                {cities.map(city => (
-                  <option key={city} value={city}>{city}</option>
-                ))}
-              </select>
-              {errors.city && <span className="text-red-500 text-sm">{errors.city}</span>}
-            </div>
-            <Boton
-              type="submit"
-              disabled={!isFormValid}
-            >
-              Registrar
-            </Boton>
-            <img
-              src="/images/registerImage.png"
-              alt="Small icon"
-              className="w-52 mx-auto my-4"
-            />  
-          </div>
-        </div>
-      </div>
-    </form>
-    <div className="flex items-center justify-between mx-14">
-      <div className="flex mt-4 gap-4">
+  const handleRegisterByExcel = () => {
+    Swal.fire({
+      title: 'Registro por Excel',
+      html: `
         <div>
-            <InputFile
-              type="file"
-              onChange={handleFileChange}
-            />
+          <p>Descarga la plantilla:</p>
+          <button onclick="document.getElementById('excelDownload').click();">Descargar Excel</button>
+          <a id="excelDownload" href="/images/ExcelDeMuestra.xlsx" style="display: none;"></a>
+          <p>Sube tu archivo Excel:</p>
+          <input type="file" id="fileUpload" class="swal2-input" accept=".xlsx, .xls" />
         </div>
-        <div>
-            <Boton onClick={handleUpload}>Subir Excel</Boton>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Subir',
+      preConfirm: () => {
+        const fileInput = document.getElementById('fileUpload') as HTMLInputElement;
+        const file = fileInput.files?.[0];
+
+        if (!file) {
+          Swal.showValidationMessage('Por favor selecciona un archivo');
+        }
+
+        return file;
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleFileChange({ target: { files: [result.value] } } as any);
+        handleUpload();
+      }
+    });
+  };
+
+  return (
+    <>
+      <div className="flex flex-col items-center space-y-6 mt-24">
+        <div className="w-64">
+          <Boton onClick={handleRegisterManually}>
+            Registrar Manualmente
+          </Boton>
+        </div>
+        <div className="w-64">
+          <Boton onClick={handleRegisterByExcel}>
+            Registrar por Excel
+          </Boton>
         </div>
       </div>
-      <div className="self-end">
-        <Boton onClick={handleDownloadExcel}>Descargar Excel</Boton>
-      </div>
-    </div>
-    
     </>
   );
 };
 
 export default Register;
-
