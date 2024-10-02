@@ -186,10 +186,9 @@ const Register = () => {
       title: 'Registro por Excel',
       html: `
         <div>
-          <p>Descarga la plantilla:</p>
-          <button onclick="document.getElementById('excelDownload').click();">Descargar Excel</button>
+          <button onclick="document.getElementById('excelDownload').click();">Descarga la plantilla</button>
           <a id="excelDownload" href="/images/ExcelDeMuestra.xlsx" style="display: none;"></a>
-          <p>Sube tu archivo Excel:</p>
+        
           <input type="file" id="fileUpload" class="swal2-input" accept=".xlsx, .xls" />
         </div>
       `,
@@ -214,21 +213,27 @@ const Register = () => {
   };
 
   return (
-    <>
-      <div className="flex flex-col items-center space-y-6 mt-24">
-        <div className="w-64">
+    <div className="flex flex-col items-center bg-gray-100 min-h-screen p-8">
+      <img src="/images/logo.png" alt="Logo" className="mr-2 w-32" />
+      <h1 className="text-5xl mb-4">Registro de Usuarios</h1>
+      <h2 className="text-xl text-center mb-8">
+      ¡Bienvenido a la plataforma de registro de votantes para tu campaña! Aquí podrás registrar a los usuarios que formarán parte de esta emocionante experiencia electoral. Te ofrecemos múltiples opciones para facilitar el proceso: puedes registrar a los votantes de manera manual o simplemente cargar un archivo de Excel con toda la información necesaria. ¡Hagamos que cada voz cuente!
+      </h2>
+      <div className="flex flex-col space-y-6 mt-8">
+        <div className="w-64 mx-auto">
           <Boton onClick={handleRegisterManually}>
             Registrar Manualmente
           </Boton>
         </div>
-        <div className="w-64">
+        <div className="w-64 mx-auto">
           <Boton onClick={handleRegisterByExcel}>
             Registrar por Excel
           </Boton>
         </div>
       </div>
-    </>
+    </div>
   );
 };
+
 
 export default Register;
