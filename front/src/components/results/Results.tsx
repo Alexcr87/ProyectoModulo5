@@ -8,7 +8,7 @@ import { IDataVote, IVotesResult } from '@/interfaces/IVotesResult'
 import colors from '@/helpers/colors.helper'
 
 
-// const Results = () => {
+const Results = () => {
 
 
   const [dataCan, setDataCan] =  useState<IDataVote[]>([]);
@@ -87,5 +87,4 @@ import colors from '@/helpers/colors.helper'
   )
 }
 
-
-// export default Results
+export default Results

@@ -87,7 +87,7 @@ const NavBar = () => {
                     {!userData ? (
                         <>
                             <li>
-                                <Link href="/registerUser">Registrarme</Link>
+                                <Link href="/registerModerator">Registrarme</Link>
                             </li>
                             <li>
                                 <Link href="/login">Iniciar Sesión</Link>
@@ -111,7 +111,7 @@ const NavBar = () => {
                                 <button onClick={toggleDropdown} className="dropdown-toggle">Usuarios</button>
                                 {isDropdownOpen && (
                                     <div className="dropdown-menu absolute bg-white text-black p-2 shadow-md">
-                                        <Link href="/register" className="block px-4 py-2 hover:bg-primaryColor hover:text-cuartiaryColor" onClick={closeDropdown}>Crear usuario</Link>
+                                        <Link href="/registerUsers" className="block px-4 py-2 hover:bg-primaryColor hover:text-cuartiaryColor" onClick={closeDropdown}>Crear usuario</Link>
                                         <Link href="/users" className="block px-4 py-2 hover:bg-primaryColor hover:text-cuartiaryColor" onClick={closeDropdown}>Mis usuarios</Link>
                                     </div>
                                 )}
