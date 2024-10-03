@@ -21,8 +21,8 @@ export class Account {
   @Column()
   price: number;
 
-  @Column()
-  description: string
+  @Column({type:'varchar', nullable: false})
+  description: string;
 
   @ManyToOne(() => User, (user) => user.accounts)
   user: User;
