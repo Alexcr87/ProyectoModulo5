@@ -1,10 +1,11 @@
+import ICampaign from "@/interfaces/ICampaign";
 import { IVotesResult } from "@/interfaces/IVotesResult";
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
-export async function getCampañaByID():Promise<IVotesResult[]>{
+export async function getCampañaByID(id: string):Promise<IVotesResult[]>{
     try {
-        const res = await fetch(`${APIURL}/votes/campaign/60c1791c-79d8-43f4-81b8-926927704cae/candidates`,{
+        const res = await fetch(`${APIURL}/votes/campaign/${id}/candidates`,{
             //next: {revalidate: 1200},
             cache: 'no-cache'
         })
@@ -15,3 +16,14 @@ export async function getCampañaByID():Promise<IVotesResult[]>{
     }
 }
 
+export async function getCampaigns() {
+    try {
+        const res = await fetch(`${APIURL}/campaigns`)
+        const campaigns: ICampaign[] = await res.json()
+        return campaigns
+        
+    } catch (error: any) {
+        throw new Error(error)
+    }
+    
+}
