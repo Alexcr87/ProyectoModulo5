@@ -7,12 +7,12 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import colors from '@/helpers/colors.helper';
 import { IDataVote } from '@/interfaces/IVotesResult';
-import { useState } from 'react';
 
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+
+ ChartJS.register(ArcElement, Tooltip, Legend);
+
 
 
 const Graph = ({dataCan}:{dataCan:IDataVote[]}) => {
@@ -21,6 +21,7 @@ const Graph = ({dataCan}:{dataCan:IDataVote[]}) => {
   let votes:number[]= []
   let colorBackground:string[]= []
   let colorBorder:string[]= []
+  
   
   dataCan && dataCan.map((data)=>{
     names.push(data.name)
@@ -58,6 +59,7 @@ const Graph = ({dataCan}:{dataCan:IDataVote[]}) => {
 
 
   return <Doughnut data={data} options={options} />;
-};
+ };
 
-export default Graph;
+ export default Graph;
+

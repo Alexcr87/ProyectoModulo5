@@ -25,10 +25,15 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, document);
-  app.enableCors({
-    origin: 'http://localhost:4000',
-    credentials:true
-  });
+    // estos dos parametros el primero es para que funcione el despligue el otro es para que funcione local descomentar el que necesiten
+    app.enableCors({
+      origin: [
+        'https://proyecto-modulo5.vercel.app',  // Dominio de Vercel
+        'http://localhost:4000',  // Para entorno local
+      ], // Incluye tu dominio de Vercel y localhost
+      methods: 'GET,POST,PUT,PATCH,DELETE',
+      credentials: true, // Si estás manejando autenticación basada en cookies o encabezados de autenticación
+    });
   await app.listen(3000);
 }
 bootstrap();

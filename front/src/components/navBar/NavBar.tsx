@@ -75,6 +75,8 @@ const NavBar = () => {
         };
     }, []);
 
+    
+
     return (
         <nav className='bg-primaryColor opacity-80 h-14 pl-8 flex items-center justify-between fixed w-full z-50'>
             <Link href="/">
