@@ -100,8 +100,8 @@ const LoginForm = () => {
         <div className='my-4 text-center flex flex-col items-center bg-white shadow-lg px-4 rounded-lg'>
             <Image src="/images/logo.png" alt="imagenLogo" width={350} height={350} className='m-10' />
             <h1 className='font-bold text-2xl mt-4'>INICIAR SESION</h1>
-            <form onSubmit={handleSubmit} className="mx-auto px-28 pb-20 rounded-lg">
-                <div className="flex flex-col mt-4">
+            <form onSubmit={handleSubmit} className="mx-auto  md:px-28 pb-20 rounded-lg">
+                <div className="flex flex-col mt-4 w-full">
                     <Input
                         type="text"
                         name='email'

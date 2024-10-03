@@ -144,16 +144,16 @@ const initialState = {
   }, [dataUser]);
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">
-      <div className="col-start-1 col-end-13">
-        <div className="grid grid-cols-12">
-          <div className="col-start-5 col-end-9 mt-[2.5em] my-[2em] text-center text-xl">
+    <form onSubmit={handleSubmit}>
+      <div>
+        <div>
+          <div className="w-full justify-center flex mb-6">
             COMPLETAR REGISTRO
           </div>
         </div>
 
-        <div className="flex">
-          <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
             <div className="flex flex-col">
               <Input
                 id="name"
@@ -215,7 +215,7 @@ const initialState = {
             </div>
           </div>
 
-          <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
+          <div>
             <div className="flex flex-col">
               <select
                 name="country"

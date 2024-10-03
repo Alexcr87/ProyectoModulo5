@@ -11,7 +11,11 @@ interface IUser {
     address?: string,
     city?: string,
     country?: string,
-    rol?: string,
+    roles?: [{
+        id:number,
+        name:string,
+        description:string
+    }],
     suffrage?: boolean,
     candidate?: ICandidate
 }

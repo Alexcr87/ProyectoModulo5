@@ -206,7 +206,7 @@ export class UserService{
         console.log('Password generated and hashed.');
 
         // Roles y cuentas por defecto
-        const defaultRole = await this.roleRepository.findOne({ where: { id: 4 } });
+        const defaultRole = await this.roleRepository.findOne({ where: { id: 3 } });
         if (!defaultRole) {
             throw new BadRequestException('Default role not found');
         }

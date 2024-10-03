@@ -124,7 +124,7 @@ const Register = () => {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "error.message", // Mostrar mensaje de error en caso de que falle
+        text: error.message, // Mostrar mensaje de error en caso de que falle
       });
     }
   };

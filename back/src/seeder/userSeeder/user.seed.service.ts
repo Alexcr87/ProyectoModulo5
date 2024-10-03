@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from '../../entities/user.entity'; // Asegúrate de que el archivo user.entity.ts exista
-import { Role } from '../../entities/roles.entity';
-import * as bcrypt from 'bcrypt'; // Para encriptar la contraseña
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Role } from "src/entities/roles.entity";
+import { User } from "src/entities/user.entity";
+import { Repository } from "typeorm";
+import * as bcrypt from "bcrypt"
 
 @Injectable()
 export class UserSeedService {
@@ -15,27 +15,74 @@ export class UserSeedService {
   ) {}
 
   async seed() {
-    const existingUser = await this.userRepository.findOne({
-      where: { email: 'admin@example.com' },
-    });
+    //const Users = [
+    //   {
+    //     name: 'Admin User',
+    //     dni: 10001,
+    //     email: 'administrador@example.com',
+    //     password: await bcrypt.hash('12345aS@', 10),
+    //     address: '123 Admin St',
+    //     city: 'Admin City',
+    //     country: 'Admin Country',
+    //     roles:[
+    //       {
+    //         id: 1,
+    //         name: "admin",
+    //         description: "Administrator with full access"
+    //       }]
+    //   },
+    //   {
+    //     name: 'Candidate User',
+    //     dni: 1002,
+    //     email: 'candidato@example.com',
+    //     password: await bcrypt.hash('12345aS@', 10),
+    //     address: '123 Admin St',
+    //     city: 'Admin City',
+    //     country: 'Admin Country',
+    //     roles: [
+    //         { id: 2, name: 'candidate', description: 'Candidate for elections' }
+    //       ,]
+    //   },
+    //   {
+    //     name: 'Votante User',
+    //     dni: 10003,
+    //     email: 'votante@example.com',
+    //     password: await bcrypt.hash('12345aS@', 10),
+    //     address: '123 Admin St',
+    //     city: 'Admin City',
+    //     country: 'Admin Country',
+    //     roles: [{ id: 3, name: 'voter', description: 'Voter in the system' }],
+    //   },
+    //   {
+    //     name: 'Moderador User',
+    //     dni: 10004,
+    //     email: 'moderador@example.com',
+    //     password: await bcrypt.hash('12345aS@', 10),
+    //     address: '123 Admin St',
+    //     city: 'Admin City',
+    //     country: 'Admin Country',
+    //     roles: [{
+    //       id: 4,
+    //       name: 'moderator',
+    //       description: 'Moderator with limited access',
+    //     }],
+    //   },
+    // ];
 
-    if (!existingUser) {
-      // Busca el rol "admin"
-      const adminRole = await this.roleRepository.findOne({
-        where: { name: 'admin' },
-      });
+    // for (const userData of Users) {
+    //   const existingUser = await this.userRepository.findOne({
+    //     where: { email: userData.email },
+    //   });
 
-      const adminUser = this.userRepository.create({
-        name: 'Admin User',
-        dni: 12345678,
-        email: 'admin@example.com',
-        password: await bcrypt.hash('developer', 10),
-        address: '123 Admin St',
-        city: 'Admin City',
-        country: 'Admin Country',
-        roles: [adminRole],
-      });
-      await this.userRepository.save(adminUser);
-    }
+
+    //   if (!existingUser) {
+    //     const newUser = this.userRepository.create({
+    //       ...userData,
+    //     });
+    //     await this.userRepository.save(newUser);
+    //   } else {
+    //     await this.userRepository.update({ id: existingUser.id }, { ...userData});
+    //   }
+    // }
   }
 }
