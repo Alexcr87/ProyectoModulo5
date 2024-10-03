@@ -10,7 +10,9 @@ import {
 import { IDataVote } from '@/interfaces/IVotesResult';
 
 
+
  ChartJS.register(ArcElement, Tooltip, Legend);
+
 
 
 const Graph = ({dataCan}:{dataCan:IDataVote[]}) => {
@@ -60,3 +62,4 @@ const Graph = ({dataCan}:{dataCan:IDataVote[]}) => {
  };
 
  export default Graph;
+

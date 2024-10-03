@@ -5,9 +5,11 @@ import Image from 'next/image';
 import { IDataVote, IVotesResult } from '@/interfaces/IVotesResult';
 import colors from '@/helpers/colors.helper';
 
+
 const Results: React.FC<{ data: IVotesResult[] }> = ({ data }) => {
   const [dataCan, setDataCan] = useState<IDataVote[]>([]);
   const [totalVotes, setTotalVotes] = useState<number>(0);
+
 
   useEffect(() => {
     const fetchData = () => {
@@ -87,3 +89,4 @@ const Results: React.FC<{ data: IVotesResult[] }> = ({ data }) => {
 }
 
 export default Results;
+
