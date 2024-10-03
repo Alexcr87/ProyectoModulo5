@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-
 import NavBar from "@/components/navBar/NavBar";
 import Footer from "@/components/footer/Footer";
 import { AuthProvider } from "@/context/Authontext";
+
 
 export const metadata: Metadata = {
   title: "Voting System",
