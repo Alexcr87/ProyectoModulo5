@@ -104,17 +104,38 @@ const initialState = {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(dataUser);
     
-    await register(dataUser);
-    Swal.fire({
-      position: "center",
-      icon: "success",
-      title: "Usted se registró un usuario con éxito",
-      showConfirmButton: false,
-      timer: 1500
-    });
-    router.push("/login");
+    try {
+      await register(dataUser); // Intenta registrar al usuario
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Usted se registró con éxito",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      router.push("/login"); // Redirige al login tras el registro exitoso
+    } catch (error: any) {
+      if (error.message.includes("dni")) { // Verifica si el error está relacionado con el DNI
+        Swal.fire({
+          icon: "error",
+          title: "DNI ya registrado",
+          text: error.message || 'Hubo un error al procesar tu solicitud',
+        });
+      } else if (error.message.includes("email")) { // Verifica si el error está relacionado con el email
+        Swal.fire({
+          icon: "error",
+          title: "Correo ya registrado",
+          text: error.message || 'Hubo un error al procesar tu solicitud',
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: error.message || 'Hubo un error al procesar tu solicitud',
+        });
+      }
+    }
   };
 
   useEffect(() => {
