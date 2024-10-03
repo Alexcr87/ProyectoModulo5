@@ -1,14 +1,28 @@
-import Results from "@/components/results/Results";
+import { getCampaigns } from "@/helpers/campaña.helper";
+import Link from "next/link";
 
-
-const Result=()=>{
+const Result = async ()=>{
+    const datas = await getCampaigns()
+    
     return(
-        <div className="bg-cuartiaryColor h-full flex justify-center">
-
-        <div className="bg-white w-11/12 mt-4 rounded-t-2xl p-8 drop-shadow-2xl border-2" >
-         <Results/>
-        </div>
-        </div>
+     <div className="grid grid-cols-4 gap-4 bg-cuartiaryColor min-h-[85vh] justify-center p-8">
+        {
+            datas && datas.map((data)=>{
+                return(
+                    <Link href={`/results/${data.id}`}>
+                        <div className="bg-white rounded-2xl h-40 overflow-hidden">
+                            <div className="bg-primaryColor text-white p-2 flex justify-center">
+                                <h2>{data.name}</h2>
+                            </div>
+                            <div className="py-2 px-4">
+                                <p>{data.description}</p>
+                            </div>
+                        </div>
+                    </Link>
+                )
+            })
+        }
+     </div>
     )
 };
 export default Result
