@@ -45,11 +45,7 @@ async createPreference(accountId:number) {
   if (!responseMp.id) {
     throw new HttpException('Failed to create payment preference.', HttpStatus.BAD_REQUEST);
   }
-
-  
-
   return { preferenceId: responseMp.id };
-
 } 
 }
 
