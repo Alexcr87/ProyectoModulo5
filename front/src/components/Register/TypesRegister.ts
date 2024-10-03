@@ -1,4 +1,5 @@
 export interface IRegisterProps {
+    id?:string;
     city: string;
     country: string;
     password: string;
