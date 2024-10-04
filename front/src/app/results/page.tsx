@@ -5,7 +5,7 @@ const Result = async ()=>{
     const datas = await getCampaigns()
     
     return(
-     <div className="grid grid-cols-4 gap-4 bg-cuartiaryColor min-h-[85vh] justify-center p-8">
+     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 bg-cuartiaryColor min-h-[85vh] justify-center p-8">
         {
             datas && datas.map((data)=>{
                 return(
