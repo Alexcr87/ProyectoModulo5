@@ -1,3 +1,4 @@
+import { IChangePassword } from "@/interfaces/IChangePassword";
 import Swal from "sweetalert2";
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
