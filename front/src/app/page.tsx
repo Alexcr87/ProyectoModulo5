@@ -1,5 +1,5 @@
 import Inicial from '@/components/inicial/inicial';
-import PricingTable from '@/components/pricingTable/PricingTable3';
+import PricingTable from '@/components/pricingTable/PricingTable';
 import TeamMembers from '@/components/teamMembers/TeamMembers';
 import React from 'react';
 
