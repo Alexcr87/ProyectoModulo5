@@ -7,6 +7,9 @@ export interface userSession {
         address?: string;
         email: string;
         name: string;
+        city: string;
+        dni: string;
+        country:string;
         user:IUsers
         roles:[
             {
