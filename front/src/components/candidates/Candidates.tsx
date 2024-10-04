@@ -4,7 +4,11 @@ import { getCandidates } from "@/helpers/candidate.helper";
 import Link from "next/link";
 
 const OrderList = async () => {
-  const usersResponse = await getCandidates();
+  const usersResponse = await getCandidates()||[];
+  if (!Array.isArray(usersResponse)) {
+    console.error('La respuesta no es un array:', usersResponse);
+    return null; // O muestra un mensaje de error si es necesario
+  }
   const usersarr = usersResponse.map((item) => ({
     list: item.list,
     postulation: item.postulation,
@@ -23,8 +27,7 @@ const OrderList = async () => {
 
   return (
     <>
-
-      <div className="flex flex-wrap bg-cuartiaryColor h-[85vh] items-center justify-center">
+      <div className="flex flex-wrap bg-cuartiaryColor min-h-[85vh] items-center justify-center">
       {usersarr && usersarr.length > 0 ? (
         usersarr.map((item) => {
           return (

@@ -179,6 +179,14 @@ const Register = () => {
         handleSubmit({ preventDefault: () => {} } as any); // Llama a handleSubmit
       }
     });
+    document.querySelector('select[name="country"]')?.addEventListener('change', (e) => {
+      const selectedCountry = (e.target as HTMLSelectElement).value;
+      const updatedCities = fetchCitiesByCountry(selectedCountry);
+      const citySelect = document.querySelector('select[name="city"]');
+      if (citySelect) {
+        citySelect.innerHTML = updatedCities.map(city => `<option value="${city}">${city}</option>`).join('');
+      }
+    });
   };
 
   const handleRegisterByExcel = () => {
