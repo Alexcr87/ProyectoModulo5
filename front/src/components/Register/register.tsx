@@ -148,15 +148,27 @@ const Register = () => {
       title: 'Registro Manual',
       html: `
         <form id="manualRegisterForm">
-          <input type="text" name="name" placeholder="Nombre" class="swal2-input" required>
-          <input type="text" name="dni" placeholder="DNI" class="swal2-input" required>
-          <input type="text" name="address" placeholder="Dirección" class="swal2-input" required>
-          <input type="email" name="email" placeholder="Correo Electrónico" class="swal2-input" required>
-          <select name="country" class="swal2-input" required>
+          <input type="text" name="name" placeholder="Nombre" class="w-11/12 my-4 p-3 text-base transition bg-transparent border rounded-md outline-none 
+        border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
+        dark:focus:border-primaryColor focus-visible:shadow-none" required>
+          <input type="text" name="dni" placeholder="DNI" class="w-11/12 p-3 text-base transition bg-transparent border rounded-md outline-none 
+        border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
+        dark:focus:border-primaryColor focus-visible:shadow-none" required>
+          <input type="text" name="address" placeholder="Dirección" class="w-11/12 my-4 p-3 text-base transition bg-transparent border rounded-md outline-none 
+        border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
+        dark:focus:border-primaryColor focus-visible:shadow-none" required>
+          <input type="email" name="email" placeholder="Correo Electrónico" class="w-11/12 p-3 text-base transition bg-transparent border rounded-md outline-none 
+        border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
+        dark:focus:border-primaryColor focus-visible:shadow-none" required>
+          <select name="country" class="w-11/12 my-4 p-3 text-base transition bg-transparent border rounded-md outline-none 
+        border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
+        dark:focus:border-primaryColor focus-visible:shadow-none" required>
             <option value="">Selecciona un país</option>
             ${countries.map(country => `<option value="${country}">${country}</option>`).join('')}
           </select>
-          <select name="city" class="swal2-input" required>
+          <select name="city" class=" w-11/12 p-3 text-base transition bg-transparent border rounded-md outline-none 
+        border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
+        dark:focus:border-primaryColor focus-visible:shadow-none" required>
             <option value="">Selecciona una ciudad</option>
             ${cities.map(city => `<option value="${city}">${city}</option>`).join('')}
           </select>
@@ -177,7 +189,13 @@ const Register = () => {
         };
         setDataUser(data);
         handleSubmit({ preventDefault: () => {} } as any); // Llama a handleSubmit
-      }
+      },
+      customClass: {
+        confirmButton: 'bg-primaryColor hover:bg-primaryColor-dark text-white px-4 py-2 rounded-md',
+        popup: 'bg-gray-100',
+        title: 'text-2xl font-bold text-primaryColor'
+      },
+      confirmButtonText: 'Registrar',
     });
     document.querySelector('select[name="country"]')?.addEventListener('change', (e) => {
       const selectedCountry = (e.target as HTMLSelectElement).value;
@@ -194,10 +212,15 @@ const Register = () => {
       title: 'Registro por Excel',
       html: `
         <div>
-          <button onclick="document.getElementById('excelDownload').click();">Descarga la plantilla</button>
+          <p> 1º - Descarga la plantilla y llena los datos.</p>
+          <span class="text-red-500">Nota: no editar las columnas en el excel </span>
+          <button onclick="document.getElementById('excelDownload').click();" class="w-full px-5 py-3 my-4 text-base text-white transition duration-300 ease-in-out border rounded-md cursor-pointer hover:scale-105 border-primaryColor bg-primaryColor hover:bg-blue-800">Descarga la plantilla</button>
           <a id="excelDownload" href="/images/ExcelDeMuestra.xlsx" style="display: none;"></a>
-        
-          <input type="file" id="fileUpload" class="swal2-input" accept=".xlsx, .xls" />
+          <p> 2º - Subir el excel
+          <input type="file" id="fileUpload" class="w-full m-3 text-base transition bg-transparent border rounded-md outline-none 
+        border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
+        dark:focus:border-primaryColor focus-visible:shadow-none 
+        file:bg-primaryColor file:h-full file:border-none file:text-white file:p-3" accept=".xlsx, .xls" />
         </div>
       `,
       showCancelButton: true,
@@ -211,6 +234,11 @@ const Register = () => {
         }
 
         return file;
+      },
+      customClass: {
+        confirmButton: 'bg-primaryColor hover:bg-primaryColor-dark text-white px-4 py-2 rounded-md',
+        popup: 'bg-gray-100',
+        title: 'text-2xl font-bold text-primaryColor'
       },
     }).then((result) => {
       if (result.isConfirmed) {
