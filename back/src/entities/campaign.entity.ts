@@ -4,12 +4,10 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   ManyToOne,
-  ManyToMany,
 } from 'typeorm';
 import { User } from 'src/entities/user.entity';
 import { Candidate } from './candidate.entity';
 import { VoteUser } from './voteUser.entity';
-import { Group } from './group.entity';
 
 @Entity('campaigns')
 export class Campaign {
@@ -36,8 +34,4 @@ export class Campaign {
 
   @OneToMany(() => Candidate, (candidate) => candidate.campaign)
   candidates: Candidate[];
-
-  @ManyToMany(() => Group, (group) => group.campaigns)
-  groups: Group[];
 }
-

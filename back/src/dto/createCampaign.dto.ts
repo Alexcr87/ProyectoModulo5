@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsDate, IsUUID, IsOptional, IsArray } from 'class-validator';
+import { IsString, IsNotEmpty, IsDate, IsUUID } from 'class-validator';
 
 export class CreateCampaignDto {
   @ApiProperty({
@@ -42,12 +42,4 @@ export class CreateCampaignDto {
   @IsUUID()
   @IsNotEmpty()
   userId: string;
-
-  @IsOptional()
-  @IsArray()
-  @ApiProperty({
-    description: 'Optional list of group IDs allowed to participate in the campaign',
-    example: ['550e8400-e29b-41d4-a716-446655440000', '550e8400-e29b-41d4-a716-446655440001'],
-  })
-  groupIds?: string[];
 }
