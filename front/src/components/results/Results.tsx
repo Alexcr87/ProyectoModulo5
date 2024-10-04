@@ -13,26 +13,20 @@ const Results: React.FC<{ data: IVotesResult[] }> = ({ data }) => {
 
   useEffect(() => {
     const fetchData = () => {
-      const datas = data;
 
-      if (!Array.isArray(datas)) {
-        console.error('Expected data to be an array');
+      if (!Array.isArray(data)) {
+        console.error('Expected data to be an array, but got', data);
         return;
       }
-
-      
 
       let total = 0;
       const dataCandidate: IDataVote[] = [];
 
-      for (let i = 0; i < datas.length; i++) {
-        datas[0].votes = 10
-        datas[1].votes = 100
+      data.forEach((item)=>{
+        total += item.votes;
+      })
 
-        total += datas[i].votes; 
-      }
-
-      datas.forEach((item, index) => {
+      data.forEach((item, index) => {
         const obj = {
           name: item.user.name, 
           votes: item.votes,

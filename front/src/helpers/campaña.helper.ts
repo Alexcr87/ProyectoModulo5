@@ -5,7 +5,7 @@ const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 export async function getCampañaByID(id: string):Promise<IVotesResult[]>{
     try {
-        const res = await fetch(`${APIURL}/votes/campaign/${id}/candidates`,{
+        const res = await fetch(`${APIURL}/votes/candidates/${id}`,{
             //next: {revalidate: 1200},
             cache: 'no-cache'
         })
