@@ -1,4 +1,4 @@
-import IUser from "./IUser";
+import IUsers from "./IUser";
 
 export interface userSession {
     token: string,
@@ -7,6 +7,13 @@ export interface userSession {
         address?: string;
         email: string;
         name: string;
-        user?:IUser
+        user:IUsers
+        roles:[
+            {
+                id:number,
+                name:string,
+                description:string
+            }
+        ]
     }
 }

@@ -76,6 +76,47 @@ const NavBar = () => {
     }, []);
 
     
+    const userRoles = userData?.userData.roles.map(item => item.id)
+    const isAdmin = userRoles?.includes(1)
+    const isModerator = userRoles?.includes(4); 
+    const isVotante = userRoles?.includes(3); 
+    const isCandidate = userRoles?.includes(2)
+   
+   const campaign = () =>{
+    return (<li className="relative" ref={campaignDropdownRef}>
+        <button onClick={toggleCampaignDropdown} className="dropdown-toggle">Campañas</button>
+        {isCampaignDropdownOpen && (
+            <div className="dropdown-menu absolute bg-white text-black p-2 shadow-md">
+                <Link href="/campaign" className="block px-4 py-2 hover:bg-primaryColor hover:text-cuartiaryColor" onClick={closeDropdown}>Crear campaña</Link>
+                <Link href="/campaigns" className="block px-4 py-2 hover:bg-primaryColor hover:text-cuartiaryColor" onClick={closeDropdown}>Mis campañas</Link>
+            </div>
+        )}
+    </li>)
+   } 
+
+   const results = () =>{
+    return ( <li>
+        <Link href="/results">Resultados</Link>
+    </li>)
+   } 
+   const candidates = () =>{
+    return (<li>
+            <Link href="/candidates">Candidatos</Link>
+    </li>)
+   }
+
+   const users = () =>{
+    return (  <li className="relative" ref={usersDropdownRef}>
+        <button onClick={toggleDropdown} className="dropdown-toggle">Usuarios</button>
+        {isDropdownOpen && (
+            <div className="dropdown-menu absolute bg-white text-black p-2 shadow-md">
+                <Link href="/registerUsers" className="block px-4 py-2 hover:bg-primaryColor hover:text-cuartiaryColor" onClick={closeDropdown}>Crear usuario</Link>
+                <Link href="/users" className="block px-4 py-2 hover:bg-primaryColor hover:text-cuartiaryColor" onClick={closeDropdown}>Mis usuarios</Link>
+            </div>
+        )}
+    </li>)
+   }
+
 
     return (
         <nav className='bg-primaryColor opacity-80 h-14 pl-8 flex items-center justify-between fixed w-full z-50'>
@@ -100,30 +141,10 @@ const NavBar = () => {
                         </>
                     ) : (
                         <>
-                            <li className="relative" ref={campaignDropdownRef}>
-                                <button onClick={toggleCampaignDropdown} className="dropdown-toggle">Campañas</button>
-                                {isCampaignDropdownOpen && (
-                                    <div className="dropdown-menu absolute bg-white text-black p-2 shadow-md">
-                                        <Link href="/campaign" className="block px-4 py-2 hover:bg-primaryColor hover:text-cuartiaryColor" onClick={closeDropdown}>Crear campaña</Link>
-                                        <Link href="/campaigns" className="block px-4 py-2 hover:bg-primaryColor hover:text-cuartiaryColor" onClick={closeDropdown}>Mis campañas</Link>
-                                    </div>
-                                )}
-                            </li>
-                            <li className="relative" ref={usersDropdownRef}>
-                                <button onClick={toggleDropdown} className="dropdown-toggle">Usuarios</button>
-                                {isDropdownOpen && (
-                                    <div className="dropdown-menu absolute bg-white text-black p-2 shadow-md">
-                                        <Link href="/registerUsers" className="block px-4 py-2 hover:bg-primaryColor hover:text-cuartiaryColor" onClick={closeDropdown}>Crear usuario</Link>
-                                        <Link href="/users" className="block px-4 py-2 hover:bg-primaryColor hover:text-cuartiaryColor" onClick={closeDropdown}>Mis usuarios</Link>
-                                    </div>
-                                )}
-                            </li>
-                            <li>
-                                <Link href="/candidates">Candidatos</Link>
-                            </li>
-                            <li>
-                                <Link href="/results">Resultados</Link>
-                            </li>
+                            {isAdmin && (<>{campaign()} {users()} {results()} {candidates()} </>)}
+                            {isCandidate && (<>  ACA HAY QUE PONER LO QUE VE EL CANDIDATO   </>)}
+                            {isVotante && (<>  ACA HAY QUE PONER LO QUE VE EL VOTANTE   </>)}
+                            {isModerator && (<>  ACA HAY QUE PONER LO QUE VE EL MODERADOR   </>)}
                             <li>
                                 <button onClick={handleClose}>Cerrar Sesión</button>
                             </li>
@@ -140,7 +161,6 @@ const NavBar = () => {
                     font: inherit;
                     outline: inherit;
                 }
-
                 .dropdown-menu {
                     min-width: 160px;
                     z-index: 10;
