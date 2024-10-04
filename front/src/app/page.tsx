@@ -11,4 +11,5 @@ export default function Home() {
         <TeamMembers/> 
     </div>
   );
+  
 }

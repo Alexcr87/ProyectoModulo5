@@ -1,8 +1,9 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import ICampaign from '@/interfaces/ICampaign'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/context/Authontext';
+
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 const CampaignsTable = () => {
@@ -11,6 +12,7 @@ const CampaignsTable = () => {
     const [loading, setLoading] = useState(true) 
     const [error, setError] = useState<string | null>(null) 
     const pathname = usePathname();
+    const router = useRouter()
 
     useEffect(() => {
         const fetchCampaigns = async () => {
@@ -48,8 +50,12 @@ const CampaignsTable = () => {
     if (loading) return <p>Cargando campañas...</p>
     if (error) return <p>{error}</p>
 
+    const handleVer= (id: string|undefined)=>{
+        router.push(`/campaigndesc?campaignId=${id}`)
+    }
+
     return (
-        <div className="mt-4">
+        <div className="mt-4 overflow-x-auto">
             <h1 className="text-2xl font-bold mb-4 text-center">Mis Campañas</h1>
             {campaigns.length > 0 ? (   
                 <table className="min-w-full border-collapse">
@@ -64,16 +70,15 @@ const CampaignsTable = () => {
                     </thead>
                     <tbody>
                         {campaigns.map((campaign, index) => (
-                            <tr key={index} className={`${index % 2 === 0 ? "bg-gray-50" : "bg-white"} border-t border-gray-200`}>
+                            <tr key={index} 
+                                className={`${index % 2 === 0 ? "bg-gray-50" : "bg-white"} border-t border-gray-200`}
+                                onClick={()=>handleVer(campaign.id)}
+                            >
                                 <td className="border p-2">{campaign.name}</td>
                                 <td className="border p-2">{campaign.description}</td>
                                 <td className="border p-2">{campaign.location}</td>
                                 <td className="border p-2">{new Date(campaign.date).toLocaleDateString()}</td>
-                                <td className="border p-2">
-                                    <a href={`/campaigndesc?campaignId=${campaign.id}`} className="text-blue-500 hover:text-blue-700 font-medium">
-                                        Ver
-                                    </a>
-                                 </td>
+                                <td className="border p-2 text-blue-500 hover:text-blue-700 ">ver </td>
                             </tr>
                         ))}
                     </tbody>

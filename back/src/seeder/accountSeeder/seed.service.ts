@@ -25,7 +25,9 @@ export class AccountSeeder {
 
       if (!existingaccount) {
         await this.accountService.save(account);
-      } 
+      } else {
+        await this.accountService.update({ id: existingaccount.id }, account);
+      }
       }
     }
   }

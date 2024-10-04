@@ -84,11 +84,11 @@ const PricingTable2 = () => {
           There are many variations of passages of Lorem Ipsum available <br /> but the majority have suffered alteration in some form.
         </h3>
       </div>
-      <div className='flex flex-wrap justify-center w-full mt-8 gap-8 px-4'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 justify-center w-full mt-8 gap-8 px-4'>
       {accounts.map((account) => (
           <div 
             key={account.id} 
-            className={`w-[20vw] duration-300 ease-in-out hover:scale-110 h-auto rounded-3xl py-4 px-16 shadow-2xl border-2 ${selectedAccountId === account.id ? 'bg-primaryColor text-white' : ''}`}
+            className={`duration-300 ease-in-out relative hover:scale-110 h-auto rounded-3xl py-4 px-16 shadow-2xl border-2 ${selectedAccountId === account.id ? 'bg-primaryColor text-white' : ''}`}
             onClick={() => handlePlanSelection(account.id, account.price)} // Aquí se pasa también el precio
           >
             <h2 className='text-lg font-bold mt-8'>{account.name}</h2>
