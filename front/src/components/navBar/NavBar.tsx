@@ -104,6 +104,11 @@ const NavBar = () => {
             <Link href="/candidates">Candidatos</Link>
     </li>)
    }
+   const perfilVotante = () =>{
+    return (<li>
+            <Link href="/perfilUser">Mi perfil</Link>
+    </li>)
+   }
 
    const users = () =>{
     return (  <li className="relative" ref={usersDropdownRef}>
@@ -143,7 +148,7 @@ const NavBar = () => {
                         <>
                             {isAdmin && (<>{campaign()} {users()} {results()} {candidates()} </>)}
                             {isCandidate && (<>  ACA HAY QUE PONER LO QUE VE EL CANDIDATO   </>)}
-                            {isVotante && (<>  ACA HAY QUE PONER LO QUE VE EL VOTANTE   </>)}
+                            {isVotante && (<> {perfilVotante()}   </>)}
                             {isModerator && (<>  ACA HAY QUE PONER LO QUE VE EL MODERADOR   </>)}
                             <li>
                                 <button onClick={handleClose}>Cerrar Sesión</button>

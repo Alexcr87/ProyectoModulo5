@@ -47,18 +47,19 @@ const VoterProfile = () => {
   const { userData } = useAuth();
   
   const initialState = {
-      id: undefined,
-      name: `${userData?.userData.name}`,
-      dni: "",
-      address: "",
-      email: `${userData?.userData.email}`,
-      password: "",
-      country: "",
-      city: ""
+    id: userData?.userData?.id || "",
+  name: userData?.userData?.name || "",
+  dni: userData?.userData?.dni ? String(userData?.userData?.dni) : "",
+  address: userData?.userData?.address || "",
+  email: userData?.userData?.email || "",
+  password: "",
+  country: userData?.userData?.country || "",
+  city: userData?.userData?.city || "",
     };
 
     
-  
+    console.log(userData, "userdata perfil de usuario");
+    
     const [dataUser, setDataUser] = useState<IRegisterProps>(initialState);
     const [errors, setErrors] = useState<IRegisterError>(initialState);
     const [isFormValid, setIsFormValid] = useState(false);
@@ -111,6 +112,12 @@ const VoterProfile = () => {
       setCities(fetchedCities);
     };
   
+
+const dniNumber = Number(userData?.userData.dni)
+
+console.log(typeof(dniNumber), "dniNumber");
+
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       
@@ -150,6 +157,8 @@ const VoterProfile = () => {
       }
     };
   
+
+
     useEffect(() => {
       const errors = validateRegisterForm(dataUser);
       setErrors(errors);
@@ -183,7 +192,7 @@ const VoterProfile = () => {
                   id="dni"
                   name="dni"
                   type="text"
-                  value={dataUser.dni}
+                  value={dniNumber}
                   onChange={handleChange}
                   placeholder="DNI"
                 />
@@ -194,14 +203,14 @@ const VoterProfile = () => {
                 <Input
                   name="address"
                   type="text"
-                  value={dataUser.address}
+                  value={userData?.userData.address}
                   onChange={handleChange}
                   placeholder="Dirección"
                 />
                 {errors.address && <span className="text-red-500 text-sm">{errors.address}</span>}
               </div>
   
-              <div className="flex flex-col mt-4">
+              {/* <div className="flex flex-col mt-4">
                 <Input
                   id="password"
                   name="password"
@@ -212,7 +221,7 @@ const VoterProfile = () => {
                   placeholder="**********"
                 />
                 {touched.password && errors.password && <span className="text-red-500 text-sm">{errors.password}</span>}
-              </div>
+              </div> */}
   
               <div className="flex flex-col mt-4">
                 <Input
@@ -231,13 +240,13 @@ const VoterProfile = () => {
               <div className="flex flex-col">
                 <select
                   name="country"
-                  value={dataUser.country}
+                  value={userData?.userData.country}
                   onChange={handleCountryChange}
                   className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
                   border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 focus:border-primaryColor 
                   dark:focus:border-primaryColor focus-visible:shadow-none"
                 >
-                  <option value="">Selecciona un país</option>
+                  <option value={`${userData?.userData.country}`}>{userData?.userData.country}</option>
                   {countries.map(country => (
                     <option key={country} value={country}>{country}</option>
                   ))}
@@ -248,13 +257,13 @@ const VoterProfile = () => {
               <div className="flex flex-col my-4">
                 <select
                   name="city"
-                  value={dataUser.city}
+                  value={userData?.userData.city}
                   onChange={handleChange}
                   className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
                     border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 focus:border-primaryColor 
                     dark:focus:border-primaryColor focus-visible:shadow-none"
                 >
-                  <option value="">Selecciona una ciudad</option>
+                  <option value={`${userData?.userData.city}`}>{userData?.userData.city}</option>
                   {cities.map(city => (
                     <option key={city} value={city}>{city}</option>
                   ))}
