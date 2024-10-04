@@ -30,38 +30,78 @@ export class VoteService {
     campaignId: string,
     candidateId?: string,
   ): Promise<string> {
-    const existingVote = await this.voteUserRepository.findOne({
-      where: { user: { id: userId }, campaign: { id: campaignId } },
-    });
 
-    if (existingVote) {
-      throw new BadRequestException('Ya has votado en esta campaña');
+    console.log(userId)
+    console.log(campaignId)
+
+    if (!userId || !campaignId) {
+      throw new BadRequestException('Faltan los parámetros necesarios: userId y campaignId.');
     }
 
-    const votoUsuario = new VoteUser();
-    const user = await this.userRepository.findOne({ where: { id: userId } });
+    const user = await this.userRepository.findOne({
+      where: {id : userId},
+    })
+    if (!user){
+      throw new BadRequestException('Usuario no encontrado')
+    }
+
     const campaign = await this.campaignRepository.findOne({
-      where: { id: campaignId },
-    });
-
-    votoUsuario.user = user;
-    votoUsuario.campaign = campaign;
-
-    if (candidateId) {
-      let votoCandidato = new VoteCandidate();
-      const candidate = await this.candidateRepository.findOne({
-        where: { id: candidateId },
-      });
-      votoCandidato.candidate = candidate;
-      votoCandidato.campaign = campaign;
-      await this.voteCandidateRepository.save(votoCandidato);
-    } else {
-      // Guardar voto en blanco (sin candidateId)
-      votoUsuario.blankVote = true;
+      where: {id : campaignId},
+      relations: ['candidates'],
+    })
+    if (!campaign){
+      throw new BadRequestException('Campaña no encontrada')
     }
-
-    await this.voteUserRepository.save(votoUsuario);
-    return 'Voto registrado con éxito';
+    
+    
+    const existingVote = await this.voteUserRepository.findOne({
+      where: {
+        user: { id: user.id },
+        campaign: {id: campaign.id },
+      },
+    });
+    if (existingVote) {
+      throw new BadRequestException('El usuario ya ha votado en esta campaña.');
+    }
+  
+    let blankVote = true
+    if (candidateId){
+      let candidate = null
+      campaign.candidates.map((item) => {
+        if(item.id == candidateId){
+          candidate = item
+        }
+      });
+      if (!candidate) {
+        throw new BadRequestException('El candidato no se ha encontrado.');
+      }
+      
+      blankVote = false
+      let voteCandidate = await this.voteCandidateRepository.findOne({
+        where: {
+          candidate: { id: candidate.id }, 
+        },
+      });
+    
+      if (!voteCandidate) {
+        voteCandidate = this.voteCandidateRepository.create({
+          candidate: { id: candidateId },
+          campaign: { id: campaign.id },
+          count:0
+        });
+      voteCandidate.count += 1;
+      await this.voteCandidateRepository.save(voteCandidate);
+    }
+  }
+ 
+  const newVote = this.voteUserRepository.create({
+    user: { id: user.id },
+    campaign: { id: campaign.id },
+    blankVote: blankVote,
+  });
+  await this.voteUserRepository.save(newVote);
+  
+  return 'Voto registrado exitosamente y conteo actualizado.';
   }
 
 
@@ -72,7 +112,6 @@ export class VoteService {
       },
       relations: ['user'], 
     });
-  
     const candidatesWithVotes = await Promise.all(candidates.map(async (candidate) => {
       const votes = await this.voteCandidateRepository.count({ 
         where: { 
@@ -89,7 +128,7 @@ export class VoteService {
     return candidatesWithVotes;
   }
   
-
+  
   async getTotalUsersInCampaign(campaignId: string) {
     const campaign = await this.campaignRepository.findOne({
       where: { id: campaignId },
@@ -102,6 +141,7 @@ export class VoteService {
     });
     return totalUsers;
   }
+
 
   async getBlankVotes(campaignId: string): Promise<number> {
     const blankVotesCount = await this.voteUserRepository.count({
