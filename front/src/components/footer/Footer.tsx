@@ -14,7 +14,7 @@ const Footer = () => {
 
   return (
     <div  className='bg-primaryColor flex flex-col items-center py-2 text-cuartiaryColor'>
-      <div className='flex gap-16'>
+      <div className='flex gap-4 md:gap-16'>
       <Link href="https://www.whatsapp.com/" target="_blank" className="text-white hover:text-gray-300">
               <i className="fab fa-whatsapp fa-2x"></i>
             </Link>

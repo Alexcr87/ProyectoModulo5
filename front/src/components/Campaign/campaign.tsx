@@ -96,7 +96,7 @@ const CampaignForm = () => {
             CREAR CAMPAÑA
     </div>
     <form onSubmit={handleSubmit} className="campaign-form flex justify-center">
-      <div className='flex flex-col items-center w-[40%] gap-4'>
+      <div className='flex flex-col items-center w-full md:w-[40%] gap-4'>
         <Input
           type="text"
           id="name"

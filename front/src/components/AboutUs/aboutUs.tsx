@@ -10,7 +10,7 @@ const AboutUs = () => {
       <div className="absolute inset-0 bg-black opacity-50"></div>
 
       {/* Contenido */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center">
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center ">
         <header className="p-6">
           <h1 className="text-4xl font-bold mb-4">Sobre Nosotros</h1>
         </header>

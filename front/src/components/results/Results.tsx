@@ -20,12 +20,15 @@ const Results: React.FC<{ data: IVotesResult[] }> = ({ data }) => {
         return;
       }
 
-      console.log(datas);
+      
 
       let total = 0;
       const dataCandidate: IDataVote[] = [];
 
       for (let i = 0; i < datas.length; i++) {
+        datas[0].votes = 10
+        datas[1].votes = 100
+
         total += datas[i].votes; 
       }
 
@@ -49,15 +52,12 @@ const Results: React.FC<{ data: IVotesResult[] }> = ({ data }) => {
 
   return (
     <div className='bg-cuartiaryColor flex justify-center'>
-      <div className='w-11/12 bg-white mt-2 min-h-dvh rounded-t-3xl shadow-2xl p-8'>
+      <div className='w-full md:w-11/12 bg-white mt-2 min-h-dvh rounded-t-3xl shadow-2xl p-8'>
         <div className='flex justify-center'>
-          <h1 className='text-3xl font-bold'>Resultado de Votaciones</h1>
+          <h1 className='md:text-3xl font-bold'>Resultado de Votaciones</h1>
         </div>
-        <div className='flex gap-8 bg-cuartiaryColor rounded-3xl'>
-          <div className='w-[50%]'>
-            <Graph dataCan={dataCan}/>
-          </div>
-          <div className='w-[50%] justify-center flex flex-col mr-2'>
+        <div className='flex flex-col md:flex-row gap-8 bg-cuartiaryColor rounded-3xl'>
+          <div className='w-full md:w-[50%] justify-center flex flex-col md:ml-2'>
             {dataCan && dataCan.map((candidate, index) => {
               let percentage = 0;
 
@@ -66,8 +66,8 @@ const Results: React.FC<{ data: IVotesResult[] }> = ({ data }) => {
               }
 
               return (
-                <div className='flex w-full items-center bg-white p-4 mb-2 rounded-xl' key={index}>
-                  <Image src={candidate.image} alt={`perfil${candidate.name}`} width={100} height={50} className='rounded-full' />
+                <div className='flex w-full items-center border-2 bg-white p-4 mb-2 rounded-xl' key={index}>
+                  <Image src={candidate.image} alt={`perfil${candidate.name}`} width={100} height={100} className='rounded-full object-cover' />
                   <div className='flex flex-col w-full mr-4 items-center'>
                     <p>{candidate.name}</p>
                     <div className={`w-full bg-blue-200 rounded-full dark:bg-gray-700 ml-4 h-4`}>
@@ -81,6 +81,9 @@ const Results: React.FC<{ data: IVotesResult[] }> = ({ data }) => {
                 </div>
               )
             })} 
+          </div>
+          <div className='w-full md:w-[50%]'>
+            <Graph dataCan={dataCan}/>
           </div>
         </div>
       </div>
