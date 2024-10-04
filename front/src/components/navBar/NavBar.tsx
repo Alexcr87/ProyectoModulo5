@@ -117,7 +117,7 @@ const NavBar = () => {
                                 )}
                             </li>
                             <li>
-                                <Link href="/candidates">Candidatos</Link>
+                                <Link href="/candidates">Votaciones</Link>
                             </li>
                             <li>
                                 <Link href="/results">Resultados</Link>
