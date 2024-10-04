@@ -13,14 +13,13 @@ export class VoteDto {
     description: 'The UUID of the campaign being voted on',
     example: '660e8400-e29b-41d4-a716-446655440001',
   })
-  @IsNotEmpty()
-  campaignId: string;
+  @IsNotEmpty() // Cambiado a IsOptional
+  campaignId: string; // Permite que campaignId sea opcional
 
   @ApiProperty({
-    description: 'The UUID of the candidate (optional)',
+    description: 'The UUID of the candidate (mandatory)',
     example: '770e8400-e29b-41d4-a716-446655430002',
-    required: false,
   })
-  @IsOptional()
-  candidateId?: string;
+  @IsOptional() // Mantén este campo como obligatorio
+  candidateId?: string; // Cambiado a obligatorio
 }
