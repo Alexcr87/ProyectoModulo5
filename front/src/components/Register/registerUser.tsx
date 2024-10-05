@@ -23,10 +23,10 @@ if (localUser) {
 }*/
 
 const initialState = {
-    name: `${userData?.userData.name}`,
+    name: ``,
     dni: "",
     address: "",
-    email: `${userData?.userData.email}`,
+    email: ``,
     password: "",
     country: "",
     city: ""
