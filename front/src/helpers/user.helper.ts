@@ -38,6 +38,14 @@ export async function updateUserById(userData:IRegisterProps, id:string) {
               },
               body: JSON.stringify(userData),
         })
+        if (!res.ok) {
+            return "respuesta error"
+        }
+        const user = await res.json()
+        console.log(user, "user");
+        
+        return user
+        
     } catch (error:any) {
         throw new Error(error)
     }

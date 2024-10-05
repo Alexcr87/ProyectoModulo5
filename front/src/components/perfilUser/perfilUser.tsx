@@ -52,7 +52,6 @@ const VoterProfile = () => {
   dni: userData?.userData?.dni ? String(userData?.userData?.dni) : "",
   address: userData?.userData?.address || "",
   email: userData?.userData?.email || "",
-  password: "",
   country: userData?.userData?.country || "",
   city: userData?.userData?.city || "",
     };
@@ -133,7 +132,7 @@ console.log(typeof(dniNumber), "dniNumber");
           showConfirmButton: false,
           timer: 1500,
         });
-        router.push("/login"); // Redirige al login tras el registro exitoso
+        router.push("/"); // Redirige al login tras el registro exitoso
       } catch (error: any) {
         if (error.message.includes("dni")) { // Verifica si el error está relacionado con el DNI
           Swal.fire({
@@ -169,7 +168,7 @@ console.log(typeof(dniNumber), "dniNumber");
         <div className="col-start-1 col-end-13">
           <div className="grid grid-cols-12">
             <div className="col-start-5 col-end-9 mt-[2.5em] my-[2em] text-center text-xl">
-              COMPLETAR REGISTRO
+              ACTUALIZACION DE DATOS
             </div>
           </div>
   
@@ -180,9 +179,9 @@ console.log(typeof(dniNumber), "dniNumber");
                   id="name"
                   name="name"
                   type="text"
-                  value={userData?.userData.name}
+                  value={dataUser.name}
                   onChange={handleChange}
-                  placeholder="Nombre"
+                  placeholder={userData?.userData.name}
                 />
                 {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
               </div>
@@ -192,7 +191,7 @@ console.log(typeof(dniNumber), "dniNumber");
                   id="dni"
                   name="dni"
                   type="text"
-                  value={dniNumber}
+                  value={userData?.userData.dni}
                   onChange={handleChange}
                   placeholder="DNI"
                 />
@@ -203,9 +202,9 @@ console.log(typeof(dniNumber), "dniNumber");
                 <Input
                   name="address"
                   type="text"
-                  value={userData?.userData.address}
+                  value={dataUser.address}
                   onChange={handleChange}
-                  placeholder="Dirección"
+                  placeholder={userData?.userData.address}
                 />
                 {errors.address && <span className="text-red-500 text-sm">{errors.address}</span>}
               </div>
@@ -228,9 +227,9 @@ console.log(typeof(dniNumber), "dniNumber");
                   id="email-address"
                   name="email"
                   type="email"
-                  value={userData?.userData.email}
+                  value={dataUser.email}
                   onChange={handleChange}
-                  placeholder="Correo Electrónico"
+                  placeholder={userData?.userData.email}
                 />
                 {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
               </div>
@@ -240,7 +239,7 @@ console.log(typeof(dniNumber), "dniNumber");
               <div className="flex flex-col">
                 <select
                   name="country"
-                  value={userData?.userData.country}
+                  value={dataUser.country}
                   onChange={handleCountryChange}
                   className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
                   border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 focus:border-primaryColor 
@@ -257,7 +256,7 @@ console.log(typeof(dniNumber), "dniNumber");
               <div className="flex flex-col my-4">
                 <select
                   name="city"
-                  value={userData?.userData.city}
+                  value={dataUser.city}
                   onChange={handleChange}
                   className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
                     border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 focus:border-primaryColor 
@@ -274,7 +273,7 @@ console.log(typeof(dniNumber), "dniNumber");
                 type="submit"
                 //disabled={!isFormValid}
               >
-                Completar Registro
+                Actualizar Datos
               </Boton>
               <img
                 src="/images/registerImage.png"
