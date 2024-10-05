@@ -48,12 +48,6 @@ const Register = () => {
     const selectedFile = event.target.files?.[0] || null;
     setFile(selectedFile);
   };
-  /*useEffect(() => {
-    const localUser = localStorage.getItem("userSesion");
-    if (localUser) {
-      setUserSesion(JSON.parse(localUser));
-    }
-  }, [pathname]);*/
 
   const parentId = userData?.userData.id
 
@@ -134,11 +128,7 @@ const Register = () => {
   
     try {
       const result = await register(userDataWithParentId, parentId); // Pasa parentId aquí
-    
-      
-      
-      
-  
+
       Swal.fire({
         position: "center",
         icon: "success",
@@ -148,12 +138,26 @@ const Register = () => {
       });
       
       router.push("/users");
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "error.message", // Mostrar mensaje de error en caso de que falle
-      });
+    } catch (error: any) {
+      if (error.message.includes("dni")) { // Verifica si el error está relacionado con el DNI
+        Swal.fire({
+          icon: "error",
+          title: "DNI ya registrado",
+          text: error.message || 'Hubo un error al procesar tu solicitud',
+        });
+      } else if (error.message.includes("email")) { // Verifica si el error está relacionado con el email
+        Swal.fire({
+          icon: "error",
+          title: "Correo ya registrado",
+          text: error.message || 'Hubo un error al procesar tu solicitud',
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: error.message || 'Hubo un error al procesar tu solicitud',
+        });
+      }
     }
   };
   
@@ -191,9 +195,10 @@ const Register = () => {
                 type="text"
                 value={dataUser.name}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 placeholder="Nombre"
               />
-              {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
+              {errors.name && <span className="text-red-500 text-sm">{errors.name|| 'Este campo es obligatorio'}</span>}
             </div>
 
             <div className="flex flex-col mt-4">
@@ -203,9 +208,10 @@ const Register = () => {
                 type="text"
                 value={dataUser.dni}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 placeholder="DNI"
               />
-              {errors.dni && <span className="text-red-500 text-sm">{errors.dni}</span>}
+              {errors.dni && <span className="text-red-500 text-sm">{errors.dni|| 'Este campo es obligatorio'}</span>}
             </div>
             <div className="flex flex-col mt-4">
               <Input
@@ -213,9 +219,22 @@ const Register = () => {
                 type="text"
                 value={dataUser.address}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 placeholder="Dirección"
               />
-              {errors.address && <span className="text-red-500 text-sm">{errors.address}</span>}
+              {errors.address && <span className="text-red-500 text-sm">{errors.address|| 'Este campo es obligatorio'}</span>}
+            </div>
+            <div className="flex flex-col mt-4">
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                value={dataUser.password}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                placeholder="**********"
+              />
+              {touched.password && errors.password && <span className="text-red-500 text-sm">{errors.password}</span>}
             </div>
 
             <div className="flex flex-col mt-4">
@@ -225,9 +244,10 @@ const Register = () => {
                 type="email"
                 value={dataUser.email}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 placeholder="Correo Electrónico"
               />
-              {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
+              {errors.email && <span className="text-red-500 text-sm">{errors.email|| 'Este campo es obligatorio'}</span>}
             </div>
           </div>
           <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
@@ -236,6 +256,7 @@ const Register = () => {
                 name="country"
                 value={dataUser.country}
                 onChange={handleCountryChange}
+                onBlur={handleBlur}
                 className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
                 border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
                 dark:focus:border-primaryColor focus-visible:shadow-none" 
@@ -245,13 +266,14 @@ const Register = () => {
                   <option key={country} value={country}>{country}</option>
                 ))}
               </select>
-              {errors.country && <span className="text-red-500 text-sm">{errors.country}</span>}
+              {errors.country && <span className="text-red-500 text-sm">{errors.country|| 'Este campo es obligatorio'}</span>}
             </div>
             <div className="flex flex-col mt-4">
               <select
                 name="city"
                 value={dataUser.city}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 className="w-full px-5 py-3 mb-4 text-base transition bg-transparent border rounded-md outline-none 
                 border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
                 dark:focus:border-primaryColor focus-visible:shadow-none"  
@@ -261,7 +283,7 @@ const Register = () => {
                   <option key={city} value={city}>{city}</option>
                 ))}
               </select>
-              {errors.city && <span className="text-red-500 text-sm">{errors.city}</span>}
+              {errors.city && <span className="text-red-500 text-sm">{errors.city|| 'Este campo es obligatorio'}</span>}
             </div>
             <Boton
               type="submit"
