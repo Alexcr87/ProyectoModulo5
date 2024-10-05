@@ -136,7 +136,10 @@ export class UserService{
   
       // Omitir la contraseña en el retorno del usuario actualizado
       const { password, ...userToShow } = updatedUser;
-      return userToShow;
+      return {
+        ...userToShow,
+        roles:userToShow.roles
+      };
   
     } catch (error) {
       console.error(`Error updating user with id ${id}:`, error);
@@ -151,7 +154,7 @@ export class UserService{
     try {
       const user = await this.userRepository.findOne({
         where: { id },
-        relations: { candidate: true },
+        relations: { candidate: true, roles:true},
       })
 
       if (!user) {

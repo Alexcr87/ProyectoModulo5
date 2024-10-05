@@ -75,6 +75,7 @@ const NavBar = () => {
         };
     }, []);
 
+    console.log(userData?.userData, "roles");
     
     const userRoles = userData?.userData.roles.map(item => item.id)
     const isAdmin = userRoles?.includes(1)

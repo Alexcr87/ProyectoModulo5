@@ -9,42 +9,12 @@ import Swal from "sweetalert2";
 import { validateRegisterForm } from "@/helpers/validateRegister";
 import Input from "../ui/Input";
 import Boton from "../ui/Boton";
-import { updateUserById } from "@/helpers/user.helper";
-import IUsers from "@/interfaces/IUsers";
+import { getUserByID, updateUserById } from "@/helpers/user.helper";
+import { userSession } from "@/interfaces/Session";
 
-// perfil para modificar los datos del votante
-// tenemos que tener un get user por id
-// {
-//   "id": "5ab9680b-2fe9-4451-b6db-9edb8000b03a",
-//   "name": "nameuser",
-//   "dni": 11111111,
-//   "email": "usuario@gmail.com",
-//   "address": "Saavedra 4353",
-//   "city": "Cap. Fed.",
-//   "country": "Argentina",
-//   "isFirstLogin": false,
-//   "candidate": {
-//     "id": "1c34be5c-3f1f-4b66-bc35-52055cd8cd99",
-//     "postulation": "Presidente",
-//     "imgUrl": "https://res.cloudinary.com/dyvlp19ui/image/upload/v1727031172/candidates/Mujer4.png",
-//     "list": "Lista 123",
-//     "proposals": "\"Educación gratuita,Plazas de empleo\""
-//   }
-// }
-
-// un put user por id
-// {
-//   "name": "nameuser",
-//   "dni": 11111111,  este no lo puede modificar a menos que se comunique por el chatbot
-//   "email": "usuario@gmail.com",
-//   "password": "12345aS@",
-//   "address": "Saavedra 4353",
-//   "city": "Cap. Fed.",
-//   "country": "Argentina",
-// }
 const VoterProfile = () => {
   const router = useRouter();
-  const { userData } = useAuth();
+  const { userData, setUserData } = useAuth();
   
   const initialState = {
     id: userData?.userData?.id || "",
@@ -55,9 +25,6 @@ const VoterProfile = () => {
   country: userData?.userData?.country || "",
   city: userData?.userData?.city || "",
     };
-
-    
-    console.log(userData, "userdata perfil de usuario");
     
     const [dataUser, setDataUser] = useState<IRegisterProps>(initialState);
     const [errors, setErrors] = useState<IRegisterError>(initialState);
@@ -87,7 +54,7 @@ const VoterProfile = () => {
       setIsFormValid(
         dataUser.name.trim() !== '' &&
         dataUser.email.trim() !== '' &&
-        dataUser.dni.trim() !== '' &&
+        String(dataUser.dni).trim() !== '' &&
         dataUser.address.trim() !== '' &&
         dataUser.country.trim() !== '' &&
         dataUser.city.trim() !== ''
@@ -110,52 +77,68 @@ const VoterProfile = () => {
       const fetchedCities = fetchCitiesByCountry(selectedCountry);
       setCities(fetchedCities);
     };
+
+const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  event.preventDefault();
   
+  try {
+    if (!userData?.userData.id) {
+      return "error el id es undefined"
+    }
 
-const dniNumber = Number(userData?.userData.dni)
+    // Actualiza los datos del usuario en el backend
+    await updateUserById(dataUser, userData?.userData.id);
 
-console.log(typeof(dniNumber), "dniNumber");
+    // Obtener los datos actualizados del usuario desde el backend
+    const updatedUser = await getUserByID(userData.userData.id);
+    
 
-
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      
-      try {
-        if (!userData?.userData.id) {
-          return "error el id es undefined"
-        }
-        await updateUserById(dataUser, userData?.userData.id); // Intenta actualizar al usuario
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Usted se registró con éxito",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        router.push("/"); // Redirige al login tras el registro exitoso
-      } catch (error: any) {
-        if (error.message.includes("dni")) { // Verifica si el error está relacionado con el DNI
-          Swal.fire({
-            icon: "error",
-            title: "DNI ya registrado",
-            text: error.message || 'Hubo un error al procesar tu solicitud',
-          });
-        } else if (error.message.includes("email")) { // Verifica si el error está relacionado con el email
-          Swal.fire({
-            icon: "error",
-            title: "Correo ya registrado",
-            text: error.message || 'Hubo un error al procesar tu solicitud',
-          });
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: error.message || 'Hubo un error al procesar tu solicitud',
-          });
-        }
-      }
+    // Actualizar el contexto de autenticación con los nuevos datos
+    const updatedUserSession:userSession = {
+      userData: updatedUser,
+      token:userData.token 
     };
-  
+
+    // Actualiza el localStorage y el estado de useAuth()
+    localStorage.setItem("userSession", JSON.stringify(updatedUserSession));
+    setUserData(updatedUserSession);
+
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Datos actualizados con éxito",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+
+    // Actualizar el estado del formulario con los datos nuevos
+    setDataUser({
+      ...dataUser,
+      ...updatedUser,
+    });
+  } catch (error: any) {
+    // Manejo de errores (DNI o email duplicados, etc.)
+    if (error.message.includes("dni")) {
+      Swal.fire({
+        icon: "error",
+        title: "DNI ya registrado",
+        text: error.message || 'Hubo un error al procesar tu solicitud',
+      });
+    } else if (error.message.includes("email")) {
+      Swal.fire({
+        icon: "error",
+        title: "Correo ya registrado",
+        text: error.message || 'Hubo un error al procesar tu solicitud',
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.message || 'Hubo un error al procesar tu solicitud',
+      });
+    }
+  }
+};
 
 
     useEffect(() => {
@@ -208,20 +191,6 @@ console.log(typeof(dniNumber), "dniNumber");
                 />
                 {errors.address && <span className="text-red-500 text-sm">{errors.address}</span>}
               </div>
-  
-              {/* <div className="flex flex-col mt-4">
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  value={dataUser.password}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  placeholder="**********"
-                />
-                {touched.password && errors.password && <span className="text-red-500 text-sm">{errors.password}</span>}
-              </div> */}
-  
               <div className="flex flex-col mt-4">
                 <Input
                   id="email-address"
@@ -288,3 +257,7 @@ console.log(typeof(dniNumber), "dniNumber");
   };
   
   export default VoterProfile;
+
+function getUserById(id: string) {
+  throw new Error("Function not implemented.");
+}
