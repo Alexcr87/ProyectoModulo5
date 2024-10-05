@@ -1,9 +1,8 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IRegisterError, IRegisterProps } from "./TypesRegister";
-
 import { validateRegisterForm } from "@/helpers/validateRegister";
 import Swal from "sweetalert2";
 import Input from "../ui/Input";
@@ -16,17 +15,11 @@ const RegisterByAuth0 = () => {
 const router = useRouter();
 const { userData } = useAuth();
 
-
-/*const localUser = localStorage.getItem("userSesion");
-if (localUser) {
-  userAuth = JSON.parse(localUser);
-}*/
-
 const initialState = {
-    name: `${userData?.userData.name}`,
+    name: ``,
     dni: "",
     address: "",
-    email: `${userData?.userData.email}`,
+    email: ``,
     password: "",
     country: "",
     city: ""
@@ -46,24 +39,6 @@ const initialState = {
       [name]: true,
     });
    };
-  
-  // useEffect(() => {
-  //   // Cargar datos del local storage
-  //   const localUser = localStorage.getItem("userSesion");
-  //   if (localUser) {
-  //     const user = JSON.parse(localUser);
-  //     // Verifica que las propiedades existan antes de asignar
-  //     setDataUser({
-  //       name: user.name || "",
-  //       dni: user.dni || "",
-  //       address:user.address || "",
-  //       email: user.email,
-  //       password:user.password || "asjkd12321S@", // Si decides no usar la contraseña, omítela
-  //       country:"",
-  //       city:""
-  //     });
-  //   }
-  // }, []);
 
   const fetchCitiesByCountry = (country: string) => {
     const countryCitiesMap: Record<string, string[]> = {
@@ -251,7 +226,7 @@ const initialState = {
             </div>
             <Boton
               type="submit"
-              //disabled={!isFormValid}
+              disabled={!isFormValid}
             >
               Completar Registro
             </Boton>
