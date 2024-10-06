@@ -226,19 +226,6 @@ const Register = () => {
             </div>
             <div className="flex flex-col mt-4">
               <Input
-                id="password"
-                name="password"
-                type="password"
-                value={dataUser.password}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                placeholder="**********"
-              />
-              {touched.password && errors.password && <span className="text-red-500 text-sm">{errors.password}</span>}
-            </div>
-
-            <div className="flex flex-col mt-4">
-              <Input
                 id="email-address"
                 name="email"
                 type="email"
@@ -300,23 +287,7 @@ const Register = () => {
         </div>
       </div>
     </form>
-    <div className="flex items-center justify-between mx-14">
-      <div className="flex mt-4 gap-4">
-        <div>
-            <InputFile
-              type="file"
-              onChange={handleFileChange}
-            />
-        </div>
-        <div>
-            <Boton onClick={handleUpload}>Subir Excel</Boton>
-        </div>
-      </div>
-      <div className="self-end">
-        <Boton onClick={handleDownloadExcel}>Descargar Excel</Boton>
-      </div>
-    </div>
-    
+
     </>
   );
 };
