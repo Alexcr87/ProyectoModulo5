@@ -11,8 +11,10 @@ const config = {
   port:process.env.DB_PORT as unknown as number,
   username:process.env.DB_USERNAME,
   password:process.env.POSTGRES_PASSWORD,
-  ssl: {
-    rejectUnauthorized: false 
+   
+  ssl: 
+  {
+    rejectUnauthorized: false,
   },
   autoLoadEntities: true,
   dropSchema: false,
