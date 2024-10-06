@@ -1,6 +1,7 @@
 import { IRegisterProps } from "@/components/Register/TypesRegister";
 import IUser from "@/interfaces/IUser";
 import IUsers from "@/interfaces/IUsers";
+import { updateUserSession, userSession } from "@/interfaces/Session";
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
@@ -16,7 +17,7 @@ export async function getCandidates(): Promise<IUser[]> {
     }
 }
 
-export async function getUserByID(id:number): Promise<IUser> {
+export async function getUserByID(id:string):Promise<updateUserSession> {
    
     try {
         const res = await fetch(`${APIURL}/user/${id}`,{
@@ -38,8 +39,17 @@ export async function updateUserById(userData:IRegisterProps, id:string) {
               },
               body: JSON.stringify(userData),
         })
+        if (!res.ok) {
+            return "respuesta error"
+        }
+        const user = await res.json()
+        console.log(user, "user");
+        
+        return user
+        
     } catch (error:any) {
         throw new Error(error)
     }
     
 }
+
