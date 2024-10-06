@@ -75,6 +75,7 @@ const NavBar = () => {
         };
     }, []);
 
+    console.log(userData?.userData, "roles");
     
     const userRoles = userData?.userData.roles.map(item => item.id)
     const isAdmin = userRoles?.includes(1)
@@ -147,9 +148,9 @@ const NavBar = () => {
                     ) : (
                         <>
                             {isAdmin && (<>{campaign()} {users()} {results()} {candidates()} </>)}
-                            {isCandidate && (<>  ACA HAY QUE PONER LO QUE VE EL CANDIDATO   </>)}
+                            {isCandidate && (<>  {perfilVotante()}   </>)}
                             {isVotante && (<> {perfilVotante()}   </>)}
-                            {isModerator && (<>  ACA HAY QUE PONER LO QUE VE EL MODERADOR   </>)}
+                            {isModerator && (<> {perfilVotante()}    </>)}
                             <li>
                                 <button onClick={handleClose}>Cerrar Sesión</button>
                             </li>

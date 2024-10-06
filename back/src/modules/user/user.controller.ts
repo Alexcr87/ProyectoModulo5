@@ -15,6 +15,8 @@ import { Role } from "src/entities/roles.entity";
 
 import { Request, Response } from "express";
 import { CreateUserDtoByAuth0 } from "src/dto/createUserByAuth0Dto";
+import { promises } from "dns";
+import { updateUserDto } from "src/dto/updateUserDto";
 
 
 
@@ -95,7 +97,9 @@ export class UserController {
 
   @Put(":id")
   @HttpCode(200)
-  async updateUserById(@Param("id", ParseUUIDPipe) id:string, @Body() createUserDto:CreateUserDto){
+  async updateUserById(@Param("id", ParseUUIDPipe) id:string, @Body() createUserDto:updateUserDto):Promise<Omit<User, "password">>{
+    console.log(createUserDto, "controles");
+    
     try {
       return await this.userService.updateUserById(id, createUserDto)
     } catch (error) {
