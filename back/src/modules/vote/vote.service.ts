@@ -61,7 +61,7 @@ export class VoteService {
       },
     });
     if (existingVote) {
-      throw new BadRequestException('El usuario ya ha votado en esta campaña.');
+      throw new BadRequestException('La usuaria ya ha votado en esta campaña.');
     }
   
     let blankVote = true
@@ -73,7 +73,7 @@ export class VoteService {
         }
       });
       if (!candidate) {
-        throw new BadRequestException('El candidato no se ha encontrado.');
+        throw new BadRequestException('El candidato no ha sido encontrado.');
       }
       
       blankVote = false
@@ -101,7 +101,7 @@ export class VoteService {
   });
   await this.voteUserRepository.save(newVote);
   
-  return 'Voto registrado exitosamente y conteo actualizado.';
+  return 'Votación registrada exitosa y conteo actualizado.';
   }
 
 

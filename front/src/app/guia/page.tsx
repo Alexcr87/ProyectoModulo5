@@ -1,8 +1,11 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
+
 
 const guia=()=>{
+ 
+
 return(
   <div className="relative h-full w-full bg-cover bg-center" style={{ backgroundImage: "url('https://img.freepik.com/premium-zdjecie/wyborczyni-wkladajaca-kartke-do-urny-wyborczej-wybory-i-koncepcja-glosowania_77190-18358.jpg')" }}>
  
@@ -13,7 +16,7 @@ return(
       PROXIMAMENTE
     </h1>
   </div>
-</div>
+  </div>
 )
 }
 

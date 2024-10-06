@@ -29,7 +29,7 @@ export class CampaignService {
     });
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Usuario no encontrado');
     }
     // logica para que solo los moderadores puedan crear campañas
     // const hasModeratorRole = user.roles.some((role) => role.name === 'moderator');
@@ -53,7 +53,7 @@ export class CampaignService {
       relations: ['user', 'candidates', 'candidates.user'],
     });
     if (!campaign) {
-      throw new NotFoundException('Campaign not found');
+      throw new NotFoundException('Campaña no encontrada');
     }
     return campaign;
   }

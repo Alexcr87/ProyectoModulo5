@@ -18,22 +18,22 @@ export class VoteController {
   }
 
   @Get('/candidates/:campaignId')
-  @ApiParam({ name: 'campaignId', required: true, description: 'ID of the campaign' })
-  @ApiResponse({ status: 200, description: 'List of candidates with votes.' })
+  @ApiParam({ name: 'campaignId', required: true, description: 'ID de la campaña' })
+  @ApiResponse({ status: 200, description: 'Lista de candidatos con votos.' })
   async getCandidatesWithVotes(@Param('campaignId') campaignId: string) {
     return this.voteService.getCandidatesWithVotes(campaignId);
   }
 
   @Get('/total-users/:campaignId')
-  @ApiParam({ name: 'campaignId', required: true, description: 'ID of the campaign' })
-  @ApiResponse({ status: 200, description: 'Total number of users in the campaign.' })
+  @ApiParam({ name: 'campaignId', required: true, description: 'ID de la campaña' })
+  @ApiResponse({ status: 200, description: 'Número total de usuarios de la campaña.' })
   async getTotalUsersInCampaign(@Param('campaignId') campaignId: string) {
     return this.voteService.getTotalUsersInCampaign(campaignId);
   }
 
   @Get('/total-black-votes/:campaignId')
-  @ApiParam({ name: 'campaignId', required: true, description: 'ID of the campaign' })
-  @ApiResponse({ status: 200, description: 'Total number of blank votes.' })
+  @ApiParam({ name: 'campaignId', required: true, description: 'ID de la campaña' })
+  @ApiResponse({ status: 200, description: 'Número total de votos en blanco.' })
   async getBlankVotes(@Param('campaignId') campaignId: string) {
     return this.voteService.getBlankVotes(campaignId);
   }

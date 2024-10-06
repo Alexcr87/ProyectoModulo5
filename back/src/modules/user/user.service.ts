@@ -38,7 +38,7 @@ export class UserService{
         const parentUser = await this.userRepository.findOne({ where: { id: parentId } });
   
         if (!parentUser) {
-          throw new NotFoundException(`User with id ${parentId} not found`);
+          throw new NotFoundException(`Usuario con id ${parentId} no encontrado`);
         }
   // Obtén las relaciones donde este usuario es el padre
         const childRelations = await this.structureRepository.find({
@@ -59,7 +59,7 @@ export class UserService{
       }
       return await this.userRepository.find({relations: ['roles']});
     } catch (error) {
-      throw new InternalServerErrorException('Error retrieving users');
+      throw new InternalServerErrorException('Error al recuperar usuarios');
     }
   }
 
@@ -69,7 +69,7 @@ export class UserService{
 
    
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Usuario no encontrado');
     }
 
     // const selectedPackage = await this.accountRepository.findOne({where:{id:packageId}});
@@ -91,12 +91,12 @@ export class UserService{
       const userToRemove = await this.userRepository.findOneBy({id})
     if(userToRemove){
       await this.userRepository.remove(userToRemove)
-      return `User with id: ${id} successfully deleted`
+      return `Usuario con id: ${id} eliminado con éxito`
     }else{
-      throw new NotFoundException(`User with id: ${id} not found`)
+      throw new NotFoundException(`Usuario con id: ${id} no enconrado`)
     }
     } catch (error) {
-      throw new InternalServerErrorException('Error deleting user')
+      throw new InternalServerErrorException('Error al eliminar un usuario')
     }
     
   }
@@ -129,6 +129,7 @@ export class UserService{
         userToUpdate.roles = [...existingRoles, ...rolesToAdd].filter(
           (role, index, self) => self.findIndex(r => r.id === role.id) === index
         ); // Asegurar que no haya duplicados
+
       }
   
       // Guardar el usuario actualizado
@@ -142,8 +143,10 @@ export class UserService{
       };
   
     } catch (error) {
+
       console.error(`Error updating user with id ${id}:`, error);
       throw new InternalServerErrorException('Error updating user');
+
     }
   }
   
@@ -158,12 +161,12 @@ export class UserService{
       })
 
       if (!user) {
-        throw new NotFoundException(`User with id: ${id} not found`)
+        throw new NotFoundException(`Usuario con id: ${id} no se encuentra`)
       }
       const { password, ...userToShow } = user
       return userToShow
     } catch (error) {
-      throw new InternalServerErrorException('Error retrieving user')
+      throw new InternalServerErrorException('Error al recuperar el usuario')
     }
   }
  
@@ -176,7 +179,7 @@ export class UserService{
   async findUserByDni(dni:number):Promise<User>{ 
     const user = await this.userRepository.findOneBy({dni}); 
    if(!user){
-    throw new NotFoundException(`user not found`)
+    throw new NotFoundException(`usuario no encontrado`)
    }
    return user;
   }
@@ -187,40 +190,40 @@ export class UserService{
     parentId?: string,
 ): Promise<Omit<User, 'password'>> {
     if (this.isCreatingUser) {
-        throw new ConflictException('User creation is already in progress.');
+        throw new ConflictException('La creación de usuarios ya está en curso.');
     }
     
     this.isCreatingUser = true;
 
     try {
-        console.log('Starting user creation at:', new Date());
+        console.log('Iniciar la creación de usuarios en:', new Date());
 
-        console.log('Checking existing user with dni:', createUserDto.dni);
+        console.log('Comprobación de usuario existente con dni:', createUserDto.dni);
         const user = await this.userRepository.findOneBy({
             dni: createUserDto.dni,
         });
         if (user) {
-            throw new UnauthorizedException(`User with dni: ${createUserDto.dni} already exists`);
+            throw new UnauthorizedException(`Usuario con dni: ${createUserDto.dni} ya existe`);
         }
         
-        console.log('Checking existing user with email:', createUserDto.email);
+        console.log('Comprobación del usuario existente con correo electrónico:', createUserDto.email);
         const userByEmail = await this.userRepository.findOneBy({
             email: createUserDto.email,
         });
         if (userByEmail) {
-            throw new UnauthorizedException(`User with email: ${createUserDto.email} already exists`);
+            throw new UnauthorizedException(`Usuario con email: ${createUserDto.email} ya existe`);
         }
 
         // Generación de contraseña y encriptación
         const passwordGenerated = !createUserDto.password;
         const password = createUserDto.password || generateRandomPassword();
         const hashedPassword = await bcrypt.hash(password, 10);
-        console.log('Password generated and hashed.');
+        console.log('Contraseña generada y hasheada.');
 
         // Roles y cuentas por defecto
         const defaultRole = await this.roleRepository.findOne({ where: { id: 3 } });
         if (!defaultRole) {
-            throw new BadRequestException('Default role not found');
+            throw new BadRequestException('No se encontró el rol predeterminado');
         }
 
         let userRoles: Role[] = [defaultRole];
@@ -229,7 +232,7 @@ export class UserService{
                 id: In(createUserDto.roles),
             });
             if (userRoles.length !== createUserDto.roles.length) {
-                throw new BadRequestException('Some roles not found');
+                throw new BadRequestException('Algunos roles no encontrados');
             }
         }
 
@@ -249,40 +252,40 @@ export class UserService{
             isFirstLogin: !passwordGenerated ? false : undefined,
         });
 
-        console.log('Saving new user to the database.');
+        console.log('Guardar un nuevo usuario en la base de datos.');
         await this.userRepository.save(newUser);
-        console.log('User saved successfully.');
+        console.log('El usuario se ha guardado correctamente.');
 
         // Enviar el correo de bienvenida
-        console.log('Sending welcome email to:', newUser.email);
+        console.log('Enviando un correo electrónico de bienvenida a:', newUser.email);
         await this.mailService.sendWelcomeEmail(newUser.email, newUser.name, password);
-        console.log('Welcome email sent.');
+        console.log('Correo electrónico de bienvenida enviado.');
 
         // Manejo de la relación con parentId
         if (parentId) {
-            console.log('Handling parentId relation with id:', parentId);
+            console.log('Manejo de la relación parentId con id:', parentId);
             const parentUser = await this.userRepository.findOneBy({ id: parentId });
             if (!parentUser) {
-                throw new BadRequestException(`Parent user with id: ${parentId} not found`);
+                throw new BadRequestException(`Usuario principal con id: ${parentId} no encontrado`);
             }
             const existingRelation = await this.structureRepository.findOne({
                 where: { child: { id: newUser.id } },
             });
             if (existingRelation) {
-                throw new BadRequestException(`User with id: ${newUser.id} is already related to another parent`);
+                throw new BadRequestException(`Usuario con id: ${newUser.id} ya está relacionada con otro padre`);
             }
             const structureRelation = this.structureRepository.create({
                 parent: parentUser,
                 child: newUser,
             });
             await this.structureRepository.save(structureRelation);
-            console.log('Structure relation saved successfully.');
+            console.log('Relación de estructura guardada con éxito.');
         }
 
         const { password: excludedPassword, ...result } = newUser;
         return result;
     } catch (error) {
-        console.error('Error during user creation:', error);
+        console.error('Error durante la creación del usuario:', error);
         throw error; // O manejarlo según tus necesidades
     } finally {
         this.isCreatingUser = false; // Reset flag after processing.
@@ -308,7 +311,7 @@ export class UserService{
     parentId: string
   ): Promise<{ addedUsers: string[], errors: string[] }> {
     if (!filePath) {
-      throw new BadRequestException('File not selected');
+      throw new BadRequestException('Archivo no seleccionado');
     }
   
     const users = await this.readExcelFile(filePath);
@@ -318,7 +321,7 @@ export class UserService{
     for (const user of users) {
       const missingFields = this.validateUserFields(user);
       if (missingFields.length > 0) {
-        errors.push(`Fallo en carga de datos del usuario ${user.email} (Nombre: ${user.name || 'N/A'}, DNI: ${user.dni || 'N/A'}): faltan los siguientes campos: ${missingFields.join(', ')}, registrar manualmente`);
+        errors.push(`Error en la carga de datos de usuario ${user.email} (Nombre: ${user.name || 'N/A'}, DNI: ${user.dni || 'N/A'}): Faltan los siguientes campos: ${missingFields.join(', ')}, register manually`);
         continue;
       }
   
@@ -328,7 +331,7 @@ export class UserService{
           await this.createUser(user, parentId);
           addedUsers.push(user.email);
         } catch (err) {
-          errors.push(`Fallo en la creación del usuario ${user.email}: ${err.message}`);
+          errors.push(`Error en la creación de usuarios ${user.email}: ${err.message}`);
         }
       } else {
         errors.push(`El usuario ${user.email} (Nombre: ${user.name || 'N/A'}, DNI: ${user.dni || 'N/A'}) ya existe.`);
