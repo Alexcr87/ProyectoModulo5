@@ -148,9 +148,9 @@ const NavBar = () => {
                     ) : (
                         <>
                             {isAdmin && (<>{campaign()} {users()} {results()} {candidates()} </>)}
-                            {isCandidate && (<>  ACA HAY QUE PONER LO QUE VE EL CANDIDATO   </>)}
+                            {isCandidate && (<>  {perfilVotante()}   </>)}
                             {isVotante && (<> {perfilVotante()}   </>)}
-                            {isModerator && (<>  ACA HAY QUE PONER LO QUE VE EL MODERADOR   </>)}
+                            {isModerator && (<> {perfilVotante()}    </>)}
                             <li>
                                 <button onClick={handleClose}>Cerrar Sesión</button>
                             </li>
