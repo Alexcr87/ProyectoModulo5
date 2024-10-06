@@ -56,6 +56,11 @@ const CampaignsTable = () => {
         router.push(`/campaigndesc?campaignId=${id}`)
     }
 
+    const handleUpdate = (id: string | undefined ) => {
+        console.log (id)
+        router.push(`/updateCampaing?id=${id}`);
+      };
+
 
     // const handleSelectAll = (checked: boolean) => {
     //     if (checked) {
@@ -118,7 +123,8 @@ const CampaignsTable = () => {
                             <th className="border p-2">Descripción</th>
                             <th className="border p-2">Ubicación</th>
                             <th className="border p-2">Fecha</th>
-                            <th className="border p-2">Accion</th>
+                            <th className="border p-2">Ver</th>
+                            <th className="border p-1">Actualizar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -145,6 +151,7 @@ const CampaignsTable = () => {
                                 <td className="border p-2">{campaign.location}</td>
                                 <td className="border p-2">{new Date(campaign.date).toLocaleDateString()}</td>
                                 <td className="border p-2 text-blue-500 hover:text-blue-700 cursor-pointer" onClick={() => handleVer(campaign.id)}>ver </td>
+                                <td className="border p-1 text-blue-500 hover:text-blue-700 cursor-pointer" onClick={() => handleUpdate(campaign.id)}>Actualizar </td>
                             </tr>
                         ))}
                     </tbody>
