@@ -1,7 +1,7 @@
 "use client";
 import Modal from "react-modal";
 import React, { useEffect, useState } from 'react';
-import CustomModal from '../InstructionsModal/modal'; 
+import CustomModal from '../InstructionsModal/Modal'; 
 
 const Inicial = () => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
