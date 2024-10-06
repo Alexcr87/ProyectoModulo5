@@ -36,7 +36,7 @@ export class UserController {
 
   @Get()
   @HttpCode(200)
-  @ApiQuery({ name: 'parentId', required: false, description: 'Optional parent ID to filter users' })
+  @ApiQuery({ name: 'parentId', required: false, description: 'ID principal opcional para filtrar usuarios' })
   async getUsers(@Query("parentId") parentId?: string): Promise<User[]> {
     try {
       return await this.userService.getUsers(parentId);
@@ -55,7 +55,7 @@ export class UserController {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
       } else {
-        throw new InternalServerErrorException('Error retrieving user');
+        throw new InternalServerErrorException('Error al recuperar el usuario');
       }
     }
   }
@@ -75,7 +75,7 @@ export class UserController {
         }
       }
       else {
-        throw new HttpException( "Unexpected error", HttpStatus.CONFLICT)
+        throw new HttpException( "Error inesperado", HttpStatus.CONFLICT)
       }
     }
   }
@@ -87,7 +87,7 @@ export class UserController {
     try {
       return await this.userService.findUserByEmail(email)
     } catch (error) {
-        throw new InternalServerErrorException('Error retrieving user by email')
+        throw new InternalServerErrorException('Error al recuperar un usuario por correo electrónico')
       }
     }
   
@@ -102,7 +102,7 @@ export class UserController {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
       } else {
-        throw new InternalServerErrorException('Error updating user');
+        throw new InternalServerErrorException('Error al actualizar el usuario');
       }
     }
   }
@@ -117,7 +117,7 @@ export class UserController {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
       } else {
-        throw new InternalServerErrorException('Error deleting user');
+        throw new InternalServerErrorException('Error al eliminar un usuario');
       }
     }
   }
@@ -125,7 +125,7 @@ export class UserController {
 
   @Post()
   @HttpCode(201)
-  @ApiQuery({ name: 'parentId', required: false, description: 'Optional parent ID to filter users' })
+  @ApiQuery({ name: 'parentId', required: false, description: 'ID principal opcional para filtrar usuarios' })
   async createUser(
     @Query("parentId") parentId: string,
     @Body() createUserDto: CreateUserDto
@@ -137,11 +137,11 @@ export class UserController {
       if (error.response) {
         if (error.response.statusCode === 409) {
           // Conflicto, por ejemplo si ya existe el usuario
-          throw new ConflictException(error.response.message || 'User already exists');
+          throw new ConflictException(error.response.message || 'El usuario ya existe');
         }
         if (error.response.statusCode === 401) {
           // No autorizado
-          throw new UnauthorizedException(error.response.message || 'Unauthorized');
+          throw new UnauthorizedException(error.response.message || 'Desautorizado');
         }
       }
     }
@@ -159,11 +159,11 @@ export class UserController {
       },
     }),
   }))
-  @ApiOperation({ summary: 'Import users from an Excel file' })
+  @ApiOperation({ summary: 'Importar usuarios desde un archivo de Excel' })
   @ApiConsumes('multipart/form-data')
-  @ApiQuery({ name: 'parentId', required: false, description: 'Optional parent ID to filter users' })
+  @ApiQuery({ name: 'parentId', required: false, description: 'ID principal opcional para filtrar usuarios' })
   @ApiBody({
-    description: 'Excel file to import users',
+    description: 'Archivo Excel para importar usuarios',
     schema: {
       type: 'object',
       properties: {
@@ -181,7 +181,7 @@ export class UserController {
       validators: [
         new MaxFileSizeValidator({
           maxSize: 2000000, // 2Mb
-          message: 'The file is too large; must be less than 2Mb',
+          message: 'El archivo es demasiado grande; debe tener menos de 2 Mb',
         }),
         /*new FileTypeValidator({
           fileType: /(xls|xlsx)$/,
@@ -191,7 +191,7 @@ export class UserController {
   ) file: Express.Multer.File, @Query("parentId") parentId: string )
   {
     if (!file) {
-      throw new BadRequestException('No file provided');
+      throw new BadRequestException('No se proporciona ningún archivo');
     }
       const filePath = file.path; // Ruta del archivo guardado
       return await this.userService.importUsers(filePath, parentId);  

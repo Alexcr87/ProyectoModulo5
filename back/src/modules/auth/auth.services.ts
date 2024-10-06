@@ -33,7 +33,7 @@ export class AuthService {
 
   async sigIn(login: CredentialUserDto) {
     if (!login.email || !login.password) {
-      throw new BadRequestException('missing data');
+      throw new BadRequestException('Datos faltantes');
     }
 
     const user = await this.userRepository.findOne({
@@ -47,7 +47,7 @@ export class AuthService {
     );
 
     if (!userHashedPassword) {
-      throw new UnauthorizedException('incorrect username and/or password');
+      throw new UnauthorizedException('Nombre de usuario y/o contraseña incorrectos');
     }
 
     if (!user.isFirstLogin) {
@@ -61,12 +61,12 @@ export class AuthService {
       const token = this.jwtService.sign(userPayload);
       const { password: excludedPassword, ...userData } = user;
       return {
-        succes: 'Login Successful, Your session will expire in 1 hour',
+        succes: 'Inicio de sesión exitoso, su sesión caducará en 1 hora',
         token,
         userData,
       };
     } else {
-      return { message: 'you need to change your password to log in' };
+      return { message: 'Debe cambiar su contraseña para iniciar sesión' };
     }
   }
 
@@ -74,13 +74,13 @@ export class AuthService {
     const { dni, password, newPassword, confirmPassword } = newCredential;
 
     if (!dni || !password || !newPassword || !confirmPassword) {
-      throw new BadRequestException('missing data');
+      throw new BadRequestException('Datos faltantes');
     }
 
     const user = await this.userService.findUserByDni(dni);
 
     if (newPassword !== confirmPassword) {
-      throw new UnauthorizedException('passwords do not match');
+      throw new UnauthorizedException('las contraseñas no coinciden');
     }
 
     const isPasswordValid = await bcrypt.compare(
@@ -89,14 +89,14 @@ export class AuthService {
     );
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException('incorrect current password');
+      throw new UnauthorizedException('Contraseña actual incorrecta');
     }
 
     user.isFirstLogin = false;
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     await this.userRepository.save(user);
-    return { message: 'password changed successfully' };
+    return { message: 'Contraseña cambiada con éxito' };
   }
 
   async sigUp(userRegister: CreateUserDto, parentId: string) {
@@ -110,8 +110,8 @@ export class AuthService {
     if (!newUser) {
       await this.userRepository.create(user);
       await this.userRepository.save(user);
-      return `${newUser.email}, Usuario creado exitosamente`;
+      return `${newUser.email}, Usuario creado con éxito` ;
     }
-    return `${newUser.email}, Ud. ya posee una cuenta`;
+    return `${newUser.email}, Ya tienes una cuenta`;
   }
 }

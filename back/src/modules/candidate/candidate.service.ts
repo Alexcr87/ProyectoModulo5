@@ -38,7 +38,7 @@ export class CandidateService {
     });
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Usuario no encontrado');
     }
 
     if (!Array.isArray(user.roles)) {
@@ -49,7 +49,7 @@ export class CandidateService {
       where: { name: 'candidate' },
     });
     if (!candidateRole) {
-      throw new NotFoundException('Role "candidate" not found');
+      throw new NotFoundException('Rol "candidato" no encontrado');
     }
 
     const hasCandidateRole = user.roles.some(
@@ -119,7 +119,7 @@ export class CandidateService {
     const candidate = await this.candidateRepository.findOne({ where: { id } });
 
     if (!candidate) {
-      throw new NotFoundException('Candidate not found');
+      throw new NotFoundException('Candidato no encontrado');
     }
 
     if (updateData.proposals) {
@@ -143,14 +143,14 @@ export class CandidateService {
     });
 
     if (!candidate) {
-      throw new NotFoundException(`Candidate with ID ${id} not found`);
+      throw new NotFoundException(`Candidato con id: ${id} no encontrado`);
     }
 
     const candidateRole = await this.roleRepository.findOneBy({ id: 2 });
     const voterRole = await this.roleRepository.findOneBy({ id: 1 });
 
     if (!candidateRole || !voterRole) {
-      throw new NotFoundException('Roles not found');
+      throw new NotFoundException('Roles no encontrados');
     }
 
     const user = candidate.user;
