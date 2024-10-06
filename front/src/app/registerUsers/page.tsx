@@ -1,13 +1,15 @@
-import Register from "@/components/Register/register";
+// app/prueba/page.tsx
+import PruebaPageComponent from '@/components/popUpRegister/popUpRegister';
+import React from 'react';
 
-const RegisterUsers=()=>{
-    return(
-        <div className="bg-cuartiaryColor h-full flex justify-center">
 
-        <div className="bg-white w-11/12 mt-4 rounded-t-2xl p-8 drop-shadow-2xl border-2" >
-         <Register/>
-        </div>
-        </div>
-    )
+const PruebaPage = () => {
+  return (
+    <div>
+      <h1>PopUp para el registro</h1>
+      <PruebaPageComponent />
+    </div>
+  );
 };
-export default RegisterUsers
+
+export default PruebaPage;

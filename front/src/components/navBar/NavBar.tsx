@@ -75,6 +75,7 @@ const NavBar = () => {
         };
     }, []);
 
+    console.log(userData?.userData, "roles");
     
     const userRoles = userData?.userData.roles.map(item => item.id)
     const isAdmin = userRoles?.includes(1)
@@ -102,6 +103,11 @@ const NavBar = () => {
    const candidates = () =>{
     return (<li>
             <Link href="/candidates">Candidatos</Link>
+    </li>)
+   }
+   const perfilVotante = () =>{
+    return (<li>
+            <Link href="/perfilUser">Mi perfil</Link>
     </li>)
    }
 
@@ -142,9 +148,9 @@ const NavBar = () => {
                     ) : (
                         <>
                             {isAdmin && (<>{campaign()} {users()} {results()} {candidates()} </>)}
-                            {isCandidate && (<>  ACA HAY QUE PONER LO QUE VE EL CANDIDATO   </>)}
-                            {isVotante && (<>  ACA HAY QUE PONER LO QUE VE EL VOTANTE   </>)}
-                            {isModerator && (<>  ACA HAY QUE PONER LO QUE VE EL MODERADOR   </>)}
+                            {isCandidate && (<>  {perfilVotante()}   </>)}
+                            {isVotante && (<> {perfilVotante()}   </>)}
+                            {isModerator && (<> {perfilVotante()}    </>)}
                             <li>
                                 <button onClick={handleClose}>Cerrar Sesión</button>
                             </li>

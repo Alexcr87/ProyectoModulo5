@@ -1,8 +1,81 @@
-import React from 'react'
+"use client"
+
+import React, { useEffect, useState } from 'react'
 import Boton from '../ui/Boton'
 import Boton2 from '../ui/Boton2'
 
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
+import Account from '@/interfaces/account';
+
+const apiKey = process.env.NEXT_PUBLIC_API_KEY;
+const APIURL = process.env.NEXT_PUBLIC_API_URL
+
+interface PricingTableProps {
+  accounts: Account[];
+  onPlanSelect: (accountId: number, price: number) => void;
+  selectedAccountId: number | null;
+  preferenceId: string | null; // Incluye el preferenceId
+}
+ 
+
 const PricingTable = () => {
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [preferenceId, setPreferenceId] = useState('');
+  const [selectedAccountId, setSelectedAccountId] = useState<number | null>(null);
+  useEffect(() => {
+    
+
+    if (!apiKey) {
+      console.error('La clave pública de Mercado Pago no está definida en las variables de entorno.');
+      return;
+    }
+
+    const fetchAccounts = async () => {
+      try {
+        const response = await fetch(`${APIURL}/payments/packages`);
+        if (!response.ok) {
+          throw new Error('Error al obtener cuentas');
+        }
+        const data = await response.json();
+        const filteredAccounts = data.slice(1, 5);
+        setAccounts(filteredAccounts);
+      } catch (error) {
+        console.error('Error al obtener cuentas:', error);
+      }
+    };
+
+    fetchAccounts();
+    initMercadoPago(apiKey); // Inicializar MercadoPago con la clave pública
+  }, []);
+
+  const handlePlanSelection = async (accountId: number , price:number) => {
+    setSelectedAccountId(accountId);
+
+    if (price === 0) { 
+      
+      setPreferenceId('');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${APIURL}/payments/preference`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ accountId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al crear la preferencia de pago');
+      }
+
+      const data = await response.json();
+      setPreferenceId(data.preferenceId); // Guarda el ID de preferencia para el botón de Mercado Pago
+    } catch (error) {
+      console.error('Error al crear la preferencia:', error);
+    }
+  };
   return (
     <div className='min-h-screen flex flex-col items-center justify-center py-8'>
       <div className='text-center'>
@@ -11,66 +84,32 @@ const PricingTable = () => {
           There are many variations of passages of Lorem Ipsum available <br /> but the majority have suffered alteration in some form.
         </h3>
       </div>
-      <div className='flex flex-wrap justify-center w-full mt-8 gap-8 px-4'>
-        {/* Plan Free  */}
-        <div className='flex flex-col items-center w-full sm:w-[300px] duration-300 ease-in-out hover:scale-110 h-auto rounded-3xl py-4 px-6 shadow-2xl border-2'>
-          <h2 className='text-lg font-bold mt-8'>Free</h2>
-          <h3>$<span className='text-4xl font-bold'>00.00</span> Per Month</h3>
-          <h2 className='text-lg font-bold mt-12 mb-4'>Features</h2>
- {/* esto agregarlo variables en el back */}         <h4>Up to 30 User</h4> {/* esto agregarlo variables en el back */}
-          <h4>All UI components</h4>
-          <h4>Lifetime access</h4>
-          <h4>Free updates</h4>
-          <div className='my-4'>
-            <Boton>Purchase Now</Boton>
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 justify-center w-full mt-8 gap-8 px-4'>
+      {accounts.map((account) => (
+          <div 
+            key={account.id} 
+            className={`duration-300 ease-in-out relative hover:scale-110 h-auto rounded-3xl py-4 px-16 shadow-2xl border-2 ${selectedAccountId === account.id ? 'bg-primaryColor text-white' : ''}`}
+            onClick={() => handlePlanSelection(account.id, account.price)} // Aquí se pasa también el precio
+          >
+            <h2 className='text-lg font-bold mt-8'>{account.name}</h2>
+            <h3>$<span className='text-4xl font-bold'>{account.price}</span> Per Month</h3>
+            <h4>{account.description}</h4>
+            <h4>All UI components</h4>
+            <h4>Lifetime access</h4>
+            <h4>Free updates</h4>
+            <h2 className='text-lg font-bold mt-12 mb-4'>Features</h2>
           </div>
-        </div>
-         {/* Plan Starter  */}
-<div className='flex flex-col items-center w-full sm:w-[300px] duration-300 ease-in-out hover:scale-110 h-auto rounded-3xl py-4 px-6 shadow-2xl border-2'>
-          <h2 className='text-lg font-bold mt-8'>Starter</h2>
-          <h3>$<span className='text-4xl font-bold'>25.00</span> Per Month</h3>
-          <h2 className='text-lg font-bold mt-12 mb-4'>Features</h2>
-    {/* esto agregarlo variables en el back */}      <h4>Up to 50 User</h4>{/* esto agregarlo variables en el back */}
-          <h4>All UI components</h4>
-          <h4>Lifetime access</h4>
-          <h4>Free updates</h4>
-          <div className='my-4'>
-            <Boton>Purchase Now</Boton>
-          </div>
-        </div>
-
-        {/* Plan Basic */}
-        <div className='flex flex-col items-center w-full sm:w-[300px] duration-300 ease-in-out hover:scale-110 bg-primaryColor text-white h-auto rounded-3xl py-4 px-6 shadow-2xl border-2 overflow-hidden relative'>
-          <p className='bg-white text-primaryColor p-2 absolute -rotate-90 pr-6 -right-14 font-bold top-10 rounded-lg'>
-            Recommended
-          </p>
-          <h2 className='text-lg font-bold mt-8'>Basic</h2>
-          <h3>$<span className='text-4xl font-bold'>59.00</span> Per Month</h3>
-          <h2 className='text-lg font-bold mt-12 mb-4'>Features</h2>
-      {/* esto agregarlo variables en el back */}    <h4>Up to 100 User</h4>{/* esto agregarlo variables en el back */}
-          <h4>All UI components</h4>
-          <h4>Lifetime access</h4>
-          <h4>Free updates</h4>
-          <div className='my-4'>
-            <Boton2>Purchase Now</Boton2>
-          </div>
-        </div>
-        {/* Plan Premium */}
-        <div className='flex flex-col items-center w-full sm:w-[300px] duration-300 ease-in-out hover:scale-110 h-auto rounded-3xl py-4 px-6 shadow-2xl border-2'>
-          <h2 className='text-lg font-bold mt-8'>Premium</h2>
-          <h3>$<span className='text-4xl font-bold'>99.00</span> Per Month</h3>
-          <h2 className='text-lg font-bold mt-12 mb-4'>Features</h2>
-     {/* esto agregarlo variables en el back */}     <h4>Up to more 100 User</h4>{/* esto agregarlo variables en el back */}
-          <h4>All UI components</h4>
-          <h4>Lifetime access</h4>
-          <h4>Free updates</h4>
-          <div className='my-4'>
-            <Boton>Purchase Now</Boton>
-          </div>
-        </div>
+        ))}
       </div>
+
+      {/* Contenedor del botón de Mercado Pago */}
+      {selectedAccountId && preferenceId && (
+        <div className='mt-8 flex justify-center'>
+          <Wallet initialization={{ preferenceId }} /> {/* Botón centrado */}
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
 export default PricingTable

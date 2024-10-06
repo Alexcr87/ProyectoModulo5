@@ -10,7 +10,8 @@ import * as fs from 'fs';
 import { MailService } from "../mail/mail.service";
 import { generateRandomPassword } from "src/helpers/password.helper"
 import { OrganizationalStructure} from "src/entities/organizationalStructure.entity";
-import { Group } from "src/entities/group.entity";
+import { updateUserDto } from "src/dto/updateUserDto";
+import { log } from "console";
 
 // import { Account } from "src/entities/account.entity";
 
@@ -103,49 +104,59 @@ export class UserService{
   }
 
 
-  async updateUserById(id: string, createUserDto: CreateUserDto): Promise<Omit<User, 'password'>> {
+  async updateUserById(id: string, createUserDto: updateUserDto): Promise<Omit<User, 'password'>> {
     try {
-      const userToUpdate = await this.userRepository.findOne({ where: { id } })
+      console.log(createUserDto, "user");
+      console.log(id, "id");
+  
+      // Buscar el usuario por su ID, incluyendo la relación 'roles'
+      const userToUpdate = await this.userRepository.findOne({ where: { id }, relations: ['roles'] });
       if (!userToUpdate) {
-        throw new NotFoundException(`User with id: ${id} not found`)
+        throw new NotFoundException(`User with id: ${id} not found`);
       }
   
-      if (!createUserDto.password) {
-        throw new BadRequestException('Password is required for updating user')
+      // Actualizar otros campos del usuario
+      Object.assign(userToUpdate, createUserDto);
+  
+      // Si hay roles en el DTO, agregarlos a los roles actuales
+      if (createUserDto.roles && createUserDto.roles.length > 0) {
+        // Buscar los roles por sus IDs
+        const rolesToAdd = await this.roleRepository.findByIds(createUserDto.roles);
+        if (rolesToAdd.length === 0) {
+          throw new NotFoundException('Roles not found');
+        }
+  
+        // Agregar los roles nuevos a los existentes
+        const existingRoles = userToUpdate.roles || [];
+        userToUpdate.roles = [...existingRoles, ...rolesToAdd].filter(
+          (role, index, self) => self.findIndex(r => r.id === role.id) === index
+        ); // Asegurar que no haya duplicados
       }
   
-      const hashedPassword = await bcrypt.hash(createUserDto.password, 10)
+      // Guardar el usuario actualizado
+      const updatedUser = await this.userRepository.save(userToUpdate);
   
-      let roles
-      if (Array.isArray(createUserDto.roles)) {
-        roles = createUserDto.roles.map(role => {
-          if (typeof role === 'number') {
-            return { id: role }  
-          }
-          return role
-        });
-      }
+      // Omitir la contraseña en el retorno del usuario actualizado
+      const { password, ...userToShow } = updatedUser;
+      return {
+        ...userToShow,
+        roles:userToShow.roles
+      };
   
-      const updatedUser = await this.userRepository.save({
-        ...userToUpdate,
-        ...createUserDto,
-        password: hashedPassword,
-        roles,  
-      });
-
-      const { password, ...userToShow } = updatedUser
-      return userToShow
     } catch (error) {
-      throw new InternalServerErrorException('Error updating user')
+      console.error(`Error updating user with id ${id}:`, error);
+      throw new InternalServerErrorException('Error updating user');
     }
   }
+  
+  
   
 
   async getUserById(id: string) {
     try {
       const user = await this.userRepository.findOne({
         where: { id },
-        relations: { candidate: true },
+        relations: { candidate: true, roles:true},
       })
 
       if (!user) {
