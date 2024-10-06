@@ -1,6 +1,6 @@
 import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CreateUserDto} from "src/dto/createUserDto";
+import { CreateUserDto} from "src/dto/createUser.dto";
 import { User } from "src/entities/user.entity";
 import { In, Repository } from "typeorm";
 import * as bcrypt from "bcrypt"
@@ -10,6 +10,7 @@ import * as fs from 'fs';
 import { MailService } from "../mail/mail.service";
 import { generateRandomPassword } from "src/helpers/password.helper"
 import { OrganizationalStructure} from "src/entities/organizationalStructure.entity";
+import { Group } from "src/entities/group.entity";
 
 // import { Account } from "src/entities/account.entity";
 
@@ -19,11 +20,13 @@ export class UserService{
   private isCreatingUser = false;
   
   constructor(
+    @InjectRepository(Group) // Asegúrate de que todos los repositorios sean inyectados correctamente
+    private readonly groupRepository: Repository<Group>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(Role) 
     private roleRepository: Repository<Role>,
-    private readonly mailService: MailService, 
+    private readonly mailService: MailService,
     @InjectRepository(OrganizationalStructure)
     private structureRepository: Repository<OrganizationalStructure>,
     // @InjectRepository(Account) private readonly accountRepository:Repository<Account>,
@@ -236,6 +239,23 @@ export class UserService{
             // accounts: [withoutAccount],
             isFirstLogin: !passwordGenerated ? false : undefined,
         });
+
+        if (createUserDto.groupId && createUserDto.groupId.length > 0) {
+          const groups = await this.groupRepository.findBy({
+              id: In(createUserDto.groupId),
+              
+          });
+          console.log(groups);
+      
+          if (groups.length !== createUserDto.groupId.length) {
+              throw new BadRequestException('Some groups not found');
+          }
+      
+          newUser.groups = groups;  // Asigna los grupos al usuario
+      }
+
+      // Guardar el nuevo usuario con los grupos asociados
+      await this.userRepository.save(newUser);
 
         console.log('Saving new user to the database.');
         await this.userRepository.save(newUser);

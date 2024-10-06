@@ -2,7 +2,7 @@
 import { BadRequestException, Body, ConflictException, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, ParseUUIDPipe, Patch, Post, Put, Query, Req, Res, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { CreateUserDto } from "src/dto/createUserDto";
+import { CreateUserDto } from "src/dto/createUser.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import * as fs from 'fs';
 import { diskStorage } from "multer";
