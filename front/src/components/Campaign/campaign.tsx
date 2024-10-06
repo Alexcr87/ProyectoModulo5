@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ICampaign from '@/interfaces/ICampaign'; 
 import Input from '../ui/Input';
 import Boton from '../ui/Boton';
@@ -10,7 +10,7 @@ const CampaignForm = () => {
   const { userData } = useAuth(); 
   const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
-  const [userSesion, setUserSesion] = useState<any>(); 
+  const [loading, setLoading] = useState(false); // Nuevo estado de carga
   const [formData, setFormData] = useState<ICampaign>({
     name: '',
     description: '',
@@ -25,22 +25,6 @@ const CampaignForm = () => {
     },
     candidates: [], // Mantener la estructura, pero vacía
   });
-
-  /*useEffect(() => {
-    const localUser = localStorage.getItem("userSesion");
-    if (localUser) {
-      const parsedUser = JSON.parse(localUser);
-      
-      setUserSesion(parsedUser);
-      if (parsedUser?.result?.id) {
-        setFormData((prevData) => ({
-          ...prevData,
-          userId: parsedUser.result.id,
-          user: { ...prevData.user, id: parsedUser.result.id, name: parsedUser.result.name }, // Asigna el id y el nombre al usuario
-        }));
-      }
-    }
-  }, []);*/ // si no funciona hay q hacer otra cosa pero este codigo no!!!
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -59,6 +43,7 @@ const CampaignForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true); // Iniciar el spinner
 
     const data = {
       name: formData.name,
@@ -86,8 +71,9 @@ const CampaignForm = () => {
       window.location.href = "/campaigns";    
     } catch (error) {
       console.error("Error al crear la campaña:", error);
+    } finally {
+      setLoading(false); // Detener el spinner
     }
-
   };
 
   return (
@@ -134,12 +120,27 @@ const CampaignForm = () => {
           onChange={handleDateChange}
           required
         />
-        <Boton type="submit">Crear Campaña</Boton>
+
+        {/* Mostrar spinner si está cargando */}
+        {loading ? (
+          <div className="flex justify-center">
+            <div className="loader border-t-4 border-b-4 border-blue-500 w-12 h-12 rounded-full animate-spin"></div>
+          </div>
+        ) : (
+          <Boton type="submit" disabled={loading}>Crear Campaña</Boton>
+        )}
       </div>
     </form>
+
+    {/* Añadir estilos del spinner */}
+    <style jsx>{`
+      .loader {
+        border-top-color: transparent;
+        border-left-color: transparent;
+      }
+    `}</style>
     </>
   );
 }
-
 
 export default CampaignForm;

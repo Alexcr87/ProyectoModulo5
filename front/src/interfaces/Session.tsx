@@ -2,7 +2,8 @@ import IUsers from "./IUser";
 
 export interface userSession {
     token: string,
-    userData:{
+    userData:
+    { 
         id: string;
         address?: string;
         email: string;
