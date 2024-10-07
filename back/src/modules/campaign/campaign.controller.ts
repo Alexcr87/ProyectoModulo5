@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Put } from '@nestjs/common';
 import { CampaignService } from './campaign.service';
 import { CreateCampaignDto } from 'src/dto/createCampaign.dto';
 import { Campaign } from 'src/entities/campaign.entity';
@@ -34,5 +34,20 @@ export class CampaignController {
   @ApiResponse({ status: 200, description: 'List of campaigns for the user.', type: [Campaign] })
   async getCampaignsByUserId(@Param('userId') userId: string): Promise<Campaign[]> {
     return this.campaignService.getCampaignsByUserId(userId);
+  }
+
+  @Post('groups')
+  @ApiResponse({ status: 200, description: 'List of campaigns for the given group IDs.', type: [Campaign] })
+  async getCampaignsByGroups(@Body() body: { groupIds: string[] }): Promise<Campaign[]> {
+    return this.campaignService.getCampaignsByGroups(body.groupIds);
+  }
+
+  @Put(':id')
+  @ApiResponse({ status: 200, description: 'Campaign replaced successfully.', type: Campaign })
+  async replace(
+    @Param('id') campaignId: string, 
+    @Body() CreateCampaignDto: CreateCampaignDto,
+  ): Promise<Campaign> {
+    return this.campaignService.updateCampaign(campaignId, CreateCampaignDto);
   }
 }

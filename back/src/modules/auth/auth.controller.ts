@@ -19,7 +19,7 @@ import {
   CredentialUserDto,
   newChangePasswordDto,
 } from 'src/dto/credentialUserDto';
-import { CreateUserDto } from 'src/dto/createUserDto';
+import { CreateUserDto } from 'src/dto/createUser.dto';
 //import { AllowedUserIds } from "src/roles/roles.decorator";
 import { AuthGuard } from 'src/Guards/auth.guard';
 import { RolesGuard } from 'src/Guards/roles.guard';
@@ -62,7 +62,7 @@ export class AuthController {
 
   @Post('newPasswordChange')
   async newPasswordUser(@Body() newCredential: newChangePasswordDto) {
-    console.log (newCredential);
+
     try {
       return await this.authservice.newPasswordLogin(newCredential);
     } catch (error) {
@@ -139,7 +139,6 @@ export class AuthController {
       dni: 5487748,
       password: 'google',
     };
-    console.log(newUser, 'controller');
 
     return this.authservice.createUserByAuth0(newUser);
   }
