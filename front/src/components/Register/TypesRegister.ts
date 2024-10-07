@@ -1,3 +1,5 @@
+import IGroup from "@/interfaces/IGroup";
+
 export interface IRegisterProps {
     id?:string;
     city: string;
@@ -6,6 +8,7 @@ export interface IRegisterProps {
     email: string;
     name: string;
     address: string;
-    dni: string
+    dni: string;
+    groups?: IGroup[]
 }
 export type IRegisterError = Partial<IRegisterProps>

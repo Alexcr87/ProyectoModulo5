@@ -104,7 +104,6 @@ const initialState = {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(dataUser);
     
     await register(dataUser);
     Swal.fire({

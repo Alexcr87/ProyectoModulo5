@@ -19,6 +19,7 @@ import { UserSeedService } from './seeder/userSeeder/user.seed.service';
 import { VoteModule } from './modules/vote/vote.module';
 
 import { PaymentModule } from './modules/payments/payment.module';
+import { GroupModule } from './modules/usersGroup/usersGroup.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { PaymentModule } from './modules/payments/payment.module';
         configService.get('typeorm'),
     }),
     AuthModule,
+    GroupModule,
     MailModule,
     PaymentModule,
     UserModule,

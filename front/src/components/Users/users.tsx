@@ -46,6 +46,7 @@ const Users = () => {
 
   return (
     <div className="container mx-auto p-4">
+      <div>**Filtrar por grupos**</div>
       <h1 className="text-2xl font-bold mb-4 text-center">Usuarios</h1>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">

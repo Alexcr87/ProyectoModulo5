@@ -10,11 +10,9 @@ export class VoteController {
 
   @Post()
   async votar(
-    @Body() voteDto: VoteDto,  // Ahora recibimos el userId en el cuerpo
+    @Body() voteDto: VoteDto,
   ): Promise<string> {
-    // Extrae userId del cuerpo de la solicitud
-    const userId = voteDto.userId; 
-    return this.voteService.votar(userId, voteDto.campaignId, voteDto.candidateId);
+    return this.voteService.votar(voteDto.userId, voteDto.campaignId, voteDto.candidateId);
   }
 
   @Get('/candidates/:campaignId')
