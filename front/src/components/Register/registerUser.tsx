@@ -1,8 +1,6 @@
 "use client";
 
-
 import {  useRouter } from "next/navigation";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IRegisterError, IRegisterProps } from "./TypesRegister";
 import { validateRegisterForm } from "@/helpers/validateRegister";
@@ -40,7 +38,6 @@ const initialState = {
       [name]: true,
     });
    };
-
   useEffect(() => {
     setIsFormValid(
       dataUser.name.trim() !== '' &&
@@ -193,7 +190,6 @@ const initialState = {
             <Boton
               type="submit"
             disabled={!isFormValid} 
-         
             >
               Completar Registro
             </Boton>

@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IRegisterError, IRegisterProps } from "./TypesRegister";
 import { validateRegisterForm } from "@/helpers/validateRegister";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 import { IloginProps } from "@/interfaces/ILogin";
 import Input from "../ui/Input";
 import Boton from "../ui/Boton";
@@ -108,15 +108,6 @@ const Register = () => {
       });
     }
   };
-
-  const fetchCitiesByCountry = (country: string) => {
-    const countryCitiesMap: Record<string, string[]> = {
-      "Argentina": ["Buenos Aires", "Córdoba", "Rosario"],
-      "Chile": ["Santiago", "Valparaíso", "Concepción"],
-      "Colombia": ["Bogotá", "Medellín", "Cali"],
-    };
-    return countryCitiesMap[country] || [];
-  };
    
     useEffect(() => {
     setIsFormValid(
@@ -128,6 +119,7 @@ const Register = () => {
       dataUser.city.trim() !== ''
     );
   }, [dataUser]);
+
 
   const handleMultiSelectChange = (selectedOptions: any) => {
     const selectedGroups = selectedOptions.map((option: any) => ({ id: option.value, name: option.label }));
@@ -144,12 +136,9 @@ const Register = () => {
       [name]: value,
     });
   };
-
-
   const handleCountryChange = (country: string) => {
     setDataUser({ ...dataUser, country });
   };
-
   const handleCityChange = (city: string) => {
     setDataUser({ ...dataUser, city });
   };
@@ -162,7 +151,6 @@ const Register = () => {
     };
   
     try {
-
       await register(dataUser);
       const result = await register(userDataWithParentId, parentId); // Pasa parentId aquí
       Swal.fire({
@@ -202,16 +190,6 @@ const Register = () => {
     const errors = validateRegisterForm(dataUser);
     setErrors(errors);
   }, [dataUser]);
-  
-  const handleDownloadExcel = () => {
-    const link = document.createElement("a");
-    link.href = `${window.location.origin}/images/ExcelDeMuestra.xlsx`; 
-    link.download = "ExcelDeMuesta.xlsx"; 
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   return (<>
     <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">
       <div className="col-start-1 col-end-13">
@@ -269,6 +247,7 @@ const Register = () => {
                 onBlur={handleBlur}
                 placeholder="Correo Electrónico"
               />
+                <div className="flex flex-col pr-4 w-full sm:w-1/2">
               {errors.email && <span className="text-red-500 text-sm">{errors.email|| 'Este campo es obligatorio'}</span>}
             </div>
           </div>
@@ -280,7 +259,6 @@ const Register = () => {
               />
               {errors.country && <span className="text-red-500 text-sm">{errors.country}</span>}
             </div>
-            <div className="flex flex-col mt-4">
             <Select
               isMulti
               name="groups"
@@ -291,9 +269,7 @@ const Register = () => {
               value={dataUser.groups?.map(group => ({ value: group.id, label: group.name }))}
               placeholder='Selecciona grupos'
             />
-
-            </div>
-            
+            </div> 
             <Boton
               type="submit"
               disabled={!isFormValid}
@@ -304,7 +280,7 @@ const Register = () => {
               src="/images/registerImage.png"
               alt="Small icon"
               className="w-52 mx-auto my-4"
-            />  
+            />
           </div>
         </div>
       </div>
