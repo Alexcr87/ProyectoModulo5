@@ -5,6 +5,8 @@
          const errors: IChangePassworError = {
          };
 
+         const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/;
+
     if ( values.password &&  values.password.length < 8) {
         errors.password = 'La contraseña debe tener al menos 8 caracteres';
     }
@@ -13,8 +15,12 @@
       errors.newPassword = 'La contraseña debe tener al menos 8 caracteres';
     }
 
-    if ( values.confirmPassword === values.newPassword ) {
-      errors.confirmPassword = 'La confirmacion debe ser igual a la nueva contraseña';
+    if (values.newPassword && !passwordRegex.test(values.newPassword)) {
+        errors.newPassword = 'La nueva contraseña debe contener al menos una mayúscula, un número y un carácter especial';
+    }
+
+    if ( values.confirmPassword !== values.newPassword ) {
+      errors.confirmPassword = 'La confirmacion debe coincidir con a la nueva contraseña';
     }
 
     return errors
