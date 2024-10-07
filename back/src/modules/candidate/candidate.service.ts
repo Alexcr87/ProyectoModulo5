@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Candidate } from '../../entities/candidate.entity';
-import { CreateCandidateDto } from '../../dto/createCandidateDto';
+import { CreateCandidateDto } from '../../dto/createCandidate.dto';
 import { User } from '../../entities/user.entity';
 import { CloudinaryService } from '../../cloudinary/cloudinary.service';
 import { Role } from 'src/entities/roles.entity';

@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useEffect, useState } from 'react'
 import ICampaign from '@/interfaces/ICampaign'
 import { usePathname, useRouter } from 'next/navigation'
@@ -11,47 +11,67 @@ const CampaignsTable = () => {
     const [campaigns, setCampaigns] = useState<ICampaign[]>([]) 
     const [loading, setLoading] = useState(true) 
     const [error, setError] = useState<string | null>(null) 
+    const [roles, setRoles] = useState<string[]>([])
+    const [groups, setGroups] = useState<string[]>([])
     const pathname = usePathname();
     const router = useRouter()
 
     useEffect(() => {
-        const fetchCampaigns = async () => {
-            if (!userData?.userData.id) {
-                setLoading(false); // Termina la carga si no hay ID
-                return;
+        if (userData) {
+            setRoles(userData.userData.roles.map(role => role.name));
+            setGroups(userData.userData.groups.map(group => group.id).filter((group): group is string => group !== undefined));
+        }
+    }, [userData]);
+
+    useEffect(() => {
+        if (userData?.userData.id) {
+            fetchCampaigns();
+        }
+    }, [roles, groups, userData, pathname]);
+
+    const fetchCampaigns = async () => {
+        if (!userData?.userData.id) {
+            setLoading(false);
+        }
+
+        const actualUser = String(userData?.userData.id);
+       
+        try {                
+            let response;
+        
+            if (roles.includes('candidate') || roles.includes('voter')) {
+                response = await fetch(`${APIURL}/campaigns/groups`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ groupIds: groups })
+                });
+            } else {
+                response = await fetch(`${APIURL}/campaigns/user/${actualUser}`);
             }
         
-            const actualUser = String(userData?.userData.id);
-           
-
-            try {
-                const response = await fetch(`${APIURL}/campaigns/user/${actualUser}`)
-             
-
-                if (!response.ok) {
-                    throw new Error('Error al obtener las campañas');
-                }
-
-                const data: ICampaign[] = await response.json();
-          
-                setCampaigns(data);
-            } catch (error) {
-                setError(error instanceof Error ? error.message : 'Error desconocido');
-            } finally {
-                setLoading(false); // Cerrar el estado de carga
+            if (!response || !response.ok) {
+                throw new Error('Error al obtener las campañas');
             }
+        
+            const data: ICampaign[] = await response.json();
+            setCampaigns(data);
+        } catch (error) {
+            setError(error instanceof Error ? error.message : 'Error desconocido');
+        } finally {
+            setLoading(false);
         }
-
-        if (userData?.userData.id) {
-            fetchCampaigns(); // Ejecuta el fetch solo si hay userSesion
-        }
-    }, [userData, pathname]); // Agregar userSesion como dependencia para ejecutar el fetch
+    }
 
     if (loading) return <p>Cargando campañas...</p>
     if (error) return <p>{error}</p>
 
-    const handleVer= (id: string|undefined)=>{
-        router.push(`/campaigndesc?campaignId=${id}`)
+    const handleAction= (id: string|undefined)=>{
+
+        if (roles.includes('candidate') || roles.includes('voter')) {
+            router.push(`/voting?campaignId=${id}`)
+        } else {
+            router.push(`/campaigndesc?campaignId=${id}`)
+        }
     }
 
     return (
@@ -72,13 +92,15 @@ const CampaignsTable = () => {
                         {campaigns.map((campaign, index) => (
                             <tr key={index} 
                                 className={`${index % 2 === 0 ? "bg-gray-50" : "bg-white"} border-t border-gray-200`}
-                                onClick={()=>handleVer(campaign.id)}
+                                onClick={()=>handleAction(campaign.id)}
                             >
                                 <td className="border p-2">{campaign.name}</td>
                                 <td className="border p-2">{campaign.description}</td>
                                 <td className="border p-2">{campaign.location}</td>
                                 <td className="border p-2">{new Date(campaign.date).toLocaleDateString()}</td>
-                                <td className="border p-2 text-blue-500 hover:text-blue-700 ">ver </td>
+                                <td className="border p-2 text-blue-500 hover:text-blue-700 ">
+                                    {roles.includes('candidate') || roles.includes('voter') ? 'votar' : 'ver'}
+                                </td>
                             </tr>
                         ))}
                     </tbody>

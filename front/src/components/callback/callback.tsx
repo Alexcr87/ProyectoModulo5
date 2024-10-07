@@ -42,7 +42,6 @@
 //             // Guardar los datos del usuario en el contexto de autenticación
 //             setUserData(userData);
 
-//             console.log(data);
             
 //             if (emailCheckResponse) {
 

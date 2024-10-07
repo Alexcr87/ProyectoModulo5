@@ -89,4 +89,12 @@ export class CreateUserDto {
     example: [1, 2],
   })
   roles?: number[];
+
+  @IsOptional()
+  @ApiProperty({
+    description: 'Optional group ID to assign to the user',
+    example: '550e8400-e29b-41d4-a716-446655440000',
+  })
+  groupId?: string [];
 }
+
