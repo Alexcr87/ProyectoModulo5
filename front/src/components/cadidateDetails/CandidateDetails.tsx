@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import ICandidate from '@/interfaces/ICandidate';
 import Image from 'next/image';
 import Swal from 'sweetalert2';
@@ -118,13 +118,14 @@ const CandidateDetails = (props: ICandidate) => {
           <div className='bg-white mt-2 drop-shadow-2xl border-2 p-4 rounded-b-2xl'>
             <div className='bg-secundaryColor h-full p-4 rounded-2xl drop-shadow-2xl text-cuartiaryColor'>
               <h2>Propuestas:</h2>
-              {convertirArreglo().map((propu, index) => (
+              {convertirArreglo().map((propu:any, index:any) => (
                 <p className='ml-4' key={index}>{`${index + 1}. ${propu}`}</p>
               ))}
             </div>
           </div>
         </div>
-      )}
+    </div>
+    )}
     </div>
   );
 }

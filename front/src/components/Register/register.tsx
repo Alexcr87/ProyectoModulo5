@@ -87,26 +87,6 @@ const Register = () => {
       });
       return;
     }
-  
-    try {
-      await importUser(file, parentId); // Pasa el parentId como argumento
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Archivo subido con éxito",
-        showConfirmButton: false,
-        timer: 1500
-      });
-      router.push("/users");
-    } catch (error) {
-      Swal.fire({
-        position: "center",
-        icon: "error",
-        title: "Error al subir el archivo",
-        showConfirmButton: false,
-        timer: 1500
-      });
-    }
   };
    
     useEffect(() => {
