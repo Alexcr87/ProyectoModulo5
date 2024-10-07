@@ -79,41 +79,6 @@ const Campaingdesc = () => {
 }, [userData]);
 
   useEffect(() => {
-
-  const sendVote = async (candidateId?: string) => {
-    setIsVoting(true);
-    try {
-      const response = await fetch(`${APIURL}/votes`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: userData?.userData.id,
-          campaignId: campaign?.id,
-          candidateId: candidateId,
-        }),
-      });
-
-      if (!response.ok) {
-        setVoteMessage('Error en la respuesta de enviar voto');
-        throw new Error('Error en la respuesta de enviar voto');
-      }
-      const result = await response.text();
-      setVoteMessage(result);
-    } catch (error) {
-      setVoteMessage('Error al enviar el voto');
-      console.error('Error al enviar el voto:', error);
-    } finally {
-      setIsVoting(false); // Asegura que el estado vuelva a falso
-    }
-  };
-
-  useEffect(() => {
-    if (userData) {
-      setRoles(userData.userData.roles.map((role) => role.name));
-    }
-  }, [userData]);
-
-  useEffect(() => {
     if (userData?.userData?.id) {
       fetchCampaignDetails();
     }
