@@ -1,18 +1,21 @@
-// import { IChangePassword } from "@/interfaces/IChangePassword";
+ import { IChangePassword, IChangePassworError } from "@/interfaces/IChangePassword";
 
+ export const validateChangePassword = (values: IChangePassword): IChangePassworError => {
 
-// export const validateChangePassword = (values: IChangePassword): IChangePassword => {
+         const errors: IChangePassworError = {
+         };
 
-//         const errors: IChangePassword = {
-//         };
+    if ( values.password &&  values.password.length < 8) {
+        errors.password = 'La contraseña debe tener al menos 8 caracteres';
+    }
 
-//     if ( values.newPassword &&  values.newPassword.length < 8) {
-//       errors.password = 'La contraseña debe tener al menos 8 caracteres';
-//     }
-//     if ( values.confirmPassword &&  values.confirmPassword.length < 8) {
-//       errors.password = 'La contraseña debe tener al menos 8 caracteres';
-//     }
+    if ( values.newPassword &&  values.newPassword.length < 8) {
+      errors.newPassword = 'La contraseña debe tener al menos 8 caracteres';
+    }
 
-//     return errors;
+    if ( values.confirmPassword === values.newPassword ) {
+      errors.confirmPassword = 'La confirmacion debe ser igual a la nueva contraseña';
+    }
 
-//   };
+    return errors
+};

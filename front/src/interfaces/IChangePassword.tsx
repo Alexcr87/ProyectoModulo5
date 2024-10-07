@@ -6,7 +6,6 @@ export interface IChangePassword{
 }
 
 export interface IChangePassworError {
-
   password?: string,
   newPassword?: string,
   confirmPassword?: string,
