@@ -7,7 +7,7 @@ import InputFile from "../ui/InputFile";
 import { importUser } from "@/helpers/auth.helper";
 import Register from "../Register/register";
 
-const PruebaPageComponent = () => {
+const PopUpRegisterComponent = () => {
   const [registroManual, setRegistroManual] = useState(false);
   const [registroMasivo, setRegistroMasivo] = useState(false);
   const [file, setFile] = useState<File | null>(null);
@@ -105,4 +105,4 @@ const PruebaPageComponent = () => {
   );
 };
 
-export default PruebaPageComponent;
+export default PopUpRegisterComponent;
