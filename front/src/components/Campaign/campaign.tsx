@@ -11,7 +11,7 @@ import IGroup from '@/interfaces/IGroup';
 const CampaignForm = () => {
   const { userData } = useAuth(); 
   const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
-
+  const [loading, setLoading] = useState(false); // Nuevo estado de carga
   const [groups, setGroups] = useState<IGroup[]>([]);
   const [formData, setFormData] = useState<ICampaign>({
     name: '',
@@ -29,6 +29,7 @@ const CampaignForm = () => {
     groups: []  // Aquí mantenemos un array de grupos seleccionados
   });
 
+
   useEffect(() => {
     const fetchGroups = async () => {
       try {
@@ -43,6 +44,7 @@ const CampaignForm = () => {
 
     fetchGroups();
   }, [userData]);
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -71,6 +73,7 @@ const CampaignForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true); // Iniciar el spinner
 
     const data = {
       ...formData,
@@ -93,6 +96,8 @@ const CampaignForm = () => {
       window.location.href = "/campaigns";    
     } catch (error) {
       console.error("Error al crear la campaña:", error);
+    } finally {
+      setLoading(false); // Detener el spinner
     }
   };
 
@@ -155,5 +160,6 @@ const CampaignForm = () => {
     </>
   );
 };
+
 
 export default CampaignForm;

@@ -11,18 +11,12 @@ import Boton from "../ui/Boton";
 import { useAuth } from "@/context/Authontext";
 import { register } from "@/helpers/auth.helper";
 import CountryCitySelector from "@/components/CountryCitySelector/CountryCitySelector"; // Asegúrate de importar el componente
-
-const Register = () => {
-  const router = useRouter();
-  const { userData } = useAuth();
-
-  const initialState = {
-    name: `${userData?.userData.name}`,
 import IGroup from "@/interfaces/IGroup";
 import Select from 'react-select';
 
 const Register = () => {
   const router = useRouter();
+  const { userData } = useAuth();
   const initialState = {
     name: "",
     dni: "",
@@ -34,8 +28,6 @@ const Register = () => {
     groupId:"",
     groups: [],
   };
-
-  const {userData} =useAuth()
   const [dataUser, setDataUser] = useState<IRegisterProps>(initialState);
   const [errors, setErrors] = useState<IRegisterError>(initialState);
   const [isFormValid, setIsFormValid] = useState(false);
@@ -144,11 +136,9 @@ const Register = () => {
       [name]: value,
     });
   };
-
   const handleCountryChange = (country: string) => {
     setDataUser({ ...dataUser, country });
   };
-
   const handleCityChange = (city: string) => {
     setDataUser({ ...dataUser, city });
   };
@@ -161,10 +151,8 @@ const Register = () => {
     };
   
     try {
-
+      await register(dataUser);
       const result = await register(userDataWithParentId, parentId); // Pasa parentId aquí
-
-
       Swal.fire({
         position: "center",
         icon: "success",
@@ -180,7 +168,8 @@ const Register = () => {
           title: "DNI ya registrado",
           text: error.message || 'Hubo un error al procesar tu solicitud',
         });
-      } else if (error.message.includes("email")) { // Verifica si el error está relacionado con el email
+      } else if (error.message.includes("email")) {
+
         Swal.fire({
           icon: "error",
           title: "Correo ya registrado",
@@ -201,7 +190,6 @@ const Register = () => {
     const errors = validateRegisterForm(dataUser);
     setErrors(errors);
   }, [dataUser]);
-
   return (<>
     <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">
       <div className="col-start-1 col-end-13">
@@ -260,6 +248,10 @@ const Register = () => {
                 placeholder="Correo Electrónico"
               />
                 <div className="flex flex-col pr-4 w-full sm:w-1/2">
+              {errors.email && <span className="text-red-500 text-sm">{errors.email|| 'Este campo es obligatorio'}</span>}
+            </div>
+          </div>
+         <div className="flex flex-col pr-4 w-full sm:w-1/2">
             <div className="flex flex-col">
               <CountryCitySelector
                 onCountryChange={handleCountryChange}
@@ -293,5 +285,9 @@ const Register = () => {
         </div>
       </div>
     </form>
+    </>
+  );
+};
 
 export default Register;
+

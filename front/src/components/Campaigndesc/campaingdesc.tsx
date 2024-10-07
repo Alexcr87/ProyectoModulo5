@@ -1,9 +1,10 @@
-'use client'; 
+'use client';
 
 import React, { Suspense, useEffect, useState } from 'react';
 import ICampaign from '@/interfaces/ICampaign';
 import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/Authontext';
+import Spinner from '@/components/ui/Spinner'; // Importa tu componente Spinner
 import Boton from '../ui/Boton';
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
@@ -17,12 +18,12 @@ const Campaingdesc = () => {
   const searchParams = useSearchParams();
   const {userData} = useAuth()
 
+
   const fetchCampaignDetails = async () => {
     if (!userData?.userData.id) {
       setLoading(false);
       return;
     }
-
     const campaignId = searchParams.get('campaignId');
     if (!campaignId) {
       setError('No se proporcionó un ID de campaña.');
@@ -45,6 +46,7 @@ const Campaingdesc = () => {
       setLoading(false);
     }
   };
+
 
   const sendVote = async (candidateId?: string) => {
     setIsVoting(true);
@@ -84,7 +86,10 @@ const Campaingdesc = () => {
     }
   }, [userData, roles, searchParams]);
 
-  if (loading) return <p>Cargando campaña...</p>;
+  if (loading) {
+    return <Spinner />; // Aquí reemplazamos el texto de carga por tu componente Spinner
+  }
+
   if (error) return <p>{error}</p>;
 
   return (
@@ -121,21 +126,7 @@ const Campaingdesc = () => {
                   <div className="mt-2">
                     <p className="font-bold">Postulación:</p>
                     <p>{candidate?.postulation}</p>
-                    <p className="my-2">{candidate?.list}</p>
-                  </div>
-                  {(roles.includes('candidate') || roles.includes('voter')) && (
-                    <div>
-                      <Boton 
-                        type='button'
-                        onClick={() => sendVote(candidate?.id)}
-                        disabled={isVoting}
-                        style={{ cursor: isVoting ? 'default' : 'pointer' }}
-                      >
-                        Votar
-                      </Boton>
-                    </div>
-                  )}
-                </div>
+                    <p className="my-2">{candidate?.list}</p> 
               </div>
             ))}
             {(roles.includes('candidate') || roles.includes('voter')) && (
