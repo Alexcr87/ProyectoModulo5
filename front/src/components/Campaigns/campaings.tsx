@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import ICampaign from '@/interfaces/ICampaign'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/context/Authontext';
+import Spinner from '@/components/ui/Spinner'; // Asegúrate de importar el spinner
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
@@ -62,9 +63,9 @@ const CampaignsTable = () => {
         }
     }
 
-    if (loading) return <p>Cargando campañas...</p>
-    if (error) return <p>{error}</p>
 
+    if (userData?.userData.id) {
+      fetchCampaigns(); // Ejecuta el fetch solo si hay userSesion
     const handleAction= (id: string|undefined)=>{
 
         if (roles.includes('candidate') || roles.includes('voter')) {
@@ -72,8 +73,16 @@ const CampaignsTable = () => {
         } else {
             router.push(`/campaigndesc?campaignId=${id}`)
         }
-    }
 
+    }
+  }, [userData, pathname]); // Agregar userSesion como dependencia para ejecutar el fetch
+
+  if (loading) return <Spinner />; // Aquí usamos el spinner durante la carga
+  if (error) return <p>{error}</p>;
+
+  const handleVer = (id: string | undefined) => {
+    router.push(`/campaigndesc?campaignId=${id}`);
+  };
     return (
         <div className="mt-4 overflow-x-auto">
             <h1 className="text-2xl font-bold mb-4 text-center">Mis Campañas</h1>
@@ -111,5 +120,6 @@ const CampaignsTable = () => {
         </div>
     )
 }
+
 
 export default CampaignsTable;

@@ -1,5 +1,7 @@
 "use client";
 
+
+import {  useRouter } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IRegisterError, IRegisterProps } from "./TypesRegister";
@@ -9,6 +11,7 @@ import Input from "../ui/Input";
 import Boton from "../ui/Boton";
 import { useAuth } from "@/context/Authontext";
 import { register } from "@/helpers/auth.helper";
+import CountryCitySelector from "../CountryCitySelector/CountryCitySelector";
 
 
 const RegisterByAuth0 = () => {
@@ -28,8 +31,6 @@ const initialState = {
   const [dataUser, setDataUser] = useState<IRegisterProps>(initialState);
   const [errors, setErrors] = useState<IRegisterError>(initialState);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [countries] = useState<string[]>(["Argentina", "Chile", "Colombia"]);
-  const [cities, setCities] = useState<string[]>([]);
   const [touched, setTouched] = useState<IRegisterError>(initialState);
 
   const handleBlur = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -39,15 +40,6 @@ const initialState = {
       [name]: true,
     });
    };
-
-  const fetchCitiesByCountry = (country: string) => {
-    const countryCitiesMap: Record<string, string[]> = {
-      "Argentina": ["Buenos Aires", "Córdoba", "Rosario"],
-      "Chile": ["Santiago", "Valparaíso", "Concepción"],
-      "Colombia": ["Bogotá", "Medellín", "Cali"],
-    };
-    return countryCitiesMap[country] || [];
-  };
 
   useEffect(() => {
     setIsFormValid(
@@ -68,19 +60,17 @@ const initialState = {
     });
   };
 
-  const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedCountry = event.target.value;
-    setDataUser({ ...dataUser, country: selectedCountry });
-
-    // Fetch cities based on the selected country
-    const fetchedCities = fetchCitiesByCountry(selectedCountry);
-    setCities(fetchedCities);
+  const handleCountryChange = (country: string) => {
+    setDataUser({ ...dataUser, country });
   };
 
+  const handleCityChange = (city: string) => {
+    setDataUser({ ...dataUser, city });
+  };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     
-    try {
+  try {
       await register(dataUser); // Intenta registrar al usuario
       Swal.fire({
         position: "center",
@@ -119,16 +109,17 @@ const initialState = {
   }, [dataUser]);
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <div>
-          <div className="w-full justify-center flex mb-6">
+    <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4 px-4">
+    <div className="col-start-1 col-end-13">
+      <div className="grid grid-cols-12">
+      <div className="col-start-1 col-end-13 mt-10 mb-8 text-center text-xl">
             COMPLETAR REGISTRO
           </div>
         </div>
-
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div>
+       
+        
+        <div className="flex flex-col sm:flex-row">
+          <div className="flex flex-col pr-4 w-full sm:w-1/2">
             <div className="flex flex-col">
               <Input
                 id="name"
@@ -190,43 +181,19 @@ const initialState = {
             </div>
           </div>
 
-          <div>
+       
+          <div className="flex flex-col pr-4 w-full sm:w-1/2">
             <div className="flex flex-col">
-              <select
-                name="country"
-                value={dataUser.country}
-                onChange={handleCountryChange}
-                className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
-                border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 focus:border-primaryColor 
-                dark:focus:border-primaryColor focus-visible:shadow-none"
-              >
-                <option value="">Selecciona un país</option>
-                {countries.map(country => (
-                  <option key={country} value={country}>{country}</option>
-                ))}
-              </select>
+            <CountryCitySelector
+              onCountryChange={handleCountryChange}
+              onCityChange={handleCityChange}
+              />
               {errors.country && <span className="text-red-500 text-sm">{errors.country}</span>}
-            </div>
-
-            <div className="flex flex-col my-4">
-              <select
-                name="city"
-                value={dataUser.city}
-                onChange={handleChange}
-                className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
-                  border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 focus:border-primaryColor 
-                  dark:focus:border-primaryColor focus-visible:shadow-none"
-              >
-                <option value="">Selecciona una ciudad</option>
-                {cities.map(city => (
-                  <option key={city} value={city}>{city}</option>
-                ))}
-              </select>
-              {errors.city && <span className="text-red-500 text-sm">{errors.city}</span>}
             </div>
             <Boton
               type="submit"
-              disabled={!isFormValid}
+            disabled={!isFormValid} 
+         
             >
               Completar Registro
             </Boton>
