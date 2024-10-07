@@ -17,10 +17,10 @@ const router = useRouter();
 const { userData } = useAuth();
 
 const initialState = {
-    name: `${userData?.userData.name}`,
+    name: ``,
     dni: "",
     address: "",
-    email: `${userData?.userData.email}`,
+    email: ``,
     password: "",
     country: "",
     city: ""
@@ -38,7 +38,6 @@ const initialState = {
       [name]: true,
     });
    };
-
   useEffect(() => {
     setIsFormValid(
       dataUser.name.trim() !== '' &&
@@ -191,7 +190,6 @@ const initialState = {
             <Boton
               type="submit"
             disabled={!isFormValid} 
-             className="mt-4"
             >
               Completar Registro
             </Boton>

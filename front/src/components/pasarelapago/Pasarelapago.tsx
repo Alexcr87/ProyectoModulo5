@@ -23,7 +23,6 @@ import PaymentsDetails from '../PaymentmethodsDetails/PaymentmethodsDetails';
 const paymentGateway =  () => {
 //useEffect (() =>{
   const paymentArray =  payments;
-//  console.log (paymentArray)
   // SetErrors (errors)
   //}, [])
 

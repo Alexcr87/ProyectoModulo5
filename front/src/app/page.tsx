@@ -5,7 +5,7 @@ import React from 'react';
 
 export default function Home() {
   return (
-    <div>
+    <div id="__next">
       <Inicial/>
         <PricingTable/> 
         <TeamMembers/> 
