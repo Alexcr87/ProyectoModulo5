@@ -13,7 +13,7 @@ import {
   newChangePasswordDto,
 } from 'src/dto/credentialUserDto';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from 'src/dto/createUserDto';
+import { CreateUserDto } from 'src/dto/createUser.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Role } from 'src/entities/roles.entity';
@@ -38,7 +38,7 @@ export class AuthService {
 
     const user = await this.userRepository.findOne({
       where: { email: login.email },
-      relations: ['roles'],
+      relations: ['roles', 'groups'],
     });
 
     const userHashedPassword = await bcrypt.compare(
@@ -105,7 +105,6 @@ export class AuthService {
 
   async createUserByAuth0(user: Partial<CreateUserDtoByAuth0>) {
     const newUser = await this.userService.findUserByEmailxlsx(user.email);
-    console.log(newUser, 'newUSer');
 
     if (!newUser) {
       await this.userRepository.create(user);

@@ -10,7 +10,7 @@ import {
   UploadedFile,
 } from '@nestjs/common';
 import { CandidateService } from './candidate.service';
-import { CreateCandidateDto } from '../../dto/createCandidateDto';
+import { CreateCandidateDto } from '../../dto/createCandidate.dto';
 import {
   ApiBody,
   ApiConsumes,

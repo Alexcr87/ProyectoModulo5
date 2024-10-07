@@ -7,12 +7,18 @@ import Textarea from "../ui/Textarea";
 import Select from "../ui/Select";
 import { useAuth } from '@/context/Authontext';
 import Spinner from "../ui/Spinner"; // Importa el componente Spinner
+import { useRouter } from "next/router";
+import { stringify } from "querystring";
+
+
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
-const CreateCandidate = () => {
-  const { userData } = useAuth(); // Obtener datos del usuario desde el contexto
-  const userId = userData?.userData?.id; // Extraer el userId
+
+const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
+
+ 
+  const userId =id
   const [postulation, setPostulation] = useState<string>("");
   const [list, setList] = useState<string>("");
   const [campaignDescription, setCampaignDescription] = useState<string>("");
@@ -26,9 +32,7 @@ const CreateCandidate = () => {
     const fetchCampaigns = async () => {
       const localUser = localStorage.getItem("userSession");
       const localUserParsed = JSON.parse(localUser!);
-      const actualUserId = localUserParsed.userData.id;
-      console.log(actualUserId, "localUserParsed");
-
+      const actualUserId = localUserParsed.userData.id
       try {
         const response = await fetch(`${APIURL}/campaigns/user/${actualUserId}`);
         if (!response.ok) throw new Error("Error al obtener campañas");

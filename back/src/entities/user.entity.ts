@@ -14,6 +14,7 @@ import { Role } from './roles.entity';
 import { Campaign } from './campaign.entity';
 import { Account } from './account.entity';
 import { VoteUser } from './voteUser.entity';
+import { Group } from './group.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -61,9 +62,16 @@ export class User {
   @OneToMany(() => Campaign, (campaign) => campaign.user)
   campaigns: Campaign[];
 
+  @OneToMany(() => Group, (group) => group.user)
+  groupCreator: Group[];
+
   @OneToMany(() => Account, (account) => account.user)
    accounts: Account[];
 
   @OneToMany(() => VoteUser, (votoUsuario) => votoUsuario.user)
   votes: VoteUser[];
+
+  @ManyToMany(() => Group, (group) => group.users)
+  groups: Group[]; 
+
 }

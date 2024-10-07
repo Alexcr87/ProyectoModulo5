@@ -1,13 +1,16 @@
 
-'use client'
+
 import { useParams } from 'next/navigation';
 import CreateCandidate from "@/components/createCandidate/createCandidate";
 
-const CreateCandidateById = () => {
+
+import React from 'react'
+
+const CreateCandidateById: React.FC <{params:{id:string}}> = ({params}) => {
 
   return (
     <div className='bg-cuartiaryColor flex justify-center '>
-      <CreateCandidate />
+      <CreateCandidate id={params.id} />
     </div>
   );
 };

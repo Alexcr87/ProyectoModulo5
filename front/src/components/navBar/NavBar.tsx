@@ -74,7 +74,6 @@ const NavBar = () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
-
     
     const userRoles = userData?.userData.roles.map(item => item.id)
     const isAdmin = userRoles?.includes(1)
@@ -99,6 +98,11 @@ const NavBar = () => {
         <Link href="/results">Resultados</Link>
     </li>)
    } 
+   const groups = () =>{
+    return ( <li>
+        <Link href="/groups">Grupos</Link>
+    </li>)
+   } 
    const candidates = () =>{
     return (<li>
             <Link href="/candidates">Candidatos</Link>
@@ -107,6 +111,12 @@ const NavBar = () => {
    const perfilVotante = () =>{
     return (<li>
             <Link href="/perfilUser">Mi perfil</Link>
+    </li>)
+   }
+
+   const campaigns = () =>{
+    return (<li>
+            <Link href="/campaigns">Campañas</Link>
     </li>)
    }
 
@@ -146,10 +156,10 @@ const NavBar = () => {
                         </>
                     ) : (
                         <>
-                            {isAdmin && (<>{campaign()} {users()} {results()} {candidates()} </>)}
-                            {isCandidate && (<>  ACA HAY QUE PONER LO QUE VE EL CANDIDATO   </>)}
-                            {isVotante && (<> {perfilVotante()}   </>)}
-                            {isModerator && (<>  ACA HAY QUE PONER LO QUE VE EL MODERADOR   </>)}
+                            {isAdmin && (<>{campaign()} {users()} {groups()} {results()} {candidates()} </>)}
+                            {isCandidate && (<> {campaigns()} {perfilVotante()}   </>)}
+                            {isVotante && (<> {campaigns()} {perfilVotante()}   </>)}
+                            {isModerator && (<> {campaign()} {users()} {groups()} {results()} {perfilVotante()} </>)}
                             <li>
                                 <button onClick={handleClose}>Cerrar Sesión</button>
                             </li>

@@ -2,7 +2,7 @@
 import { BadRequestException, Body, ConflictException, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, ParseUUIDPipe, Patch, Post, Put, Query, Req, Res, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { CreateUserDto } from "src/dto/createUserDto";
+import { CreateUserDto } from "src/dto/createUser.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import * as fs from 'fs';
 import { diskStorage } from "multer";
@@ -15,6 +15,8 @@ import { Role } from "src/entities/roles.entity";
 
 import { Request, Response } from "express";
 import { CreateUserDtoByAuth0 } from "src/dto/createUserByAuth0Dto";
+import { promises } from "dns";
+import { updateUserDto } from "src/dto/updateUserDto";
 
 
 
@@ -95,7 +97,8 @@ export class UserController {
 
   @Put(":id")
   @HttpCode(200)
-  async updateUserById(@Param("id", ParseUUIDPipe) id:string, @Body() createUserDto:CreateUserDto){
+  async updateUserById(@Param("id", ParseUUIDPipe) id:string, @Body() createUserDto:updateUserDto):Promise<Omit<User, "password">>{
+    
     try {
       return await this.userService.updateUserById(id, createUserDto)
     } catch (error) {

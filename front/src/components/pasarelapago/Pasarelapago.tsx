@@ -2,10 +2,13 @@ import Input from '../ui/Input';
 import Boton from '../ui/Boton';
 import payments from '@/helpers/pasarela.helper';
 import PaymentsDetails from '../PaymentmethodsDetails/PaymentmethodsDetails';
+// const mercadopago = initMercadoPago('PUBLIC_KEY_MERCADOPAGO');
 
-const PaymentGateway = () => {
-  const paymentArray = payments;
-
+const paymentGateway =  () => {
+//useEffect (() =>{
+  const paymentArray =  payments;
+  // SetErrors (errors)
+  //}, [])
   return (
     <div className='flex flex-row'>
       <div className='my-4 text-center flex flex-col items-center bg-white shadow-lg px-4 rounded-lg'>
