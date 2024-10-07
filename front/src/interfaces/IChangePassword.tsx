@@ -1,5 +1,5 @@
 export interface IChangePassword{
-  dni:number,
+  dni?:string,
   password: string,
   newPassword: string,
   confirmPassword: string,

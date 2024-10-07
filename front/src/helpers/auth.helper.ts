@@ -1,4 +1,5 @@
 import {  IRegisterProps } from "@/components/Register/TypesRegister";
+import { IChangePassword } from "@/interfaces/IChangePassword";
 import { IloginProps } from "@/interfaces/ILogin";
 import Swal from 'sweetalert2';
 
@@ -106,4 +107,22 @@ export async function login (userData: IloginProps){
     return
   }
   
+}
+
+
+export async function newPassword(data: IChangePassword) {
+  try {
+    const res = await fetch(`${APIURL}/auth/newPasswordChange`, {
+      method: "POST",
+      headers:{
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+    if(res.ok){
+      alert("contraseña cambiada con exito")
+    }
+  } catch (error: any) {
+    throw Error (error)
+  }
 }
