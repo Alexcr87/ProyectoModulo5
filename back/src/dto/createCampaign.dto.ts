@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, IsDate, IsUUID, IsOptional, IsArray } from 'class-validator';
+import { GroupDto } from './group.dto';
 
 export class CreateCampaignDto {
   @ApiProperty({
@@ -45,9 +46,10 @@ export class CreateCampaignDto {
 
   @IsOptional()
   @IsArray()
+  @IsUUID(undefined, { each: true })  // Aquí se asegura que cada ID en el array sea un UUID válido
   @ApiProperty({
     description: 'Optional list of group IDs allowed to participate in the campaign',
     example: ['550e8400-e29b-41d4-a716-446655440000', '550e8400-e29b-41d4-a716-446655440001'],
   })
-  groupIds?: string[];
+  groups?: GroupDto[];
 }

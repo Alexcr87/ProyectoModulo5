@@ -26,26 +26,18 @@ export class CredentialUserDto {
 }
 
 export class newChangePasswordDto {
-  @ApiProperty({
-    example: '111111111',
-  })
+  @ApiProperty({example: '111111111'})
   @IsNotEmpty({ message: 'dni option should not be empty' })
   @IsNumber()
   dni: number;
 
-  @ApiProperty({
-    example: 'actual password user',
-  })
+  @ApiProperty({example: 'actual password user'})
   @IsNotEmpty({ message: 'password option should not be empty' })
   @IsString()
   password: string;
 
-  @ApiProperty({
-    example: 'new password user',
-  })
-  @Length(8, 15, {
-    message: 'password property must contain a minimum of 8 to 15 characters',
-  })
+  @ApiProperty({example: 'new password user'})
+  @Length(8, 15, {message: 'password property must contain a minimum of 8 to 15 characters'})
   @IsString()
   @IsNotEmpty({ message: 'password must not be empty' })
   @Matches(
@@ -57,12 +49,8 @@ export class newChangePasswordDto {
   )
   newPassword: string;
 
-  @ApiProperty({
-    example: 'new password user',
-  })
-  @Length(8, 15, {
-    message: 'password property must contain a minimum of 8 to 15 characters',
-  })
+  @ApiProperty({example: 'new password user'})
+  @Length(8, 15, {message: 'password property must contain a minimum of 8 to 15 characters'})
   @IsString()
   @IsNotEmpty({ message: 'password must not be empty' })
   @Matches(

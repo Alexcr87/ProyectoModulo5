@@ -1,20 +1,26 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "src/entities/user.entity";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Campaign } from "./campaign.entity";
-import { User } from "./user.entity";
 
 @Entity({ name: 'groups' })
 export class Group {
+
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ type: 'varchar', length: 100 })
   name: string;
 
-  @ManyToMany(() => User, (user) => user.groups)
+  @ManyToOne(() => User, (user) => user.groupCreator)
+  user: User;
+
+  @ManyToMany(() => User, (user) => user.groups, {
+    cascade: true, // Mantener aquí
+  })
   @JoinTable({
-    name: 'user_groups', // Nombre de la tabla intermedia
-    joinColumn: { name: 'group_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    name: 'user_groups', // Nombre de la tabla de unión
+    joinColumn: { name: 'groupId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'userId', referencedColumnName: 'id' },
   })
   users: User[];
 

@@ -1,4 +1,5 @@
 import ICandidate from "./ICandidate"
+import IGroup from "./IGroup";
 import IUsers from "./IUsers";
 
 interface ICampaign {
@@ -12,6 +13,7 @@ interface ICampaign {
     candidates?: [
       ICandidate?
     ]
+    groups: IGroup[]
   }
   
   export default ICampaign;

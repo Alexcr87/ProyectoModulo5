@@ -22,7 +22,6 @@ export class MailService {
     name: string,
     password: string,
   ): Promise<void> {
-    console.log('Enviando correo de bienvenida a:', email);
     const templatePath = path.join(__dirname, '../../..', 'welcomeTemplate.ejs');
     let template: string;
   
@@ -47,9 +46,7 @@ export class MailService {
   
     // Renderizar el HTML usando la plantilla y los datos
     const htmlContent = ejs.render(template, data);
-  
-    console.log('Contenido HTML del correo:\n', htmlContent);
-  
+
     // Enviar el correo
     await this.sendMail(
       email,

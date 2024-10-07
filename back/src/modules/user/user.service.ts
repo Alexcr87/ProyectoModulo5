@@ -12,6 +12,7 @@ import { generateRandomPassword } from "src/helpers/password.helper"
 import { OrganizationalStructure} from "src/entities/organizationalStructure.entity";
 import { updateUserDto } from "src/dto/updateUserDto";
 import { log } from "console";
+import { Group } from "src/entities/group.entity";
 
 // import { Account } from "src/entities/account.entity";
 
@@ -105,10 +106,7 @@ export class UserService{
 
 
   async updateUserById(id: string, createUserDto: updateUserDto): Promise<Omit<User, 'password'>> {
-    try {
-      console.log(createUserDto, "user");
-      console.log(id, "id");
-  
+    try { 
       // Buscar el usuario por su ID, incluyendo la relación 'roles'
       const userToUpdate = await this.userRepository.findOne({ where: { id }, relations: ['roles'] });
       if (!userToUpdate) {
@@ -156,7 +154,7 @@ export class UserService{
     try {
       const user = await this.userRepository.findOne({
         where: { id },
-        relations: { candidate: true, roles:true},
+        relations: { candidate: true, roles:true, groups:true},
       })
 
       if (!user) {
@@ -195,9 +193,7 @@ export class UserService{
     this.isCreatingUser = true;
 
     try {
-        console.log('Starting user creation at:', new Date());
 
-        console.log('Checking existing user with dni:', createUserDto.dni);
         const user = await this.userRepository.findOneBy({
             dni: createUserDto.dni,
         });
@@ -205,7 +201,7 @@ export class UserService{
             throw new UnauthorizedException(`User with dni: ${createUserDto.dni} already exists`);
         }
         
-        console.log('Checking existing user with email:', createUserDto.email);
+    
         const userByEmail = await this.userRepository.findOneBy({
             email: createUserDto.email,
         });
@@ -217,7 +213,6 @@ export class UserService{
         const passwordGenerated = !createUserDto.password;
         const password = createUserDto.password || generateRandomPassword();
         const hashedPassword = await bcrypt.hash(password, 10);
-        console.log('Password generated and hashed.');
 
         // Roles y cuentas por defecto
         const defaultRole = await this.roleRepository.findOne({ where: { id: 3 } });
@@ -235,7 +230,6 @@ export class UserService{
             }
         }
 
-        // console.log('Fetching default account.');
         // const withoutAccount = await this.accountRepository.findOne({
         //     where: { id: 0 },
         // });
@@ -253,10 +247,8 @@ export class UserService{
 
         if (createUserDto.groupId && createUserDto.groupId.length > 0) {
           const groups = await this.groupRepository.findBy({
-              id: In(createUserDto.groupId),
-              
+              id: In(createUserDto.groupId),   
           });
-          console.log(groups);
       
           if (groups.length !== createUserDto.groupId.length) {
               throw new BadRequestException('Some groups not found');
@@ -268,18 +260,13 @@ export class UserService{
       // Guardar el nuevo usuario con los grupos asociados
       await this.userRepository.save(newUser);
 
-        console.log('Saving new user to the database.');
         await this.userRepository.save(newUser);
-        console.log('User saved successfully.');
 
         // Enviar el correo de bienvenida
-        console.log('Sending welcome email to:', newUser.email);
         await this.mailService.sendWelcomeEmail(newUser.email, newUser.name, password);
-        console.log('Welcome email sent.');
 
         // Manejo de la relación con parentId
         if (parentId) {
-            console.log('Handling parentId relation with id:', parentId);
             const parentUser = await this.userRepository.findOneBy({ id: parentId });
             if (!parentUser) {
                 throw new BadRequestException(`Parent user with id: ${parentId} not found`);
@@ -295,7 +282,6 @@ export class UserService{
                 child: newUser,
             });
             await this.structureRepository.save(structureRelation);
-            console.log('Structure relation saved successfully.');
         }
 
         const { password: excludedPassword, ...result } = newUser;
@@ -322,6 +308,7 @@ export class UserService{
   
     return users;
   }
+  
   async importUsers(
     filePath: string, 
     parentId: string

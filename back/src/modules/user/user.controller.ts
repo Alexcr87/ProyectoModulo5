@@ -98,7 +98,6 @@ export class UserController {
   @Put(":id")
   @HttpCode(200)
   async updateUserById(@Param("id", ParseUUIDPipe) id:string, @Body() createUserDto:updateUserDto):Promise<Omit<User, "password">>{
-    console.log(createUserDto, "controles");
     
     try {
       return await this.userService.updateUserById(id, createUserDto)
