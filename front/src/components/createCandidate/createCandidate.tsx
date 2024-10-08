@@ -1,4 +1,5 @@
 'use client';
+import Swal from "sweetalert2";
 import { useEffect, useState } from "react";
 import Boton from "../ui/Boton";
 import Input from "../ui/Input";
@@ -24,7 +25,8 @@ const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
   const [file, setFile] = useState<File | null>(null);
   const [campaigns, setCampaigns] = useState<{ id: string; name: string }[]>([]);
   const [selectedCampaignId, setSelectedCampaignId] = useState<string>("");
-
+  const [loading, setLoading] = useState<boolean>(false);
+  
   useEffect(() => {
     const fetchCampaigns = async () => {
       const localUser = localStorage.getItem("userSession")
@@ -55,6 +57,7 @@ const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     const formData = new FormData();
     formData.append("postulation", postulation);
     formData.append("list", list);
@@ -71,11 +74,29 @@ const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
         body: formData,
       });
       if (!response.ok) {
-        throw new Error("Error en la creación del candidato");
+        const errorData = await response.json();
+        
+        throw new Error( errorData.message || "Error en la creación del candidato");
       }
-      window.location.href = "/candidates";    
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'Candidato creado exitosamente.',
+      }).then(() => {
+        window.location.href = "/candidates";
+      });
+    
     } catch (error) {
-      console.error("Error al crear candidato:", error);
+      if (error instanceof Error) {
+        
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: error.message,
+        });
+      }
+    } finally {
+      setLoading(false); 
     }
   };
 
