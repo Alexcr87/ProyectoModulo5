@@ -34,7 +34,7 @@ export class CampaignService {
     });
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Usuario no encontrado');
     }
 
     let foundGroups = [];
@@ -48,7 +48,7 @@ export class CampaignService {
   
       // Validar que todos los grupos fueron encontrados
       if (foundGroups.length !== groupIds.length) {
-        throw new BadRequestException('Some groups not found');
+        throw new BadRequestException('Algunos grupos no encontrados');
       }
     }
 
@@ -77,7 +77,7 @@ export class CampaignService {
       relations: ['user', 'candidates', 'candidates.user'],
     });
     if (!campaign) {
-      throw new NotFoundException('Campaign not found');
+      throw new NotFoundException('Campaña no encontrada');
     }
     return campaign;
   }
@@ -93,7 +93,7 @@ export class CampaignService {
     const campaign = await this.campaignRepository.findOne({ where: { id } });
     
     if (!campaign) {
-      throw new NotFoundException(`Campaign with ID ${id} not found`);
+      throw new NotFoundException(`Campaña con ID ${id} no encontrada`);
     }
   
     let foundGroups = [];
@@ -105,7 +105,7 @@ export class CampaignService {
       });
   
       if (groups.length !== createCampaignDto.groups.length) {
-        throw new BadRequestException('Some groups not found');
+        throw new BadRequestException('Algunos grupos no encontrados');
       }
   
       campaign.groups = groups; // Asignar grupos a la campaña

@@ -23,7 +23,7 @@ export class GroupService {
           });
       
           if (!user) {
-            throw new NotFoundException('User not found');
+            throw new NotFoundException('Usuario no encontrado');
           }
 
         const group = this.groupRepository.create({...groupData, user});
@@ -33,7 +33,7 @@ export class GroupService {
                 id: In(createGroupDto.userIds),
             });
             if (users.length !== createGroupDto.userIds.length) {
-                throw new BadRequestException('Some users not found');
+                throw new BadRequestException('Algunos usuarios no encontrados');
             }
 
             group.users = users;  // Asociamos los usuarios al grupo

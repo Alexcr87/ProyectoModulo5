@@ -41,7 +41,7 @@ export class UserService{
         const parentUser = await this.userRepository.findOne({ where: { id: parentId } });
   
         if (!parentUser) {
-          throw new NotFoundException(`User with id ${parentId} not found`);
+          throw new NotFoundException(`Usuario con id ${parentId} no encontrado`);
         }
   // Obtén las relaciones donde este usuario es el padre
         const childRelations = await this.structureRepository.find({
@@ -62,7 +62,7 @@ export class UserService{
       }
       return await this.userRepository.find({relations: ['roles']});
     } catch (error) {
-      throw new InternalServerErrorException('Error retrieving users');
+      throw new InternalServerErrorException('Error al recuperar usuarios');
     }
   }
 
@@ -72,7 +72,7 @@ export class UserService{
 
    
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Usuario no encontrado');
     }
 
     // const selectedPackage = await this.accountRepository.findOne({where:{id:packageId}});
@@ -94,12 +94,12 @@ export class UserService{
       const userToRemove = await this.userRepository.findOneBy({id})
     if(userToRemove){
       await this.userRepository.remove(userToRemove)
-      return `User with id: ${id} successfully deleted`
+      return `Usuario con id: ${id} eliminado`
     }else{
-      throw new NotFoundException(`User with id: ${id} not found`)
+      throw new NotFoundException(`Usuario con id: ${id} no encontrado`)
     }
     } catch (error) {
-      throw new InternalServerErrorException('Error deleting user')
+      throw new InternalServerErrorException('Error al eliminar un usuario')
     }
     
   }
@@ -110,7 +110,7 @@ export class UserService{
       // Buscar el usuario por su ID, incluyendo la relación 'roles'
       const userToUpdate = await this.userRepository.findOne({ where: { id }, relations: ['roles'] });
       if (!userToUpdate) {
-        throw new NotFoundException(`User with id: ${id} not found`);
+        throw new NotFoundException(`Usuario con id: ${id} no encontrado`);
       }
   
       // Actualizar otros campos del usuario
@@ -121,7 +121,7 @@ export class UserService{
         // Buscar los roles por sus IDs
         const rolesToAdd = await this.roleRepository.findByIds(createUserDto.roles);
         if (rolesToAdd.length === 0) {
-          throw new NotFoundException('Roles not found');
+          throw new NotFoundException('Rol no encontrado');
         }
   
         // Agregar los roles nuevos a los existentes
@@ -142,8 +142,8 @@ export class UserService{
       };
   
     } catch (error) {
-      console.error(`Error updating user with id ${id}:`, error);
-      throw new InternalServerErrorException('Error updating user');
+      console.error(`Error al actualizar el usuario con id ${id}:`, error);
+      throw new InternalServerErrorException('Error al actualizar el usuario');
     }
   }
   
@@ -158,12 +158,12 @@ export class UserService{
       })
 
       if (!user) {
-        throw new NotFoundException(`User with id: ${id} not found`)
+        throw new NotFoundException(`Usuario con id: ${id} no encontrado`)
       }
       const { password, ...userToShow } = user
       return userToShow
     } catch (error) {
-      throw new InternalServerErrorException('Error retrieving user')
+      throw new InternalServerErrorException('Error al recuperar el usuario')
     }
   }
  
@@ -176,7 +176,7 @@ export class UserService{
   async findUserByDni(dni:number):Promise<User>{ 
     const user = await this.userRepository.findOneBy({dni}); 
    if(!user){
-    throw new NotFoundException(`user not found`)
+    throw new NotFoundException(`Usuario no encontrado`)
    }
    return user;
   }
@@ -187,7 +187,7 @@ export class UserService{
     parentId?: string,
 ): Promise<Omit<User, 'password'>> {
     if (this.isCreatingUser) {
-        throw new ConflictException('User creation is already in progress.');
+        throw new ConflictException('La creación de usuarios ya está en curso.');
     }
     
     this.isCreatingUser = true;
@@ -198,7 +198,7 @@ export class UserService{
             dni: createUserDto.dni,
         });
         if (user) {
-            throw new UnauthorizedException(`User with dni: ${createUserDto.dni} already exists`);
+            throw new UnauthorizedException(`Usuario con id: ${createUserDto.dni} ya existe`);
         }
         
     
@@ -206,7 +206,7 @@ export class UserService{
             email: createUserDto.email,
         });
         if (userByEmail) {
-            throw new UnauthorizedException(`User with email: ${createUserDto.email} already exists`);
+            throw new UnauthorizedException(`Usuario con email: ${createUserDto.email} ya existe`);
         }
 
         // Generación de contraseña y encriptación
@@ -217,7 +217,7 @@ export class UserService{
         // Roles y cuentas por defecto
         const defaultRole = await this.roleRepository.findOne({ where: { id: 3 } });
         if (!defaultRole) {
-            throw new BadRequestException('Default role not found');
+            throw new BadRequestException('No se encontró el rol predeterminado');
         }
 
         let userRoles: Role[] = [defaultRole];
@@ -226,7 +226,7 @@ export class UserService{
                 id: In(createUserDto.roles),
             });
             if (userRoles.length !== createUserDto.roles.length) {
-                throw new BadRequestException('Some roles not found');
+                throw new BadRequestException('Algunos roles no encontrados');
             }
         }
 
@@ -251,7 +251,7 @@ export class UserService{
           });
       
           if (groups.length !== createUserDto.groupId.length) {
-              throw new BadRequestException('Some groups not found');
+              throw new BadRequestException('Algunos grupos no encontrados');
           }
       
           newUser.groups = groups;  // Asigna los grupos al usuario
@@ -269,13 +269,13 @@ export class UserService{
         if (parentId) {
             const parentUser = await this.userRepository.findOneBy({ id: parentId });
             if (!parentUser) {
-                throw new BadRequestException(`Parent user with id: ${parentId} not found`);
+                throw new BadRequestException(`Usuario principal con identificación: ${parentId} no encontrado`);
             }
             const existingRelation = await this.structureRepository.findOne({
                 where: { child: { id: newUser.id } },
             });
             if (existingRelation) {
-                throw new BadRequestException(`User with id: ${newUser.id} is already related to another parent`);
+                throw new BadRequestException(`Usuario con id: ${newUser.id} ya está relacionada con otro padre`);
             }
             const structureRelation = this.structureRepository.create({
                 parent: parentUser,
@@ -287,7 +287,7 @@ export class UserService{
         const { password: excludedPassword, ...result } = newUser;
         return result;
     } catch (error) {
-        console.error('Error during user creation:', error);
+        console.error('Error durante la creacion de usuario:', error);
         throw error; // O manejarlo según tus necesidades
     } finally {
         this.isCreatingUser = false; // Reset flag after processing.
@@ -314,7 +314,7 @@ export class UserService{
     parentId: string
   ): Promise<{ addedUsers: string[], errors: string[] }> {
     if (!filePath) {
-      throw new BadRequestException('File not selected');
+      throw new BadRequestException('Archivo no seleccionado');
     }
   
     const users = await this.readExcelFile(filePath);
