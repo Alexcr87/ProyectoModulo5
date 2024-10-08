@@ -14,6 +14,21 @@ export async function changePassword (userData: IChangePassword){
           body: JSON.stringify(userData)
       })
       if(res.ok){
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+          }
+          });
+          Toast.fire({
+              icon: "success",
+              title: "contraseña cambiada con exito"
+          });
           return res.json()
       }else{
           throw Error("usuario o contraseña no coincide con usuario registrado")
