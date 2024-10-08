@@ -1,6 +1,6 @@
 'use client'; 
 
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState, useRef } from 'react';
 import ICampaign from '@/interfaces/ICampaign';
 import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/Authontext';
@@ -16,6 +16,8 @@ const Campaingdesc = () => {
   const [isVoting, setIsVoting] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const {userData} = useAuth()
+
+  const voteMessageRef = useRef<HTMLDivElement | null>(null);
 
   const fetchCampaignDetails = async () => {
     if (!userData?.userData.id) {
@@ -65,6 +67,7 @@ const Campaingdesc = () => {
       }
       const result = await response.text();
       setVoteMessage(result);
+      voteMessageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center'});
     } catch (error) {
       setVoteMessage('Error al enviar el voto');
       console.error('Error al enviar el voto:', error);
@@ -97,7 +100,7 @@ const Campaingdesc = () => {
         <p className="text-md text-gray-600">Fecha: {new Date(campaign.date).toLocaleDateString()}</p>
         
         {(roles.includes('candidate') || roles.includes('voter')) && (
-          <div className="flex flex-wrap justify-center gap-2">
+          <div ref={voteMessageRef} className="flex flex-wrap justify-center gap-2">
             <h1 className="text-2xl font-bold mb-4">{voteMessage}</h1>
           </div>
         )}
