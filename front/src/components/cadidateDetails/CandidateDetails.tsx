@@ -94,7 +94,7 @@ const CandidateDetails = (props: ICandidate) => {
     } finally {
       setLoading(false); // Oculta el spinner después de la petición
     }
-  }
+  };
 
   return (
     <div className='mt-6'>
