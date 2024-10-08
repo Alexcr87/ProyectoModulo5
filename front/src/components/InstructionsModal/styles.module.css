@@ -1,0 +1,58 @@
+.modalContent {
+  display: flex; /* Usar flexbox */
+  flex-direction: column; /* Alinear elementos en columna */
+  align-items: center; /* Centrar horizontalmente */
+  justify-content: center; /* Centrar verticalmente */
+  position: fixed; 
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white; 
+  border-radius: 12px; 
+  padding: 20px; 
+  width: 400px; 
+  max-width: 90%; 
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); 
+  z-index: 1000; 
+  animation: fadeIn 0.3s ease-in-out; 
+}
+
+.modalOverlay {
+  background: rgba(0, 0, 0, 0.5); 
+  z-index: 999; 
+  position: fixed; 
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
+  }
+}
+
+.lista {
+  list-style-type: square;
+}
+
+
+.closeButton {
+  background-color: var(--primary-color); 
+  color: white; 
+  border: none; 
+  border-radius: 5px; 
+  padding: 10px 20px; 
+  cursor: pointer; 
+  transition: background-color 0.3s ease; 
+  font-size: 16px; 
+  margin-top: 20px; /* Espaciado entre el contenido y el botón */
+}
+
+.closeButton:hover {
+  background-color: var(--secundary-color); 
+}
