@@ -1,9 +1,12 @@
+
+'use client'
 import React from "react";
 import Cartrender from "../candidaterender/Candidaterender";
 import { getCandidates } from "@/helpers/candidate.helper";
 import Link from "next/link";
 
 const OrderList = async () => {
+
   const usersResponse = await getCandidates()||[];
   if (!Array.isArray(usersResponse)) {
     console.error('La respuesta no es un array:', usersResponse);
@@ -25,15 +28,19 @@ const OrderList = async () => {
     },
   }));
 
+
   return (
     <>
       <div className="flex flex-wrap bg-cuartiaryColor min-h-[85vh] items-center justify-center">
       {usersarr && usersarr.length > 0 ? (
         usersarr.map((item) => {
           return (
-              <Link href={`/candidates/${item.id}`} key={item.id}>
-                <Cartrender key={item.id} {...item} />
-              </Link>
+              // <Link href={`/candidates/${item.id}`} key={item.id}>
+              <Cartrender key={item.id} {...item} 
+              // onDelete={() => handleDeleteCandidate(item.id)}
+              // onAccess={() => handleUpdate(item.id)}
+            />
+       // </Link>
           );
         })
       ) : (
