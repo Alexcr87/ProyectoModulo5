@@ -9,7 +9,7 @@ import { IloginProps } from "@/interfaces/ILogin";
 import Input from "../ui/Input";
 import Boton from "../ui/Boton";
 import { useAuth } from "@/context/Authontext";
-import { register } from "@/helpers/auth.helper";
+import { importUser, register } from "@/helpers/auth.helper";
 import CountryCitySelector from "@/components/CountryCitySelector/CountryCitySelector"; // Asegúrate de importar el componente
 import IGroup from "@/interfaces/IGroup";
 import Select from 'react-select';
@@ -86,8 +86,6 @@ const Register = () => {
       });
       return;
     }
-<<<<<<< HEAD
-=======
   
     try {
       await importUser(file, parentId);
@@ -117,7 +115,6 @@ const Register = () => {
       "Colombia": ["Bogotá", "Medellín", "Cali"],
     };
     return countryCitiesMap[country] || [];
->>>>>>> 9a145806d584b239aa420e78f36ffae5ef4f4a77
   };
    
     useEffect(() => {
