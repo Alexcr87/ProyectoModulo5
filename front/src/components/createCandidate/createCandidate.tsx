@@ -30,7 +30,6 @@ const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
       const localUser = localStorage.getItem("userSession")
       const localUserParsed = JSON.parse(localUser!);
       const actualUserId = localUserParsed.userData.id
-      console.log(actualUserId, "localUserParsed");
       
       try {
         const response = await fetch(`${APIURL}/campaigns/user/${actualUserId}`);

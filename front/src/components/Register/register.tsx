@@ -11,6 +11,8 @@ import { IloginProps } from "@/interfaces/ILogin";
 import Input from "../ui/Input";
 import InputFile from "../ui/InputFile";
 import { useAuth } from "@/context/Authontext";
+import IGroup from "@/interfaces/IGroup";
+import Select from 'react-select';
 
 const Register = () => {
   const router = useRouter();
@@ -21,7 +23,9 @@ const Register = () => {
     email: "",
     password: "",
     country: "",
-    city: ""
+    city: "",
+    groupId:"",
+    groups: [],
   };
 
   const {userData} =useAuth()
@@ -31,9 +35,12 @@ const Register = () => {
   const [countries, setCountries] = useState<string[]>(["Argentina", "Chile", "Colombia"]);
   const [cities, setCities] = useState<string[]>([]);
   const [file, setFile] = useState<File | null>(null);
+  const [groups, setGroups] = useState<IGroup[]>([]);
   const [touched, setTouched] = useState<IRegisterError>(initialState);
   const [userSesion, setUserSesion] = useState<IloginProps>();
   const pathname = usePathname();
+  const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
+
 
   const handleBlur = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name } = event.target;
@@ -51,6 +58,28 @@ const Register = () => {
 
   const parentId = userData?.userData.id
 
+  useEffect(() => {
+    const fetchGroups = async () => {
+      if (parentId) {
+        try {
+          const response = await fetch(`${APIURL}/groups/user/${parentId}`)
+          const data = await response.json();
+          setGroups(data);
+        } catch (error) {
+          console.error('Error fetching groups:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al obtener los grupos',
+            text: 'Hubo un problema al cargar los grupos. Intente nuevamente.',
+          });
+        }
+      }
+    };
+  
+    fetchGroups();
+  }, [parentId]);
+  
+
   const handleUpload = async () => {
     if (!file) {
       Swal.fire({
@@ -62,7 +91,7 @@ const Register = () => {
     }
   
     try {
-      await importUser(file, parentId); // Pasa el parentId como argumento
+      await importUser(file, parentId);
       Swal.fire({
         position: "center",
         icon: "success",
@@ -101,6 +130,14 @@ const Register = () => {
       dataUser.city.trim() !== ''
     );
   }, [dataUser]);
+
+  const handleMultiSelectChange = (selectedOptions: any) => {
+    const selectedGroups = selectedOptions.map((option: any) => ({ id: option.value, name: option.label }));
+    setDataUser(prevData => ({
+      ...prevData,
+      groups: selectedGroups,
+    }));
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
@@ -272,6 +309,20 @@ const Register = () => {
               </select>
               {errors.city && <span className="text-red-500 text-sm">{errors.city|| 'Este campo es obligatorio'}</span>}
             </div>
+            <div className="flex flex-col mt-4">
+            <Select
+              isMulti
+              name="groups"
+              options={groups.map(group => ({ value: group.id, label: group.name }))}
+              className="basic-multi-select w-full"
+              classNamePrefix="select"
+              onChange={handleMultiSelectChange}
+              value={dataUser.groups?.map(group => ({ value: group.id, label: group.name }))}
+              placeholder='Selecciona grupos'
+            />
+
+            </div>
+            
             <Boton
               type="submit"
               disabled={!isFormValid}
