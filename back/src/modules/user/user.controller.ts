@@ -1,5 +1,5 @@
 
-import { BadRequestException, Body, ConflictException, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, ParseUUIDPipe, Patch, Post, Put, Query, Req, Res, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, ConflictException, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, ParseUUIDPipe, Patch, Post, Put, Query, Req, Res, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors, UsePipes } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "src/dto/createUser.dto";
@@ -17,6 +17,7 @@ import { Request, Response } from "express";
 import { CreateUserDtoByAuth0 } from "src/dto/createUserByAuth0Dto";
 import { promises } from "dns";
 import { updateUserDto } from "src/dto/updateUserDto";
+import { ExcelFilePipe } from "src/pipes/maxSizeAndFormatPlanilla";
 
 
 
@@ -179,20 +180,8 @@ export class UserController {
   })
   @ApiResponse({ status: 200, description: 'File uploaded successfully' })
   @ApiResponse({ status: 400, description: 'Incorrect request' })
-  async importUsers(@UploadedFile(
-    new ParseFilePipe({
-      validators: [
-        new MaxFileSizeValidator({
-          maxSize: 2000000, // 2Mb
-          message: 'The file is too large; must be less than 2Mb',
-        }),
-        /*new FileTypeValidator({
-          fileType: /(xls|xlsx)$/,
-        }),*/
-      ],
-    }),
-  ) file: Express.Multer.File, @Query("parentId") parentId: string )
-  {
+  async importUsers(@UploadedFile(new ExcelFilePipe())file: Express.Multer.File, @Query("parentId") parentId: string ){
+    
     if (!file) {
       throw new BadRequestException('No file provided');
     }

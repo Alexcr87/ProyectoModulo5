@@ -20,6 +20,7 @@ import {
 } from '@nestjs/swagger';
 import { Candidate } from 'src/entities/candidate.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { MinSizeAndFormat } from 'src/pipes/maxSizeAndFormatImg';
 
 @ApiTags('Candidates')
 @ApiExtraModels(CreateCandidateDto)
@@ -58,7 +59,7 @@ export class CandidateController {
   })
   async create(
     @Body() createCandidateDto: CreateCandidateDto,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(new MinSizeAndFormat()) file: Express.Multer.File,
   ) {
     return this.candidateService.create(createCandidateDto, file);
   }

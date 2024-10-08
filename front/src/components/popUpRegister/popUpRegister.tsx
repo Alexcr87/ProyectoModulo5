@@ -29,7 +29,7 @@ const PopUpRegisterComponent = () => {
 
     try {
       // Implementa la lógica de importación del archivo aquí
-      await importUser(file); // Asegúrate de definir esta función
+     await importUser(file); // Asegúrate de definir esta función
       Swal.fire({
         position: "center",
         icon: "success",
@@ -37,11 +37,13 @@ const PopUpRegisterComponent = () => {
         showConfirmButton: false,
         timer: 1500,
       });
-    } catch (error) {
+    } catch (error:any) {
+     const errorMessage = (error.message) || "Error desconocido al subir el archivo.";
       Swal.fire({
         position: "center",
         icon: "error",
         title: "Error al subir el archivo",
+        text:errorMessage,
         showConfirmButton: false,
         timer: 1500,
       });

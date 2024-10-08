@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Boton from "../ui/Boton";
 import Input from "../ui/Input";
 import InputFile from "../ui/InputFile";
@@ -9,6 +9,7 @@ import { useAuth } from '@/context/Authontext';
 import Spinner from "../ui/Spinner"; // Importa el componente Spinner
 import { useRouter } from "next/router";
 import { stringify } from "querystring";
+import Swal from "sweetalert2";
 
 
 
@@ -17,7 +18,8 @@ const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
 
- 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const userId =id
   const [postulation, setPostulation] = useState<string>("");
   const [list, setList] = useState<string>("");
@@ -68,6 +70,8 @@ const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
     formData.append("proposals", JSON.stringify(proposals));
     formData.append("userId", userId!); // Usar el userId del contexto
     formData.append("campaignId", selectedCampaignId); // Usar el campaignId seleccionado
+
+
     if (file) {
       formData.append("file", file);
     }
@@ -77,16 +81,34 @@ const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
         method: "POST",
         body: formData,
       });
+    
+      
       if (!response.ok) {
-        throw new Error("Error en la creación del candidato");
+        const errorData = await response.json();
+        
+        throw new Error(errorData.message || "Error en la creación del candidato");
       }
-      window.location.href = "/candidates";
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'Candidato creado exitosamente.',
+      }).then(() => {
+        window.location.href = "/candidates";
+      });
+    
     } catch (error) {
-      console.error("Error al crear candidato:", error);
+      if (error instanceof Error) {
+        
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: error.message,
+        });
+      }
     } finally {
-      setLoading(false); // Oculta el spinner cuando termina la solicitud
+      setLoading(false); 
     }
-  };
+}
 
   return (
     <div className="flex flex-col justify-center items-center p-6 bg-white shadow-lg rounded-lg w-full max-w-4xl mx-auto sm:w-11/12 md:w-9/12 lg:w-3/4 xl:w-2/3">
@@ -156,6 +178,8 @@ const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
       </form>
     </div>
   );
-};
+}
+
+
 
 export default CreateCandidate;
