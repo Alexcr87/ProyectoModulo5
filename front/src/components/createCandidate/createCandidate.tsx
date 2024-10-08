@@ -33,6 +33,7 @@ const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
       const localUser = localStorage.getItem("userSession");
       const localUserParsed = JSON.parse(localUser!);
       const actualUserId = localUserParsed.userData.id
+      
       try {
         const response = await fetch(`${APIURL}/campaigns/user/${actualUserId}`);
         if (!response.ok) throw new Error("Error al obtener campañas");

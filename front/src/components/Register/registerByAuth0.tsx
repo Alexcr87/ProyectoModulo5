@@ -59,6 +59,7 @@ const RegisterByAuth0 = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    
     await register(dataUser);
     Swal.fire({
       position: "center",
