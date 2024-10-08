@@ -161,10 +161,11 @@ const NavBar = () => {
                         </>
                     ) : (
                         <>
-                            {isAdmin && (<>{campaign()} {users()} {groups()} {results()} {changePassword()} </>)}
-                            {isCandidate && (<> {campaigns()} {perfilVotante()} {changePassword()}  </>)}
-                            {isVotante && (<> {campaigns()} {perfilVotante()}  {changePassword()} </>)}
-                            {isModerator && (<> {campaign()} {users()} {groups()} {results()} {perfilVotante()} {changePassword()}</>)}
+
+                            {isAdmin && (<>{campaign()} {users()} {groups()} {results()} </>)}
+                            {(isCandidate || isVotante) && (<>{campaigns()} {perfilVotante()}</>)}
+                            {isModerator && (<> {campaign()} {users()} {groups()} {results()} {perfilVotante()} </>)}
+
                             <li>
                                 <button onClick={handleClose}>Cerrar Sesión</button>
                             </li>
