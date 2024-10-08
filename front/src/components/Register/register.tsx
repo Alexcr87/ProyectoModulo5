@@ -55,14 +55,13 @@ const Register = () => {
 
   const parentId = userData?.userData.id
 
-  // Nueva función para obtener grupos
   useEffect(() => {
     const fetchGroups = async () => {
       if (parentId) {
         try {
           const response = await fetch(`${APIURL}/groups/user/${parentId}`)
           const data = await response.json();
-          setGroups(data); // Asegúrate de que el backend devuelva `groups` correctamente
+          setGroups(data);
         } catch (error) {
           console.error('Error fetching groups:', error);
           Swal.fire({
@@ -87,6 +86,38 @@ const Register = () => {
       });
       return;
     }
+<<<<<<< HEAD
+=======
+  
+    try {
+      await importUser(file, parentId);
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Archivo subido con éxito",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      router.push("/users");
+    } catch (error) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error al subir el archivo",
+        showConfirmButton: false,
+        timer: 1500
+      });
+    }
+  };
+
+  const fetchCitiesByCountry = (country: string) => {
+    const countryCitiesMap: Record<string, string[]> = {
+      "Argentina": ["Buenos Aires", "Córdoba", "Rosario"],
+      "Chile": ["Santiago", "Valparaíso", "Concepción"],
+      "Colombia": ["Bogotá", "Medellín", "Cali"],
+    };
+    return countryCitiesMap[country] || [];
+>>>>>>> 9a145806d584b239aa420e78f36ffae5ef4f4a77
   };
    
     useEffect(() => {

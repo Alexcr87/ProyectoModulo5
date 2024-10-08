@@ -30,12 +30,9 @@ export class VoteService {
     campaignId: string,
     candidateId?: string,
   ): Promise<string> {
-    console.log(userId, 'userId')
-    console.log(campaignId, 'campaignId')
-    console.log(candidateId, 'candidateId')
   
     if (!userId || !campaignId) {
-      throw new BadRequestException('Faltanparámetros necesario: userId y/o campaignId.');
+      throw new BadRequestException('Faltan parámetros necesarios: userId y/o campaignId.');
     }
   
     const user = await this.userRepository.findOne({

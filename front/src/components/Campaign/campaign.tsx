@@ -54,8 +54,6 @@ const CampaignForm = () => {
     }));
   };
 
-  
-
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -152,6 +150,7 @@ const CampaignForm = () => {
             classNamePrefix="select"
             onChange={handleMultiSelectChange}
             value={formData.groups.map(group => ({ value: group.id, label: group.name }))}
+            placeholder='Selecciona grupos'
           />
 
           <Boton type="submit">Crear Campaña</Boton>

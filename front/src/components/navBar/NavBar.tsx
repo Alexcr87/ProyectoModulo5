@@ -156,7 +156,7 @@ const NavBar = () => {
                         </>
                     ) : (
                         <>
-                            {isAdmin && (<>{campaign()} {users()} {groups()} {results()} {candidates()} </>)}
+                            {isAdmin && (<>{campaign()} {users()} {groups()} {results()} </>)}
                             {isCandidate && (<> {campaigns()} {perfilVotante()}   </>)}
                             {isVotante && (<> {campaigns()} {perfilVotante()}   </>)}
                             {isModerator && (<> {campaign()} {users()} {groups()} {results()} {perfilVotante()} </>)}
