@@ -86,7 +86,6 @@ const RegisterModerator = () => {
     }
 
     try {
-      console.log("Submitting user data:", dataUser); // Depuración
       const result = await register(dataUser, parentId);
       setUserData(result);
 
@@ -100,7 +99,6 @@ const RegisterModerator = () => {
 
       router.push("/login");
     } catch (error: any) {
-      console.error("Error registering user:", error); // Depuración
       Swal.fire({
         icon: "error",
         title: "Oops...",

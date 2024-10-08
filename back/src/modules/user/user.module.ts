@@ -9,11 +9,15 @@ import { OrganizationalStructure } from 'src/entities/organizationalStructure.en
 import { MailModule } from '../mail/mail.module';
 import { MailService } from '../mail/mail.service';
 import { requiresAuth } from 'express-openid-connect';
+import { GroupModule } from '../usersGroup/usersGroup.module';
+import { Group } from 'src/entities/group.entity';
+import { GroupService } from '../usersGroup/usersGroup.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Role, OrganizationalStructure]),
+    TypeOrmModule.forFeature([User, Role, OrganizationalStructure,Group]),
     MailModule,
+    GroupModule
   ],
   providers: [UserService, MailService],
   controllers: [UserController],

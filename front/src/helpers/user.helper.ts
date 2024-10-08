@@ -43,7 +43,6 @@ export async function updateUserById(userData:IRegisterProps, id:string) {
             return "respuesta error"
         }
         const user = await res.json()
-        console.log(user, "user");
         
         return user
         

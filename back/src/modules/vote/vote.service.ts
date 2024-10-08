@@ -30,29 +30,26 @@ export class VoteService {
     campaignId: string,
     candidateId?: string,
   ): Promise<string> {
-
-    console.log(userId)
-    console.log(campaignId)
-
+  
     if (!userId || !campaignId) {
-      throw new BadRequestException('Faltan los parámetros necesarios: userId y campaignId.');
+      throw new BadRequestException('Faltan parámetros necesarios: userId y/o campaignId.');
     }
-
+  
     const user = await this.userRepository.findOne({
-      where: {id : userId},
-    })
-    if (!user){
-      throw new BadRequestException('Usuario no encontrado')
-    }
-
-    const campaign = await this.campaignRepository.findOne({
-      where: {id : campaignId},
-      relations: ['candidates'],
-    })
-    if (!campaign){
-      throw new BadRequestException('Campaña no encontrada')
-    }
+      where: { id: userId },
+    });
     
+    if (!user) {
+      throw new BadRequestException('Usuario no encontrado.');
+    }
+  
+    const campaign = await this.campaignRepository.findOne({
+      where: { id: campaignId },
+      relations: ['candidates'],
+    });
+    if (!campaign) {
+      throw new BadRequestException('Campaña no encontrada.');
+    }
     
     const existingVote = await this.voteUserRepository.findOne({
       where: {
@@ -61,7 +58,7 @@ export class VoteService {
       },
     });
     if (existingVote) {
-      throw new BadRequestException('El usuario ya ha votado en esta campaña.');
+      return 'El usuario ya ha votado en esta campaña.';
     }
   
     let blankVote = true
