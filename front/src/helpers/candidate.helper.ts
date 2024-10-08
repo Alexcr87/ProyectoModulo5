@@ -1,4 +1,3 @@
-
 import ICandidate from "@/interfaces/ICandidate"
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
@@ -44,14 +43,14 @@ export async function registerCandidate(userData: ICandidate) {
       if (!res.ok) {
         const errorData = await res.json(); // Obtener los detalles del error
         throw new Error(
-          `Error ${res.status}: ${errorData.message || "Failed to register"}`
+          `Error ${res.status}: ${errorData.message || "No se pudo registrar"}`
         );
       }
       return await res.json();
     } catch (error: any) {
       console.error("Registration error:", error.message);
       throw new Error(
-        error.message || `Unknown error occurred during registration.`
+        error.message || `Ocurrió un error desconocido durante el registro.`
       );
     }
   }

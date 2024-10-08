@@ -7,7 +7,7 @@ import InputFile from "../ui/InputFile";
 import { importUser } from "@/helpers/auth.helper";
 import Register from "../Register/register";
 
-const PruebaPageComponent = () => {
+const PopUpRegisterComponent = () => {
   const [registroManual, setRegistroManual] = useState(false);
   const [registroMasivo, setRegistroMasivo] = useState(false);
   const [file, setFile] = useState<File | null>(null);
@@ -29,7 +29,7 @@ const PruebaPageComponent = () => {
 
     try {
       // Implementa la lógica de importación del archivo aquí
-      await importUser(file); // Asegúrate de definir esta función
+     await importUser(file); // Asegúrate de definir esta función
       Swal.fire({
         position: "center",
         icon: "success",
@@ -37,11 +37,13 @@ const PruebaPageComponent = () => {
         showConfirmButton: false,
         timer: 1500,
       });
-    } catch (error) {
+    } catch (error:any) {
+     const errorMessage = (error.message) || "Error desconocido al subir el archivo.";
       Swal.fire({
         position: "center",
         icon: "error",
         title: "Error al subir el archivo",
+        text:errorMessage,
         showConfirmButton: false,
         timer: 1500,
       });
@@ -105,4 +107,4 @@ const PruebaPageComponent = () => {
   );
 };
 
-export default PruebaPageComponent;
+export default PopUpRegisterComponent;
