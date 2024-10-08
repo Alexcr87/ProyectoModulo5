@@ -9,7 +9,7 @@ import { IloginProps } from "@/interfaces/ILogin";
 import Input from "../ui/Input";
 import Boton from "../ui/Boton";
 import { useAuth } from "@/context/Authontext";
-import { register } from "@/helpers/auth.helper";
+import { importUser, register } from "@/helpers/auth.helper";
 import CountryCitySelector from "@/components/CountryCitySelector/CountryCitySelector"; // Asegúrate de importar el componente
 import IGroup from "@/interfaces/IGroup";
 import Select from 'react-select';
@@ -55,14 +55,13 @@ const Register = () => {
 
   const parentId = userData?.userData.id
 
-  // Nueva función para obtener grupos
   useEffect(() => {
     const fetchGroups = async () => {
       if (parentId) {
         try {
           const response = await fetch(`${APIURL}/groups/user/${parentId}`)
           const data = await response.json();
-          setGroups(data); // Asegúrate de que el backend devuelva `groups` correctamente
+          setGroups(data);
         } catch (error) {
           console.error('Error fetching groups:', error);
           Swal.fire({
@@ -87,6 +86,35 @@ const Register = () => {
       });
       return;
     }
+  
+    try {
+      await importUser(file, parentId);
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Archivo subido con éxito",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      router.push("/users");
+    } catch (error) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error al subir el archivo",
+        showConfirmButton: false,
+        timer: 1500
+      });
+    }
+  };
+
+  const fetchCitiesByCountry = (country: string) => {
+    const countryCitiesMap: Record<string, string[]> = {
+      "Argentina": ["Buenos Aires", "Córdoba", "Rosario"],
+      "Chile": ["Santiago", "Valparaíso", "Concepción"],
+      "Colombia": ["Bogotá", "Medellín", "Cali"],
+    };
+    return countryCitiesMap[country] || [];
   };
    
     useEffect(() => {
