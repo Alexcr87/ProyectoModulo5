@@ -55,7 +55,10 @@ export async function importUser(file: File, parentId?: string) {
     });
 
     if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
+      const errorData = await response.json().catch(() => ({})); // Intenta obtener el JSON
+      const errorMessage = errorData.message || `Error ${response.status}: ${response.statusText}`;
+      throw new Error(errorMessage);
+     /* throw new Error(`Error ${response.status}: ${response.statusText}`);*/
     }
 
     const contentType = response.headers.get("content-type");
