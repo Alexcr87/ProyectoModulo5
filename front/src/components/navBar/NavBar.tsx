@@ -157,8 +157,7 @@ const NavBar = () => {
                     ) : (
                         <>
                             {isAdmin && (<>{campaign()} {users()} {groups()} {results()} </>)}
-                            {isCandidate && (<> {campaigns()} {perfilVotante()}   </>)}
-                            {isVotante && (<> {campaigns()} {perfilVotante()}   </>)}
+                            {(isCandidate || isVotante) && (<>{campaigns()} {perfilVotante()}</>)}
                             {isModerator && (<> {campaign()} {users()} {groups()} {results()} {perfilVotante()} </>)}
                             <li>
                                 <button onClick={handleClose}>Cerrar Sesión</button>
