@@ -3,10 +3,10 @@ const teamMembers = [
         "id": 1,
         "name": "Eiris Salazar",
         "profession":"FrontEnd Developer",
-        "image":"https://www.labsaenzrenauld.com/wp-content/uploads/2020/10/Perfil-hombre-ba%CC%81sico_738242395.jpg",
-        "linkFacebook":"",
-        "linkGitHub":"",
-        "linkLinkedIn":""
+        "image":"/images/eirisPhoto.jpg",
+        "linkFacebook":"https://www.facebook.com/eiriselias",
+        "linkGitHub":"https://github.com/eiriselias",
+        "linkLinkedIn":"https://co.linkedin.com/in/eiriselias"
     },
     {
         "id": 2,
