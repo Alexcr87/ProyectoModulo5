@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import ICampaign from '@/interfaces/ICampaign'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/context/Authontext';
+import Spinner from '@/components/ui/Spinner'; // Asegúrate de importar el spinner
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
@@ -32,6 +33,7 @@ const CampaignsTable = () => {
     const fetchCampaigns = async () => {
         if (!userData?.userData.id) {
             setLoading(false);
+            return;
         }
 
         const actualUser = String(userData?.userData.id);
@@ -62,17 +64,16 @@ const CampaignsTable = () => {
         }
     }
 
-    if (loading) return <p>Cargando campañas...</p>
-    if (error) return <p>{error}</p>
-
-    const handleAction= (id: string|undefined)=>{
-
+    const handleAction = (id: string | undefined) => {
         if (roles.includes('candidate') || roles.includes('voter')) {
-            router.push(`/voting?campaignId=${id}`)
+            router.push(`/voting?campaignId=${id}`);
         } else {
-            router.push(`/campaigndesc?campaignId=${id}`)
+            router.push(`/campaigndesc?campaignId=${id}`);
         }
-    }
+    };
+
+    if (loading) return <Spinner />; // Aquí usamos el spinner durante la carga
+    if (error) return <p>{error}</p>;
 
     return (
         <div className="mt-4 overflow-x-auto">
@@ -92,13 +93,13 @@ const CampaignsTable = () => {
                         {campaigns.map((campaign, index) => (
                             <tr key={index} 
                                 className={`${index % 2 === 0 ? "bg-gray-50" : "bg-white"} border-t border-gray-200`}
-                                onClick={()=>handleAction(campaign.id)}
+                                onClick={() => handleAction(campaign.id)}
                             >
                                 <td className="border p-2">{campaign.name}</td>
                                 <td className="border p-2">{campaign.description}</td>
                                 <td className="border p-2">{campaign.location}</td>
                                 <td className="border p-2">{new Date(campaign.date).toLocaleDateString()}</td>
-                                <td className="border p-2 text-blue-500 hover:text-blue-700 ">
+                                <td className="border p-2 text-blue-500 hover:text-blue-700">
                                     {roles.includes('candidate') || roles.includes('voter') ? 'votar' : 'ver'}
                                 </td>
                             </tr>
@@ -109,7 +110,7 @@ const CampaignsTable = () => {
                 <p>No hay campañas disponibles</p>
             )}
         </div>
-    )
+    );
 }
 
 export default CampaignsTable;

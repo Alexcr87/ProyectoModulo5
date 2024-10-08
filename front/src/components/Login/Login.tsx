@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import Input from '../ui/Input';
 import Boton from '../ui/Boton';
 import { useAuth } from '@/context/Authontext'; // Importa el contexto de autenticación
+import Spinner from '../ui/Spinner'; // Importa el componente Spinner
 
 const LoginForm = () => {
     const router = useRouter();
@@ -22,6 +23,7 @@ const LoginForm = () => {
 
     const [dataUser, SetdataUser] = useState<IloginProps>(initialState);
     const [errors, SetErrors] = useState<IloginError>(initialState);
+    const [loading, setLoading] = useState(false); // Nuevo estado para controlar el spinner
     
     // CAPTURO LA INFORMACION DE LOS INPUTS
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +44,9 @@ const LoginForm = () => {
                 text: "Something went wrong!",
             });
         } else {
+            setLoading(true); // Activa el spinner
             const clearUser = await login(dataUser);
+            setLoading(false); // Desactiva el spinner cuando termina la solicitud
             if (clearUser.token) {
                 // Aquí es donde guardo los nuevos datos del usuario en el contexto
                 setUserData(clearUser); // Establece el usuario en el contexto
@@ -129,11 +133,17 @@ const LoginForm = () => {
                     <div className="text-red-500 text-xs mt-2">{errors.password}</div>
                 )}
                 
-                <Boton 
-                    type='submit'
-                    disabled={Object.keys(errors).length > 0}>
-                    Iniciar Sesion
-                </Boton>
+                {/* Mostrar spinner o el botón dependiendo del estado de carga */}
+                {loading ? (
+                    <Spinner />  // Aquí se muestra el spinner cuando está cargando
+                ) : (
+                    <Boton 
+                        type='submit'
+                        disabled={Object.keys(errors).length > 0}>
+                        Iniciar Sesion
+                    </Boton>
+                )}
+                
                 <hr className='my-4'/>
                 <Boton 
                     type='button'

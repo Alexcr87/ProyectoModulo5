@@ -1,9 +1,10 @@
-'use client'; 
+'use client';
 
 import React, { Suspense, useEffect, useState } from 'react';
 import ICampaign from '@/interfaces/ICampaign';
 import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/Authontext';
+import Spinner from '@/components/ui/Spinner'; // Importa tu componente Spinner
 import Boton from '../ui/Boton';
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
@@ -78,13 +79,15 @@ const Campaingdesc = () => {
 }, [userData]);
 
   useEffect(() => {
-
     if (userData?.userData?.id) {
       fetchCampaignDetails();
     }
   }, [userData, roles, searchParams]);
 
-  if (loading) return <p>Cargando campaña...</p>;
+  if (loading) {
+    return <Spinner />; // Aquí reemplazamos el texto de carga por tu componente Spinner
+  }
+
   if (error) return <p>{error}</p>;
 
   return (

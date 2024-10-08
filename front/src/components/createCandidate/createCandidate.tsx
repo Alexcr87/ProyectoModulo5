@@ -5,6 +5,8 @@ import Input from "../ui/Input";
 import InputFile from "../ui/InputFile";
 import Textarea from "../ui/Textarea";
 import Select from "../ui/Select";
+import { useAuth } from '@/context/Authontext';
+import Spinner from "../ui/Spinner"; // Importa el componente Spinner
 import { useRouter } from "next/router";
 import { stringify } from "querystring";
 
@@ -24,10 +26,11 @@ const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
   const [file, setFile] = useState<File | null>(null);
   const [campaigns, setCampaigns] = useState<{ id: string; name: string }[]>([]);
   const [selectedCampaignId, setSelectedCampaignId] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false); // Estado para controlar el spinner
 
   useEffect(() => {
     const fetchCampaigns = async () => {
-      const localUser = localStorage.getItem("userSession")
+      const localUser = localStorage.getItem("userSession");
       const localUserParsed = JSON.parse(localUser!);
       const actualUserId = localUserParsed.userData.id
       
@@ -49,12 +52,16 @@ const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
       setFile(e.target.files[0]);
     }
   };
+
   const handleProposalsChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     setProposals(value.split("\n"));
   };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true); // Muestra el spinner
+
     const formData = new FormData();
     formData.append("postulation", postulation);
     formData.append("list", list);
@@ -65,6 +72,7 @@ const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
     if (file) {
       formData.append("file", file);
     }
+
     try {
       const response = await fetch(`${APIURL}/candidates`, {
         method: "POST",
@@ -73,36 +81,43 @@ const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
       if (!response.ok) {
         throw new Error("Error en la creación del candidato");
       }
-      window.location.href = "/candidates";    
+      window.location.href = "/candidates";
     } catch (error) {
       console.error("Error al crear candidato:", error);
+    } finally {
+      setLoading(false); // Oculta el spinner cuando termina la solicitud
     }
   };
 
   return (
-    <div className="flex w-[60%] justify-center p-6 bg-white shadow-lg rounded-lg">
-      <form onSubmit={handleSubmit} className="w-11/12 space-y-4">
+    <div className="flex flex-col justify-center items-center p-6 bg-white shadow-lg rounded-lg w-full max-w-4xl mx-auto sm:w-11/12 md:w-9/12 lg:w-3/4 xl:w-2/3">
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-opacity-75 bg-gray-500">
+          <Spinner /> {/* Muestra el spinner mientras se está cargando */}
+        </div>
+      )}
+      <form onSubmit={handleSubmit} className="w-full space-y-4">
         <h1 className="text-lg font-bold text-center">Crear Candidato</h1>
-          <Input
-            type="text"
-            placeholder="Postulación"
-            value={postulation}
-            onChange={(e) => setPostulation(e.target.value)}
-            required
-          />
-          <Input
-            type="text"
-            placeholder="Lista"
-            value={list}
-            onChange={(e) => setList(e.target.value)}
-            required
-          />
-          <Textarea
-            value={campaignDescription}
-            placeholder="Descripción de la campaña"
-            onChange={(e) => setCampaignDescription(e.target.value)}
-            required
-          />
+        <Input
+          type="text"
+          placeholder="Postulación"
+          value={postulation}
+          onChange={(e) => setPostulation(e.target.value)}
+          required
+        />
+        <Input
+          type="text"
+          placeholder="Lista"
+          value={list}
+          onChange={(e) => setList(e.target.value)}
+          required
+        />
+        <Textarea
+          value={campaignDescription}
+          placeholder="Descripción de la campaña"
+          onChange={(e) => setCampaignDescription(e.target.value)}
+          required
+        />
         <div className="rounded-md">
           <label className="block text-sm font-medium text-gray-700">Propuestas</label>
           <Textarea
@@ -119,8 +134,10 @@ const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
             required
           >
             <option value="">Seleccione una campaña</option>
-            {campaigns.map(campaign => (
-              <option key={campaign.id} value={campaign.id}>{campaign.name}</option>
+            {campaigns.map((campaign) => (
+              <option key={campaign.id} value={campaign.id}>
+                {campaign.name}
+              </option>
             ))}
           </Select>
         </div>
@@ -133,12 +150,13 @@ const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
           />
         </div>
         <div className="flex justify-center">
-          <div className="w-[20%]">
-            <Boton>Crear Candidato </Boton>
+          <div className="w-[50%] sm:w-[40%] md:w-[30%] lg:w-[25%] xl:w-[20%]">
+            <Boton>Crear Candidato</Boton>
           </div>
-         </div>
+        </div>
       </form>
     </div>
   );
 };
+
 export default CreateCandidate;

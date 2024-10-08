@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/helpers/landbot.js", "src/components/Chatbot/Chatbot.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/helpers/landbot.js", "src/components/Chatbot/Chatbot.tsx", "src/components/CountryCitySelector"],
   "exclude": ["node_modules"]
 }
