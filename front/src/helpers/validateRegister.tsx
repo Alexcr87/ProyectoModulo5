@@ -32,19 +32,26 @@ export function validateRegisterForm(values: IRegisterProps): IRegisterError {
   }
 
   // Validación de la contraseña
-  if (values.password) {
-    if (values.password.length < 8) {
-      errors.password = "La contraseña debe tener al menos 8 caracteres.";
-    } else if (values.password.length > 20) {
-      errors.password = "La contraseña debe tener menos de 20 caracteres.";
-    } else if (!/[A-Z]/.test(values.password)) {
-      errors.password = "La contraseña debe tener al menos una letra mayúscula.";
-    } else if (!/[!@#$%^&*]/.test(values.password)) {
-      errors.password = "La contraseña debe contener al menos un carácter especial.";
-    } else if (/\s/.test(values.password)) {
-      errors.password = "La contraseña no debe contener espacios.";
+  
+    if(!values.password){
+      errors.password = "La contraseña es obligatoria"
     }
-  }
+    if (values.password) {
+      if (values.password.length < 8) {
+        errors.password = "La contraseña debe tener al menos 8 caracteres.";
+      } else if (values.password.length > 20) {
+        errors.password = "La contraseña debe tener menos de 20 caracteres.";
+      } else if (!/[A-Z]/.test(values.password)) {
+        errors.password = "La contraseña debe tener al menos una letra mayúscula.";
+      } else if (!/[!@#$%^&*]/.test(values.password)) {
+        errors.password = "La contraseña debe contener al menos un carácter especial.";
+      } else if (/\s/.test(values.password)) {
+        errors.password = "La contraseña no debe contener espacios.";
+      }
+
+    }
+    
+  
    // Validación del país
    if (!values.country?.trim()) {
     errors.country = "El país es obligatorio.";

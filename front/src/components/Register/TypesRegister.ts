@@ -4,7 +4,7 @@ export interface IRegisterProps {
     id?:string;
     city: string;
     country: string;
-    password?: string;
+    password: string;
     email: string;
     name: string;
     address: string;
