@@ -18,6 +18,7 @@ const NavBar = () => {
     const campaignDropdownRef = useRef<HTMLLIElement>(null); // Referencia al li del dropdown de campañas
     const usersDropdownRef = useRef<HTMLLIElement>(null); // Referencia al li del dropdown de usuarios
 
+    const APIRUL =process.env.AUTH0_ISSUER_BASE_URL
     useEffect(() => {
         const localUser = localStorage.getItem("userData");
         if (localUser) {
@@ -26,6 +27,10 @@ const NavBar = () => {
     }, [pathname]);
 
     const handleClose = () => {
+      // revisar lo del cierre de sesion con auth0
+         const auth0LoginUrl = `http://localhost:3000/logout`;
+         window.location.href = auth0LoginUrl;
+        
         localStorage.clear();
         setUserData(null)
         const Toast = Swal.mixin({

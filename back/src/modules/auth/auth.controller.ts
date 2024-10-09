@@ -115,8 +115,10 @@ export class AuthController {
 
 
   @Get('protected')
-  userby(@Req() req: Request) {
-    return JSON.stringify(req.oidc.user);
+  async userby(@Req() req: Request) {
+    console.log(JSON.stringify(req.oidc.user));
+    
+    return await JSON.stringify(req.oidc.user);
   }
 
   @Get('profile')
@@ -137,7 +139,7 @@ export class AuthController {
       email: user.email,
       name: user.name,
       dni: 5487748,
-      password: 'google',
+      password: '12345aS@',
     };
 
     return this.authservice.createUserByAuth0(newUser);

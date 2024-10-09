@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <UserProvider>
+        {/* <UserProvider> */}
         <AuthProvider>
         <div className="containerPrincipal">
           <header>
@@ -34,7 +34,7 @@ export default function RootLayout({
           </footer>
         </div>
       </AuthProvider>
-      </UserProvider>
+      {/* </UserProvider> */}
       </body>
     </html>
   );
