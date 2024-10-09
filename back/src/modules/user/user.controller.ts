@@ -180,12 +180,14 @@ export class UserController {
   })
   @ApiResponse({ status: 200, description: 'File uploaded successfully' })
   @ApiResponse({ status: 400, description: 'Incorrect request' })
-  async importUsers(@UploadedFile(new ExcelFilePipe())file: Express.Multer.File, @Query("parentId") parentId: string ){
+  async importUsers(@UploadedFile(new ExcelFilePipe())file: Express.Multer.File, 
+  @Query("parentId") parentId: string,
+  @Body('groupId') groupId: string[] ){
     if (!file) {
       throw new BadRequestException('No file provided');
     }
       const filePath = file.path; // Ruta del archivo guardado
-      return await this.userService.importUsers(filePath, parentId);  
+      return await this.userService.importUsers(filePath, parentId,groupId);  
   }
 
   @Patch(':userId/assign-package')

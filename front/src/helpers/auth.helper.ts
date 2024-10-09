@@ -1,4 +1,5 @@
 import {  IRegisterProps } from "@/components/Register/TypesRegister";
+import IGroup from "@/interfaces/IGroup";
 import { IloginProps } from "@/interfaces/ILogin";
 import Swal from 'sweetalert2';
 
@@ -38,13 +39,15 @@ export async function register(userData: IRegisterProps, parentId?: string) {
 
 
 
-export async function importUser(file: File, parentId?: string) {
+export async function importUser(file: File, parentId: string | undefined, groups?:IGroup[]) {
   const formData = new FormData();
   formData.append("file", file);
+  const groupsId = groups?.length ? groups.map((group) => group.id) : [];
+  formData.append("groupId", JSON.stringify(groupsId));
 
   try {
     // Construir la URL con el parentId como parámetro de consulta
-    const url = parentId ? `${APIURL}/user/import?parentId=${parentId}` : `${APIURL}/user/import`;
+    const url = `${APIURL}/user/import?parentId=${parentId}`;
 
     const response = await fetch(url, {
       method: "POST",
