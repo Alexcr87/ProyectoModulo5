@@ -5,14 +5,20 @@ import ICampaign from '@/interfaces/ICampaign';
 import Input from '../ui/Input';
 import Boton from '../ui/Boton';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useAuth } from '@/context/Authontext';
+import IGroup from '@/interfaces/IGroup';
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 
-const updateCampaing = () => {
+const updateCampaign = () => {
+  const { userData } = useAuth(); 
   const [campaign, setCampaign] = useState<ICampaign | null>(null);
   const [loading, setLoading] = useState(true);
+  const [groups, setGroups] = useState<IGroup[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [date, setDate] = useState(campaign?.date ? new Date(campaign?.date) : null);
+
   const searchParams = useSearchParams(); // Obtener parámetros de la URL
   const id = searchParams.get('id'); // Obtener el id de la campaña de los parámetros de la URL
 
@@ -32,44 +38,51 @@ const updateCampaing = () => {
   }, [id]);
 
   console.log (campaign)
+
+  //   fetchGroups();
+  // }, [userData]);
+
+  console.log (groups)
  
   // ESTA FUNCION EJECUTA LA MODIFICACION
 
-  // const handleUpdateCampaign = async (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   try {
-  //     const form = event.target as HTMLFormElement;
-  //     const formData = new FormData(form);
-  //     const updatedCampaign = {
-  //       name: formData.get('name'),
-  //       description: formData.get('description'),
-  //       location: formData.get('location'),
-  //       date: formData.get('date'),
-  //     };
-  //     const response = await fetch(`${APIURL}/campaigns/${id}`, {
-  //       method: 'PATCH',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify(updatedCampaign),
-  //     });
-  //     const data = await response.json();
-  //     setCampaign(data);
-  //   } catch (error) {
-  //     setError((error as { message: string }).message);
-  //   }
-  // };
+  const handleUpdateCampaign = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      const form = event.target as HTMLFormElement;
+      const formData = new FormData(form);
+      
+
+      const updatedCampaign = {
+        name: formData.get('name'),
+        description: formData.get('description'),
+        location: formData.get('location'),
+        date: formData.get ('date'),
+      };
+      const response = await fetch(`${APIURL}/campaigns/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedCampaign),
+      });
+      const data = await response.json();
+      setCampaign(data);
+    } catch (error) {
+      setError((error as { message: string }).message);
+    }
+  };
 
 
   return (
     <>
       <div className="col-start-5 col-end-9 mt-[2.5em] my-[2em] text-center text-xl font-bold">
-        ACTUALIZAR CAMPANA
+        ACTUALIZAR CAMPAÑA
           <div className="flex flex-row items-center w-full md:w-[40%] gap-4 m-auto mt-8 py-8 px-4 font-bold border-4 rounded-md outline-none
             border-stroke dark:border-dark-3 border-blue-500" >
           <p>{`Campana: ${campaign?.name}`}</p>
           {/* <p>{`Fecha: ${campaign?.date}`}</p> */}
           <p>{`Fecha: ${campaign?.date ? new Date(campaign.date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) : ''}`}</p> </div>
       </div>
-      <form className="campaign-form flex justify-center">
+      <form className="campaign-form flex justify-center" onSubmit={handleUpdateCampaign}>
         <div className="flex flex-col items-center w-full md:w-[40%] gap-4">
           <Input
             type="text"
@@ -102,8 +115,8 @@ const updateCampaing = () => {
             name="date"
             id="date"
             // placeholder={campaign?.date ? campaign.date.toISOString().substring(0, 10) : ''}
-             value={campaign?.date? new Date().toISOString().substring(0, 10) : ''}
-            //  value={campaign.date.toISOString().substring(0, 10)}
+            value={date ? date.toISOString().substring(0, 10) : ''}
+            onChange={(e) => setDate(new Date(e.target.value))}
             required
           />
           <Boton type="submit">Actualizar Campaña</Boton>
@@ -113,4 +126,4 @@ const updateCampaing = () => {
   );
 };
 
-export default updateCampaing;
+export default updateCampaign;
