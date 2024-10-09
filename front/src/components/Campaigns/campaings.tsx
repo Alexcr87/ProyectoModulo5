@@ -84,9 +84,9 @@ const CampaignsTable = () => {
         }
     };
 
-    // esta funcion entiendo que deberia integrarse en handleAction y depender de los roles
+    // esta funcion entiendo que deberia  depender de los roles
     const handleUpdate = (id: string | undefined ) => {
-        router.push(`/updateCampaing?id=${id}`);
+        router.push(`/updateCampaign?id=${id}`);
       };
 
     return (

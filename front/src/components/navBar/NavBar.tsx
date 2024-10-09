@@ -34,6 +34,9 @@ const NavBar = () => {
             showConfirmButton: false,
             timer: 2000,
             timerProgressBar: true,
+            customClass: {
+                container: 'mt-12'
+            },
             didOpen: (toast) => {
                 toast.onmouseenter = Swal.stopTimer;
                 toast.onmouseleave = Swal.resumeTimer;
