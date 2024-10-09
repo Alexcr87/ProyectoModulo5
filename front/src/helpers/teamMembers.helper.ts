@@ -48,10 +48,10 @@ const teamMembers = [
         "id": 6,
         "name": "Nicolas Mainer",
         "profession":"BackEnd Developer",
-        "image":"https://www.labsaenzrenauld.com/wp-content/uploads/2020/10/Perfil-hombre-ba%CC%81sico_738242395.jpg",
-        "linkFacebook":"",
-        "linkGitHub":"",
-        "linkLinkedIn":""
+        "image":"/images/fotoNicoMainer.jpeg",
+        "linkFacebook":"https://www.facebook.com/nicolas.mainer",
+        "linkGitHub":"https://github.com/nmainer",
+        "linkLinkedIn":"https://www.linkedin.com/in/nicolas-matias-mainer-95706a208/"
     },
 
 ]
