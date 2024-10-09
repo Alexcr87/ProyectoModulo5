@@ -1,11 +1,11 @@
 export interface IChangePassword{
-  dni:number,
+  dni:string,
   password: string,
   newPassword: string,
   confirmPassword: string,
 }
 
-export interface IChangePassworError {
+export interface IChangePasswordError {
 
   password?: string,
   newPassword?: string,

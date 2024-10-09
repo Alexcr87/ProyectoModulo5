@@ -100,6 +100,9 @@ export async function login (userData: IloginProps){
       showConfirmButton: false,
       timer: 3000,
       timerProgressBar: true,
+      customClass: {
+        container: 'mt-12'
+    },
       didOpen: (toast) => {
         toast.onmouseenter = Swal.stopTimer;
         toast.onmouseleave = Swal.resumeTimer;

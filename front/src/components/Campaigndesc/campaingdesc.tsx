@@ -1,5 +1,5 @@
 'use client'; 
-
+import Swal from 'sweetalert2';
 import React, { Suspense, useEffect, useState, useRef } from 'react';
 import ICampaign from '@/interfaces/ICampaign';
 import { useSearchParams } from 'next/navigation';
@@ -64,6 +64,25 @@ const Campaingdesc = () => {
       if (!response.ok) {
         setVoteMessage('Error en la respuesta de enviar voto');
         throw new Error('Error en la respuesta de enviar voto');
+      }else{
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          customClass: {
+            container: 'mt-12'
+        },
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: "success",
+          title: "Votacion Realizada"
+        });
       }
       const result = await response.text();
       setVoteMessage(result);

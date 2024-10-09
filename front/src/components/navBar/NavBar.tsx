@@ -34,6 +34,9 @@ const NavBar = () => {
             showConfirmButton: false,
             timer: 2000,
             timerProgressBar: true,
+            customClass: {
+                container: 'mt-12'
+            },
             didOpen: (toast) => {
                 toast.onmouseenter = Swal.stopTimer;
                 toast.onmouseleave = Swal.resumeTimer;
@@ -119,6 +122,11 @@ const NavBar = () => {
             <Link href="/campaigns">Campañas</Link>
     </li>)
    }
+   const changePassword = () =>{
+    return (<li>
+            <Link href="/changePassword">Cambio Contraseña</Link>
+    </li>)
+   }
 
    const users = () =>{
     return (  <li className="relative" ref={usersDropdownRef}>
@@ -156,9 +164,11 @@ const NavBar = () => {
                         </>
                     ) : (
                         <>
+
                             {isAdmin && (<>{campaign()} {users()} {groups()} {results()} </>)}
                             {(isCandidate || isVotante) && (<>{campaigns()} {perfilVotante()}</>)}
                             {isModerator && (<> {campaign()} {users()} {groups()} {results()} {perfilVotante()} </>)}
+
                             <li>
                                 <button onClick={handleClose}>Cerrar Sesión</button>
                             </li>
