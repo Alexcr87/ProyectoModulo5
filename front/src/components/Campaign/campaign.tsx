@@ -7,6 +7,7 @@ import Input from '../ui/Input';
 import Boton from '../ui/Boton';
 import { useAuth } from '@/context/Authontext';
 import IGroup from '@/interfaces/IGroup';
+import Swal from "sweetalert2";
 
 const CampaignForm = () => {
   const { userData } = useAuth(); 
@@ -85,13 +86,32 @@ const CampaignForm = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Error en la creación de la campaña");
+        const errorData = await response.json(); 
+        throw new Error(errorData.message || "Error en la creación de la campaña"); 
       }
+  
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Campaña creada con éxito",
+        showConfirmButton: false,
+        timer: 1500
+      }).then(() => {
+        
+        window.location.href = "/campaigns";
+      });
+     
 
-      window.location.href = "/campaigns";    
     } catch (error) {
-      console.error("Error al crear la campaña:", error);
+
+      const errorMessage = (error as any).message || "Ocurrió un error inesperado.";
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: errorMessage
+      });
     }
+
   };
 
   return (
@@ -146,6 +166,7 @@ const CampaignForm = () => {
             onChange={handleMultiSelectChange}
             value={formData.groups.map(group => ({ value: group.id, label: group.name }))}
             placeholder='Selecciona grupos'
+            required
           />
 
           <Boton type="submit">Crear Campaña</Boton>
