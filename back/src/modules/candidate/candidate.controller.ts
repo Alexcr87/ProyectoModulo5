@@ -83,6 +83,6 @@ export class CandidateController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     await this.candidateService.deleteCandidate(id);
-    return { message: 'Candidate deleted successfully' };
+    return { message: 'Candidato eliminado con exito' };
   }
 }

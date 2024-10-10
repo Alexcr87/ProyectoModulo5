@@ -27,7 +27,7 @@ async createPreference(accountId:number) {
   const account = await this.repositoryAccount.findOne({where :{id:accountId}});
 
   if (!account) {
-    throw new HttpException('Account not found', HttpStatus.NOT_FOUND);
+    throw new HttpException('Cuenta no encontrada', HttpStatus.NOT_FOUND);
   }
   const items = [{
     id: account.id.toString(),
@@ -43,7 +43,7 @@ async createPreference(accountId:number) {
   });
 
   if (!responseMp.id) {
-    throw new HttpException('Failed to create payment preference.', HttpStatus.BAD_REQUEST);
+    throw new HttpException('No se pudo crear la preferencia de pago.', HttpStatus.BAD_REQUEST);
   }
   return { preferenceId: responseMp.id };
 } 
