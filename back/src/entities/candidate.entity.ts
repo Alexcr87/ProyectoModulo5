@@ -17,7 +17,7 @@ export class Candidate {
   @PrimaryGeneratedColumn('uuid')
   id: string = uuid();
 
-  @Column({ type: 'varchar', length: 20, nullable: false })
+  @Column({ type: 'varchar', nullable: false })
   postulation: string;
 
   @Column()
