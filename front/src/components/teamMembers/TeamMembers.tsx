@@ -20,10 +20,11 @@ const TeamMembers = () => {
                     team.map((member) => (
                         <div key={member.id} className='w-[300px] h-auto bg-white flex flex-col items-center p-8 rounded-2xl relative group hover:scale-105'>
                             <div className='bg-tertiaryColor w-20 h-20 absolute rounded-full top-15 left-10 opacity-0 group-hover:opacity-100'></div>
-                            <div className='w-[200px] h-[200px] rounded-full overflow-hidden z-10'>
+                            <div className='w-[200px] h-[200px] rounded-full overflow-hidden mx-auto z-10'>
                                 <img 
                                     src={member.image} 
                                     alt={`Foto perfil de ${member.name}`} 
+                                    className='h-full w-full object-cover'
                                     onError={(e) => { e.currentTarget.src = '/path/to/default/image.jpg'; }} // Cambia la ruta a la imagen por defecto
                                 />
                             </div>
