@@ -12,16 +12,20 @@ export class MailService {
       to,
       subject,
       html,
+      
     };
 
     await transporter.sendMail(mailOptions);
+    console.log('Correo enviado a:', to);
   }
 
   async sendWelcomeEmail(
     email: string,
     name: string,
     password: string,
+    
   ): Promise<void> {
+    
     const templatePath = path.join(__dirname, '../../..', 'welcomeTemplate.ejs');
     let template: string;
   
@@ -33,7 +37,7 @@ export class MailService {
     }
   
     // Generar el enlace de cambio de contraseña
-    const changePasswordLink = `URL DE CAMBIO DE CONTRASEÑA`;
+    const changePasswordLink = `${process.env.API_URL}/login?redirect=changePassword`;
   
     // Datos que se inyectarán en la plantilla
     const data = {
@@ -42,10 +46,13 @@ export class MailService {
       password,
       platform: 'Gestión Electoral 2024',
       changePasswordLink,  // Enlace de cambio de contraseña
+      apiUrl: process.env.API_URL,
     };
+    console.log(data)
   
     // Renderizar el HTML usando la plantilla y los datos
     const htmlContent = ejs.render(template, data);
+    console.log(htmlContent)
 
     // Enviar el correo
     await this.sendMail(

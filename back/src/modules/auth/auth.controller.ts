@@ -82,7 +82,7 @@ export class AuthController {
           message: error.message,
         };
       } else {
-        throw new HttpException('unexpected error', HttpStatus.CONFLICT);
+        throw new HttpException('Error inesperado', HttpStatus.CONFLICT);
       }
     }
 
@@ -108,7 +108,7 @@ export class AuthController {
           message: error.message,
         };
       } else {
-        throw new HttpException('unexpected error', HttpStatus.BAD_REQUEST);
+        throw new HttpException('Error inesperado', HttpStatus.BAD_REQUEST);
 
       }}
   }
@@ -131,11 +131,11 @@ export class AuthController {
     const user = req.oidc.user;
 
     if (!user) {
-      throw new BadRequestException('User not found in request');
+      throw new BadRequestException('Usuario no encontrado en la solicitud');
     }
 
     if (!user.email) {
-      throw new BadRequestException('Email not found in request');
+      throw new BadRequestException('Correo electrónico no encontrado en la solicitud');
     }
 
     const newUser: Partial<CreateUserDtoByAuth0> = {
