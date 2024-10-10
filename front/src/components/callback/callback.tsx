@@ -21,11 +21,11 @@ const Callback = () => {
           method: 'GET',
           credentials: 'include',
         });
-
+       
         if (response.ok) {
           const data = await response.json();
           const userEmail = data.email; // Suponiendo que data contiene el email
-
+        
           // Verificar si el correo electrónico está en la base de datos
           const emailCheckResponse = await fetch(`${APIURL}/user/email/${userEmail}`);
 
@@ -41,7 +41,7 @@ const Callback = () => {
 
           // Crear el objeto de sesión del usuario
           const usersession: userSession = {
-            token: data.token,
+            token: data.sid,
             userData: {
               id: user.id,
               email: user.email,

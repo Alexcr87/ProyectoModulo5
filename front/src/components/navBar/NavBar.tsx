@@ -28,10 +28,11 @@ const NavBar = () => {
 
     const handleClose = () => {
       // revisar lo del cierre de sesion con auth0
-         const auth0LoginUrl = `http://localhost:3000/logout`;
+         const auth0LoginUrl = `${process.env.NEXT_PUBLIC_AUTH0_ISSUER_BASE_URL}/v2/logout?returnTo=${process.env.NEXT_PUBLIC_API_URL}/logouts&client_id=${process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID}`;
          window.location.href = auth0LoginUrl;
-        
+
         localStorage.clear();
+        
         setUserData(null)
         const Toast = Swal.mixin({
             toast: true,
