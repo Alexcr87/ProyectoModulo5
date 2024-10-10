@@ -1,15 +1,17 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import ICandidate from '@/interfaces/ICandidate';
 import Image from 'next/image';
 import Swal from 'sweetalert2';
 import Boton2 from '../ui/Boton2';
 import { useAuth } from '@/context/Authontext'; // Importa el hook de autenticación
+import Spinner from '../ui/Spinner';
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 const CandidateDetails = (props: ICandidate) => {
   const { userData } = useAuth();
+  const [isLoading, setIsLoading] = useState(false)
   
   const convertirArreglo = () => {
     const variable = props.proposals;
@@ -47,7 +49,7 @@ const CandidateDetails = (props: ICandidate) => {
       userId: actualUserId,
       candidateId: props.id,
     };
-
+    setIsLoading(true);
     try {
       const response = await fetch(`${APIURL}/votes`, {
         method: 'POST',
@@ -80,11 +82,15 @@ const CandidateDetails = (props: ICandidate) => {
         title: "Oops...",
         text: "Error al registrar tu voto. Por favor intenta de nuevo.",
       });
+    }finally {
+      setIsLoading(false);  // Oculta el spinner después de la acción
     }
   };
 
   return (
-    <div className='mt-6'>
+    <div className='mt-6'>{isLoading ? (
+      <Spinner />
+    ) : (
       <div className='grid grid-cols-2 w-11/12 justify-center gap-2 h-[65vh]'>
         <div className='bg-white flex justify-center items-center mt-2 drop-shadow-2xl border-2 p-8 rounded-b-2xl'>
           <div className='bg-cuartiaryColor w-80 h-96 relative rounded-xl overflow-hidden drop-shadow-2xl border-2'>
@@ -111,6 +117,7 @@ const CandidateDetails = (props: ICandidate) => {
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 }

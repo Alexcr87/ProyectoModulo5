@@ -8,9 +8,11 @@ import Boton from '../ui/Boton';
 import { useAuth } from '@/context/Authontext';
 import IGroup from '@/interfaces/IGroup';
 import Swal from "sweetalert2";
+import Spinner from '../ui/Spinner';
 
 const CampaignForm = () => {
   const { userData } = useAuth(); 
+  const [isLoading, setIsLoading] = useState(false);
   const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
   const [groups, setGroups] = useState<IGroup[]>([]);
@@ -75,7 +77,7 @@ const CampaignForm = () => {
       ...formData,
       date: formData.date.toISOString(), // Asegúrate de que la fecha esté en formato ISO
     };
-
+    setIsLoading(true);
     try {
       const response = await fetch(`${APIURL}/campaigns`, {
         method: "POST",
@@ -110,6 +112,8 @@ const CampaignForm = () => {
         title: "Oops...",
         text: errorMessage
       });
+    }finally {
+      setIsLoading(false);  // Oculta el spinner al finalizar la operación
     }
 
   };
@@ -121,6 +125,10 @@ const CampaignForm = () => {
       </div>
       <form onSubmit={handleSubmit} className="campaign-form flex justify-center">
         <div className='flex flex-col items-center w-full md:w-[40%] gap-4'>
+        {isLoading ? (
+            <Spinner />  
+          ) : (
+            <>
           <Input
             type="text"
             id="name"
@@ -170,6 +178,8 @@ const CampaignForm = () => {
           />
 
           <Boton type="submit">Crear Campaña</Boton>
+          </>
+        )}
         </div>
       </form>
     </>
