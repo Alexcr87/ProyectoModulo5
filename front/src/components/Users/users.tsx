@@ -53,7 +53,7 @@ const Users = () => {
   }
 
   const filteredUsers = selectedRole
-  ? users.filter((user) => user.roles.some((role) => role.name === selectedRole))
+  ? users.filter((user) => user.roles?.some((role) => role.name === selectedRole))
   : users; // Mostrar todos si no se selecciona ningún rol
 
 

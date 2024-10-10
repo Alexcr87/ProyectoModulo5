@@ -7,7 +7,7 @@ interface IUsers {
     address?: string,
     city?: string,
     country?: string,
-    roles: [{
+    roles?: [{
         id:number,
         name:string,
         description:string
