@@ -17,6 +17,7 @@ const PopUpRegisterComponent = () => {
   const { userData, setUserData } = useAuth();
   const [groups, setGroups] = useState<IGroup[]>([]);
   const [selectedGroups, setSelectedGroups] = useState<IGroup[]>([]);
+  const [loading, setLoading] = useState(false)
 
   const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
   const parentId = userData?.userData.id
@@ -57,7 +58,7 @@ const PopUpRegisterComponent = () => {
       });
       return;
     }
-
+    setLoading(true);
     try {
       // Implementa la lógica de importación del archivo aquí
     await importUser(file, userData?.userData.id, selectedGroups); // Asegúrate de definir esta función
@@ -78,6 +79,8 @@ const PopUpRegisterComponent = () => {
         showConfirmButton: false,
         timer: 1500,
       });
+    }finally {
+      setLoading(false); 
     }
   };
 
@@ -115,11 +118,12 @@ const PopUpRegisterComponent = () => {
       {/* Popup para registro manual */}
       {registroManual && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg">
-            <button onClick={() => setRegistroManual(false)} className="mb-4">
-              Cerrar
+          <div className="bg-white p-8 rounded-lg shadow-lg relative overflow-hidden">
+            <button 
+              onClick={() => setRegistroManual(false)} 
+              className="absolute top-0 right-0 bg-slate-400 hover:bg-red-500 font-bold text-xl text-white px-2">
+              x
             </button>
-            <h2 className="text-xl mb-4">Formulario de Registro</h2>
             <Register />
           </div>
         </div>
@@ -128,13 +132,22 @@ const PopUpRegisterComponent = () => {
       {/* Popup para registro masivo */}
       {registroMasivo && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg">
-            <button onClick={() => setRegistroMasivo(false)} className="mb-4">
-              Cerrar
+          <div className="bg-white p-8 w-[40%] rounded-lg shadow-lg relative overflow-hidden flex flex-col items-center">
+            <button 
+              onClick={() => setRegistroMasivo(false)} 
+              className="absolute top-0 right-0 bg-slate-400 hover:bg-red-500 font-bold text-xl text-white px-2">
+              x
             </button>
-            <h2 className="text-xl mb-4">Subir y Descargar Excel</h2>
+            <h2 className="text-xl mb-4 font-bold">Subir y Descargar Excel</h2>
+            <p>1º- Descargar la plantilla de excel donde agregaras los usuarios</p> 
+            <span className="text-red-500">Nota: no agregar ni quitar columnas de la plantilla</span>
+            <div className="flex justify-between my-4">
+              <Boton onClick={handleDownloadExcel}>Descargar Excel</Boton>
+            </div>
+            <p className="mb-4">2º- Seleciona la plantilla descargada con el listado de usuarios a agregar</p>
             <InputFile type="file" onChange={handleFileChange} />
-            <div className="flex flex-col mt-4">
+            <p className="my-4">3º- Seleciona el grupo o los grupos a los que perteneceran estos usuarios</p>
+            <div className="flex flex-col w-full">
             <Select
               isMulti
               name="groups"
@@ -147,7 +160,6 @@ const PopUpRegisterComponent = () => {
             </div>
             <div className="flex justify-between mt-4">
               <Boton onClick={handleUpload}>Subir Excel</Boton>
-              <Boton onClick={handleDownloadExcel}>Descargar Excel</Boton>
             </div>
           </div>
         </div>
