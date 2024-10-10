@@ -7,7 +7,11 @@ interface IUsers {
     address?: string,
     city?: string,
     country?: string,
-    rol?: string,
+    roles: [{
+        id:number,
+        name:string,
+        description:string
+    }],
     isFirstLogin?: boolean
 }
 
