@@ -196,6 +196,7 @@ export class UserService{
           await this.saveOrganizationalStructure(parentId, user.id)
           const { password: excludedPassword, ...result } = user;
           return result;
+          
 
         } else if(user) {
           throw new UnauthorizedException(`Usuario con dni: ${createUserDto.dni} ya existe`);
@@ -262,7 +263,6 @@ export class UserService{
       }
 
       await this.userRepository.save(newUser);
-
       await this.mailService.sendWelcomeEmail(newUser.email, newUser.name, password);
       
       if (parentId) {
