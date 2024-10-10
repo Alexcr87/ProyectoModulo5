@@ -45,8 +45,7 @@ const RegisterModerator = () => {
       dataUser.dni.trim() !== "" &&
       dataUser.address.trim() !== "" &&
       dataUser.country.trim() !== "" &&
-      dataUser.city.trim() !== ""&&
-      dataUser.password.trim() !== ""
+      dataUser.city.trim() !== ""
     );
   }, [dataUser]);
 
