@@ -20,6 +20,7 @@ import { VoteModule } from './modules/vote/vote.module';
 
 import { PaymentModule } from './modules/payments/payment.module';
 import { GroupModule } from './modules/usersGroup/usersGroup.module';
+import { RedirectController } from './redirectController';
 
 @Module({
   imports: [
@@ -51,7 +52,7 @@ import { GroupModule } from './modules/usersGroup/usersGroup.module';
       secret: process.env.JWT_SECRET,
     }),
   ],
-  controllers: [],
+  controllers: [RedirectController],
   providers: [],
   exports: [],
 })

@@ -3,6 +3,7 @@ import "./globals.css";
 import NavBar from "@/components/navBar/NavBar";
 import Footer from "@/components/footer/Footer";
 import { AuthProvider } from "@/context/Authontext";
+import { UserProvider } from "@auth0/nextjs-auth0/client";
 
 
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        {/* <UserProvider> */}
         <AuthProvider>
         <div className="containerPrincipal">
           <header>
@@ -32,6 +34,7 @@ export default function RootLayout({
           </footer>
         </div>
       </AuthProvider>
+      {/* </UserProvider> */}
       </body>
     </html>
   );

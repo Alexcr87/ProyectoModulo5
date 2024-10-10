@@ -92,7 +92,10 @@ const initialState = {
       [name]: value,
     });
   };
-
+  const handleAuth0Login = () => {
+    const auth0LoginUrl = `${process.env.NEXT_PUBLIC_API_URL}/login`;
+    window.location.href = auth0LoginUrl;
+};
   const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCountry = event.target.value;
     setDataUser({ ...dataUser, country: selectedCountry });
@@ -104,7 +107,7 @@ const initialState = {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+ 
     await register(dataUser);
     Swal.fire({
       position: "center",
@@ -113,7 +116,7 @@ const initialState = {
       showConfirmButton: false,
       timer: 1500
     });
-    router.push("/login");
+    handleAuth0Login()
   };
 
   useEffect(() => {
