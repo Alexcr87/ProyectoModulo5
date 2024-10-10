@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import IUsers from "@/interfaces/IUsers";
 import { useAuth } from "@/context/Authontext";
+import Spinner from "../ui/Spinner";
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 const Users = () => {
@@ -10,6 +11,7 @@ const Users = () => {
   const {userData} = useAuth()
   const [users, setUsers] = useState<IUsers[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -41,7 +43,11 @@ const Users = () => {
   }, [userData]); // Solo se ejecuta cuando userSesion cambia
 
   if (loading) {
-    return <p className="text-center text-gray-500">Cargando...</p>;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Spinner /> {/* Show spinner while loading */}
+      </div>
+    );
   }
 
   return (

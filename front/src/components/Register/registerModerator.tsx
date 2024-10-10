@@ -6,6 +6,7 @@ import { register } from "@/helpers/auth.helper";
 import { validateRegisterForm } from "@/helpers/validateRegister";
 import Swal from 'sweetalert2';
 import { useAuth } from "@/context/Authontext";
+import Spinner from "../ui/Spinner";
 
 const RegisterModerator = () => {
   const router = useRouter();
@@ -26,6 +27,7 @@ const RegisterModerator = () => {
   const [countries] = useState<string[]>(["Argentina", "Chile", "Colombia"]);
   const [cities, setCities] = useState<string[]>([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
   
   const parentId = userData?.userData?.id;
 
@@ -89,6 +91,7 @@ const RegisterModerator = () => {
   
     event.preventDefault();
     setIsSubmitted(true);
+    setIsLoading(true);
   
     const validationErrors = validateRegisterForm(dataUser);
     if (Object.keys(validationErrors).length > 0) {
@@ -124,6 +127,8 @@ const RegisterModerator = () => {
         title: "Oops...",
         text: error.message,
       });
+    } finally {
+      setIsLoading(false); 
     }
   };
 
@@ -235,7 +240,7 @@ const RegisterModerator = () => {
           type="submit" 
           className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded transition duration-200"
         >
-          Registrarse
+          {isLoading ? <Spinner /> : "Registrarse"}
         </button>
       </form>
     </div>
