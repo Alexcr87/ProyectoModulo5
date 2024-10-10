@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import ICampaign from '@/interfaces/ICampaign'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/context/Authontext';
+import Spinner from '../ui/Spinner';
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
@@ -64,7 +65,7 @@ const CampaignsTable = () => {
         }
     }
 
-    if (loading) return <p>Cargando campañas...</p>
+    if (loading) return <p>{<Spinner/>}</p>
     if (error) return <p>{error}</p>
 
     const handleAction= (id: string|undefined)=>{
