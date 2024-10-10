@@ -14,6 +14,18 @@ const ChangePassword = () => {
     const {userData, setUserData} = useAuth()
     const router = useRouter()
 
+    // Capturar el parámetro "redirect" de la URL para verificar si viene del correo
+    const [fromEmail, setFromEmail] = useState(false);
+
+
+    useEffect(() => {
+        // Detectar si el parámetro "redirect" es "change-password"
+        const queryParams = new URLSearchParams(window.location.search);
+        if (queryParams.get('redirect') === 'changePassword') {
+            setFromEmail(true); // Si viene del correo, activar el estado
+        }
+    }, []);
+
     const initialState = {
         dni: "",
         password:"",
@@ -54,6 +66,14 @@ const ChangePassword = () => {
             });
             return
         }
+
+        if (!userData?.userData.dni && fromEmail) {
+            // Redirigir al login para capturar DNI
+            router.push('/login?redirect=changePassword');
+            return;
+        }
+
+
         data.dni = userData?.userData.dni
         await changePassword(data)
         localStorage.clear()

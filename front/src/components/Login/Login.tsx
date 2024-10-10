@@ -22,6 +22,14 @@ const LoginForm = () => {
 
     const [dataUser, SetdataUser] = useState<IloginProps>(initialState);
     const [errors, SetErrors] = useState<IloginError>(initialState);
+    const [redirect, setRedirect] = useState<string>(""); // Estado para redirección
+
+     // Captura la información de la URL
+     useEffect(() => {
+        const queryParams = new URLSearchParams(window.location.search);
+        setRedirect(queryParams.get('redirect') || ""); // Obtiene el parámetro redirect
+    }, []);
+
     
     // CAPTURO LA INFORMACION DE LOS INPUTS
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,11 +69,11 @@ const LoginForm = () => {
                         toast.onmouseleave = Swal.resumeTimer;
                     }
                 });
-                Toast.fire({
-                    icon: "success",
-                    title: "Ha iniciado sesión correctamente"
-                });
-                router.push('/');
+                if (redirect === 'changePassword') {
+                    router.push('/changePassword'); // Redirige al cambio de contraseña
+                } else {
+                    router.push('/');
+                }
             } else {
                 const Toast = Swal.mixin({
                     toast: true,

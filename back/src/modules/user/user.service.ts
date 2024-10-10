@@ -191,10 +191,15 @@ export class UserService{
         const user = await this.userRepository.findOneBy({
             dni: createUserDto.dni,
         });
+
+        console.log(`User: ${user}`); 
+        console.log(`parentId: ${parentId}`); 
+
         if (user && parentId) {
           await this.saveOrganizationalStructure(parentId, user.id)
           const { password: excludedPassword, ...result } = user;
           return result;
+          
 
         } else if(user) {
           throw new UnauthorizedException(`User with dni: ${createUserDto.dni} already exists`);
@@ -261,6 +266,7 @@ export class UserService{
       }
 
       await this.userRepository.save(newUser);
+      console.log(`Usuario guardado: ${newUser.email}`); 
       
       await this.mailService.sendWelcomeEmail(newUser.email, newUser.name, password);
       
