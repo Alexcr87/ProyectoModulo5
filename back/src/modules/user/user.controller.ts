@@ -25,7 +25,7 @@ import { ExcelFilePipe } from "src/pipes/maxSizeAndFormatPlanilla";
 export class RedirectController {
   @Get('')
   redirectToFrontend(@Res() res: Response) {
-    res.redirect('http://localhost:4000');
+    res.redirect(`${process.env.API_URL}`);
   }
 }
 
