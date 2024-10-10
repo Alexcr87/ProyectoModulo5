@@ -115,11 +115,10 @@ const PopUpRegisterComponent = () => {
       {/* Popup para registro manual */}
       {registroManual && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg">
-            <button onClick={() => setRegistroManual(false)} className="mb-4">
-              Cerrar
+          <div className="bg-white p-8 rounded-lg shadow-lg relative overflow-hidden">
+            <button onClick={() => setRegistroManual(false)} className="absolute top-0 right-0 bg-slate-400 hover:bg-red-500 font-bold text-xl text-white px-2">
+              x
             </button>
-            <h2 className="text-xl mb-4">Formulario de Registro</h2>
             <Register />
           </div>
         </div>

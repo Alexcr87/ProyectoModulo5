@@ -219,7 +219,7 @@ const Register = () => {
       <div className="col-start-1 col-end-13">
         <div className="grid grid-cols-12">
           <div className="col-start-5 col-end-9 mt-[2.5em] my-[2em] text-center text-xl">
-            REGISTRO USUARIO
+            FORMULARIO DE REGISTRO
           </div>
         </div>
 
@@ -309,7 +309,7 @@ const Register = () => {
               </select>
               {errors.city && <span className="text-red-500 text-sm">{errors.city|| 'Este campo es obligatorio'}</span>}
             </div>
-            <div className="flex flex-col mt-4">
+            <div className="flex flex-col mb-4">
             <Select
               isMulti
               name="groups"
