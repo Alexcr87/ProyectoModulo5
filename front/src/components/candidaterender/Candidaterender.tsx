@@ -38,9 +38,28 @@ const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 // const Cartrender: React.FC<ICandidate & { onDelete: () => void; onAccess: () => void;}> = (props) => {
   
 //   const {onDelete,onAccess, ...candidate} = props
-   const Cartrender:React.FC<ICandidate> = ({...candidate}) => { 
 
-    
+   const Cartrender:React.FC<ICandidate> = ({...candidate}) => { 
+    console.log (candidate.id)
+
+    const handleDelete = async () => {
+      try {
+        const response = await fetch(`${APIURL}/candidates/${candidate.id}`, {
+          method: 'DELETE',
+        });
+        if (response.ok) {
+          console.log(`Candidate ${candidate.user.name} deleted successfully`);
+          
+          router.push('/'); 
+        } else {
+          console.error(`Error deleting candidate: ${response.status}`);
+        }
+
+    }  catch (error: any) {
+        console.error(`Error deleting candidate: ${error.message} - ${error.stack}`);
+      }
+    };
+
 const router = useRouter()
     
 
@@ -70,7 +89,8 @@ const router = useRouter()
         </div>
              {/* Botones para eliminar y acceder al componente */}
       <div className="flex flex-col justify-center">
-        <button  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-2">
+        <button  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-2"
+        onClick={handleDelete}>
           Eliminar
         </button>
 

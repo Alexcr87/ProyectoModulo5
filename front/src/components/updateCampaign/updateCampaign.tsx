@@ -79,7 +79,6 @@ const updateCampaign = () => {
           <div className="flex flex-row items-center w-full md:w-[40%] gap-4 m-auto mt-8 py-8 px-4 font-bold border-4 rounded-md outline-none
             border-stroke dark:border-dark-3 border-blue-500" >
           <p>{`Campana: ${campaign?.name}`}</p>
-          {/* <p>{`Fecha: ${campaign?.date}`}</p> */}
           <p>{`Fecha: ${campaign?.date ? new Date(campaign.date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) : ''}`}</p> </div>
       </div>
       <form className="campaign-form flex justify-center" onSubmit={handleUpdateCampaign}>
