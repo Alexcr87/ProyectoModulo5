@@ -4,9 +4,9 @@ import React, { useEffect, useState } from 'react'
 import Swal from "sweetalert2";
 import Boton from '../ui/Boton'
 import Boton2 from '../ui/Boton2'
-
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 import Account from '@/interfaces/account';
+import Spinner from '../ui/Spinner';
 
 const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 const APIURL = process.env.NEXT_PUBLIC_API_URL
@@ -24,6 +24,7 @@ const PricingTable = () => {
   const [preferenceId, setPreferenceId] = useState('');
   const [selectedAccountId, setSelectedAccountId] = useState<number | null>(null);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     
@@ -44,6 +45,8 @@ const PricingTable = () => {
         setAccounts(filteredAccounts);
       } catch (error) {
         console.error('Error al obtener cuentas:', error);
+      }finally {
+        setLoading(false); 
       }
     };
 
@@ -97,6 +100,9 @@ const PricingTable = () => {
           There are many variations of passages of Lorem Ipsum available <br /> but the majority have suffered alteration in some form.
         </h3>
       </div>
+      {loading ? (
+        <Spinner /> // Mostrar el spinner mientras se cargan las tarjetas
+      ) : (
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 justify-center w-full mt-8 gap-8 px-4'>
       {accounts.map((account) => (
           <div 
@@ -114,7 +120,7 @@ const PricingTable = () => {
           </div>
         ))}
       </div>
-
+    )}
       {/* Contenedor del botón de Mercado Pago */}
       {selectedAccountId && preferenceId && (
         <div className='mt-8 flex justify-center'>

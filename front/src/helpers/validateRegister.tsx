@@ -5,29 +5,29 @@ export function validateRegisterForm(values: IRegisterProps): IRegisterError {
   const errors: IRegisterError = {};
 
   // Validación del email
-  if (!values.email.trim()) {
+  if (values.email && !values.email.trim()) {
     errors.email = "El correo electrónico es obligatorio.";
-  } else if (!/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(values.email)) {
+  } else if ( values.email && !/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(values.email)) {
     errors.email = "Correo electrónico inválido.";
   }
 
   // Validación del nombre
-  if (!values.name.trim()) {
+  if (values.name && !values.name.trim()) {
     errors.name = "El nombre es obligatorio.";
-  } else if (!/^[a-zA-Z\s]+$/.test(values.name)) {
+  } else if (values.name && !/^[a-zA-Z\s]+$/.test(values.name)) {
     errors.name = "El nombre no debe tener números ni símbolos.";
-  } else if (/\s{2,}/.test(values.name)) {
+  } else if (values.name && /\s{2,}/.test(values.name)) {
     errors.name = "El nombre no debe tener más de dos espacios consecutivos.";
   }
 
-  if (!values.address?.trim()) {
+  if (values.address && !values.address?.trim()) {
     errors.address = "La dirección es obligatoria.";
   }
 
   // Validación del DNI (número y sin puntos)
-  if (!values.dni.trim()) {
+  if (values.dni && !values.dni.trim()) {
     errors.dni = "El DNI es obligatorio.";
-  } else if (!/^\d+$/.test(values.dni)) {
+  } else if (values.dni && !/^\d+$/.test(values.dni)) {
     errors.dni = "El DNI debe ser un número sin puntos.";
   }
 
@@ -53,12 +53,12 @@ export function validateRegisterForm(values: IRegisterProps): IRegisterError {
     
   
    // Validación del país
-   if (!values.country?.trim()) {
+   if (values.country && !values.country?.trim()) {
     errors.country = "El país es obligatorio.";
   }
 
   // Validación de la ciudad
-  if (!values.city?.trim()) {
+  if (values.city && !values.city?.trim()) {
     errors.city = "La ciudad es obligatoria.";
   }
 

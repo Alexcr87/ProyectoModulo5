@@ -13,6 +13,7 @@ import InputFile from "../ui/InputFile";
 import { useAuth } from "@/context/Authontext";
 import IGroup from "@/interfaces/IGroup";
 import Select from 'react-select';
+import Spinner from "../ui/Spinner";
 
 const Register = () => {
   const router = useRouter();
@@ -40,7 +41,7 @@ const Register = () => {
   const [userSesion, setUserSesion] = useState<IloginProps>();
   const pathname = usePathname();
   const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
-
+  const [loading, setLoading] = useState(false);
 
   const handleBlur = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name } = event.target;
@@ -158,6 +159,7 @@ const Register = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
     
     const userDataWithParentId = {
       ...dataUser,
@@ -195,6 +197,8 @@ const Register = () => {
           text: error.message || 'Hubo un error al procesar tu solicitud',
         });
       }
+    }finally {
+      setLoading(false); // Ocultar spinner cuando termina la solicitud
     }
   };
   
@@ -215,11 +219,16 @@ const Register = () => {
   };
 
   return (<>
+  {loading && (
+      <div className="flex justify-center items-center">
+        <Spinner /> {/* Muestra el spinner */}
+      </div>
+    )}
     <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">
       <div className="col-start-1 col-end-13">
         <div className="grid grid-cols-12">
           <div className="col-start-5 col-end-9 mt-[2.5em] my-[2em] text-center text-xl">
-            REGISTRO USUARIO
+            FORMULARIO DE REGISTRO
           </div>
         </div>
 
@@ -309,7 +318,7 @@ const Register = () => {
               </select>
               {errors.city && <span className="text-red-500 text-sm">{errors.city|| 'Este campo es obligatorio'}</span>}
             </div>
-            <div className="flex flex-col mt-4">
+            <div className="flex flex-col mb-4">
             <Select
               isMulti
               name="groups"

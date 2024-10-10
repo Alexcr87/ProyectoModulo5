@@ -115,8 +115,8 @@ const Campaingdesc = () => {
   return (
     <div>
       {campaign ? (
-        <div>
-          <h1 className="text-2xl font-bold mb-4">{campaign.name}</h1>
+        <div className='flex flex-col items-center'>
+          <h1 className="text-2xl font-bold mb-4 capitalize">{campaign.name}</h1>
           <p className="text-lg">{campaign.description}</p>
           <p className="text-md text-gray-600">Ubicación: {campaign.location}</p>
           <p className="text-md text-gray-600">Fecha: {new Date(campaign.date).toLocaleDateString()}</p>
@@ -127,13 +127,13 @@ const Campaingdesc = () => {
             </div>
           )}
           {campaign.candidates && campaign.candidates.length > 0 ? (
-            <div className="flex flex-wrap justify-center gap-2">
+            <div className="flex flex-wrap justify-center bg-cuartiaryColor gap-2 w-full p-8 mt-4">
               {campaign.candidates.map((candidate) => (
                 <div
                   key={candidate?.id}
-                  className="flex flex-col justify-between p-4 rounded-2xl bg-white shadow-md w-72 dark:border-gray-700"
+                  className="flex flex-col items-center p-4 rounded-2xl bg-white shadow-md w-72 h-80 dark:border-gray-700"
                 >
-                  <div className="relative overflow-hidden rounded-xl h-25">
+                  <div className="relative overflow-hidden rounded-xl w-[95%] h-[60%] mx-auto">
                     <img
                       className="h-full w-full object-cover"
                       src={candidate?.imgUrl}
@@ -141,12 +141,12 @@ const Campaingdesc = () => {
                       style={{ objectFit: 'cover', height: '100%' }}
                     />
                   </div>
-                  <div className="pt-4 text-center">
-                    <p className="font-bold text-xl">{candidate?.user.name}</p>
-                    <div className="mt-2">
+                  <div className="text-center">
+                    <p className="font-bold text-xl uppercase">{candidate?.user.name}</p>
+                    <div className="">
                       <p className="font-bold">Postulación:</p>
-                      <p>{candidate?.postulation}</p>
-                      <p className="my-2">{candidate?.list}</p>
+                      <p className='capitalize'>{candidate?.postulation}</p>
+                      <p className="capitalize">{candidate?.list}</p>
                     </div>
                     {(roles.includes('candidate') || roles.includes('voter')) && (
                       <div>
@@ -164,16 +164,16 @@ const Campaingdesc = () => {
                 </div>
               ))}
               {(roles.includes('candidate') || roles.includes('voter')) && (
-                <div className="flex flex-col justify-between p-4 rounded-2xl bg-white shadow-md w-72 dark:border-gray-700">
-                  <div className="relative overflow-hidden rounded-xl h-25">
+                <div className="flex flex-col items-center p-4 rounded-2xl bg-white shadow-md w-72 h-80 dark:border-gray-700">
+                  <div className="relative overflow-hidden rounded-xl w-[95%] h-[50%] mx-auto flex justify-center">
                     <img
-                      className="h-full w-full object-cover"
+                      className="object-cover object-center"
                       src="/images/blankVote.jpg"
                       style={{ objectFit: 'cover', height: '100%' }}
                     />
                   </div>
                   <div className="pt-4 text-center">
-                    <p className="font-bold text-xl" style={{ marginBottom: '30px' }}>Votar en Blanco</p>
+                    <p className="font-bold text-xl mb-8">Votar en Blanco</p>
                     <div>
                       <Boton
                         type='button'

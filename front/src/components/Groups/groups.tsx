@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/Authontext";
 import IGroup from "@/interfaces/IGroup";
+import Spinner from "../ui/Spinner";
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 const Groups = () => {
@@ -69,7 +70,11 @@ const Groups = () => {
   };
 
   if (loading) {
-    return <p className="text-center text-gray-500">Cargando...</p>;
+    return (
+    <div className="flex justify-center items-center h-screen">
+    <Spinner />
+  </div>
+);
   }
 
   return (
