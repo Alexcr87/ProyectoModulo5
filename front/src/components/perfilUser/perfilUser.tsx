@@ -11,6 +11,7 @@ import Input from "../ui/Input";
 import Boton from "../ui/Boton";
 import { getUserByID, updateUserById } from "@/helpers/user.helper";
 import { userSession } from "@/interfaces/Session";
+import Spinner from "../ui/Spinner";
 
 const VoterProfile = () => {
   const router = useRouter();
@@ -32,6 +33,7 @@ const VoterProfile = () => {
     const [countries] = useState<string[]>(["Argentina", "Chile", "Colombia"]);
     const [cities, setCities] = useState<string[]>([]);
     const [touched, setTouched] = useState<IRegisterError>(initialState);
+    const [loading, setLoading] = useState<boolean>(false)
   
     const handleBlur = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
      const { name } = event.target;
@@ -80,6 +82,7 @@ const VoterProfile = () => {
 
 const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
   event.preventDefault();
+  setLoading(true);
   
   try {
     if (!userData?.userData.id) {
@@ -137,6 +140,8 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         text: error.message || 'Hubo un error al procesar tu solicitud',
       });
     }
+  }finally {
+    setLoading(false); 
   }
 };
 
@@ -145,6 +150,14 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       const errors = validateRegisterForm(dataUser);
       setErrors(errors);
     }, [dataUser]);
+    
+    if (loading) {
+      return (
+        <div className="flex justify-center items-center h-screen">
+          <Spinner /> {/* Mostrar Spinner mientras carga */}
+        </div>
+      );
+    }
   
     return (
       <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">

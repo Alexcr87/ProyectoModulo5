@@ -9,6 +9,7 @@ import Input from "../ui/Input";
 import Boton from "../ui/Boton";
 import { useAuth } from "@/context/Authontext";
 import { register } from "@/helpers/auth.helper";
+import Spinner from "../ui/Spinner";
 
 
 const RegisterByAuth0 = () => {
@@ -31,6 +32,7 @@ const initialState = {
   const [countries] = useState<string[]>(["Argentina", "Chile", "Colombia"]);
   const [cities, setCities] = useState<string[]>([]);
   const [touched, setTouched] = useState<IRegisterError>(initialState);
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleBlur = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
    const { name } = event.target;
@@ -79,7 +81,7 @@ const initialState = {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+    setIsLoading(true);
     try {
       await register(dataUser); // Intenta registrar al usuario
       Swal.fire({
@@ -110,6 +112,8 @@ const initialState = {
           text: error.message || 'Hubo un error al procesar tu solicitud',
         });
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -228,7 +232,7 @@ const initialState = {
               type="submit"
               disabled={!isFormValid}
             >
-              Completar Registro
+              {isLoading ? <Spinner /> : "Completar Registro"}
             </Boton>
             <img
               src="/images/registerImage.png"

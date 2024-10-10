@@ -17,6 +17,7 @@ const PopUpRegisterComponent = () => {
   const { userData, setUserData } = useAuth();
   const [groups, setGroups] = useState<IGroup[]>([]);
   const [selectedGroups, setSelectedGroups] = useState<IGroup[]>([]);
+  const [loading, setLoading] = useState(false)
 
   const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
   const parentId = userData?.userData.id
@@ -57,7 +58,7 @@ const PopUpRegisterComponent = () => {
       });
       return;
     }
-
+    setLoading(true);
     try {
       // Implementa la lógica de importación del archivo aquí
     await importUser(file, userData?.userData.id, selectedGroups); // Asegúrate de definir esta función
@@ -78,6 +79,8 @@ const PopUpRegisterComponent = () => {
         showConfirmButton: false,
         timer: 1500,
       });
+    }finally {
+      setLoading(false); 
     }
   };
 
