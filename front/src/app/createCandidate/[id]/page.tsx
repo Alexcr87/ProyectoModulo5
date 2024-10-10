@@ -9,7 +9,7 @@ import React from 'react'
 const CreateCandidateById: React.FC <{params:{id:string}}> = ({params}) => {
 
   return (
-    <div className='bg-cuartiaryColor flex justify-center '>
+    <div className='bg-cuartiaryColor flex justify-center items-center h-[85vh] '>
       <CreateCandidate id={params.id} />
     </div>
   );

@@ -100,7 +100,7 @@ const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
   };
 
   return (
-    <div className="flex w-[60%] justify-center p-6 bg-white shadow-lg rounded-lg">
+    <div className="flex w-[60%] justify-center items-center h-[80%] p-6 bg-white shadow-lg rounded-lg">
       <form onSubmit={handleSubmit} className="w-11/12 space-y-4">
         <h1 className="text-lg font-bold text-center">Crear Candidato</h1>
           <Input
@@ -117,12 +117,12 @@ const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
             onChange={(e) => setList(e.target.value)}
             required
           />
-          <Textarea
+          {/* <Textarea
             value={campaignDescription}
             placeholder="Descripción de la campaña"
             onChange={(e) => setCampaignDescription(e.target.value)}
             required
-          />
+          /> */}
         <div className="rounded-md">
           <label className="block text-sm font-medium text-gray-700">Propuestas</label>
           <Textarea
