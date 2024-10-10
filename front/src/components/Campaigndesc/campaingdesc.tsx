@@ -133,7 +133,7 @@ const Campaingdesc = () => {
                   key={candidate?.id}
                   className="flex flex-col items-center p-4 rounded-2xl bg-white shadow-md w-72 h-80 dark:border-gray-700"
                 >
-                  <div className="relative overflow-hidden rounded-xl w-[95%] h-[50%] mx-auto">
+                  <div className="relative overflow-hidden rounded-xl w-[95%] h-[60%] mx-auto">
                     <img
                       className="h-full w-full object-cover"
                       src={candidate?.imgUrl}
@@ -141,12 +141,12 @@ const Campaingdesc = () => {
                       style={{ objectFit: 'cover', height: '100%' }}
                     />
                   </div>
-                  <div className="pt-4 text-center">
+                  <div className="text-center">
                     <p className="font-bold text-xl uppercase">{candidate?.user.name}</p>
-                    <div className="mt-2">
+                    <div className="">
                       <p className="font-bold">Postulación:</p>
                       <p className='capitalize'>{candidate?.postulation}</p>
-                      <p className="my-2 capitalize">{candidate?.list}</p>
+                      <p className="capitalize">{candidate?.list}</p>
                     </div>
                     {(roles.includes('candidate') || roles.includes('voter')) && (
                       <div>
@@ -164,16 +164,16 @@ const Campaingdesc = () => {
                 </div>
               ))}
               {(roles.includes('candidate') || roles.includes('voter')) && (
-                <div className="flex flex-col items-center p-4 rounded-2xl bg-white shadow-md w-72 dark:border-gray-700">
-                  <div className="relative overflow-hidden rounded-xl w-[95%] h-[50%] mx-auto">
+                <div className="flex flex-col items-center p-4 rounded-2xl bg-white shadow-md w-72 h-80 dark:border-gray-700">
+                  <div className="relative overflow-hidden rounded-xl w-[95%] h-[50%] mx-auto flex justify-center">
                     <img
-                      className="h-full w-full object-cover"
+                      className="object-cover object-center"
                       src="/images/blankVote.jpg"
                       style={{ objectFit: 'cover', height: '100%' }}
                     />
                   </div>
                   <div className="pt-4 text-center">
-                    <p className="font-bold text-xl" style={{ marginBottom: '30px' }}>Votar en Blanco</p>
+                    <p className="font-bold text-xl mb-8">Votar en Blanco</p>
                     <div>
                       <Boton
                         type='button'
