@@ -30,19 +30,19 @@ const teamMembers = [
         "id": 4,
         "name": "Christian Rugna",
         "profession":"BackEnd Developer",
-        "image":"https://www.labsaenzrenauld.com/wp-content/uploads/2020/10/Perfil-hombre-ba%CC%81sico_738242395.jpg",
+        "image":"https://res.cloudinary.com/dgexsgnid/image/upload/v1728671958/Christian_jlugyo.jpg",
         "linkFacebook":"",
-        "linkGitHub":"",
-        "linkLinkedIn":""
+        "linkGitHub":"https://github.com/Alexcr87",
+        "linkLinkedIn":"https://www.linkedin.com/in/christian-rugna-285a9a32b/"
     },
     {
         "id": 5,
         "name": "Sharon Lopez",
         "profession":"BackEnd Developer",
-        "image":"https://vivolabs.es/wp-content/uploads/2022/03/perfil-mujer-vivo.png",
-        "linkFacebook":"",
-        "linkGitHub":"",
-        "linkLinkedIn":""
+        "image":"/images/sharon.jpg",
+        "linkFacebook":"https://www.facebook.com/profile.php?id=100008723472457",
+        "linkGitHub":"https://github.com/Sharonesaa",
+        "linkLinkedIn":"https://www.linkedin.com/in/sharonlopez07/"
     },
     {
         "id": 6,

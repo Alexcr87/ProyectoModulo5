@@ -2,8 +2,7 @@ import ICandidate from "./ICandidate"
 import IGroup from "./IGroup";
 import IUsers from "./IUsers";
 
-interface ICampaign {
-    id: string;
+interface ICampaignSinID {
     name: string;
     description: string;
     location: string;
@@ -16,8 +15,4 @@ interface ICampaign {
     groups: IGroup[]
   }
   
-  export default ICampaign;
-
-
-  
-  
+  export default ICampaignSinID;

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateGroupDto } from 'src/dto/group.dto';
 import { GroupService } from 'src/modules/usersGroup/usersGroup.service';
@@ -20,6 +20,12 @@ export class GroupController {
   async getGroupsByUserId(@Param('userId') userId: string): Promise<Group[]> {
     return this.groupService.getGroupsByUserId(userId);
   }
+
+  @Delete()
+  async deleteGroups(@Body('ids') ids: string[]): Promise<string> {
+    return await this.groupService.deleteGroups(ids);
+  }
+
 
   @Get()
   async findAll(): Promise<Group[]> {

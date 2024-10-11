@@ -4,12 +4,13 @@ import Graph from '../graph/Graph';
 import Image from 'next/image';
 import { IDataVote, IVotesResult } from '@/interfaces/IVotesResult';
 import colors from '@/helpers/colors.helper';
+import Spinner from '../ui/Spinner';
 
 
 const Results: React.FC<{ data: IVotesResult[] }> = ({ data }) => {
   const [dataCan, setDataCan] = useState<IDataVote[]>([]);
   const [totalVotes, setTotalVotes] = useState<number>(0);
-
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
     const fetchData = () => {
@@ -39,10 +40,19 @@ const Results: React.FC<{ data: IVotesResult[] }> = ({ data }) => {
 
       setDataCan(dataCandidate);
       setTotalVotes(total);
+      setIsLoading(false);
     }
 
     fetchData();
-  }, [data]); // Agregar 'data' como dependencia
+  }, [data]); 
+  
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Spinner /> 
+      </div>
+    );
+  }
 
   return (
     <div className='bg-cuartiaryColor flex justify-center'>

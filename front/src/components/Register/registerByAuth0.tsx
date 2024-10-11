@@ -10,12 +10,16 @@ import Input from "../ui/Input";
 import Boton from "../ui/Boton";
 import { useAuth } from "@/context/Authontext";
 import { register } from "@/helpers/auth.helper";
-
+import Spinner from "../ui/Spinner";
+import { Country, City } from "@/components/utils/types";
+import { citiesByCountry } from "@/components/utils/citiesByCountry";
+import { countries } from "../utils/countries";
 
 const RegisterByAuth0 = () => {
 const router = useRouter();
-const { userData } = useAuth();
-
+const { userData, auth0UserData } = useAuth();
+const [loading, setLoading] = useState(false);
+const [isSubmitted, setIsSubmitted] = useState(false);
 
 /*const localUser = localStorage.getItem("userSesion");
 if (localUser) {
@@ -23,11 +27,11 @@ if (localUser) {
 }*/
 
 const initialState = {
-    name: `${userData?.userData.name}`,
+    name: `${auth0UserData?.name}`,
     dni: "",
     address: "",
-    email: `${userData?.userData.email}`,
-    password: "jahsdsajh123S@",
+    email: `${auth0UserData?.email}`,
+    password: "12345aS@",
     country: "",
     city: ""
   };
@@ -35,8 +39,8 @@ const initialState = {
   const [dataUser, setDataUser] = useState<IRegisterProps>(initialState);
   const [errors, setErrors] = useState<IRegisterError>(initialState);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [countries] = useState<string[]>(["Argentina", "Chile", "Colombia"]);
-  const [cities, setCities] = useState<string[]>([]);
+  
+  const [cities, setCities] = useState<City[]>([]);
   const [touched, setTouched] = useState<IRegisterError>(initialState);
 
   // const handleBlur = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -64,15 +68,9 @@ const initialState = {
   //     });
   //   }
   // }, []);
-
-  const fetchCitiesByCountry = (country: string) => {
-    const countryCitiesMap: Record<string, string[]> = {
-      "Argentina": ["Buenos Aires", "Córdoba", "Rosario"],
-      "Chile": ["Santiago", "Valparaíso", "Concepción"],
-      "Colombia": ["Bogotá", "Medellín", "Cali"],
-    };
-    return countryCitiesMap[country] || [];
-  };
+  const fetchCitiesByCountryId = (countryId: number) => {
+    return citiesByCountry.filter((city: { id_country: number; }) => city.id_country === countryId);
+};
 
   useEffect(() => {
     setIsFormValid(
@@ -96,35 +94,70 @@ const initialState = {
     const auth0LoginUrl = `${process.env.NEXT_PUBLIC_API_URL}/login`;
     window.location.href = auth0LoginUrl;
 };
-  const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedCountry = event.target.value;
-    setDataUser({ ...dataUser, country: selectedCountry });
 
-    // Fetch cities based on the selected country
-    const fetchedCities = fetchCitiesByCountry(selectedCountry);
-    setCities(fetchedCities);
-  };
+const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const selectedCountryId = Number(event.target.value);
+  const selectedCountryName = countries.find(country => country.id === selectedCountryId)?.name || "";
+
+  setDataUser((prevDataUser) => ({
+    ...prevDataUser,
+    country: selectedCountryName,
+    city: "" // Reiniciar la ciudad al cambiar el país
+  }));
+
+  const fetchedCities = fetchCitiesByCountryId(selectedCountryId);
+  setCities(fetchedCities);
+
+  if (isSubmitted) {
+    setIsSubmitted(false);
+  }
+};
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
- 
-    await register(dataUser);
-    Swal.fire({
-      position: "center",
-      icon: "success",
-      title: "Usted se registró un usuario con éxito",
-      showConfirmButton: false,
-      timer: 1500
-    });
-    handleAuth0Login()
+    setLoading(true);
+    try {
+      await register(dataUser);
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Usted se registró un usuario con éxito",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      handleAuth0Login();
+    } catch (error) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error al registrar",
+        showConfirmButton: false,
+        timer: 1500
+      });
+    } finally {
+      setLoading(false); // Ocultar el spinner al finalizar
+    }
   };
-
   useEffect(() => {
     const errors = validateRegisterForm(dataUser);
     setErrors(errors);
   }, [dataUser]);
 
+  const handleBlur = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name } = event.target;
+    setTouched({
+      ...touched,
+      [name]: true,
+    });
+  };
+
   return (
+    <>
+    {loading && (
+      <div className="flex justify-center items-center">
+        <Spinner /> {/* Muestra el spinner */}
+      </div>
+    )}
     <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">
       <div className="col-start-1 col-end-13">
         <div className="grid grid-cols-12">
@@ -140,9 +173,9 @@ const initialState = {
                 id="name"
                 name="name"
                 type="text"
-                value={userData?.userData.name}
+                value={dataUser.name}
                 onChange={handleChange}
-                placeholder="Nombre"
+                placeholder={auth0UserData?.name}
               />
               {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
             </div>
@@ -175,9 +208,12 @@ const initialState = {
                 id="email-address"
                 name="email"
                 type="email"
-                value={userData?.userData.email}
+                value={auth0UserData?.email}
+                onBlur={handleBlur}
                 onChange={handleChange}
-                placeholder="Correo Electrónico"
+                placeholder={auth0UserData?.email}
+                disabled
+                
               />
               {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
             </div>
@@ -185,44 +221,39 @@ const initialState = {
 
           <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
             <div className="flex flex-col">
-              <select
-                name="country"
-                value={dataUser.country}
-                onChange={handleCountryChange}
-                className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
-                border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 focus:border-primaryColor 
-                dark:focus:border-primaryColor focus-visible:shadow-none"
-              >
-                <option value="">Selecciona un país</option>
-                {countries.map(country => (
-                  <option key={country} value={country}>{country}</option>
-                ))}
-              </select>
-              {errors.country && <span className="text-red-500 text-sm">{errors.country}</span>}
+            <select
+          name="country"
+          onChange={handleCountryChange}
+          className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
+        >
+          <option value="">Selecciona un país</option>
+          {countries.map(country => (
+              <option key={country.id} value={country.id}>{country.name}</option>
+          ))}
+        </select>
+        {errors.country && <p className="text-red-500">{errors.country}</p>}
+        <div className="flex flex-col mt-4">
+        <select
+          name="city"
+          value={dataUser.city}
+          onChange={handleChange}
+          className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
+        >
+          <option value="">Selecciona una ciudad</option>
+          {cities.map(city => (
+              <option key={city.id} value={city.id}>{city.name}</option>
+          ))}
+        </select>
             </div>
-
-            <div className="flex flex-col my-4">
-              <select
-                name="city"
-                value={dataUser.city}
-                onChange={handleChange}
-                className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
-                  border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 focus:border-primaryColor 
-                  dark:focus:border-primaryColor focus-visible:shadow-none"
-              >
-                <option value="">Selecciona una ciudad</option>
-                {cities.map(city => (
-                  <option key={city} value={city}>{city}</option>
-                ))}
-              </select>
-              {errors.city && <span className="text-red-500 text-sm">{errors.city}</span>}
+            {errors.city && <span className="text-red-500 text-sm">{errors.city}</span>}
             </div>
-            <Boton
-              type="submit"
-              //disabled={!isFormValid}
-            >
-              Completar Registro
+            <div className="mt-4">
+            <Boton type="submit" disabled={!isFormValid || loading}>
+              {loading ? <Spinner /> : 'Completar Registro'}
             </Boton>
+            </div>
             <img
               src="/images/registerImage.png"
               alt="Small icon"
@@ -232,7 +263,8 @@ const initialState = {
         </div>
       </div>
     </form>
-  );
+    </>
+);
 };
 
 export default RegisterByAuth0;

@@ -60,7 +60,7 @@ export class UserService{
           return []; 
         }
       }
-      return await this.userRepository.find({relations: ['roles']});
+      return await this.userRepository.find({relations: ['roles', 'groups']});
     } catch (error) {
       throw new InternalServerErrorException('Error al recuperar usuarios');
     }
@@ -165,6 +165,7 @@ export class UserService{
   }
 
   async findUserByEmail(email:string):Promise<User>{
+    console.log(email, "email");
     
     const user = await this.userRepository.findOne({ where: { email },relations: { roles:true, groups:true}});
       if (!user) {

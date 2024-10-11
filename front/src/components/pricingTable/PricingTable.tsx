@@ -1,11 +1,12 @@
 "use client"
 
 import React, { useEffect, useState } from 'react'
+import Swal from "sweetalert2";
 import Boton from '../ui/Boton'
 import Boton2 from '../ui/Boton2'
-
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 import Account from '@/interfaces/account';
+import Spinner from '../ui/Spinner';
 
 const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 const APIURL = process.env.NEXT_PUBLIC_API_URL
@@ -22,6 +23,9 @@ const PricingTable = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [preferenceId, setPreferenceId] = useState('');
   const [selectedAccountId, setSelectedAccountId] = useState<number | null>(null);
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
     
 
@@ -41,6 +45,8 @@ const PricingTable = () => {
         setAccounts(filteredAccounts);
       } catch (error) {
         console.error('Error al obtener cuentas:', error);
+      }finally {
+        setLoading(false); 
       }
     };
 
@@ -50,6 +56,16 @@ const PricingTable = () => {
 
   const handlePlanSelection = async (accountId: number , price:number) => {
     setSelectedAccountId(accountId);
+
+    if (!isRegistered) {
+      Swal.fire({
+        title: '¡Regístrate para continuar!',
+        text: 'Debes estar registrado para acceder a estas cuentas',
+        icon: 'info',
+        confirmButtonText: 'Ok',
+      });
+      return;
+    }
 
     if (price === 0) { 
       
@@ -76,14 +92,21 @@ const PricingTable = () => {
       console.error('Error al crear la preferencia:', error);
     }
   };
+
+
+
   return (
+
     <div className='min-h-screen flex flex-col items-center justify-center py-8'>
       <div className='text-center'>
-        <h1 className='text-4xl font-bold py-4'>Awesome Pricing Plan</h1>
+        <h1 className='text-4xl font-bold py-4'>Plan de precios increíble</h1>
         <h3 className='pb-4'>
-          There are many variations of passages of Lorem Ipsum available <br /> but the majority have suffered alteration in some form.
+        {/* Hay muchas variaciones de pasajes de Lorem Ipsum disponibles. <br /> but the majority have suffered alteration in some form. */}
         </h3>
       </div>
+      {loading ? (
+        <Spinner /> // Mostrar el spinner mientras se cargan las tarjetas
+      ) : (
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 justify-center w-full mt-8 gap-8 px-4'>
       {accounts.map((account) => (
           <div 
@@ -92,16 +115,17 @@ const PricingTable = () => {
             onClick={() => handlePlanSelection(account.id, account.price)} // Aquí se pasa también el precio
           >
             <h2 className='text-lg font-bold mt-8'>{account.name}</h2>
-            <h3>$<span className='text-4xl font-bold'>{account.price}</span> Per Month</h3>
+            <h3>$<span className='text-4xl font-bold'>{account.price}</span> Por mes</h3>
             <h4>{account.description}</h4>
-            <h4>All UI components</h4>
-            <h4>Lifetime access</h4>
-            <h4>Free updates</h4>
-            <h2 className='text-lg font-bold mt-12 mb-4'>Features</h2>
+    
+            <h4>Todos los componentes de la interfaz de usuario</h4>
+            <h4>Acceso de por vida</h4>
+            <h4>Actualizaciones gratuitas</h4>
+            <h2 className='text-lg font-bold mt-12 mb-4'>Características</h2>
           </div>
         ))}
       </div>
-
+    )}
       {/* Contenedor del botón de Mercado Pago */}
       {selectedAccountId && preferenceId && (
         <div className='mt-8 flex justify-center'>

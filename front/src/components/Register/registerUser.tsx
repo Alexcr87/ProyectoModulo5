@@ -9,12 +9,15 @@ import Input from "../ui/Input";
 import Boton from "../ui/Boton";
 import { useAuth } from "@/context/Authontext";
 import { register } from "@/helpers/auth.helper";
-
+import Spinner from "../ui/Spinner";
+import { Country, City } from "@/components/utils/types";
+import { citiesByCountry } from "@/components/utils/citiesByCountry";
+import { countries } from "../utils/countries";
 
 const RegisterByAuth0 = () => {
 const router = useRouter();
 const { userData } = useAuth();
-
+const [isSubmitted, setIsSubmitted] = useState(false);
 const initialState = {
     name: ``,
     dni: "",
@@ -28,9 +31,9 @@ const initialState = {
   const [dataUser, setDataUser] = useState<IRegisterProps>(initialState);
   const [errors, setErrors] = useState<IRegisterError>(initialState);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [countries] = useState<string[]>(["Argentina", "Chile", "Colombia"]);
-  const [cities, setCities] = useState<string[]>([]);
+  const [cities, setCities] = useState<City[]>([]);
   const [touched, setTouched] = useState<IRegisterError>(initialState);
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleBlur = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
    const { name } = event.target;
@@ -40,14 +43,9 @@ const initialState = {
     });
    };
 
-  const fetchCitiesByCountry = (country: string) => {
-    const countryCitiesMap: Record<string, string[]> = {
-      "Argentina": ["Buenos Aires", "Córdoba", "Rosario"],
-      "Chile": ["Santiago", "Valparaíso", "Concepción"],
-      "Colombia": ["Bogotá", "Medellín", "Cali"],
-    };
-    return countryCitiesMap[country] || [];
-  };
+   const fetchCitiesByCountryId = (countryId: number) => {
+    return citiesByCountry.filter((city: { id_country: number; }) => city.id_country === countryId);
+};
 
   useEffect(() => {
     setIsFormValid(
@@ -69,17 +67,26 @@ const initialState = {
   };
 
   const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedCountry = event.target.value;
-    setDataUser({ ...dataUser, country: selectedCountry });
+    const selectedCountryId = Number(event.target.value);
+    const selectedCountryName = countries.find(country => country.id === selectedCountryId)?.name || "";
 
-    // Fetch cities based on the selected country
-    const fetchedCities = fetchCitiesByCountry(selectedCountry);
+    setDataUser((prevDataUser) => ({
+      ...prevDataUser,
+      country: selectedCountryName,
+      city: "" // Reiniciar la ciudad al cambiar el país
+    }));
+
+    const fetchedCities = fetchCitiesByCountryId(selectedCountryId);
     setCities(fetchedCities);
+
+    if (isSubmitted) {
+      setIsSubmitted(false);
+    }
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+    setIsLoading(true);
     try {
       await register(dataUser); // Intenta registrar al usuario
       Swal.fire({
@@ -110,6 +117,8 @@ const initialState = {
           text: error.message || 'Hubo un error al procesar tu solicitud',
         });
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -191,45 +200,43 @@ const initialState = {
           </div>
 
           <div>
-            <div className="flex flex-col">
-              <select
-                name="country"
-                value={dataUser.country}
-                onChange={handleCountryChange}
-                className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
-                border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 focus:border-primaryColor 
-                dark:focus:border-primaryColor focus-visible:shadow-none"
-              >
-                <option value="">Selecciona un país</option>
-                {countries.map(country => (
-                  <option key={country} value={country}>{country}</option>
-                ))}
-              </select>
-              {errors.country && <span className="text-red-500 text-sm">{errors.country}</span>}
-            </div>
-
-            <div className="flex flex-col my-4">
-              <select
-                name="city"
-                value={dataUser.city}
-                onChange={handleChange}
-                className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
-                  border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 focus:border-primaryColor 
-                  dark:focus:border-primaryColor focus-visible:shadow-none"
-              >
-                <option value="">Selecciona una ciudad</option>
-                {cities.map(city => (
-                  <option key={city} value={city}>{city}</option>
-                ))}
-              </select>
+            <div className="flex flex-col mt-4">
+            <select
+          name="country"
+          onChange={handleCountryChange}
+          className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
+        >
+          <option value="">Selecciona un país</option>
+          {countries.map(country => (
+              <option key={country.id} value={country.id}>{country.name}</option>
+          ))}
+        </select>
+        {errors.country && <p className="text-red-500">{errors.country}</p>}
+        <div className="flex flex-col mt-4">
+        <select
+          name="city"
+          value={dataUser.city}
+          onChange={handleChange}
+          className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
+        >
+          <option value="">Selecciona una ciudad</option>
+          {cities.map(city => (
+              <option key={city.id} value={city.id}>{city.name}</option>
+          ))}
+        </select>
+        </div>
               {errors.city && <span className="text-red-500 text-sm">{errors.city}</span>}
             </div>
+            <div className="mt-4">
             <Boton
               type="submit"
-              disabled={!isFormValid}
+              disabled={!isFormValid} 
             >
-              Completar Registro
+              {isLoading ? <Spinner /> : "Completar Registro"}
             </Boton>
+            </div>
             <img
               src="/images/registerImage.png"
               alt="Small icon"
@@ -243,3 +250,7 @@ const initialState = {
 };
 
 export default RegisterByAuth0;
+function setIsSubmitted(arg0: boolean) {
+  throw new Error("Function not implemented.");
+}
+

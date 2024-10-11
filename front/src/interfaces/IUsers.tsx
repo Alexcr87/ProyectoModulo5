@@ -1,3 +1,5 @@
+import IGroup from "./IGroup";
+
 interface IUsers {
     id: string,
     name: string,
@@ -7,7 +9,12 @@ interface IUsers {
     address?: string,
     city?: string,
     country?: string,
-    rol?: string,
+    roles?: [{
+        id:number,
+        name:string,
+        description:string
+    }],
+    group?:IGroup[]
     isFirstLogin?: boolean
 }
 
