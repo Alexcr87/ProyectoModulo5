@@ -87,6 +87,8 @@ export class UserController {
   @Get("/email/:email")
   @HttpCode(200)
   async findUserByEmail(@Param("email") email: string) {
+    console.log(email, "email controller");
+    
     try {
       return await this.userService.findUserByEmail(email);
     } catch (error) {
