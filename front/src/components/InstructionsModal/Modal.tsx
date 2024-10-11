@@ -5,21 +5,36 @@ import styles from "./styles.module.css";
 interface CustomModalProps {
     isOpen: boolean;
     onRequestClose: () => void;
+    userRole: string | null;
 }
 
-const CustomModal: React.FC<CustomModalProps> = ({ isOpen, onRequestClose }) => {
+const CustomModal: React.FC<CustomModalProps> = ({ isOpen, onRequestClose, userRole }) => {
+    // Contenido para votantes
+    const voterGuideContent = (
+        <>
+             <h2>Sigue estos pasos:</h2>
+            <br />
+            <ul className={styles.lista}>
+                <li>Inicia sesion</li>
+                <br />
+                <li>Dirigete a tu campaña</li>
+                <br />
+                <li>Selecciona tu candidato</li>
+                <br />
+                <li>Dale a "votar"</li>
+                <br />
+                <li>Tu sufragio fue emitido</li>
+                <br />
+                <li>Puedes cerrar sesion</li>
+            </ul>
+            <br />
+        </>
+    );
 
-
-    return (
-        <Modal 
-            isOpen={isOpen} 
-            onRequestClose={onRequestClose} 
-            className={styles.modalContent}
-            overlayClassName={styles.modalOverlay} 
-            ariaHideApp={false}
-        >
-            <div className={styles.modalInner}>
-            <h2>Bienvenido a Voting System</h2>
+    // Contenido para creadores de campañas
+    const campaignGuideContent = (
+        <>
+                <h2>Bienvenido a Voting SYSTEM</h2>
             <p>¡Gracias por elegirnos! Aquí te mostramos cómo utilizar nuestra app para crear votaciones de manera sencilla y efectiva:</p>
             <br />
             <ul className={styles.lista}>
@@ -44,10 +59,28 @@ const CustomModal: React.FC<CustomModalProps> = ({ isOpen, onRequestClose }) => 
             <h3>¡Gracias por elegirnos!</h3>
             <p>Tu participación es clave para construir comunidades más fuertes y comprometidas. ¡Empieza a votar y haz que tu voz cuente hoy!</p>
             <br />
-            <button onClick={onRequestClose} className={styles.closeButton}>Cerrar</button>
-        </div>
-    </Modal>
-    );    
-}    
+        </>
+    );
+
+    // Determina el contenido del modal basado en el rol del usuario
+    const modalContent = (!userRole || userRole === 'admin' || userRole === 'moderator') 
+        ? campaignGuideContent 
+        : voterGuideContent;
+
+    return (
+        <Modal 
+            isOpen={isOpen} 
+            onRequestClose={onRequestClose} 
+            className={styles.modalContent}
+            overlayClassName={styles.modalOverlay} 
+            ariaHideApp={true} // Se puede establecer en true
+        >
+            <div className={styles.modalInner}>
+                {modalContent}
+                <button onClick={onRequestClose} className={styles.closeButton}>Cerrar</button>
+            </div>
+        </Modal>
+    );
+};
 
 export default CustomModal;
