@@ -1,13 +1,11 @@
-'use client'
+'use client';
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/Authontext";
 import IGroup from "@/interfaces/IGroup";
 import Spinner from "../ui/Spinner";
 import Swal from "sweetalert2";
-import {deleteGroups} from "../../helpers/group.helper";
-
-
+import { deleteGroups } from "../../helpers/group.helper";
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
@@ -16,7 +14,7 @@ const Groups = () => {
   const [groups, setGroups] = useState<IGroup[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [groupName, setGroupName] = useState<string>("");
-  const [selectedGroups, setSelectedGroups] = useState<string[]>([])
+  const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
 
   const fetchGroups = async () => {
     if (!userData?.userData.id) {
@@ -75,14 +73,6 @@ const Groups = () => {
     }
   };
 
-  if (loading) {
-    return (
-    <div className="flex justify-center items-center h-screen">
-    <Spinner />
-  </div>
-);
-  }
-
   const handleSelectGroup = (groupId: string) => {
     if (selectedGroups.includes(groupId)) {
       setSelectedGroups(selectedGroups.filter((id) => id !== groupId));
@@ -101,19 +91,17 @@ const Groups = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Sí, eliminar",
     });
-  
+
     if (result.isConfirmed) {
       try {
-        
         const response = await deleteGroups(selectedGroups);
-        
+
         const newGroups = groups.filter(
           (group) => !selectedGroups.includes(group.id ?? "")
         );
         setGroups(newGroups);
-        setSelectedGroups([]); 
-  
-       
+        setSelectedGroups([]);
+
         Swal.fire("¡Eliminados!", response, "success");
       } catch (error: any) {
         const errorMessage = error.message || "Error al eliminar los grupos.";
@@ -122,6 +110,13 @@ const Groups = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -144,6 +139,7 @@ const Groups = () => {
         <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
           <thead>
             <tr className="bg-primaryColor text-white text-left">
+              <th className="py-3 px-6 text-sm font-medium">Seleccionar</th>
               <th className="py-3 px-6 text-sm font-medium">Nombre</th>
               <th className="py-3 px-6 text-sm font-medium">Accion</th>
             </tr>
@@ -152,9 +148,18 @@ const Groups = () => {
             {groups.length > 0 ? (
               groups.map((group, idx) => (
                 <tr
-                  key={group.id}
-                  className={`${idx % 2 === 0 ? "bg-gray-50" : "bg-white"} border-t border-gray-200`}
+                  key={group.id ?? idx} // Usa el idx como backup si el id es undefined
+                  className={`${
+                    idx % 2 === 0 ? "bg-gray-50" : "bg-white"
+                  } border-t border-gray-200`}
                 >
+                  <td className="py-3 px-6 text-sm text-gray-700">
+                    <input
+                      type="checkbox"
+                      checked={selectedGroups.includes(group.id ?? "")}
+                      onChange={() => handleSelectGroup(group.id ?? "")}
+                    />
+                  </td>
                   <td className="py-3 px-6 text-sm text-gray-700">{group.name}</td>
                   <td className="py-3 px-6 text-sm text-gray-700">
                     <a
@@ -168,59 +173,24 @@ const Groups = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={8} className="py-4 text-center text-gray-500">
-                No se encontraron grupos
+                <td colSpan={3} className="py-4 text-center text-gray-500">
+                  No hay grupos disponibles.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
-      <div className="overflow-x-auto">
-    <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
-      <thead>
-        <tr className="bg-primaryColor text-white text-left">
-          <th className="py-3 px-6 text-sm font-medium">Seleccionar</th>
-          <th className="py-3 px-6 text-sm font-medium">Nombre</th>
-          <th className="py-3 px-6 text-sm font-medium">Accion</th>
-        </tr>
-      </thead>
-      <tbody>
-  {groups.length > 0 ? (
-    groups.map((group, idx) => (
-      <tr
-        key={group.id ?? idx} // Usa el idx como backup si el id es undefined
-        className={`${idx % 2 === 0 ? "bg-gray-50" : "bg-white"} border-t border-gray-200`}
-      >
-        <td className="py-3 px-6 text-sm text-gray-700">
-          <input
-            type="checkbox"
-            checked={selectedGroups.includes(group.id ?? "")} // Usa el id o un valor por defecto
-            onChange={() => handleSelectGroup(group.id ?? "")} // Manejamos el cambio del checkbox
-          />
-        </td>
-        <td className="py-3 px-6 text-sm text-gray-700">{group.name}</td>
-        <td className="py-3 px-6 text-sm text-gray-700">
-          <a
-            href={`/groups/edit/${group.id}`}
-            className="text-blue-500 hover:text-blue-700 font-medium"
-          >
-            editar grupo
-          </a>
-        </td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan={8} className="py-4 text-center text-gray-500">
-        No hay grupos disponibles.
-      </td>
-    </tr>
-  )}
-</tbody>
-    </table>
-  </div>
-</div>
+
+      {selectedGroups.length > 0 && (
+        <button
+          onClick={handleDeleteGroups}
+          className="bg-red-500 text-white p-2 rounded mt-4"
+        >
+          Eliminar Grupos Seleccionados
+        </button>
+      )}
+    </div>
   );
 };
 
