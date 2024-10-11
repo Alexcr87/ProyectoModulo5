@@ -1,7 +1,7 @@
 'use client'; 
 import Swal from 'sweetalert2';
 import React, { Suspense, useEffect, useState, useRef } from 'react';
-import ICampaign from '@/interfaces/ICampaign';
+import {ICampaign} from '@/interfaces/ICampaign';
 import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/Authontext';
 import Boton from '../ui/Boton';
