@@ -2,22 +2,23 @@
 
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
-import ICampaign from '@/interfaces/ICampaign'; 
 import Input from '../ui/Input';
 import Boton from '../ui/Boton';
 import { useAuth } from '@/context/Authontext';
 import IGroup from '@/interfaces/IGroup';
 import Swal from "sweetalert2";
 import Spinner from '../ui/Spinner';
+import { Loader } from "@googlemaps/js-api-loader";
+import Maps from '../maps/maps';
+import ICampaignSinID from '@/interfaces/ICampaignSinID';
 
 const CampaignForm = () => {
   const { userData } = useAuth(); 
   const [isLoading, setIsLoading] = useState(false);
   const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
-
+  const [coordinates, setCoordinates] = useState<{lat: number, lng: number} | null>(null);
   const [groups, setGroups] = useState<IGroup[]>([]);
-  const [formData, setFormData] = useState<ICampaign>({
-    id:'',
+  const [formData, setFormData] = useState<ICampaignSinID>({
     name: '',
     description: '',
     location: '',
@@ -71,9 +72,53 @@ const CampaignForm = () => {
     }));
   };
 
+  const handleGeocode = async () => {
+    if (!formData.location) return;
+  
+    const loader = new Loader({
+      apiKey: process.env.NEXT_PUBLIC_MAPS_API_KEY as string,
+      version: 'weekly',
+    });
+  
+    const { Geocoder } = await loader.importLibrary('geocoding');
+    const geocoder = new Geocoder();
+  
+    try {
+      const geocodeResult = await geocoder.geocode({ address: formData.location });
+  
+      // Verificar si existen resultados
+      if (geocodeResult && geocodeResult.results && geocodeResult.results.length > 0) {
+        const position = geocodeResult.results[0].geometry.location;
+        setCoordinates({ lat: position.lat(), lng: position.lng() });
+  
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Ubicación encontrada',
+          text: `Latitud: ${position.lat()}, Longitud: ${position.lng()}`,
+          showConfirmButton: true,
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Ubicación no encontrada',
+          text: 'No pudimos encontrar la ubicación ingresada',
+        });
+      }
+    } catch (error) {
+      console.error('Error al geocodificar:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ocurrió un error al intentar encontrar la ubicación.',
+      });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    await handleGeocode ()
+    
     const data = {
       ...formData,
       date: formData.date.toISOString(), // Asegúrate de que la fecha esté en formato ISO
@@ -124,6 +169,7 @@ const CampaignForm = () => {
       <div className="col-start-5 col-end-9 mt-[2.5em] my-[2em] text-center text-xl">
         CREAR CAMPAÑA
       </div>
+    <div>
       <form onSubmit={handleSubmit} className="campaign-form flex justify-center">
         <div className='flex flex-col items-center w-full md:w-[40%] gap-4'>
         {isLoading ? (
@@ -183,6 +229,14 @@ const CampaignForm = () => {
         )}
         </div>
       </form>
+      <div className="w-full md:w-1/2 h-[400px] bg-gray-100">
+          {coordinates ? (
+            <Maps coordinates={coordinates} />
+          ) : (
+            <p className="text-center mt-20">El mapa aparecerá aquí cuando ingreses una ubicación.</p>
+          )}
+        </div>
+        </div>
     </>
   );
 };
