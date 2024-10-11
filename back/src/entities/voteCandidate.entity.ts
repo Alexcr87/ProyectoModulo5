@@ -13,7 +13,7 @@ export class VoteCandidate {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Candidate, (candidate) => candidate.votes)
+  @ManyToOne(() => Candidate, (candidate) => candidate.votes )
   candidate: Candidate;
 
   @ManyToOne(() => Campaign, (campaign) => campaign.votes)

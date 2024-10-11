@@ -28,16 +28,16 @@ export class Campaign {
   @Column({ type: 'timestamp' })
   date: Date;
 
-  @OneToMany(() => VoteUser, (voteUser) => voteUser.campaign) // Cambié el nombre a `voteUser`
+  @OneToMany(() => VoteUser, (voteUser) => voteUser.campaign , { cascade: true }) // Cambié el nombre a `voteUser`
   votes: VoteUser[];
 
   @ManyToOne(() => User, (user) => user.campaigns)
   user: User;
 
-  @OneToMany(() => Candidate, (candidate) => candidate.campaign)
+  @OneToMany(() => Candidate, (candidate) => candidate.campaign , { cascade: true })
   candidates: Candidate[];
 
-  @ManyToMany(() => Group, (group) => group.campaigns)
+  @ManyToMany(() => Group, (group) => group.campaigns )
   groups: Group[];
 }
 

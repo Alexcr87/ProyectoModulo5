@@ -4,11 +4,15 @@ import ICampaign from '@/interfaces/ICampaign'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/context/Authontext';
 import Spinner from '../ui/Spinner';
+import Swal from 'sweetalert2';
+import {deleteCampaign} from "../../helpers/campaña.helper";
+
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 const CampaignsTable = () => {
     const { userData } = useAuth();
+    const [selectedCampaigns, setSelectedCampaigns] = React.useState<ICampaign[]>([]);
     const [campaigns, setCampaigns] = useState<ICampaign[]>([]) 
     const [loading, setLoading] = useState(true) 
     const [error, setError] = useState<string | null>(null) 
@@ -16,7 +20,7 @@ const CampaignsTable = () => {
     const [groups, setGroups] = useState<string[]>([])
     const pathname = usePathname();
     const router = useRouter()
-    const [selectedCampaigns, setSelectedCampaigns] = useState<ICampaign[]>([]);
+    
 
     useEffect(() => {
         if (userData) {
@@ -84,17 +88,66 @@ const CampaignsTable = () => {
             setSelectedCampaigns(selectedCampaigns.filter((c) => c.id !== campaign.id));
         }
     };
-
-    // esta funcion entiendo que deberia  depender de los roles
+    
+    
+    const handleDelete = async () => {
+        // Obtener IDs de campañas seleccionadas y asegurarse de que sean solo strings
+        const campaignIds: string[] = selectedCampaigns
+        .map(campaign => campaign.id) // Mapeo a campaign.id
+        .filter((id): id is string => id !== undefined);// Filtra para que solo queden strings
+    
+        // Verificar si se han seleccionado campañas
+        if (campaignIds.length === 0) {
+            Swal.fire('Advertencia!', 'No se seleccionaron campañas para eliminar.', 'warning');
+            return;
+        }
+    
+        // Confirmar eliminación
+        const confirmDelete = await Swal.fire({
+            title: '¿Estás seguro?',
+            text: "Esta acción eliminará las campañas seleccionadas.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Eliminar',
+            cancelButtonText: 'Cancelar'
+        });
+    
+        // Si se confirma la eliminación
+        if (confirmDelete.isConfirmed) {
+            try {
+                await deleteCampaign(campaignIds); // Llama a la función de eliminación
+                Swal.fire('Eliminado!', 'Las campañas han sido eliminadas.', 'success');
+    
+                // Actualiza el estado de campañas en el frontend
+                setCampaigns(prevCampaigns => 
+                    prevCampaigns.filter(campaign => !campaignIds.includes(campaign.id)) // Aquí no necesitas el 'as string'
+                );
+    
+                // Limpia la selección de campañas
+                setSelectedCampaigns([]); 
+            } catch (error: unknown) {
+                // Manejo de errores
+                if (error instanceof Error) {
+                    Swal.fire('Error!', error.message, 'error');
+                } else {
+                    Swal.fire('Error!', 'Se produjo un error desconocido.', 'error');
+                }
+            }
+        }
+    };
+    
     const handleUpdate = (id: string | undefined ) => {
         router.push(`/updateCampaign?id=${id}`);
       };
-
+    
     return (
         <div className="mt-4 overflow-x-auto">
             <h1 className="text-2xl font-bold mb-4 text-center">Mis Campañas</h1>
             <div className="mb-4">
-        <button className='bg-primaryColor  text-cuartiaryColor py-2 px-4 flex justify-center rounded-lg hover:scale-105 hover:bg-primaryColor duration-300'>
+        <button className='bg-primaryColor  text-cuartiaryColor py-2 px-4 flex justify-center rounded-lg hover:scale-105 hover:bg-primaryColor duration-300'
+         onClick={handleDelete}>
             Eliminar seleccionados
         </button>
             </div>
@@ -137,4 +190,4 @@ const CampaignsTable = () => {
     )
 }
 
-export default CampaignsTable;
+export default CampaignsTable

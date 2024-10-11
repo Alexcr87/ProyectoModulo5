@@ -29,10 +29,10 @@ export class Candidate {
   @Column({ type: 'text', nullable: true })
   proposals: string;
 
-  @OneToMany(() => VoteCandidate, (vote) => vote.candidate)
+  @OneToMany(() => VoteCandidate, (vote) => vote.candidate , { cascade: true })
   votes: VoteCandidate[];
 
-  @ManyToOne(() => Campaign, (campaign) => campaign.candidates)
+  @ManyToOne(() => Campaign, (campaign) => campaign.candidates , { onDelete: 'CASCADE' })
   campaign: Campaign;
 
   @OneToOne(() => User, (user) => user.candidate, { onDelete: 'CASCADE' })

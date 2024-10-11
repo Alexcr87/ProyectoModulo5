@@ -1,6 +1,9 @@
 "use client"
 
 import React, { useEffect, useState } from 'react'
+import Swal from "sweetalert2";
+import Boton from '../ui/Boton'
+import Boton2 from '../ui/Boton2'
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 import Account from '@/interfaces/account';
 import Spinner from '../ui/Spinner';
@@ -20,7 +23,9 @@ const PricingTable = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [preferenceId, setPreferenceId] = useState('');
   const [selectedAccountId, setSelectedAccountId] = useState<number | null>(null);
+  const [isRegistered, setIsRegistered] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
     
 
@@ -51,6 +56,16 @@ const PricingTable = () => {
 
   const handlePlanSelection = async (accountId: number , price:number) => {
     setSelectedAccountId(accountId);
+
+    if (!isRegistered) {
+      Swal.fire({
+        title: '¡Regístrate para continuar!',
+        text: 'Debes estar registrado para acceder a estas cuentas',
+        icon: 'info',
+        confirmButtonText: 'Ok',
+      });
+      return;
+    }
 
     if (price === 0) { 
       
