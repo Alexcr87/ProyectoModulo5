@@ -160,7 +160,9 @@ const Groups = () => {
                       onChange={() => handleSelectGroup(group.id ?? "")}
                     />
                   </td>
-                  <td className="py-3 px-6 text-sm text-gray-700">{group.name}</td>
+                  <td className="py-3 px-6 text-sm text-gray-700">
+                    {group.name}
+                  </td>
                   <td className="py-3 px-6 text-sm text-gray-700">
                     <a
                       href={`/groups/edit/${group.id}`}
@@ -182,14 +184,15 @@ const Groups = () => {
         </table>
       </div>
 
-      {selectedGroups.length > 0 && (
-        <button
-          onClick={handleDeleteGroups}
-          className="bg-red-500 text-white p-2 rounded mt-4"
-        >
-          Eliminar Grupos Seleccionados
-        </button>
-      )}
+      <button
+        onClick={handleDeleteGroups}
+        disabled={selectedGroups.length === 0}
+        className={`bg-blue-500 text-white p-2 rounded mt-4 ${
+          selectedGroups.length === 0 ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+      >
+        Eliminar Grupos Seleccionados
+      </button>
     </div>
   );
 };
