@@ -17,7 +17,7 @@ const CampaignForm = () => {
 
   const [groups, setGroups] = useState<IGroup[]>([]);
   const [formData, setFormData] = useState<ICampaign>({
-    id:userData?.userData.id || '',
+    id:'',
     name: '',
     description: '',
     location: '',
