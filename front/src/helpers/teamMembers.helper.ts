@@ -39,10 +39,10 @@ const teamMembers = [
         "id": 5,
         "name": "Sharon Lopez",
         "profession":"BackEnd Developer",
-        "image":"https://vivolabs.es/wp-content/uploads/2022/03/perfil-mujer-vivo.png",
-        "linkFacebook":"",
-        "linkGitHub":"",
-        "linkLinkedIn":""
+        "image":"/images/sharon.jpg",
+        "linkFacebook":"https://www.facebook.com/profile.php?id=100008723472457",
+        "linkGitHub":"https://github.com/Sharonesaa",
+        "linkLinkedIn":"https://www.linkedin.com/in/sharonlopez07/"
     },
     {
         "id": 6,

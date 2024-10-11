@@ -19,7 +19,7 @@ const CustomModal: React.FC<CustomModalProps> = ({ isOpen, onRequestClose }) => 
             ariaHideApp={false}
         >
             <div className={styles.modalInner}>
-            <h2>Bienvenido a Voting SYSTEM</h2>
+            <h2>Bienvenido a Voting System</h2>
             <p>¡Gracias por elegirnos! Aquí te mostramos cómo utilizar nuestra app para crear votaciones de manera sencilla y efectiva:</p>
             <br />
             <ul className={styles.lista}>
