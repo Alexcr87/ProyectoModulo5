@@ -1,7 +1,8 @@
 import ICampaign from "@/interfaces/ICampaign";
 import ICampaignError from "@/interfaces/ICampaignError";
+import ICampaignSinID from "@/interfaces/ICampaignSinId";
 
-export const validateCampaingError = (values: ICampaign): ICampaignError => {
+export const validateCampaingError = (values: ICampaignSinID): ICampaignError => {
 
     const errors: ICampaignError = {};
     const today = new Date();
