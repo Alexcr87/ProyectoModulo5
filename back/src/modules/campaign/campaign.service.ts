@@ -3,6 +3,7 @@ import {
   NotFoundException,
   ForbiddenException,
   BadRequestException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
@@ -10,6 +11,9 @@ import { Campaign } from 'src/entities/campaign.entity';
 import { CreateCampaignDto } from 'src/dto/createCampaign.dto';
 import { User } from 'src/entities/user.entity';
 import { Group } from 'src/entities/group.entity';
+import { Candidate } from 'src/entities/candidate.entity';
+import { VoteUser } from 'src/entities/voteUser.entity';
+import { VoteCandidate } from 'src/entities/voteCandidate.entity';
 
 
 @Injectable()
@@ -20,7 +24,13 @@ export class CampaignService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(Group)
-    private readonly groupRepository: Repository<Group>
+    private readonly groupRepository: Repository<Group> ,
+    @InjectRepository(VoteUser)
+    private readonly voteUserRepository: Repository<VoteUser>,
+    @InjectRepository(Candidate)
+    private readonly candidateRepository: Repository<Candidate>,
+    @InjectRepository(VoteCandidate)
+    private readonly voteCandidateRepository: Repository<VoteCandidate>
   ) {}
 
   async createCampaign(
@@ -34,7 +44,7 @@ export class CampaignService {
     });
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Usuario no encontrado');
     }
 
     let foundGroups = [];
@@ -48,7 +58,7 @@ export class CampaignService {
   
       // Validar que todos los grupos fueron encontrados
       if (foundGroups.length !== groupIds.length) {
-        throw new BadRequestException('Some groups not found');
+        throw new BadRequestException('Algunos grupos no encontrados');
       }
     }
 
@@ -77,7 +87,7 @@ export class CampaignService {
       relations: ['user', 'candidates', 'candidates.user'],
     });
     if (!campaign) {
-      throw new NotFoundException('Campaign not found');
+      throw new NotFoundException('Campaña no encontrada');
     }
     return campaign;
   }
@@ -93,7 +103,7 @@ export class CampaignService {
     const campaign = await this.campaignRepository.findOne({ where: { id } });
     
     if (!campaign) {
-      throw new NotFoundException(`Campaign with ID ${id} not found`);
+      throw new NotFoundException(`Campaña con ID ${id} no encontrada`);
     }
   
     let foundGroups = [];
@@ -105,7 +115,7 @@ export class CampaignService {
       });
   
       if (groups.length !== createCampaignDto.groups.length) {
-        throw new BadRequestException('Some groups not found');
+        throw new BadRequestException('Algunos grupos no encontrados');
       }
   
       campaign.groups = groups; // Asignar grupos a la campaña
@@ -131,6 +141,38 @@ export class CampaignService {
 
     return uniqueCampaigns;
   }
-  
+
+  async deleteCampaign(ids: string[]) {
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+        throw new BadRequestException('No se proporcionaron IDs válidos para eliminar.');
+    }
+
+    try {
+        const campaigns = await this.campaignRepository.find({
+            where: { id: In(ids) },
+            relations: ['votes', 'candidates'],
+        });
+
+        if (!campaigns || campaigns.length === 0) {
+            throw new NotFoundException('No se encontraron campañas con los IDs proporcionados.');
+        }
+
+        await this.voteUserRepository.delete({ campaign: { id: In(ids) } });
+        await this.voteCandidateRepository.delete({ campaign: { id: In(ids) } });
+        await this.candidateRepository.delete({ campaign: { id: In(ids) } });
+        await this.campaignRepository.remove(campaigns);
+
+        
+        return { message: 'Campañas eliminadas con éxito.' }; 
+    } catch (error) {
+        throw new InternalServerErrorException(`Error al eliminar campañas con IDs ${ids.join(', ')}: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+    }
 }
+
+
+}
+
+
+  
+
 

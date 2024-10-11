@@ -9,4 +9,8 @@ export const config = {
     response_type: 'code',
     scope: 'openid profile email',
   },*/
+  logoutParams: {
+    returnTo: 'http://localhost:3000/logouts', // Aquí especificas la URL de redirección al cerrar sesión
+    client_id: process.env.AUTH0_CLIENT_ID,
+  },
 };

@@ -8,11 +8,25 @@ import { useAuth } from '@/context/Authontext'
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/navigation'
 import { validateChangePassword } from '@/helpers/validateChangePassword'
+import Spinner from '../ui/Spinner'
 
 const ChangePassword = () => {
+    const [loading, setLoading] = useState(false);
 
     const {userData, setUserData} = useAuth()
     const router = useRouter()
+
+    // Capturar el parámetro "redirect" de la URL para verificar si viene del correo
+    const [fromEmail, setFromEmail] = useState(false);
+
+
+    useEffect(() => {
+        // Detectar si el parámetro "redirect" es "change-password"
+        const queryParams = new URLSearchParams(window.location.search);
+        if (queryParams.get('redirect') === 'changePassword') {
+            setFromEmail(true); // Si viene del correo, activar el estado
+        }
+    }, []);
 
     const initialState = {
         dni: "",
@@ -33,6 +47,7 @@ const ChangePassword = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>)=>{
         event.preventDefault()
+        setLoading(true)
         if(!userData?.userData.dni) {
             const Toast = Swal.mixin({
                 toast: true,
@@ -54,11 +69,20 @@ const ChangePassword = () => {
             });
             return
         }
+
+        if (!userData?.userData.dni && fromEmail) {
+            // Redirigir al login para capturar DNI
+            router.push('/login?redirect=changePassword');
+            return;
+        }
+
+
         data.dni = userData?.userData.dni
         await changePassword(data)
         localStorage.clear()
         setUserData(null)
         router.push("/login")
+        setLoading(false)
     }
     
     useEffect(() => {
@@ -70,6 +94,9 @@ const ChangePassword = () => {
     <div className='bg-cuartiaryColor min-h-[85vh] flex justify-center'>
       <div className='bg-white w-[50%] my-8 shadow-2xl rounded-2xl flex flex-col items-center px-16'>
         <h2 className='text-2xl font-bold my-12'>Cambio De Contraseña</h2>
+        {loading ? ( 
+            <Spinner />
+        ) : (
         <form onSubmit={handleSubmit} className='w-full gap-8 flex flex-col items-center'>
             <Input 
                 name="password"
@@ -105,6 +132,7 @@ const ChangePassword = () => {
                 <Boton>Renovar</Boton>
             </div>
         </form>
+         )}
       </div>
     </div>
   )

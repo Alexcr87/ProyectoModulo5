@@ -39,19 +39,19 @@ const teamMembers = [
         "id": 5,
         "name": "Sharon Lopez",
         "profession":"BackEnd Developer",
-        "image":"https://vivolabs.es/wp-content/uploads/2022/03/perfil-mujer-vivo.png",
-        "linkFacebook":"",
-        "linkGitHub":"",
-        "linkLinkedIn":""
+        "image":"/images/sharon.jpg",
+        "linkFacebook":"https://www.facebook.com/profile.php?id=100008723472457",
+        "linkGitHub":"https://github.com/Sharonesaa",
+        "linkLinkedIn":"https://www.linkedin.com/in/sharonlopez07/"
     },
     {
         "id": 6,
         "name": "Nicolas Mainer",
         "profession":"BackEnd Developer",
-        "image":"https://www.labsaenzrenauld.com/wp-content/uploads/2020/10/Perfil-hombre-ba%CC%81sico_738242395.jpg",
-        "linkFacebook":"",
-        "linkGitHub":"",
-        "linkLinkedIn":""
+        "image":"/images/fotoNicoMainer.jpeg",
+        "linkFacebook":"https://www.facebook.com/nicolas.mainer",
+        "linkGitHub":"https://github.com/nmainer",
+        "linkLinkedIn":"https://www.linkedin.com/in/nicolas-matias-mainer-95706a208/"
     },
 
 ]

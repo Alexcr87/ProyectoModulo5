@@ -11,7 +11,7 @@ export interface userSession {
         city: string;
         dni: string;
         country: string;
-        user: IUsers;
+        user?: IUsers;
         roles:[
             {
                 id:number,

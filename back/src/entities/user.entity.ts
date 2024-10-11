@@ -45,11 +45,12 @@ export class User {
   @Column({ default: false })
   isFirstLogin: boolean;
 
-  @OneToOne(() => Candidate, (candidate) => candidate.user, {
-    cascade: ['remove'],
+  @OneToMany(() => Candidate, (candidate) => candidate.user, {
+    cascade: ['remove'],  
     onDelete: 'CASCADE',
   })
-  candidate: Candidate;
+  candidate: Candidate[];  
+
 
   @ManyToMany(() => Role, (role) => role.users)
   @JoinTable({

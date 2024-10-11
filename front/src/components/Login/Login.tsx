@@ -10,6 +10,8 @@ import Input from '../ui/Input';
 import Boton from '../ui/Boton';
 import { useAuth } from '@/context/Authontext'; // Importa el contexto de autenticación
 
+
+
 const LoginForm = () => {
     const router = useRouter();
     const { setUserData } = useAuth(); // Obtiene setUserData desde el contexto
@@ -22,6 +24,14 @@ const LoginForm = () => {
 
     const [dataUser, SetdataUser] = useState<IloginProps>(initialState);
     const [errors, SetErrors] = useState<IloginError>(initialState);
+    const [redirect, setRedirect] = useState<string>(""); // Estado para redirección
+
+     // Captura la información de la URL
+     useEffect(() => {
+        const queryParams = new URLSearchParams(window.location.search);
+        setRedirect(queryParams.get('redirect') || ""); // Obtiene el parámetro redirect
+    }, []);
+
     
     // CAPTURO LA INFORMACION DE LOS INPUTS
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,11 +71,11 @@ const LoginForm = () => {
                         toast.onmouseleave = Swal.resumeTimer;
                     }
                 });
-                Toast.fire({
-                    icon: "success",
-                    title: "Ha iniciado sesión correctamente"
-                });
-                router.push('/');
+                if (redirect === 'changePassword') {
+                    router.push('/changePassword'); // Redirige al cambio de contraseña
+                } else {
+                    router.push('/');
+                }
             } else {
                 const Toast = Swal.mixin({
                     toast: true,
@@ -98,10 +108,10 @@ const LoginForm = () => {
     
     // Redirigir a Auth0 para iniciar sesión
     const handleAuth0Login = () => {
-        const auth0LoginUrl = 'http://localhost:3000/login';
+        const auth0LoginUrl = `${process.env.NEXT_PUBLIC_API_URL}/login`;
         window.location.href = auth0LoginUrl;
     };
-     
+
     return (
         <div className='my-4 text-center flex flex-col items-center bg-white shadow-lg px-4 rounded-lg'>
             <Image src="/images/logo.png" alt="imagenLogo" width={350} height={350} className='m-10' />

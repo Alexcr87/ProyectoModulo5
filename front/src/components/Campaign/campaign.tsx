@@ -7,13 +7,17 @@ import Input from '../ui/Input';
 import Boton from '../ui/Boton';
 import { useAuth } from '@/context/Authontext';
 import IGroup from '@/interfaces/IGroup';
+import Swal from "sweetalert2";
+import Spinner from '../ui/Spinner';
 
 const CampaignForm = () => {
   const { userData } = useAuth(); 
+  const [isLoading, setIsLoading] = useState(false);
   const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
   const [groups, setGroups] = useState<IGroup[]>([]);
   const [formData, setFormData] = useState<ICampaign>({
+    id:'',
     name: '',
     description: '',
     location: '',
@@ -74,7 +78,7 @@ const CampaignForm = () => {
       ...formData,
       date: formData.date.toISOString(), // Asegúrate de que la fecha esté en formato ISO
     };
-
+    setIsLoading(true);
     try {
       const response = await fetch(`${APIURL}/campaigns`, {
         method: "POST",
@@ -85,13 +89,34 @@ const CampaignForm = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Error en la creación de la campaña");
+        const errorData = await response.json(); 
+        throw new Error(errorData.message || "Error en la creación de la campaña"); 
       }
+  
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Campaña creada con éxito",
+        showConfirmButton: false,
+        timer: 1500
+      }).then(() => {
+        
+        window.location.href = "/campaigns";
+      });
+     
 
-      window.location.href = "/campaigns";    
     } catch (error) {
-      console.error("Error al crear la campaña:", error);
+
+      const errorMessage = (error as any).message || "Ocurrió un error inesperado.";
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: errorMessage
+      });
+    }finally {
+      setIsLoading(false);  // Oculta el spinner al finalizar la operación
     }
+
   };
 
   return (
@@ -101,6 +126,10 @@ const CampaignForm = () => {
       </div>
       <form onSubmit={handleSubmit} className="campaign-form flex justify-center">
         <div className='flex flex-col items-center w-full md:w-[40%] gap-4'>
+        {isLoading ? (
+            <Spinner />  
+          ) : (
+            <>
           <Input
             type="text"
             id="name"
@@ -146,9 +175,12 @@ const CampaignForm = () => {
             onChange={handleMultiSelectChange}
             value={formData.groups.map(group => ({ value: group.id, label: group.name }))}
             placeholder='Selecciona grupos'
+            required
           />
 
           <Boton type="submit">Crear Campaña</Boton>
+          </>
+        )}
         </div>
       </form>
     </>
@@ -156,3 +188,7 @@ const CampaignForm = () => {
 };
 
 export default CampaignForm;
+
+
+
+

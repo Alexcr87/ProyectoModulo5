@@ -7,6 +7,7 @@ import Boton from '../ui/Boton';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/context/Authontext';
 import IGroup from '@/interfaces/IGroup';
+import Spinner from '../ui/Spinner';
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
@@ -24,6 +25,7 @@ const updateCampaign = () => {
 
   useEffect(() => {
     if (id) {
+      setLoading(true)
       fetch(`${APIURL}/campaigns/${id}`)
         .then(response => response.json())
         .then(data => {
@@ -48,6 +50,7 @@ const updateCampaign = () => {
 
   const handleUpdateCampaign = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true); 
     try {
       const form = event.target as HTMLFormElement;
       const formData = new FormData(form);
@@ -68,8 +71,17 @@ const updateCampaign = () => {
       setCampaign(data);
     } catch (error) {
       setError((error as { message: string }).message);
+      setLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Spinner /> {/* Show spinner while loading */}
+      </div>
+    );
+  }
 
 
   return (

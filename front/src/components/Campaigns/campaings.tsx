@@ -3,11 +3,16 @@ import React, { useEffect, useState } from 'react'
 import ICampaign from '@/interfaces/ICampaign'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/context/Authontext';
+import Spinner from '../ui/Spinner';
+import Swal from 'sweetalert2';
+import {deleteCampaign} from "../../helpers/campaña.helper";
+
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 const CampaignsTable = () => {
     const { userData } = useAuth();
+    const [selectedCampaigns, setSelectedCampaigns] = React.useState<ICampaign[]>([]);
     const [campaigns, setCampaigns] = useState<ICampaign[]>([]) 
     const [loading, setLoading] = useState(true) 
     const [error, setError] = useState<string | null>(null) 
@@ -15,8 +20,10 @@ const CampaignsTable = () => {
     const [groups, setGroups] = useState<string[]>([])
     const pathname = usePathname();
     const router = useRouter()
-    const [selectedCampaigns, setSelectedCampaigns] = useState<ICampaign[]>([]);
+    
 
+
+    
     useEffect(() => {
         if (userData) {
             setRoles(userData.userData.roles.map(role => role.name));
@@ -64,8 +71,9 @@ const CampaignsTable = () => {
         }
     }
 
-    if (loading) return <p>Cargando campañas...</p>
-    if (error) return <p>{error}</p>
+    if (loading) return <div><Spinner /></div>; // Usa <div> en lugar de <p>
+    if (error) return <div>{error}</div>; // También reestructura el manejo de errores
+
 
     const handleAction= (id: string|undefined)=>{
 
@@ -83,17 +91,71 @@ const CampaignsTable = () => {
             setSelectedCampaigns(selectedCampaigns.filter((c) => c.id !== campaign.id));
         }
     };
-
-    // esta funcion entiendo que deberia  depender de los roles
+    
+    
+    const handleDelete = async () => {
+        // Obtener IDs de campañas seleccionadas y asegurarse de que sean solo strings
+        const campaignIds: string[] = selectedCampaigns
+        .map(campaign => campaign.id) // Mapeo a campaign.id
+        .filter((id): id is string => id !== undefined);// Filtra para que solo queden strings
+    
+        // Verificar si se han seleccionado campañas
+        if (campaignIds.length === 0) {
+            Swal.fire('Advertencia!', 'No se seleccionaron campañas para eliminar.', 'warning');
+            return;
+        }
+    
+        // Confirmar eliminación
+        const confirmDelete = await Swal.fire({
+            title: '¿Estás seguro?',
+            text: "Esta acción eliminará las campañas seleccionadas.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Eliminar',
+            cancelButtonText: 'Cancelar'
+        });
+    
+        // Si se confirma la eliminación
+        if (confirmDelete.isConfirmed) {
+            try {
+                await deleteCampaign(campaignIds); // Llama a la función de eliminación
+                Swal.fire('Eliminado!', 'Las campañas han sido eliminadas.', 'success');
+    
+                // Actualiza el estado de campañas en el frontend
+                setCampaigns(prevCampaigns => 
+                    prevCampaigns.filter(campaign => !campaignIds.includes(campaign.id)) // Aquí no necesitas el 'as string'
+                );
+    
+                // Limpia la selección de campañas
+                setSelectedCampaigns([]); 
+            } catch (error: unknown) {
+                // Manejo de errores
+                if (error instanceof Error) {
+                    Swal.fire('Error!', error.message, 'error');
+                } else {
+                    Swal.fire('Error!', 'Se produjo un error desconocido.', 'error');
+                }
+            }
+        }
+    };
+    
     const handleUpdate = (id: string | undefined ) => {
-        router.push(`/updateCampaign?id=${id}`);
+        if (roles.includes('admin') || roles.includes('moderator')) {
+            router.push(`/updateCampaign?id=${id}`);
+        } else {
+            console.log('No tienes permisos para actualizar la campaña');
+        }
+       
       };
-
+    
     return (
         <div className="mt-4 overflow-x-auto">
             <h1 className="text-2xl font-bold mb-4 text-center">Mis Campañas</h1>
             <div className="mb-4">
-        <button className='bg-primaryColor  text-cuartiaryColor py-2 px-4 flex justify-center rounded-lg hover:scale-105 hover:bg-primaryColor duration-300'>
+        <button className='bg-primaryColor  text-cuartiaryColor py-2 px-4 flex justify-center rounded-lg hover:scale-105 hover:bg-primaryColor duration-300'
+         onClick={handleDelete}>
             Eliminar seleccionados
         </button>
             </div>
@@ -107,7 +169,9 @@ const CampaignsTable = () => {
                             <th className="border p-2">Ubicación</th>
                             <th className="border p-2">Fecha</th>
                             <th className="border p-2">Ver</th>
-                            <th className="border p-1">Actualizar</th>
+                            {roles.includes('admin') || roles.includes('moderator') ? (
+                                <th className="border p-2">Actualizar</th>
+                            ) : null}
                         </tr>
                     </thead>
                     <tbody>
@@ -124,7 +188,11 @@ const CampaignsTable = () => {
                                 <td className="border p-2 text-blue-500 hover:text-blue-700 cursor-pointer " onClick={()=>handleAction(campaign.id)}>
                                     {roles.includes('candidate') || roles.includes('voter') ? 'votar' : 'ver'}
                                 </td>
-                                <td className="border p-1 text-blue-500 hover:text-blue-700 cursor-pointer" onClick={() => handleUpdate(campaign.id)}>Actualizar </td>
+                                <td className="border p-2 text-blue-500 hover:text-blue-700 cursor-pointer">
+                                    {roles.includes('admin') || roles.includes('moderator') ? (
+                                        <span onClick={() => handleUpdate(campaign.id)}>Actualizar</span>
+                                    ) : null}
+                                </td>
                             </tr>
                         ))}
                     </tbody>
@@ -136,4 +204,4 @@ const CampaignsTable = () => {
     )
 }
 
-export default CampaignsTable;
+export default CampaignsTable

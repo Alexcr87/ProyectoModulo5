@@ -25,7 +25,7 @@ import { ExcelFilePipe } from "src/pipes/maxSizeAndFormatPlanilla";
 export class RedirectController {
   @Get('')
   redirectToFrontend(@Res() res: Response) {
-    res.redirect('http://localhost:4000');
+    res.redirect(`${process.env.API_URL}`);
   }
 }
 
@@ -58,7 +58,7 @@ export class UserController {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
       } else {
-        throw new InternalServerErrorException('Error retrieving user');
+        throw new InternalServerErrorException('Error al recuperar el usuario');
       }
     }
   }
@@ -78,7 +78,7 @@ export class UserController {
         }
       }
       else {
-        throw new HttpException( "Unexpected error", HttpStatus.CONFLICT)
+        throw new HttpException( "Error inesperado", HttpStatus.CONFLICT)
       }
     }
   }
@@ -86,13 +86,15 @@ export class UserController {
   
   @Get("/email/:email")
   @HttpCode(200)
-  async findUserByEmail(@Param("email") email:string ){
+  async findUserByEmail(@Param("email") email: string) {
     try {
-      return await this.userService.findUserByEmail(email)
+      return await this.userService.findUserByEmail(email);
     } catch (error) {
-        throw new InternalServerErrorException('Error retrieving user by email')
+        throw new InternalServerErrorException('Error al recuperar un usuario por correo electrónico')
       }
+
     }
+  
   
 
 
@@ -106,7 +108,7 @@ export class UserController {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
       } else {
-        throw new InternalServerErrorException('Error updating user');
+        throw new InternalServerErrorException('Error al actualizar el usuario');
       }
     }
   }
@@ -121,7 +123,7 @@ export class UserController {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);
       } else {
-        throw new InternalServerErrorException('Error deleting user');
+        throw new InternalServerErrorException('Error al eliminar un usuario');
       }
     }
   }
@@ -141,11 +143,11 @@ export class UserController {
       if (error.response) {
         if (error.response.statusCode === 409) {
           // Conflicto, por ejemplo si ya existe el usuario
-          throw new ConflictException(error.response.message || 'User already exists');
+          throw new ConflictException(error.response.message || 'El usuario ya existe');
         }
         if (error.response.statusCode === 401) {
           // No autorizado
-          throw new UnauthorizedException(error.response.message || 'Unauthorized');
+          throw new UnauthorizedException(error.response.message || 'Desautorizado');
         }
       }
     }
@@ -180,12 +182,14 @@ export class UserController {
   })
   @ApiResponse({ status: 200, description: 'File uploaded successfully' })
   @ApiResponse({ status: 400, description: 'Incorrect request' })
-  async importUsers(@UploadedFile(new ExcelFilePipe())file: Express.Multer.File, @Query("parentId") parentId: string ){
+  async importUsers(@UploadedFile(new ExcelFilePipe())file: Express.Multer.File, 
+  @Query("parentId") parentId: string,
+  @Body('groupId') groupId: string[] ){
     if (!file) {
-      throw new BadRequestException('No file provided');
+      throw new BadRequestException('No se proporciona ningún archivo');
     }
       const filePath = file.path; // Ruta del archivo guardado
-      return await this.userService.importUsers(filePath, parentId);  
+      return await this.userService.importUsers(filePath, parentId,groupId);  
   }
 
   @Patch(':userId/assign-package')

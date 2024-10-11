@@ -3,7 +3,7 @@ import IGroup from "./IGroup";
 import IUsers from "./IUsers";
 
 interface ICampaign {
-    id?: string;
+    id: string;
     name: string;
     description: string;
     location: string;
@@ -17,4 +17,7 @@ interface ICampaign {
   }
   
   export default ICampaign;
+
+
+  
   

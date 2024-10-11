@@ -31,6 +31,8 @@
 import ICandidate from "@/interfaces/ICandidate";
 import { useRouter } from 'next/navigation'
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import Spinner from "../ui/Spinner";
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 
@@ -61,7 +63,24 @@ const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
     };
 
 const router = useRouter()
-    
+const [loading, setLoading] = useState(true);
+useEffect(() => {
+  // Simulando carga de datos
+  const timer = setTimeout(() => {
+    setLoading(false);
+  }, 1000); // Simula un tiempo de carga de 1 segundo
+
+  return () => clearTimeout(timer); // Limpieza
+}, []);
+
+if (loading) {
+  return (
+    <div className="flex justify-center items-center h-60">
+      <Spinner /> {/* Mostrar el spinner mientras carga */}
+    </div>
+  );
+}
+
 
   return (
 

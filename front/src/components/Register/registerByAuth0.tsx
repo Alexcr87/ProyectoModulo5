@@ -10,11 +10,13 @@ import Input from "../ui/Input";
 import Boton from "../ui/Boton";
 import { useAuth } from "@/context/Authontext";
 import { register } from "@/helpers/auth.helper";
+import Spinner from "../ui/Spinner";
 
 
 const RegisterByAuth0 = () => {
 const router = useRouter();
 const { userData } = useAuth();
+const [loading, setLoading] = useState(false);
 
 
 /*const localUser = localStorage.getItem("userSesion");
@@ -27,7 +29,7 @@ const initialState = {
     dni: "",
     address: "",
     email: `${userData?.userData.email}`,
-    password: "jahsdsajh123S@",
+    password: "12345aS@",
     country: "",
     city: ""
   };
@@ -92,7 +94,10 @@ const initialState = {
       [name]: value,
     });
   };
-
+  const handleAuth0Login = () => {
+    const auth0LoginUrl = `${process.env.NEXT_PUBLIC_API_URL}/login`;
+    window.location.href = auth0LoginUrl;
+};
   const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCountry = event.target.value;
     setDataUser({ ...dataUser, country: selectedCountry });
@@ -104,24 +109,41 @@ const initialState = {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
-    await register(dataUser);
-    Swal.fire({
-      position: "center",
-      icon: "success",
-      title: "Usted se registró un usuario con éxito",
-      showConfirmButton: false,
-      timer: 1500
-    });
-    router.push("/login");
+    setLoading(true);
+    try {
+      await register(dataUser);
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Usted se registró un usuario con éxito",
+        showConfirmButton: false,
+        timer: 1500
+      });
+      handleAuth0Login();
+    } catch (error) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error al registrar",
+        showConfirmButton: false,
+        timer: 1500
+      });
+    } finally {
+      setLoading(false); // Ocultar el spinner al finalizar
+    }
   };
-
   useEffect(() => {
     const errors = validateRegisterForm(dataUser);
     setErrors(errors);
   }, [dataUser]);
 
   return (
+    <>
+    {loading && (
+      <div className="flex justify-center items-center">
+        <Spinner /> {/* Muestra el spinner */}
+      </div>
+    )}
     <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">
       <div className="col-start-1 col-end-13">
         <div className="grid grid-cols-12">
@@ -214,11 +236,8 @@ const initialState = {
               </select>
               {errors.city && <span className="text-red-500 text-sm">{errors.city}</span>}
             </div>
-            <Boton
-              type="submit"
-              //disabled={!isFormValid}
-            >
-              Completar Registro
+            <Boton type="submit" disabled={!isFormValid || loading}>
+              {loading ? <Spinner /> : 'Completar Registro'}
             </Boton>
             <img
               src="/images/registerImage.png"
@@ -229,7 +248,8 @@ const initialState = {
         </div>
       </div>
     </form>
-  );
+    </>
+);
 };
 
 export default RegisterByAuth0;
