@@ -9,6 +9,8 @@ import { useAuth } from '@/context/Authontext';
 import IGroup from '@/interfaces/IGroup';
 import Swal from "sweetalert2";
 import Spinner from '../ui/Spinner';
+import ICampaignError from '@/interfaces/ICampaignError';
+import { validateCampaingError } from '@/helpers/validateCampaingError';
 
 const CampaignForm = () => {
   const { userData } = useAuth(); 
@@ -16,6 +18,7 @@ const CampaignForm = () => {
   const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
   const [groups, setGroups] = useState<IGroup[]>([]);
+  const [errors, setErros] = useState<ICampaignError>({})
   const [formData, setFormData] = useState<ICampaign>({
     id:'',
     name: '',
@@ -119,6 +122,11 @@ const CampaignForm = () => {
 
   };
 
+  useEffect(()=>{
+    const error = validateCampaingError(formData)
+    setErros(error)
+  },[formData])
+
   return (
     <>
       <div className="col-start-5 col-end-9 mt-[2.5em] my-[2em] text-center text-xl">
@@ -139,6 +147,9 @@ const CampaignForm = () => {
             onChange={handleInputChange}
             required
           />
+          {errors.name && (
+                <div className="text-red-500 text-xs mt-2">{errors.name}</div>
+          )}
           <textarea
             id="description"
             name="description"
@@ -148,6 +159,9 @@ const CampaignForm = () => {
             className="w-full h-40 px-5 py-3 text-base transition bg-transparent border rounded-md outline-none border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor dark:focus:border-primaryColor focus-visible:shadow-none"
             required
           />
+          {errors.description && (
+                <div className="text-red-500 text-xs mt-2">{errors.description}</div>
+          )}
           <Input
             type="text"
             id="location"
@@ -157,6 +171,9 @@ const CampaignForm = () => {
             onChange={handleInputChange}
             required
           />
+          {errors.location && (
+                <div className="text-red-500 text-xs mt-2">{errors.location}</div>
+          )}
           <Input
             type="date"
             name="date"
@@ -165,7 +182,9 @@ const CampaignForm = () => {
             onChange={handleDateChange}
             required
           />
-
+          {errors.date && (
+                <div className="text-red-500 text-xs mt-2">{errors.date}</div>
+          )}
           <Select
             isMulti
             name="groups"
