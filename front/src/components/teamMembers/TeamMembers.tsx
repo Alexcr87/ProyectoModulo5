@@ -11,9 +11,8 @@ const TeamMembers = () => {
     return (
         <div className='bg-primaryColor pb-6'>
             <div className='text-white flex flex-col items-center text-center mb-6 px-8'>
-                <h1 className='text-4xl font-bold py-8'>Our Creative Team</h1>
-                <p>There are many variations of passages of Lorem Ipsum</p>
-                <p>available but the majority have suffered alteration in some form.</p>
+                <h1 className='text-4xl font-bold py-8'>Nuestro Equipo de Programadores</h1>
+                <p>Somos un grupo de estudiantes apasionados por la programación y el desarrollo de software. Nuestro objetivo es crear soluciones innovadoras y efectivas que aborden los desafíos actuales en el ámbito tecnológico. Cada miembro aporta sus habilidades únicas y su creatividad para contribuir al éxito de nuestros proyectos.</p>
             </div>
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-items-center gap-6'>
                 {
