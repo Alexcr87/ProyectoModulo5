@@ -37,7 +37,7 @@ export class CampaignService {
     createCampaignDto: CreateCampaignDto,
   ): Promise<Campaign> {
     const { userId, groups, ...campaignData } = createCampaignDto;
-
+   
     const user = await this.userRepository.findOne({
       where: { id: userId },
       relations: ['roles'],

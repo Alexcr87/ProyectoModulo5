@@ -4,6 +4,11 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/context/Authontext";
 import IGroup from "@/interfaces/IGroup";
 import Spinner from "../ui/Spinner";
+import Swal from "sweetalert2";
+import {deleteGroups} from "../../helpers/group.helper";
+
+
+
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 const Groups = () => {
@@ -11,6 +16,7 @@ const Groups = () => {
   const [groups, setGroups] = useState<IGroup[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [groupName, setGroupName] = useState<string>("");
+  const [selectedGroups, setSelectedGroups] = useState<string[]>([])
 
   const fetchGroups = async () => {
     if (!userData?.userData.id) {
@@ -77,6 +83,46 @@ const Groups = () => {
 );
   }
 
+  const handleSelectGroup = (groupId: string) => {
+    if (selectedGroups.includes(groupId)) {
+      setSelectedGroups(selectedGroups.filter((id) => id !== groupId));
+    } else {
+      setSelectedGroups([...selectedGroups, groupId]);
+    }
+  };
+
+  const handleDeleteGroups = async () => {
+    const result = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: "No podrás revertir esta acción.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar",
+    });
+  
+    if (result.isConfirmed) {
+      try {
+        
+        const response = await deleteGroups(selectedGroups);
+        
+        const newGroups = groups.filter(
+          (group) => !selectedGroups.includes(group.id ?? "")
+        );
+        setGroups(newGroups);
+        setSelectedGroups([]); 
+  
+       
+        Swal.fire("¡Eliminados!", response, "success");
+      } catch (error: any) {
+        const errorMessage = error.message || "Error al eliminar los grupos.";
+        Swal.fire("Error", errorMessage, "error");
+      }
+    }
+  };
+
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4 text-center">Mis Grupos</h1>
@@ -93,44 +139,60 @@ const Groups = () => {
           Crear Grupo
         </button>
       </form>
-
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
-          <thead>
-            <tr className="bg-primaryColor text-white text-left">
-              <th className="py-3 px-6 text-sm font-medium">Nombre</th>
-              <th className="py-3 px-6 text-sm font-medium">Accion</th>
-            </tr>
-          </thead>
-          <tbody>
-            {groups.length > 0 ? (
-              groups.map((group, idx) => (
-                <tr
-                  key={group.id}
-                  className={`${idx % 2 === 0 ? "bg-gray-50" : "bg-white"} border-t border-gray-200`}
-                >
-                  <td className="py-3 px-6 text-sm text-gray-700">{group.name}</td>
-                  <td className="py-3 px-6 text-sm text-gray-700">
-                    <a
-                      href={`/groups/edit/${group.id}`}
-                      className="text-blue-500 hover:text-blue-700 font-medium"
-                    >
-                      editar grupo
-                    </a>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={8} className="py-4 text-center text-gray-500">
-                  No groups found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+      <div className="mb-4">
+        <button
+          className="bg-blue-500 text-white p-2 rounded"
+          onClick={handleDeleteGroups}
+          disabled={selectedGroups.length === 0}
+        >
+          Eliminar Grupos Seleccionados
+        </button>
       </div>
-    </div>
+      <div className="overflow-x-auto">
+    <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
+      <thead>
+        <tr className="bg-primaryColor text-white text-left">
+          <th className="py-3 px-6 text-sm font-medium">Seleccionar</th>
+          <th className="py-3 px-6 text-sm font-medium">Nombre</th>
+          <th className="py-3 px-6 text-sm font-medium">Accion</th>
+        </tr>
+      </thead>
+      <tbody>
+  {groups.length > 0 ? (
+    groups.map((group, idx) => (
+      <tr
+        key={group.id ?? idx} // Usa el idx como backup si el id es undefined
+        className={`${idx % 2 === 0 ? "bg-gray-50" : "bg-white"} border-t border-gray-200`}
+      >
+        <td className="py-3 px-6 text-sm text-gray-700">
+          <input
+            type="checkbox"
+            checked={selectedGroups.includes(group.id ?? "")} // Usa el id o un valor por defecto
+            onChange={() => handleSelectGroup(group.id ?? "")} // Manejamos el cambio del checkbox
+          />
+        </td>
+        <td className="py-3 px-6 text-sm text-gray-700">{group.name}</td>
+        <td className="py-3 px-6 text-sm text-gray-700">
+          <a
+            href={`/groups/edit/${group.id}`}
+            className="text-blue-500 hover:text-blue-700 font-medium"
+          >
+            editar grupo
+          </a>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan={8} className="py-4 text-center text-gray-500">
+        No hay grupos disponibles.
+      </td>
+    </tr>
+  )}
+</tbody>
+    </table>
+  </div>
+</div>
   );
 };
 
