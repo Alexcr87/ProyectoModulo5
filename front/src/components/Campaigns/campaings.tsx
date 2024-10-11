@@ -18,6 +18,8 @@ const CampaignsTable = () => {
     const router = useRouter()
     const [selectedCampaigns, setSelectedCampaigns] = useState<ICampaign[]>([]);
 
+
+    
     useEffect(() => {
         if (userData) {
             setRoles(userData.userData.roles.map(role => role.name));
@@ -65,8 +67,9 @@ const CampaignsTable = () => {
         }
     }
 
-    if (loading) return <p>{<Spinner/>}</p>
-    if (error) return <p>{error}</p>
+    if (loading) return <div><Spinner /></div>; // Usa <div> en lugar de <p>
+    if (error) return <div>{error}</div>; // También reestructura el manejo de errores
+
 
     const handleAction= (id: string|undefined)=>{
 
@@ -87,7 +90,12 @@ const CampaignsTable = () => {
 
     // esta funcion entiendo que deberia  depender de los roles
     const handleUpdate = (id: string | undefined ) => {
-        router.push(`/updateCampaign?id=${id}`);
+        if (roles.includes('admin') || roles.includes('moderator')) {
+            router.push(`/updateCampaign?id=${id}`);
+        } else {
+            console.log('No tienes permisos para actualizar la campaña');
+        }
+       
       };
 
     return (
@@ -108,7 +116,9 @@ const CampaignsTable = () => {
                             <th className="border p-2">Ubicación</th>
                             <th className="border p-2">Fecha</th>
                             <th className="border p-2">Ver</th>
-                            <th className="border p-1">Actualizar</th>
+                            {roles.includes('admin') || roles.includes('moderator') ? (
+                                <th className="border p-2">Actualizar</th>
+                            ) : null}
                         </tr>
                     </thead>
                     <tbody>
@@ -125,7 +135,11 @@ const CampaignsTable = () => {
                                 <td className="border p-2 text-blue-500 hover:text-blue-700 cursor-pointer " onClick={()=>handleAction(campaign.id)}>
                                     {roles.includes('candidate') || roles.includes('voter') ? 'votar' : 'ver'}
                                 </td>
-                                <td className="border p-1 text-blue-500 hover:text-blue-700 cursor-pointer" onClick={() => handleUpdate(campaign.id)}>Actualizar </td>
+                                <td className="border p-2 text-blue-500 hover:text-blue-700 cursor-pointer">
+                                    {roles.includes('admin') || roles.includes('moderator') ? (
+                                        <span onClick={() => handleUpdate(campaign.id)}>Actualizar</span>
+                                    ) : null}
+                                </td>
                             </tr>
                         ))}
                     </tbody>

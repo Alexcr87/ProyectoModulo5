@@ -3,7 +3,7 @@ import "./globals.css";
 import NavBar from "@/components/navBar/NavBar";
 import Footer from "@/components/footer/Footer";
 import { AuthProvider } from "@/context/Authontext";
-import { UserProvider } from "@auth0/nextjs-auth0/client";
+
 
 
 export const metadata: Metadata = {
