@@ -26,13 +26,13 @@ const Groups = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error("La respuesta de la red no fue correcta");
       }
 
       const data = await response.json();
       setGroups(data);
     } catch (error) {
-      console.error("Error fetching groups:", error);
+      console.error("Error al obtener grupos:", error);
     } finally {
       setLoading(false);
     }
@@ -123,7 +123,7 @@ const Groups = () => {
             ) : (
               <tr>
                 <td colSpan={8} className="py-4 text-center text-gray-500">
-                  No groups found
+                No se encontraron grupos
                 </td>
               </tr>
             )}
