@@ -2,6 +2,7 @@ import ICandidate from "./ICandidate"
 import IGroup from "./IGroup";
 import IUsers from "./IUsers";
 
+
 export interface ICampaign {
     id?: string;
     name: string;

@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IRegisterError, IRegisterProps } from "./TypesRegister";
@@ -6,6 +6,13 @@ import { register } from "@/helpers/auth.helper";
 import { validateRegisterForm } from "@/helpers/validateRegister";
 import Swal from 'sweetalert2';
 import { useAuth } from "@/context/Authontext";
+
+import { countries } from "@/components/utils/countries"; // Importa la lista de países
+import { citiesByCountry } from "@/components/utils/citiesByCountry";
+import { Country, City } from "@/components/utils/types";
+
+import Spinner from "../ui/Spinner";
+
 
 const RegisterModerator = () => {
   const router = useRouter();
@@ -23,23 +30,17 @@ const RegisterModerator = () => {
   const [dataUser, setDataUser] = useState<IRegisterProps>(initialState);
   const [errors, setErrors] = useState<IRegisterError>(initialState);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [countries] = useState<string[]>(["Argentina", "Chile", "Colombia"]);
-  const [cities, setCities] = useState<string[]>([]);
+  const [cities, setCities] = useState<City[]>([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
   
   const parentId = userData?.userData?.id;
-
-  const fetchCitiesByCountry = (country: string) => {
-    const countryCitiesMap: Record<string, string[]> = {
-      Argentina: ["Buenos Aires", "Córdoba", "Rosario", "Mendoza", "La Plata", "Tucumán"],
-      Chile: ["Santiago", "Valparaíso", "Concepción", "La Serena", "Antofagasta", "Temuco"],
-      Colombia: ["Bogotá", "Medellín", "Cali", "Cartagena", "Barranquilla", "Cúcuta"],
-    };
-    return countryCitiesMap[country] || [];
-  };
+  const fetchCitiesByCountryId = (countryId: number) => {
+    return citiesByCountry.filter((city: { id_country: number; }) => city.id_country === countryId);
+};
 
   useEffect(() => {
-     setIsFormValid(
+    setIsFormValid(
       dataUser.name.trim() !== "" &&
       dataUser.email.trim() !== "" &&
       dataUser.dni.trim() !== "" &&
@@ -59,14 +60,12 @@ const RegisterModerator = () => {
       [fieldName]: value,
     }));
 
-
-   // Validar inmediatamente el campo editado
-   const validationErrors = validateRegisterForm({ ...dataUser, [fieldName]: value });
+    // Validar inmediatamente el campo editado
+    const validationErrors = validateRegisterForm({ ...dataUser, [fieldName]: value });
     setErrors((prevErrors) => ({
       ...prevErrors,
       [fieldName]: validationErrors[fieldName] || "",
     }));
-
 
     // Restablecer isSubmitted cuando el usuario corrige un campo
     if (isSubmitted) {
@@ -74,10 +73,17 @@ const RegisterModerator = () => {
     }
   };
 
-  const handleCountryChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedCountry = event.target.value;
-    setDataUser((prevDataUser) => ({ ...prevDataUser, country: selectedCountry }));
-    const fetchedCities = fetchCitiesByCountry(selectedCountry);
+  const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedCountryId = Number(event.target.value);
+    const selectedCountryName = countries.find(country => country.id === selectedCountryId)?.name || "";
+
+    setDataUser((prevDataUser) => ({
+      ...prevDataUser,
+      country: selectedCountryName,
+      city: "" // Reiniciar la ciudad al cambiar el país
+    }));
+
+    const fetchedCities = fetchCitiesByCountryId(selectedCountryId);
     setCities(fetchedCities);
 
     if (isSubmitted) {
@@ -86,15 +92,14 @@ const RegisterModerator = () => {
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-  
     event.preventDefault();
     setIsSubmitted(true);
+    setIsLoading(true);
   
     const validationErrors = validateRegisterForm(dataUser);
     if (Object.keys(validationErrors).length > 0) {
       // Actualiza el estado de los errores
       setErrors(validationErrors);
-      
       
       Swal.fire({
         icon: "warning",
@@ -124,6 +129,8 @@ const RegisterModerator = () => {
         title: "Oops...",
         text: error.message,
       });
+    } finally {
+      setIsLoading(false); 
     }
   };
 
@@ -144,10 +151,9 @@ const RegisterModerator = () => {
           required 
           autoComplete="off"
         />
-        {  errors.name && <p className="text-red-500">{errors.name}</p>}
+        {errors.name && <p className="text-red-500">{errors.name}</p>}
         
         <input 
-       
           type="text" 
           name="dni" 
           placeholder="DNI" 
@@ -157,10 +163,9 @@ const RegisterModerator = () => {
           required 
           autoComplete="off"
         />
-        {  errors.dni && <p className="text-red-500">{errors.dni}</p>}
+        {errors.dni && <p className="text-red-500">{errors.dni}</p>}
         
         <input 
-         
           type="text" 
           name="address" 
           placeholder="Dirección" 
@@ -170,72 +175,67 @@ const RegisterModerator = () => {
           required 
           autoComplete="off"
         />
-        { errors.address && <p className="text-red-500">{errors.address}</p>}
+        {errors.address && <p className="text-red-500">{errors.address}</p>}
         
         <input 
-        
           type="email" 
           name="email" 
           placeholder="Correo Electrónico" 
           value={dataUser.email} 
           onChange={handleChange} 
           className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
+          required 
           autoComplete="off"
-           
         />
-        {isSubmitted && errors.email && <p className="text-red-500">{errors.email}</p>}
-        
-        <select 
-         
-          name="country" 
-          value={dataUser.country} 
-          onChange={handleCountryChange} 
-          className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-          autoComplete="off"
-         
-        >
-          <option value="">Selecciona un país</option>
-          {countries.map(country => (
-            <option key={country} value={country}>{country}</option>
-          ))}
-        </select>
-        { errors.country && <p className="text-red-500">{errors.country}</p>}
-        
-        <select
-          name="city" 
-          value={dataUser.city} 
-          onChange={handleChange} 
-          className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-          autoComplete="off"
-        >
-          <option value="">Selecciona una ciudad</option>
-          {cities.map(city => (
-            <option key={city} value={city}>{city}</option>
-          ))}
-        </select>
-        {  errors.city && <p className="text-red-500">{errors.city}</p>}
+        {errors.email && <p className="text-red-500">{errors.email}</p>}
         
         <input 
-        
           type="password" 
           name="password" 
           placeholder="Contraseña" 
           value={dataUser.password} 
           onChange={handleChange} 
           className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-           autoComplete="off"
+          required 
+          autoComplete="off"
         />
-          { errors.password && <p className="text-red-500">{errors.password}</p>}
+        {errors.password && <p className="text-red-500">{errors.password}</p>}
+        
+        <select
+          name="country"
+          onChange={handleCountryChange}
+          className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
+        >
+          <option value="">Selecciona un país</option>
+          {countries.map(country => (
+              <option key={country.id} value={country.id}>{country.name}</option>
+          ))}
+        </select>
+        {errors.country && <p className="text-red-500">{errors.country}</p>}
+        
+        <select
+          name="city"
+          value={dataUser.city}
+          onChange={handleChange}
+          className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
+        >
+          <option value="">Selecciona una ciudad</option>
+          {cities.map(city => (
+              <option key={city.id} value={city.id}>{city.name}</option>
+          ))}
+        </select>
+        {errors.city && <p className="text-red-500">{errors.city}</p>}
         
         <button 
-          type="submit" 
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded transition duration-200"
+            type="submit" 
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded transition duration-200"
+            disabled={!isFormValid}
         >
-          Registrarse
+
+          {isLoading ? <Spinner /> : "Registrarse"}
+
         </button>
       </form>
     </div>
@@ -243,10 +243,4 @@ const RegisterModerator = () => {
 };
 
 export default RegisterModerator;
-
-
-
-
-
-
 
