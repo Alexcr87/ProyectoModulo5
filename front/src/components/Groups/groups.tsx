@@ -32,13 +32,13 @@ const Groups = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error("La respuesta de la red no fue correcta");
       }
 
       const data = await response.json();
       setGroups(data);
     } catch (error) {
-      console.error("Error fetching groups:", error);
+      console.error("Error al obtener grupos:", error);
     } finally {
       setLoading(false);
     }
@@ -139,14 +139,42 @@ const Groups = () => {
           Crear Grupo
         </button>
       </form>
-      <div className="mb-4">
-        <button
-          className="bg-blue-500 text-white p-2 rounded"
-          onClick={handleDeleteGroups}
-          disabled={selectedGroups.length === 0}
-        >
-          Eliminar Grupos Seleccionados
-        </button>
+
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
+          <thead>
+            <tr className="bg-primaryColor text-white text-left">
+              <th className="py-3 px-6 text-sm font-medium">Nombre</th>
+              <th className="py-3 px-6 text-sm font-medium">Accion</th>
+            </tr>
+          </thead>
+          <tbody>
+            {groups.length > 0 ? (
+              groups.map((group, idx) => (
+                <tr
+                  key={group.id}
+                  className={`${idx % 2 === 0 ? "bg-gray-50" : "bg-white"} border-t border-gray-200`}
+                >
+                  <td className="py-3 px-6 text-sm text-gray-700">{group.name}</td>
+                  <td className="py-3 px-6 text-sm text-gray-700">
+                    <a
+                      href={`/groups/edit/${group.id}`}
+                      className="text-blue-500 hover:text-blue-700 font-medium"
+                    >
+                      editar grupo
+                    </a>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={8} className="py-4 text-center text-gray-500">
+                No se encontraron grupos
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
       <div className="overflow-x-auto">
     <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">

@@ -11,6 +11,7 @@ import Swal from "sweetalert2";
 import Spinner from '../ui/Spinner';
 import ICampaignError from '@/interfaces/ICampaignError';
 import { validateCampaingError } from '@/helpers/validateCampaingError';
+import ICampaignSinID from '@/interfaces/ICampaignSinId';
 
 const CampaignForm = () => {
   const { userData } = useAuth(); 
@@ -19,8 +20,7 @@ const CampaignForm = () => {
 
   const [groups, setGroups] = useState<IGroup[]>([]);
   const [errors, setErros] = useState<ICampaignError>({})
-  const [formData, setFormData] = useState<ICampaign>({
-    id:'',
+  const [formData, setFormData] = useState<ICampaignSinID>({
     name: '',
     description: '',
     location: '',
