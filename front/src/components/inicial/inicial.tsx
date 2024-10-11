@@ -1,14 +1,32 @@
 "use client";
-import Modal from 'react-modal'
+import Modal from 'react-modal';
 import React, { useEffect, useState } from 'react';
 import CustomModal from '../InstructionsModal/Modal'; 
+import { useAuth } from '@/context/Authontext';
 
 const Inicial = () => {
+    const { userData } = useAuth();
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [userRole, setUserRole] = useState<string | null>(null);
 
     useEffect(() => {
         Modal.setAppElement('#__next'); // Establece el elemento raíz
-    }, []);
+
+        // Asegúrate de que userData tenga la estructura esperada
+        const roles = userData?.userData?.roles.map((item: { id: number }) => item.id) || [];
+        if (roles.includes(1)) {
+            setUserRole('admin');
+        } else if (roles.includes(2)) {
+            setUserRole('candidate');
+        } else if (roles.includes(3)) {
+            setUserRole('voter');
+        } else if (roles.includes(4)) {
+            setUserRole('moderator');
+        } else {
+            setUserRole(null);
+        }
+        console.log("Rol del usuario:", userRole); // Log para verificar el rol
+    }, [userData]); // Dependencia para que se ejecute al cambiar userData
 
     const openModal = () => {
         setModalIsOpen(true);
@@ -17,6 +35,10 @@ const Inicial = () => {
     const closeModal = () => {
         setModalIsOpen(false);
     };
+
+    const buttonText = (userRole === 'voter' || userRole === 'candidate')
+        ? 'Guía de Votación'
+        : '¿Cómo usar la app?';
 
     return (
         <div className="relative w-full bg-cover bg-center h-[90vh]" style={{ backgroundImage: "url('https://img.freepik.com/premium-zdjecie/wyborczyni-wkladajaca-kartke-do-urny-wyborczej-wybory-i-koncepcja-glosowania_77190-18358.jpg')" }}>
@@ -28,11 +50,12 @@ const Inicial = () => {
                     onClick={openModal} 
                     className="bg-primaryColor text-white px-6 py-3 rounded-md shadow-md hover:bg-tertiaryColor transition duration-300"
                 >
-                    Guía de votación
+                    {buttonText}
                 </button>
                 <CustomModal 
                     isOpen={modalIsOpen} 
                     onRequestClose={closeModal} 
+                    userRole={userRole} // Asegúrate de pasar el userRole aquí
                 />
             </div>
         </div>
