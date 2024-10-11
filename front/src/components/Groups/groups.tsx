@@ -95,7 +95,6 @@ const Groups = () => {
     if (result.isConfirmed) {
       try {
         const response = await deleteGroups(selectedGroups);
-
         const newGroups = groups.filter(
           (group) => !selectedGroups.includes(group.id ?? "")
         );
@@ -122,19 +121,27 @@ const Groups = () => {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4 text-center">Mis Grupos</h1>
 
-      <form onSubmit={handleCreateGroup} className="mb-4">
-        <input
-          type="text"
-          value={groupName}
-          onChange={(e) => setGroupName(e.target.value)}
-          placeholder="Nombre del grupo"
-          className="border rounded p-2 mr-2"
-        />
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-          Crear Grupo
-        </button>
-      </form>
-
+      <div className="mb-4">
+  <form onSubmit={handleCreateGroup} className="flex items-center">
+    <input
+      type="text"
+      value={groupName}
+      onChange={(e) => setGroupName(e.target.value)}
+      placeholder="Nombre del grupo"
+      className="border rounded p-2 mr-2"
+    />
+    <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+      Crear Grupo
+    </button>
+  </form>
+  <button
+    onClick={handleDeleteGroups}
+    className="bg-blue-500 text-white p-2 rounded mt-2 disabled:opacity-50"
+    disabled={selectedGroups.length === 0} // Desactiva si no hay grupos seleccionados
+  >
+    Eliminar Grupos
+  </button>
+</div>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
           <thead>
@@ -149,20 +156,16 @@ const Groups = () => {
               groups.map((group, idx) => (
                 <tr
                   key={group.id ?? idx} // Usa el idx como backup si el id es undefined
-                  className={`${
-                    idx % 2 === 0 ? "bg-gray-50" : "bg-white"
-                  } border-t border-gray-200`}
+                  className={`${idx % 2 === 0 ? "bg-gray-50" : "bg-white"} border-t border-gray-200`}
                 >
                   <td className="py-3 px-6 text-sm text-gray-700">
                     <input
                       type="checkbox"
-                      checked={selectedGroups.includes(group.id ?? "")}
-                      onChange={() => handleSelectGroup(group.id ?? "")}
+                      checked={selectedGroups.includes(group.id ?? "")} // Usa el id o un valor por defecto
+                      onChange={() => handleSelectGroup(group.id ?? "")} // Manejamos el cambio del checkbox
                     />
                   </td>
-                  <td className="py-3 px-6 text-sm text-gray-700">
-                    {group.name}
-                  </td>
+                  <td className="py-3 px-6 text-sm text-gray-700">{group.name}</td>
                   <td className="py-3 px-6 text-sm text-gray-700">
                     <a
                       href={`/groups/edit/${group.id}`}
@@ -175,26 +178,17 @@ const Groups = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={3} className="py-4 text-center text-gray-500">
-                  No hay grupos disponibles.
+                <td colSpan={8} className="py-4 text-center text-gray-500">
+                  No se encontraron grupos
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
-
-      <button
-        onClick={handleDeleteGroups}
-        disabled={selectedGroups.length === 0}
-        className={`bg-blue-500 text-white p-2 rounded mt-4 ${
-          selectedGroups.length === 0 ? "opacity-50 cursor-not-allowed" : ""
-        }`}
-      >
-        Eliminar Grupos Seleccionados
-      </button>
     </div>
   );
 };
 
 export default Groups;
+
