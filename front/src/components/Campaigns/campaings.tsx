@@ -125,7 +125,7 @@ const CampaignsTable = () => {
     
                 // Actualiza el estado de campañas en el frontend
                 setCampaigns(prevCampaigns => 
-                    prevCampaigns.filter(campaign => !campaignIds.includes(campaign.id)) // Aquí no necesitas el 'as string'
+                    prevCampaigns.filter(campaign => !campaignIds.includes(campaign.id!)) // Aquí no necesitas el 'as string'
                 );
     
                 // Limpia la selección de campañas
