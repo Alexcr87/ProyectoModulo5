@@ -17,7 +17,7 @@ import { countries } from "../utils/countries";
 
 const RegisterByAuth0 = () => {
 const router = useRouter();
-const { userData } = useAuth();
+const { userData, auth0UserData } = useAuth();
 const [loading, setLoading] = useState(false);
 const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -27,10 +27,10 @@ if (localUser) {
 }*/
 
 const initialState = {
-    name: `${userData?.userData.name}`,
+    name: `${auth0UserData?.name}`,
     dni: "",
     address: "",
-    email: `${userData?.userData.email}`,
+    email: `${auth0UserData?.email}`,
     password: "12345aS@",
     country: "",
     city: ""
@@ -143,6 +143,14 @@ const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setErrors(errors);
   }, [dataUser]);
 
+  const handleBlur = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name } = event.target;
+    setTouched({
+      ...touched,
+      [name]: true,
+    });
+  };
+
   return (
     <>
     {loading && (
@@ -165,9 +173,9 @@ const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
                 id="name"
                 name="name"
                 type="text"
-                value={userData?.userData.name}
+                value={dataUser.name}
                 onChange={handleChange}
-                placeholder="Nombre"
+                placeholder={auth0UserData?.name}
               />
               {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
             </div>
@@ -200,9 +208,12 @@ const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
                 id="email-address"
                 name="email"
                 type="email"
-                value={userData?.userData.email}
+                value={auth0UserData?.email}
+                onBlur={handleBlur}
                 onChange={handleChange}
-                placeholder="Correo Electrónico"
+                placeholder={auth0UserData?.email}
+                disabled
+                
               />
               {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
             </div>

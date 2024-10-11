@@ -159,7 +159,7 @@ const NavBar = () => {
                     {!userData ? (
                         <>
                             <li>
-                                <Link href="/registerModerator">Registrarme</Link>
+                                <Link href="/registerUser">Registrarme</Link>
                             </li>
                             <li>
                                 <Link href="/login">Iniciar Sesión</Link>
