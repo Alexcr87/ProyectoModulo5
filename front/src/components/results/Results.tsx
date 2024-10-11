@@ -44,7 +44,7 @@ const Results: React.FC<{ data: IVotesResult[] }> = ({ data }) => {
     }
 
     fetchData();
-  }, [data]); // Agregar 'data' como dependencia
+  }, [data]); 
   
   if (isLoading) {
     return (
