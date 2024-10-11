@@ -42,9 +42,39 @@ export class GroupService {
         return await this.groupRepository.save(group);
     }
 
+    async deleteGroups(ids: string[]): Promise<string> {
+      
+      const groupsToDelete = await this.groupRepository.find({
+        where: { id: In(ids) }, 
+        relations: ['users', 'campaigns'], 
+      });
+  
+      
+      if (groupsToDelete.length === 0) {
+        throw new NotFoundException('No se encontraron grupos para eliminar.');
+      }
+  
+      
+      for (const group of groupsToDelete) {
+        
+        group.users = [];
+        
+        group.campaigns = [];
+      }
+  
+      
+      await this.groupRepository.save(groupsToDelete);
+  
+  
+      await this.groupRepository.remove(groupsToDelete);
+  
+      return 'Grupos eliminados exitosamente.';
+    }
+
+
     async findAll(): Promise<Group[]> {
         return this.groupRepository.find({
-            relations: ['users'], // Incluimos los usuarios relacionados
+            relations: ['users'], 
         });
     }
 
