@@ -5,6 +5,7 @@ import IUsers from "@/interfaces/IUsers";
 import { useAuth } from "@/context/Authontext";
 import Spinner from "../ui/Spinner";
 import IUser from "@/interfaces/IUser";
+import IGroup from "@/interfaces/IGroup";
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 const Users = () => {
@@ -13,8 +14,9 @@ const Users = () => {
   const [users, setUsers] = useState<IUsers[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedRole, setSelectedRole] = useState<string>("");
-
-
+  const [selectedGroup, setSelectedGroup] = useState<string>("");
+  const [groups, setGroups] = useState<IGroup[]>([]);
+  
   useEffect(() => {
     const fetchUsers = async () => {
       if (!userData?.userData.id) {
@@ -35,6 +37,15 @@ const Users = () => {
 
         const data = await response.json();
         setUsers(data);
+
+        const groupsResponse = await fetch(`${APIURL}/groups/user/${actualUser}`, {
+          method: "GET",
+        });
+        if (!groupsResponse.ok) {
+          throw new Error("La respuesta de la red no fue correcta al obtener grupos.");
+        }
+        const groupsData = await groupsResponse.json();
+        setGroups(groupsData);
       } catch (error) {
       } finally {
         setLoading(false);
@@ -52,9 +63,13 @@ const Users = () => {
     );
   }
 
-  const filteredUsers = selectedRole
-  ? users.filter((user) => user.roles?.some((role) => role.name === selectedRole))
-  : users; // Mostrar todos si no se selecciona ningún rol
+const filteredUsers = users
+    .filter((user) =>
+      selectedRole ? user.roles?.some((role) => role.name === selectedRole) : true
+    )
+    .filter((user) =>
+      selectedGroup ? user.group?.some((group) => group.id === selectedGroup) : true
+    );
 
 
   return (
@@ -71,6 +86,18 @@ const Users = () => {
           <option value="moderator">Moderador</option>
           <option value="voter">Votante</option>
           {/* Agrega más opciones según los roles que tengas */}
+        </select>
+        <select
+          value={selectedGroup}
+          onChange={(e) => setSelectedGroup(e.target.value)}
+          className="p-2 border rounded-md"
+        >
+          <option value="">Todos los grupos</option>
+          {groups.map((group) => (
+            <option key={group.id} value={group.id}>
+              {group.name}
+            </option>
+          ))}
         </select>
         </div>
       <h1 className="text-2xl font-bold mb-4 text-center">Usuarios</h1>
