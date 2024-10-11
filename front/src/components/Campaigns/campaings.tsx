@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react'
-import ICampaign from '@/interfaces/ICampaign'
+import {ICampaign} from '@/interfaces/ICampaign'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/context/Authontext';
 import Spinner from '../ui/Spinner';
