@@ -16,7 +16,7 @@ export class MailService {
     };
 
     await transporter.sendMail(mailOptions);
-    console.log('Correo enviado a:', to);
+
   }
 
   async sendWelcomeEmail(
@@ -52,8 +52,7 @@ export class MailService {
   
     // Renderizar el HTML usando la plantilla y los datos
     const htmlContent = ejs.render(template, data);
-    console.log(htmlContent)
-
+  
     // Enviar el correo
     await this.sendMail(
       email,

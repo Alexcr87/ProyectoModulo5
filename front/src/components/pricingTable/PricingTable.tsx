@@ -99,7 +99,7 @@ const PricingTable = () => {
 
     <div className='min-h-screen flex flex-col items-center justify-center py-8'>
       <div className='text-center'>
-        <h1 className='text-4xl font-bold py-4'>Plan de precios increíble</h1>
+        <h1 className='text-4xl font-bold py-4'>Plan de precios increíbles</h1>
         <h3 className='pb-4'>
         {/* Hay muchas variaciones de pasajes de Lorem Ipsum disponibles. <br /> but the majority have suffered alteration in some form. */}
         </h3>
