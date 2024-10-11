@@ -82,7 +82,7 @@ const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
         title: '¡Éxito!',
         text: 'Candidato creado exitosamente.',
       }).then(() => {
-        window.location.href = "/candidates";
+        window.location.href = `/campaigndesc?campaignId=${selectedCampaignId}`;
       });
     
     } catch (error) {
@@ -92,13 +92,14 @@ const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
           icon: 'error',
           title: 'Oops...',
           text: error.message,
+        }).then(() => {
+          window.location.href = `/users`;
         });
       }
     } finally {
       setLoading(false); 
     }
   };
-
   return (
     <div className="flex w-[60%] justify-center items-center h-[80%] p-6 bg-white shadow-lg rounded-lg">
       <form onSubmit={handleSubmit} className="w-11/12 space-y-4">
