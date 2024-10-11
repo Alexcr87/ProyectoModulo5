@@ -11,9 +11,9 @@ import { useAuth } from "@/context/Authontext";
 import { register } from "@/helpers/auth.helper";
 import Spinner from "../ui/Spinner";
 import { Country, City } from "@/components/utils/types";
-
 import { citiesByCountry } from "@/components/utils/citiesByCountry";
 import { countries } from "../utils/countries";
+
 const RegisterByAuth0 = () => {
 const router = useRouter();
 const { userData } = useAuth();
