@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Candidate } from '../../entities/candidate.entity';
@@ -7,6 +7,7 @@ import { User } from '../../entities/user.entity';
 import { CloudinaryService } from '../../cloudinary/cloudinary.service';
 import { Role } from 'src/entities/roles.entity';
 import { Campaign } from 'src/entities/campaign.entity';
+
 
 @Injectable()
 export class CandidateService {
@@ -36,6 +37,17 @@ export class CandidateService {
     const campaign = await this.campaignRepository.findOne({
       where: { id: campaignId },
     });
+
+    const existingCandidate = await this.candidateRepository.findOne({
+      where: {
+        user: { id: userId },
+        campaign: { id: campaignId },
+      },
+    });
+  
+    if (existingCandidate) {
+      throw new ConflictException('Este candidato ya ha sido nombrado para esta campaña');
+    }
 
     if (!user) {
       throw new NotFoundException('Usuario no encontrado');

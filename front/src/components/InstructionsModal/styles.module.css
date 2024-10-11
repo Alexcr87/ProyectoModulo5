@@ -1,8 +1,8 @@
 .modalContent {
-  display: flex; /* Usar flexbox */
-  flex-direction: column; /* Alinear elementos en columna */
-  align-items: center; /* Centrar horizontalmente */
-  justify-content: center; /* Centrar verticalmente */
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: flex-start; /* Cambia a flex-start para alinear desde el inicio */
   position: fixed; 
   top: 50%;
   left: 50%;
@@ -15,6 +15,12 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); 
   z-index: 1000; 
   animation: fadeIn 0.3s ease-in-out; 
+  overflow-y: auto; /* Permitir scroll vertical */
+  max-height: 80vh; /* Altura máxima del modal */
+}
+
+.modalInner {
+  padding: 10px; /* Espaciado interno */
 }
 
 .modalOverlay {
@@ -37,9 +43,15 @@
 }
 
 .lista {
-  list-style-type: square;
+  list-style-type: square; 
+  padding-left: 20px; 
+  color: #333; 
 }
 
+.content {
+  flex-grow: 1; /* Para permitir que el contenido crezca y use el espacio disponible */
+  overflow-y: auto; /* Asegurarse de que el contenido se desplace si es necesario */
+}
 
 .closeButton {
   background-color: var(--primary-color); 
@@ -50,7 +62,7 @@
   cursor: pointer; 
   transition: background-color 0.3s ease; 
   font-size: 16px; 
-  margin-top: 20px; /* Espaciado entre el contenido y el botón */
+  margin-top: 20px; 
 }
 
 .closeButton:hover {
