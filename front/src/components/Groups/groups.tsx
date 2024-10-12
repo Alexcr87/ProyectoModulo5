@@ -14,23 +14,49 @@ const Groups = () => {
   const [groups, setGroups] = useState<IGroup[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [groupName, setGroupName] = useState<string>("");
+  const [roles, setRoles] = useState<string[]>([]); // Estado para roles
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
 
-  const fetchGroups = async () => {
+  useEffect(() => {
+    const initializeData = async () => {
+      if (!userData) {
+        setLoading(false); // Si no hay userData, termina la carga
+        return;
+      }
+
+      const mappedRoles = userData.userData.roles.map(role => role.name);
+      setRoles(mappedRoles);
+
+      const userGroups = userData.userData.groups.map(group => group.id).filter((group): group is string => group !== undefined);
+      setSelectedGroups(userGroups);
+
+      await fetchGroups(mappedRoles);
+    };
+
+    initializeData(); 
+  }, [userData]); 
+
+  const fetchGroups = async (userRoles: string[]) => {
     if (!userData?.userData.id) {
-      setLoading(false); // Termina la carga si no hay ID
+      setLoading(false);
       return;
     }
 
-    const actualUser = userData?.userData.id;
-
     try {
-      const response = await fetch(`${APIURL}/groups/user/${actualUser}`, {
-        method: "GET",
-      });
+      let response;
+
+      if (userRoles.includes('admin')) {
+        response = await fetch(`${APIURL}/groups`, {
+          method: "GET",
+        });
+      } else {
+        response = await fetch(`${APIURL}/groups/user/${userData.userData.id}`, {
+          method: "GET",
+        });
+      }
 
       if (!response.ok) {
-        throw new Error("La respuesta de la red no fue correcta");
+        throw new Error("Error al obtener los grupos");
       }
 
       const data = await response.json();
@@ -38,13 +64,9 @@ const Groups = () => {
     } catch (error) {
       console.error("Error al obtener grupos:", error);
     } finally {
-      setLoading(false);
+      setLoading(false); // Finaliza la carga solo después de la solicitud
     }
   };
-
-  useEffect(() => {
-    fetchGroups();
-  }, [userData]);
 
   const handleCreateGroup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +79,7 @@ const Groups = () => {
         },
         body: JSON.stringify({
           name: groupName,
-          userId: userData?.userData.id, // ID del usuario autenticado
+          userId: userData?.userData.id, 
         }),
       });
 
@@ -65,9 +87,8 @@ const Groups = () => {
         throw new Error("Error al crear el grupo");
       }
 
-      // Después de crear el grupo, actualizar la lista de grupos
-      await fetchGroups(); // Llama de nuevo a la función para obtener los grupos actualizados
-      setGroupName(""); // Limpiar el campo del nombre del grupo
+      await fetchGroups(roles); 
+      setGroupName(""); 
     } catch (error) {
       console.error("Error creando grupo:", error);
     }
