@@ -77,6 +77,18 @@ const CampaignForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (formData.date <= today) {
+      Swal.fire({
+        icon: "error",
+        title: "Fecha inválida",
+        text: "La campaña debe tener una fecha futura.",
+      });
+      return; // Evitar que se procese el formulario si la fecha no es válida
+    }
+
     const data = {
       ...formData,
       date: formData.date.toISOString(), // Asegúrate de que la fecha esté en formato ISO
