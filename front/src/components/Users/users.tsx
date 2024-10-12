@@ -131,7 +131,7 @@ const Users = () => {
     });
 
     if (selectedGroupId) {
-      try {
+      try { // crear endpoint 
         const response = await fetch(`${APIURL}/assign-group`, {
           method: "POST",
           body: JSON.stringify({
@@ -160,7 +160,7 @@ const filteredUsers = users
       selectedRole ? user.roles?.some((role) => role.name === selectedRole) : true
     )
     .filter((user) =>
-      selectedGroup ? user.group?.some((group) => group.id === selectedGroup) : true
+      selectedGroup ? user.group?.some((group) => group.name === selectedGroup) : true
     );
 
 

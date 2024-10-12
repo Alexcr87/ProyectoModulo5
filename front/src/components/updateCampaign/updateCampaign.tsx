@@ -68,10 +68,16 @@ const updateCampaign = () => {
         body: JSON.stringify(updatedCampaign),
       });
       const data = await response.json();
-      setCampaign(data);
+      if (response.ok) { 
+        setCampaign(data); // Actualiza la campaña con la nueva data
+        setError(null); // Limpia cualquier error previo
+      } else {
+        setError(data.message || 'Ocurrió un error');
+      }
     } catch (error) {
       setError((error as { message: string }).message);
-      setLoading(false);
+    } finally {
+      setLoading(false); // Asegúrate de que se detenga la carga después de la petición
     }
   };
 
