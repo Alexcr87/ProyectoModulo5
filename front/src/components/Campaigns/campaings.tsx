@@ -45,10 +45,16 @@ const CampaignsTable = () => {
 
         const actualUser = String(userData?.userData.id);
        
-        try {                
+        try {
             let response;
-        
-            if (roles.includes('candidate') || roles.includes('voter')) {
+    
+            
+            if (roles.includes('admin')) {
+                response = await fetch(`${APIURL}/campaigns`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            } else if (roles.includes('candidate') || roles.includes('voter')) {
                 response = await fetch(`${APIURL}/campaigns/groups`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -57,11 +63,11 @@ const CampaignsTable = () => {
             } else {
                 response = await fetch(`${APIURL}/campaigns/user/${actualUser}`);
             }
-        
+    
             if (!response || !response.ok) {
                 throw new Error('Error al obtener las campañas');
             }
-        
+    
             const data: ICampaign[] = await response.json();
             setCampaigns(data);
         } catch (error) {
@@ -69,7 +75,7 @@ const CampaignsTable = () => {
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     if (loading) return <div><Spinner /></div>; // Usa <div> en lugar de <p>
     if (error) return <div>{error}</div>; // También reestructura el manejo de errores

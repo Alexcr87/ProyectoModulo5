@@ -92,12 +92,16 @@ const PricingTable = () => {
       console.error('Error al crear la preferencia:', error);
     }
   };
+
+
+
   return (
+
     <div className='min-h-screen flex flex-col items-center justify-center py-8'>
       <div className='text-center'>
-        <h1 className='text-4xl font-bold py-4'>Awesome Pricing Plan</h1>
+        <h1 className='text-4xl font-bold py-4'>Plan de precios increíbles</h1>
         <h3 className='pb-4'>
-          There are many variations of passages of Lorem Ipsum available <br /> but the majority have suffered alteration in some form.
+        {/* Hay muchas variaciones de pasajes de Lorem Ipsum disponibles. <br /> but the majority have suffered alteration in some form. */}
         </h3>
       </div>
       {loading ? (
@@ -111,12 +115,13 @@ const PricingTable = () => {
             onClick={() => handlePlanSelection(account.id, account.price)} // Aquí se pasa también el precio
           >
             <h2 className='text-lg font-bold mt-8'>{account.name}</h2>
-            <h3>$<span className='text-4xl font-bold'>{account.price}</span> Per Month</h3>
+            <h3>$<span className='text-4xl font-bold'>{account.price}</span> Por mes</h3>
             <h4>{account.description}</h4>
-            <h4>All UI components</h4>
-            <h4>Lifetime access</h4>
-            <h4>Free updates</h4>
-            <h2 className='text-lg font-bold mt-12 mb-4'>Features</h2>
+    
+            <h4>Todos los componentes de la interfaz de usuario</h4>
+            <h4>Acceso de por vida</h4>
+            <h4>Actualizaciones gratuitas</h4>
+            <h2 className='text-lg font-bold mt-12 mb-4'>Características</h2>
           </div>
         ))}
       </div>

@@ -1,4 +1,5 @@
 "use client"
+import IAuth0 from '@/interfaces/IAuth0';
 //contexto de autenticacion
 import { userSession } from '@/interfaces/Session'
 import {useEffect, useState, createContext, useContext} from 'react'
@@ -6,16 +7,21 @@ import {useEffect, useState, createContext, useContext} from 'react'
 export interface AuthContextProps{
     userData: userSession | null;
     setUserData: (userData: userSession | null) => void;
+    auth0UserData: IAuth0| null;
+  setAuth0UserData: (userData: { name: string; email: string }) => void;
 }
 
 export const AuthContext = createContext<AuthContextProps>({
   userData: null,
-  setUserData: () => {}
+  setUserData: () => {},
+  auth0UserData: null,
+  setAuth0UserData: () => {},
 })
 
 //pasa el context a sus hijos (AuthProvide en Layout)
 export const AuthProvider: React.FC<{ children: React.ReactNode}> = ({children}: { children: React.ReactNode}) => {
   const [userData, setUserData] = useState<userSession | null>(null)
+  const [auth0UserData, setAuth0UserData] = useState<{ name: string; email: string } | null>(null)
   
       //sincroniza con localstorage
     useEffect(()=>{
@@ -29,7 +35,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode}> = ({children}:
         setUserData(JSON.parse(userData!))
     },[])
   return (
-    <AuthContext.Provider value={{userData, setUserData}}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ userData, setUserData, auth0UserData, setAuth0UserData }}>{children}</AuthContext.Provider>
   )
 }
 

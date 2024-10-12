@@ -1,9 +1,12 @@
-'use client'
+'use client';
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/Authontext";
 import IGroup from "@/interfaces/IGroup";
 import Spinner from "../ui/Spinner";
+import Swal from "sweetalert2";
+import { deleteGroups } from "../../helpers/group.helper";
+
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 const Groups = () => {
@@ -11,36 +14,59 @@ const Groups = () => {
   const [groups, setGroups] = useState<IGroup[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [groupName, setGroupName] = useState<string>("");
+  const [roles, setRoles] = useState<string[]>([]); // Estado para roles
+  const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
 
-  const fetchGroups = async () => {
+  useEffect(() => {
+    const initializeData = async () => {
+      if (!userData) {
+        setLoading(false); // Si no hay userData, termina la carga
+        return;
+      }
+
+      const mappedRoles = userData.userData.roles.map(role => role.name);
+      setRoles(mappedRoles);
+
+      const userGroups = userData.userData.groups.map(group => group.id).filter((group): group is string => group !== undefined);
+      setSelectedGroups(userGroups);
+
+      await fetchGroups(mappedRoles);
+    };
+
+    initializeData(); 
+  }, [userData]); 
+
+  const fetchGroups = async (userRoles: string[]) => {
     if (!userData?.userData.id) {
-      setLoading(false); // Termina la carga si no hay ID
+      setLoading(false);
       return;
     }
 
-    const actualUser = userData?.userData.id;
-
     try {
-      const response = await fetch(`${APIURL}/groups/user/${actualUser}`, {
-        method: "GET",
-      });
+      let response;
+
+      if (userRoles.includes('admin')) {
+        response = await fetch(`${APIURL}/groups`, {
+          method: "GET",
+        });
+      } else {
+        response = await fetch(`${APIURL}/groups/user/${userData.userData.id}`, {
+          method: "GET",
+        });
+      }
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error("Error al obtener los grupos");
       }
 
       const data = await response.json();
       setGroups(data);
     } catch (error) {
-      console.error("Error fetching groups:", error);
+      console.error("Error al obtener grupos:", error);
     } finally {
-      setLoading(false);
+      setLoading(false); // Finaliza la carga solo después de la solicitud
     }
   };
-
-  useEffect(() => {
-    fetchGroups();
-  }, [userData]);
 
   const handleCreateGroup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,7 +79,7 @@ const Groups = () => {
         },
         body: JSON.stringify({
           name: groupName,
-          userId: userData?.userData.id, // ID del usuario autenticado
+          userId: userData?.userData.id, 
         }),
       });
 
@@ -61,43 +87,87 @@ const Groups = () => {
         throw new Error("Error al crear el grupo");
       }
 
-      // Después de crear el grupo, actualizar la lista de grupos
-      await fetchGroups(); // Llama de nuevo a la función para obtener los grupos actualizados
-      setGroupName(""); // Limpiar el campo del nombre del grupo
+      await fetchGroups(roles); 
+      setGroupName(""); 
     } catch (error) {
       console.error("Error creando grupo:", error);
     }
   };
 
+  const handleSelectGroup = (groupId: string) => {
+    if (selectedGroups.includes(groupId)) {
+      setSelectedGroups(selectedGroups.filter((id) => id !== groupId));
+    } else {
+      setSelectedGroups([...selectedGroups, groupId]);
+    }
+  };
+
+  const handleDeleteGroups = async () => {
+    const result = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: "No podrás revertir esta acción.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await deleteGroups(selectedGroups);
+        const newGroups = groups.filter(
+          (group) => !selectedGroups.includes(group.id ?? "")
+        );
+        setGroups(newGroups);
+        setSelectedGroups([]);
+
+        Swal.fire("¡Eliminados!", response, "success");
+      } catch (error: any) {
+        const errorMessage = error.message || "Error al eliminar los grupos.";
+        Swal.fire("Error", errorMessage, "error");
+      }
+    }
+  };
+
   if (loading) {
     return (
-    <div className="flex justify-center items-center h-screen">
-    <Spinner />
-  </div>
-);
+      <div className="flex justify-center items-center h-screen">
+        <Spinner />
+      </div>
+    );
   }
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4 text-center">Mis Grupos</h1>
 
-      <form onSubmit={handleCreateGroup} className="mb-4">
-        <input
-          type="text"
-          value={groupName}
-          onChange={(e) => setGroupName(e.target.value)}
-          placeholder="Nombre del grupo"
-          className="border rounded p-2 mr-2"
-        />
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-          Crear Grupo
-        </button>
-      </form>
-
+      <div className="mb-4">
+  <form onSubmit={handleCreateGroup} className="flex items-center">
+    <input
+      type="text"
+      value={groupName}
+      onChange={(e) => setGroupName(e.target.value)}
+      placeholder="Nombre del grupo"
+      className="border rounded p-2 mr-2"
+    />
+    <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+      Crear Grupo
+    </button>
+  </form>
+  <button
+    onClick={handleDeleteGroups}
+    className="bg-blue-500 text-white p-2 rounded mt-2 disabled:opacity-50"
+    disabled={selectedGroups.length === 0} // Desactiva si no hay grupos seleccionados
+  >
+    Eliminar Grupos
+  </button>
+</div>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
           <thead>
             <tr className="bg-primaryColor text-white text-left">
+              <th className="py-3 px-6 text-sm font-medium">Seleccionar</th>
               <th className="py-3 px-6 text-sm font-medium">Nombre</th>
               <th className="py-3 px-6 text-sm font-medium">Accion</th>
             </tr>
@@ -106,9 +176,16 @@ const Groups = () => {
             {groups.length > 0 ? (
               groups.map((group, idx) => (
                 <tr
-                  key={group.id}
+                  key={group.id ?? idx} // Usa el idx como backup si el id es undefined
                   className={`${idx % 2 === 0 ? "bg-gray-50" : "bg-white"} border-t border-gray-200`}
                 >
+                  <td className="py-3 px-6 text-sm text-gray-700">
+                    <input
+                      type="checkbox"
+                      checked={selectedGroups.includes(group.id ?? "")} // Usa el id o un valor por defecto
+                      onChange={() => handleSelectGroup(group.id ?? "")} // Manejamos el cambio del checkbox
+                    />
+                  </td>
                   <td className="py-3 px-6 text-sm text-gray-700">{group.name}</td>
                   <td className="py-3 px-6 text-sm text-gray-700">
                     <a
@@ -123,7 +200,7 @@ const Groups = () => {
             ) : (
               <tr>
                 <td colSpan={8} className="py-4 text-center text-gray-500">
-                  No groups found
+                  No se encontraron grupos
                 </td>
               </tr>
             )}
@@ -135,3 +212,4 @@ const Groups = () => {
 };
 
 export default Groups;
+

@@ -11,7 +11,7 @@ const APIURL = process.env.NEXT_PUBLIC_API_URL;
 
 const Callback = () => {
   const router = useRouter();
-  const { setUserData } = useAuth();
+  const { setUserData, setAuth0UserData } = useAuth();
 
   useEffect(() => {
     const handleAuth0Response = async () => {
@@ -24,6 +24,7 @@ const Callback = () => {
        
         if (response.ok) {
           const data = await response.json();
+          setAuth0UserData({ name: data.name, email: data.email });
           const userEmail = data.email; // Suponiendo que data contiene el email
         
           // Verificar si el correo electrónico está en la base de datos
