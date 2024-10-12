@@ -17,21 +17,38 @@ const Users = () => {
   const [selectedRole, setSelectedRole] = useState<string>("");
   const [selectedGroup, setSelectedGroup] = useState<string>("");
   const [groups, setGroups] = useState<IGroup[]>([]);
+  const [roles, setRoles] = useState<string[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   
+ 
+  useEffect(() => {
+    if (userData) {
+      // Mapea roles desde el userData
+      setRoles(userData.userData.roles.map((role) => role.name));
+    }
+  }, [userData]);
+
   useEffect(() => {
     const fetchUsers = async () => {
       if (!userData?.userData.id) {
-        setLoading(false); // Termina la carga si no hay ID
+        setLoading(false);
         return;
       }
 
-      const actualUser = userData?.userData.id
-
       try {
-        const response = await fetch(`${APIURL}/user?parentId=${actualUser}`, {
-          method: "GET",
-        });
+        let response;
+
+        // Si el usuario es admin, traer todos los usuarios
+        if (roles.includes("admin")) {
+          response = await fetch(`${APIURL}/user`, {
+            method: "GET",
+          });
+        } else {
+          // Si no es admin, traer solo los usuarios según el parentId
+          response = await fetch(`${APIURL}/user?parentId=${userData.userData.id}`, {
+            method: "GET",
+          });
+        }
 
         if (!response.ok) {
           throw new Error("La respuesta de la red no fue correcta");
@@ -40,22 +57,28 @@ const Users = () => {
         const data = await response.json();
         setUsers(data);
 
-        const groupsResponse = await fetch(`${APIURL}/groups/user/${actualUser}`, {
+        const groupsResponse = await fetch(`${APIURL}/groups/user/${userData.userData.id}`, {
           method: "GET",
         });
+
         if (!groupsResponse.ok) {
           throw new Error("La respuesta de la red no fue correcta al obtener grupos.");
         }
+
         const groupsData = await groupsResponse.json();
         setGroups(groupsData);
       } catch (error) {
+        console.error("Error al obtener usuarios o grupos:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUsers();
-  }, [userData]); // Solo se ejecuta cuando userSesion cambia
+    // Ejecuta el fetch solo cuando los roles se han establecido y están listos
+    if (roles.length > 0) {
+      fetchUsers();
+    }
+  }, [roles, userData]); // Solo se ejecuta cuando userSesion cambia
 
   if (loading) {
     return (
