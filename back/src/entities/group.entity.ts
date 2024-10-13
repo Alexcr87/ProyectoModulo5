@@ -14,9 +14,7 @@ export class Group {
   @ManyToOne(() => User, (user) => user.groupCreator)
   user: User;
 
-  @ManyToMany(() => User, (user) => user.groups, {
-    cascade: true, // Mantener aquí
-  })
+  @ManyToMany(() => User, (user) => user.groups)
   @JoinTable({
     name: 'user_groups', // Nombre de la tabla de unión
     joinColumn: { name: 'groupId', referencedColumnName: 'id' },
