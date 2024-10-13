@@ -8,16 +8,11 @@ import IUsers from "@/interfaces/IUsers";
 import Spinner from "../ui/Spinner";
 import Select from 'react-select';
 import Swal from "sweetalert2";
-<<<<<<< HEAD
 import {deleteUsersHelper} from "../../helpers/user.helper";
 
 
-
-=======
-
-
 const MySwal = withReactContent(Swal);
->>>>>>> development
+
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 const Users = () => {
@@ -92,36 +87,28 @@ const Users = () => {
     );
   }
 
-<<<<<<< HEAD
-  const handleDeleteUsers = async (selectedUsers: string[], APIURL: string | undefined): Promise<void> => {
-    if (!APIURL) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'La URL de la API no está definida.',
-=======
   const options = groups.map(group => ({
     value: group.id as string,
     label: group.name as string
   }))
 
   const handleCheckboxChange = (userId: string) => {
-    setSelectedUsers((prevSelectedUsers) =>
-      prevSelectedUsers.includes(userId)
-        ? prevSelectedUsers.filter((id) => id !== userId)
-        : [...prevSelectedUsers, userId]
-    );
+    if (selectedUsers.includes(userId)) {
+      setSelectedUsers(selectedUsers.filter(id => id !== userId));
+    } else {
+      setSelectedUsers([...selectedUsers, userId]);
+    }
   };
 
-  const handleDeleteUsers = async () => {
-    try {
-      const response = await fetch(`${APIURL}/user`, {
-        method: "DELETE",
-        body: JSON.stringify({ userIds: selectedUsers }), // Enviar IDs seleccionados
-        headers: {
-          "Content-Type": "application/json",
-        },
->>>>>>> development
+
+
+  const handleDeleteUsers = async (selectedUsers: string[], APIURL: string | undefined): Promise<void> => {
+    if (!APIURL) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'La URL de la API no está definida.',
+
       });
       return; 
     }
@@ -132,15 +119,9 @@ const Users = () => {
       setSelectedUsers([]); 
     }
   };
-  
-  const handleCheckboxChange = (userId: string) => {
-    if (selectedUsers.includes(userId)) {
-      setSelectedUsers(selectedUsers.filter(id => id !== userId));
-    } else {
-      setSelectedUsers([...selectedUsers, userId]);
-    }
-  };
 
+
+ 
   const handleAssignGroup = async () => {
     let selectedGroups: IGroup[] = []; // Usamos la interfaz IGroup
   
@@ -204,6 +185,7 @@ const Users = () => {
       }
     }
   };
+
 const filteredUsers = users
     .filter((user) =>
       selectedRole ? user.roles?.some((role) => role.name === selectedRole) : true
