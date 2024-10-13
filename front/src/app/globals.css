@@ -13,3 +13,24 @@
     --tertiary-color: #13C296;
     --cuartiary-color: #e8ebfd;
 }
+
+.large-swal-popup {
+  max-width: 600px; /* Aumenta el ancho según lo necesario */
+  width: 80%; /* Ajusta el porcentaje si prefieres que se adapte al tamaño de la pantalla */
+  height: 100%; /* Aumenta la altura según lo que necesites */
+  max-height: 100%; /* Fija una altura máxima */
+  padding: 1rem;
+}
+
+.select__menu {
+  max-height: none; /* Remueve el límite de altura para el dropdown */
+  height: auto; /* Deja que el dropdown crezca según el contenido */
+  overflow: visible; /* Evita el scroll si hay pocas opciones */
+}
+
+/* Clase personalizada para reducir los márgenes */
+.sweetalert-custom-container {
+  margin-top: 0px; /* Eliminar margen superior */
+  margin-bottom: 70px; /* Reducir el margen inferior entre el título y el Select */
+}
+

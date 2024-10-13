@@ -1,16 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import IUsers from "@/interfaces/IUsers";
+import withReactContent from "sweetalert2-react-content"; 
 import { useAuth } from "@/context/Authontext";
-import Spinner from "../ui/Spinner";
-import IUser from "@/interfaces/IUser";
+import { useEffect, useState } from "react";
 import IGroup from "@/interfaces/IGroup";
+import IUsers from "@/interfaces/IUsers";
+import Spinner from "../ui/Spinner";
+import Select from 'react-select';
 import Swal from "sweetalert2";
+
+
+const MySwal = withReactContent(Swal);
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 const Users = () => {
-
   const {userData} = useAuth()
   const [users, setUsers] = useState<IUsers[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -19,11 +22,9 @@ const Users = () => {
   const [groups, setGroups] = useState<IGroup[]>([]);
   const [roles, setRoles] = useState<string[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  
- 
+
   useEffect(() => {
     if (userData) {
-      // Mapea roles desde el userData
       setRoles(userData.userData.roles.map((role) => role.name));
     }
   }, [userData]);
@@ -37,14 +38,11 @@ const Users = () => {
 
       try {
         let response;
-
-        // Si el usuario es admin, traer todos los usuarios
         if (roles.includes("admin")) {
           response = await fetch(`${APIURL}/user`, {
             method: "GET",
           });
         } else {
-          // Si no es admin, traer solo los usuarios según el parentId
           response = await fetch(`${APIURL}/user?parentId=${userData.userData.id}`, {
             method: "GET",
           });
@@ -56,7 +54,6 @@ const Users = () => {
 
         const data = await response.json();
         setUsers(data);
-
         const groupsResponse = await fetch(`${APIURL}/groups/user/${userData.userData.id}`, {
           method: "GET",
         });
@@ -88,6 +85,11 @@ const Users = () => {
     );
   }
 
+  const options = groups.map(group => ({
+    value: group.id as string,
+    label: group.name as string
+  }))
+
   const handleCheckboxChange = (userId: string) => {
     setSelectedUsers((prevSelectedUsers) =>
       prevSelectedUsers.includes(userId)
@@ -117,44 +119,68 @@ const Users = () => {
   };
 
   const handleAssignGroup = async () => {
-    const { value: selectedGroupId } = await Swal.fire({
-      title: "Asignar grupo",
-      input: "select",
-      inputOptions: groups.reduce((acc: any, group) => {
-        acc[group.id!] = group.name;
-        return acc;
-      }, {}),
-      inputPlaceholder: "Selecciona un grupo",
+    let selectedGroups: IGroup[] = []; // Usamos la interfaz IGroup
+  
+    const { value: formValues } = await MySwal.fire({
+      title: "Asignar grupos",
+      html: (
+        <div className="sweetalert-custom-container">
+          <Select
+            isMulti
+            name="groups"
+            className="basic-multi-select w-full"
+            classNamePrefix="select"
+            placeholder="Selecciona grupos"
+            autoFocus
+            options={options}
+            onChange={(newValue) => {
+              selectedGroups = (newValue as Array<{ value: string; label: string }>).map(group => ({
+                id: group.value, 
+                name: group.label 
+              })) as IGroup[]; 
+            }}
+          />
+        </div>
+      ),
       showCancelButton: true,
       confirmButtonText: "Asignar",
       cancelButtonText: "Cancelar",
+      preConfirm: () => {
+        if (!selectedGroups || selectedGroups.length === 0) {
+          Swal.showValidationMessage("Debes seleccionar al menos un grupo");
+          return false; // Cancela la acción si no se seleccionan grupos
+        }
+        return selectedGroups; 
+      },
+      customClass: {
+        popup: 'large-swal-popup', 
+      },
     });
-
-    if (selectedGroupId) {
-      try { // crear endpoint 
-        const response = await fetch(`${APIURL}/assign-group`, {
-          method: "POST",
+  
+    if (formValues && formValues.length > 0) {
+      try {
+        const response = await fetch(`${APIURL}/groups/assignGroup/${selectedUsers}`, {
+          method: "PATCH",
           body: JSON.stringify({
             userIds: selectedUsers,
-            groupId: selectedGroupId,
+            groupIds: formValues.map((group: IGroup) => group.id), // Obtener solo los valores de ID de los grupos seleccionados
           }),
           headers: {
             "Content-Type": "application/json",
           },
         });
+  
         if (response.ok) {
-          Swal.fire("Éxito", "Grupo asignado correctamente", "success");
-          setSelectedUsers([]); // Limpiar la selección
+          MySwal.fire("Grupos asignados", "Los grupos han sido asignados correctamente", "success");
         } else {
-          throw new Error("Error al asignar grupo");
+          throw new Error("Error al asignar grupos");
         }
       } catch (error) {
-        console.error(error);
-        Swal.fire("Error", "No se pudo asignar el grupo", "error");
+        console.error('Error:', error);
+        MySwal.fire("Error", "Ocurrió un error al asignar grupos", "error");
       }
     }
   };
-  
 const filteredUsers = users
     .filter((user) =>
       selectedRole ? user.roles?.some((role) => role.name === selectedRole) : true
@@ -162,7 +188,6 @@ const filteredUsers = users
     .filter((user) =>
       selectedGroup ? user.group?.some((group) => group.name === selectedGroup) : true
     );
-
 
     return (
       <div className="container mx-auto p-4">
