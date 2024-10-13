@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateGroupDto } from 'src/dto/group.dto';
 import { GroupService } from 'src/modules/usersGroup/usersGroup.service';
@@ -19,6 +19,17 @@ export class GroupController {
   @ApiResponse({ status: 200, description: 'List of campaigns for the user.', type: [Group] })
   async getGroupsByUserId(@Param('userId') userId: string): Promise<Group[]> {
     return this.groupService.getGroupsByUserId(userId);
+  }
+
+  @Patch('assignGroup/:userId')
+  @ApiParam({ name: 'userId', required: true, description: 'ID of the user' })
+  @ApiResponse({ status: 200, description: 'Grupos asignados al usuario correctamente.' })
+  async assignGroupsToUser(
+    @Param('userId') userId: string,
+    @Body('groupIds') groupIds: string[]
+  ): Promise<string> {
+    await this.groupService.assignGroupsToUser(userId, groupIds);
+    return `Grupos asignados al usuario ${userId} correctamente.`;
   }
 
   @Delete()
