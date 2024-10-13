@@ -12,10 +12,14 @@ import { requiresAuth } from 'express-openid-connect';
 import { GroupModule } from '../usersGroup/usersGroup.module';
 import { Group } from 'src/entities/group.entity';
 import { GroupService } from '../usersGroup/usersGroup.service';
+import { Campaign } from 'src/entities/campaign.entity';
+import { Account } from 'src/entities/account.entity';
+import { VoteUser } from 'src/entities/voteUser.entity';
+import { VoteCandidate } from 'src/entities/voteCandidate.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Role, OrganizationalStructure,Group]),
+    TypeOrmModule.forFeature([User, Role, OrganizationalStructure,Group,Campaign,Account,VoteUser]),
     MailModule,
     GroupModule
   ],

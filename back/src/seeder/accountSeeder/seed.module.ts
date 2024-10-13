@@ -7,6 +7,6 @@ import { AccountSeeder } from './seed.service';
 @Module({
   imports: [TypeOrmModule.forFeature([Account])],
   providers: [AccountSeeder],
-  exports: [AccountSeeder],
+  exports: [TypeOrmModule,AccountSeeder],
 })
 export class AccountSeedModule {}

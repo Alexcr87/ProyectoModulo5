@@ -8,9 +8,11 @@ import IUsers from "@/interfaces/IUsers";
 import Spinner from "../ui/Spinner";
 import Select from 'react-select';
 import Swal from "sweetalert2";
+import {deleteUsersHelper} from "../../helpers/user.helper";
 
 
 const MySwal = withReactContent(Swal);
+
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 const Users = () => {
@@ -91,33 +93,35 @@ const Users = () => {
   }))
 
   const handleCheckboxChange = (userId: string) => {
-    setSelectedUsers((prevSelectedUsers) =>
-      prevSelectedUsers.includes(userId)
-        ? prevSelectedUsers.filter((id) => id !== userId)
-        : [...prevSelectedUsers, userId]
-    );
-  };
-
-  const handleDeleteUsers = async () => {
-    try {
-      const response = await fetch(`${APIURL}/user`, {
-        method: "DELETE",
-        body: JSON.stringify({ userIds: selectedUsers }), // Enviar IDs seleccionados
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.ok) {
-        setUsers((prevUsers) => prevUsers.filter((user) => !selectedUsers.includes(user.id)));
-        setSelectedUsers([]); // Limpiar la selección
-      } else {
-        throw new Error("Error al eliminar usuarios");
-      }
-    } catch (error) {
-      console.error(error);
+    if (selectedUsers.includes(userId)) {
+      setSelectedUsers(selectedUsers.filter(id => id !== userId));
+    } else {
+      setSelectedUsers([...selectedUsers, userId]);
     }
   };
 
+
+
+  const handleDeleteUsers = async (selectedUsers: string[], APIURL: string | undefined): Promise<void> => {
+    if (!APIURL) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'La URL de la API no está definida.',
+
+      });
+      return; 
+    }
+  
+    const success = await deleteUsersHelper(selectedUsers, APIURL); 
+    if (success) {
+      setUsers((prevUsers) => prevUsers.filter((user) => !selectedUsers.includes(user.id)));
+      setSelectedUsers([]); 
+    }
+  };
+
+
+ 
   const handleAssignGroup = async () => {
     let selectedGroups: IGroup[] = []; // Usamos la interfaz IGroup
   
@@ -181,6 +185,7 @@ const Users = () => {
       }
     }
   };
+
 const filteredUsers = users
     .filter((user) =>
       selectedRole ? user.roles?.some((role) => role.name === selectedRole) : true
@@ -217,13 +222,13 @@ const filteredUsers = users
           </select>
         </div>
         <div className="flex justify-between mt-4 mb-4">
-          <button
-            onClick={handleDeleteUsers}
-            className="bg-red-500 text-white px-4 py-2 rounded-md"
-            disabled={selectedUsers.length === 0}
-          >
-            Eliminar seleccionados
-          </button>
+        <button
+  onClick={() => handleDeleteUsers(selectedUsers, APIURL)}
+  className="bg-blue-500 text-white px-4 py-2 rounded-md"
+  disabled={selectedUsers.length === 0}
+>
+  Eliminar seleccionados
+</button>
           <button
             onClick={handleAssignGroup}
             className="bg-blue-500 text-white px-4 py-2 rounded-md"

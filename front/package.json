@@ -25,7 +25,7 @@
     "react-intl": "^6.7.2",
     "react-modal": "^3.16.1",
     "react-select": "^5.8.1",
-    "sweetalert2": "^11.14.2",
+    "sweetalert2": "^11.14.3",
     "sweetalert2-react-content": "^5.0.7"
   },
   "devDependencies": {

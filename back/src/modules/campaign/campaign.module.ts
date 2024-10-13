@@ -13,5 +13,6 @@ import { VoteCandidate } from 'src/entities/voteCandidate.entity';
   imports: [TypeOrmModule.forFeature([Campaign, User,Group,Candidate,VoteUser,VoteCandidate])],
   controllers: [CampaignController],
   providers: [CampaignService],
+  exports: [TypeOrmModule]
 })
 export class CampaignModule {}

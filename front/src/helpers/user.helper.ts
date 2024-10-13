@@ -1,5 +1,6 @@
 import { IRegisterProps } from "@/components/Register/TypesRegister";
 import IUser from "@/interfaces/IUser";
+import Swal from "sweetalert2";
 import IUsers from "@/interfaces/IUsers";
 import { updateUserSession, userSession } from "@/interfaces/Session";
 
@@ -29,6 +30,79 @@ export async function getUserByID(id:string):Promise<updateUserSession> {
         throw new Error(error)
     }
 }
+
+export const deleteUsersHelper = async (userIds: string[], APIURL: string): Promise<boolean> => {
+  // Verificar que APIURL esté definido
+  if (!APIURL) {
+      Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'La URL de la API no está definida.',
+      });
+      return false;
+  }
+
+  // Validar que se hayan seleccionado usuarios
+  if (userIds.length === 0) {
+      Swal.fire({
+          icon: 'warning',
+          title: 'Atención',
+          text: 'No has seleccionado ningún usuario para eliminar',
+      });
+      return false;
+  }
+
+  // Confirmación antes de eliminar
+  const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción eliminará los usuarios seleccionados. No podrás revertirla.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+  });
+
+  if (result.isConfirmed) {
+      try {
+          const response = await fetch(`${APIURL}/user`, {
+              method: 'DELETE',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ userIds }), 
+          });
+
+          if (response.ok) {
+              Swal.fire({
+                  icon: 'success',
+                  title: 'Eliminado',
+                  text: 'Los usuarios seleccionados han sido eliminados con éxito',
+              });
+              return true; 
+          } else {
+              const errorMessage = await response.text();
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: `Hubo un problema al eliminar los usuarios: ${errorMessage}`,
+              });
+              return false;
+          }
+      } catch (error) {
+          Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Hubo un problema al eliminar los usuarios. Inténtalo nuevamente.',
+          });
+          return false;
+      }
+  }
+
+  return false; 
+};
+
+
+
 
 export async function updateUserById(userData:IRegisterProps, id:string) {
     try {
