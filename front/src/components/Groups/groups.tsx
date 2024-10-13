@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { deleteGroups } from "../../helpers/group.helper";
 import { useAuth } from "@/context/Authontext";
+import { useEffect, useState } from "react";
 import IGroup from "@/interfaces/IGroup";
 import Spinner from "../ui/Spinner";
 import Swal from "sweetalert2";
-import { deleteGroups } from "../../helpers/group.helper";
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
@@ -130,6 +130,48 @@ const Groups = () => {
     }
   };
 
+  const handleEditGroup = async (group: IGroup) => {
+    const { value: newName } = await Swal.fire({
+      title: 'Cambiar nombre del grupo',
+      input: 'text',
+      inputLabel: 'Nuevo nombre',
+      inputPlaceholder: 'Ingresa el nuevo nombre',
+      showCancelButton: true,
+      confirmButtonText: 'Guardar',
+      cancelButtonText: 'Cancelar',
+      inputValue: group.name,
+    });
+
+    if (newName) {
+      try {
+        const response = await fetch(`${APIURL}/groups/changeName/${group.id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            newName: newName,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Error al cambiar el nombre del grupo");
+        }
+
+        setGroups((prevGroups) =>
+          prevGroups.map((g) =>
+            g.id === group.id ? { ...g, name: newName } : g
+          )
+        );
+
+        Swal.fire("Éxito", "Nombre del grupo actualizado.", "success");
+      } catch (error:any) {
+        const errorMessage = error.message || "Error al cambiar nombre.";
+        Swal.fire("Error", errorMessage , "error");
+      }
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -188,12 +230,12 @@ const Groups = () => {
                   </td>
                   <td className="py-3 px-6 text-sm text-gray-700">{group.name}</td>
                   <td className="py-3 px-6 text-sm text-gray-700">
-                    <a
-                      href={`/groups/edit/${group.id}`}
+                    <button
+                      onClick={() => handleEditGroup(group)}
                       className="text-blue-500 hover:text-blue-700 font-medium"
                     >
                       editar grupo
-                    </a>
+                    </button>
                   </td>
                 </tr>
               ))
