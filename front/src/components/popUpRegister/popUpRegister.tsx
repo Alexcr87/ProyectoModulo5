@@ -110,8 +110,7 @@ import { useRouter } from 'next/navigation'
     document.body.removeChild(link);
   };
 
- 
-  
+
   // const handleModalClose = () => {
   //   console.log('Se hizo clic en el botón de cierre del modal');
   //   router.push('/registerUsers');
@@ -125,12 +124,12 @@ import { useRouter } from 'next/navigation'
         <div id="popup-modal"  className={registroManual ? "fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" : "hidden"}>
           <div className="bg-white p-8 rounded-lg shadow-lg relative overflow-hidden">
             
-            {/* <button 
+            <button 
               // onClick={() => setRegistroManual(false)} 
-              onClick={() => router.push('/registerUsers')} 
+              onClick={() => router.push('/')} 
               className="absolute top-0 right-0 bg-slate-400 hover:bg-red-500 font-bold text-xl text-white px-2">
               x
-            </button> */}
+            </button>
 
             <Register />
           </div>
@@ -142,11 +141,11 @@ import { useRouter } from 'next/navigation'
         <div id="popup-modal" className= {registroMasivo ? "fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" : "hidden"}>
           <div className="bg-white p-8 w-[40%] rounded-lg shadow-lg relative overflow-hidden flex flex-col items-center">
             
-            {/* <button 
-              onClick={() => router.push('/registerUsers')} 
+            <button 
+              onClick={() => router.push('/')} 
               className="absolute top-0 right-0 bg-slate-400 hover:bg-red-500 font-bold text-xl text-white px-2">
               x
-            </button> */}
+            </button>
 
             <h2 className="text-xl mb-4 font-bold">Subir y Descargar Excel</h2>
             <p>1º- Descargar la plantilla de excel donde agregaras los usuarios</p> 
