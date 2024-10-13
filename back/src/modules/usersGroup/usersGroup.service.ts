@@ -89,5 +89,17 @@ export class GroupService {
       user.groups = groups; 
       await this.userRepository.save(user); 
     }
+
+    async changeGroupName(groupId: string, newName: string): Promise<boolean> {
+      const group: Group | undefined = await this.groupRepository.findOne(
+        {where: { id: groupId }
+    });
+      if (!group) {
+        throw new NotFoundException(`Grupo con ID ${groupId} no encontrado.`);
+      }
+      group.name = newName;
+      await this.groupRepository.save(group);
+      return true;
+    }
   }
 

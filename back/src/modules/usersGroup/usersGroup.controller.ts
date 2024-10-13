@@ -32,6 +32,21 @@ export class GroupController {
     return `Grupos asignados al usuario ${userId} correctamente.`;
   }
 
+  @Patch('changeName/:groupId')
+  async changeGroupName(
+    @Param('groupId') groupId: string,
+    @Body() updateData: { newName: string }
+  ): Promise<string> {
+    try {
+      await this.groupService.changeGroupName(groupId, updateData.newName);
+      return `Grupo ${groupId} ha sido renombrado a ${updateData.newName}.`;
+    } catch (error) {
+      return error.message; 
+    }
+  }
+  
+
+
   @Delete()
   async deleteGroups(@Body('ids') ids: string[]): Promise<string> {
     return await this.groupService.deleteGroups(ids);
