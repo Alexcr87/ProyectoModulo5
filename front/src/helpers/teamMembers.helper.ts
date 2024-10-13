@@ -10,7 +10,7 @@ const teamMembers = [
     },
     {
         "id": 2,
-        "name": "Ramon Gonzales",
+        "name": "Ramon Gonzalez",
         "profession":"FrontEnd Developer",
         "image":"https://www.labsaenzrenauld.com/wp-content/uploads/2020/10/Perfil-hombre-ba%CC%81sico_738242395.jpg",
         "linkFacebook":"",

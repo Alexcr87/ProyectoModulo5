@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
@@ -9,15 +9,24 @@ import Register from "../Register/register";
 import { useAuth } from '@/context/Authontext'
 import Select from "react-select";
 import IGroup from "@/interfaces/IGroup";
+import { useRouter } from 'next/navigation'
 
-const PopUpRegisterComponent = () => {
-  const [registroManual, setRegistroManual] = useState(false);
-  const [registroMasivo, setRegistroMasivo] = useState(false);
+
+
+
+// const PopUpRegisterComponent = () => {
+  const PopUpRegisterComponent = ({ registroManual, registroMasivo}: { registroManual: boolean, registroMasivo: boolean  }) => {
+  // const [registroManual, setRegistroManual] = useState(false);
+  // const [registroMasivo, setRegistroMasivo] = useState(false);
+  const router = useRouter()
   const [file, setFile] = useState<File | null>(null);
   const { userData, setUserData } = useAuth();
   const [groups, setGroups] = useState<IGroup[]>([]);
   const [selectedGroups, setSelectedGroups] = useState<IGroup[]>([]);
   const [loading, setLoading] = useState(false)
+    const [isOpenManual, setIsOpenManual] = useState(false);
+  const [isOpeMasivo, setIsOpeMasivo] = useState(false);
+  
 
   const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
   const parentId = userData?.userData.id
@@ -25,6 +34,7 @@ const PopUpRegisterComponent = () => {
   useEffect(() => {
     fetchGroups();
   }, [parentId]);
+
 
   const fetchGroups = async () => {
     if (parentId) {
@@ -100,30 +110,28 @@ const PopUpRegisterComponent = () => {
     document.body.removeChild(link);
   };
 
+ 
+  
+  // const handleModalClose = () => {
+  //   console.log('Se hizo clic en el botón de cierre del modal');
+  //   router.push('/registerUsers');
+  // };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <button
-        onClick={() => setRegistroManual(true)}
-        className="bg-blue-500 text-white px-4 py-2 m-2 rounded"
-      >
-       Registro Manual
-      </button>
-      <button
-        onClick={() => setRegistroMasivo(true)}
-        className="bg-green-500 text-white px-4 py-2 m-2 rounded"
-      >
-        Registro Masivo
-      </button>
 
       {/* Popup para registro manual */}
       {registroManual && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div id="popup-modal"  className={registroManual ? "fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" : "hidden"}>
           <div className="bg-white p-8 rounded-lg shadow-lg relative overflow-hidden">
-            <button 
-              onClick={() => setRegistroManual(false)} 
+            
+            {/* <button 
+              // onClick={() => setRegistroManual(false)} 
+              onClick={() => router.push('/registerUsers')} 
               className="absolute top-0 right-0 bg-slate-400 hover:bg-red-500 font-bold text-xl text-white px-2">
               x
-            </button>
+            </button> */}
+
             <Register />
           </div>
         </div>
@@ -131,13 +139,15 @@ const PopUpRegisterComponent = () => {
 
       {/* Popup para registro masivo */}
       {registroMasivo && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div id="popup-modal" className= {registroMasivo ? "fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" : "hidden"}>
           <div className="bg-white p-8 w-[40%] rounded-lg shadow-lg relative overflow-hidden flex flex-col items-center">
-            <button 
-              onClick={() => setRegistroMasivo(false)} 
+            
+            {/* <button 
+              onClick={() => router.push('/registerUsers')} 
               className="absolute top-0 right-0 bg-slate-400 hover:bg-red-500 font-bold text-xl text-white px-2">
               x
-            </button>
+            </button> */}
+
             <h2 className="text-xl mb-4 font-bold">Subir y Descargar Excel</h2>
             <p>1º- Descargar la plantilla de excel donde agregaras los usuarios</p> 
             <span className="text-red-500">Nota: no agregar ni quitar columnas de la plantilla</span>
@@ -169,3 +179,5 @@ const PopUpRegisterComponent = () => {
 };
 
 export default PopUpRegisterComponent;
+
+

@@ -9,6 +9,7 @@ import IGroup from "@/interfaces/IGroup";
 import Swal from "sweetalert2";
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
+
 const Users = () => {
 
   const {userData} = useAuth()
@@ -93,8 +94,12 @@ const Users = () => {
       prevSelectedUsers.includes(userId)
         ? prevSelectedUsers.filter((id) => id !== userId)
         : [...prevSelectedUsers, userId]
+
     );
+    console.log (selectedUsers)
   };
+
+
 
   const handleDeleteUsers = async () => {
     try {
