@@ -7,7 +7,7 @@
    async redirectToFrontend(@Res() res: Response) {
     try {
       // Realiza la solicitud a /auth/protected para obtener los datos del usuario
-      const protectedDataResponse = await fetch(`${process.env.API_URL}/auth/protected`, {
+      const protectedDataResponse = await fetch(`${process.env.REDIRECT_AUTH0}/auth/protected`, {
         method: 'GET',
         credentials: 'include',  // Incluye las cookies o credenciales
       });
