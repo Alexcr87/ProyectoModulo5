@@ -117,10 +117,8 @@ export class AuthController {
   @Get('protected')
   async userby(@Req() req: Request) {
   try {
-    if (!req.oidc || !req.oidc.user) {
-      throw new BadRequestException('User not found');
-    }
-
+    console.log(req.oidc.user, "authprotected");
+    
     return req.oidc.user;
   } catch (error) {
     throw new BadRequestException(error.message)
