@@ -21,6 +21,7 @@ const Callback = () => {
           method: 'GET',
           credentials: 'include',
         });
+       console.log(response, "response");
        
         if (response.ok) {
           const data = await response.json();
