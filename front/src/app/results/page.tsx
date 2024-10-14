@@ -1,8 +1,11 @@
+'use client'
 import { getCampaigns } from "@/helpers/campaña.helper";
 import Link from "next/link";
+import { useEffect } from "react";
 
 const Result = async ()=>{
     const datas = await getCampaigns()
+    
     
     return(
      <div className="bg-cuartiaryColor min-h-[85vh] justify-center p-8">
@@ -19,7 +22,7 @@ const Result = async ()=>{
                   });
               
                 return(
-                    <Link href={`/results/${data.id}`}>
+                    <Link href={`/results/${data.id}`} key={data.id}>
                         <div className="bg-white grid grid-cols-4 overflow-hidden">
                             <div className="text-primaryColor font-bold capitalize p-2 flex justify-center">
                                 <h2>{data.name}</h2>
