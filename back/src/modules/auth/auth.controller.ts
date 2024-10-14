@@ -120,7 +120,8 @@ export class AuthController {
     if (!req.oidc || !req.oidc.user) {
       throw new BadRequestException('User not found');
     }
-
+    console.log(req.oidc.user);
+    
     return req.oidc.user;
   } catch (error) {
     throw new BadRequestException(error.message)
