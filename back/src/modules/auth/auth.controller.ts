@@ -114,39 +114,16 @@ export class AuthController {
   }
 
 
-  @Get('usuario')
-  async user() {
-    try {
-      // Aquí haces la llamada a la ruta 'protected'
-      const response = await fetch(`https://proyectomodulo5.onrender.com/auth/protected`, {
-        method: 'GET',
-        credentials: 'include' // Asegúrate de incluir las credenciales si es necesario
-      });
-
-      // Comprueba si la respuesta es correcta
-      if (!response.ok) {
-        throw new BadRequestException('Error al obtener datos del usuario');
-      }
-
-      const data = await response.json(); // Convierte la respuesta a JSON
-      return data; // Devuelve los datos que obtuviste de la ruta 'protected'
-    } catch (error) {
-      throw new BadRequestException(error.message); // Manejo de errores
-    }
-  }
+ 
 
   @Get('protected')
   async userby(@Req() req: Request) {
   try {
-    if (!req.oidc.user){return "no existe usuario"}
-    const user = {
-      name:req.oidc.user.name,
-      email: req.oidc.user.email,
-      token:req.oidc.user.sid
+    if (!req.oidc.user){
+      throw new UnauthorizedException("no tenes permiso")
     }
-    console.log(user, "useAuth0");
     
-    return user
+    return req.oidc.user
   } catch (error) {
     throw new BadRequestException(error.message)
   }

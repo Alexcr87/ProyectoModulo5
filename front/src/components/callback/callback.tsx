@@ -13,16 +13,17 @@ const Callback = () => {
   const router = useRouter();
   const { setUserData, setAuth0UserData } = useAuth();
 
+  
+
   useEffect(() => {
     const handleAuth0Response = async () => {
       try {
+        await new Promise((resolve) => setTimeout(resolve, 5000));
         // Realizar la solicitud a localhost:3000/auth/protected
         const response = await fetch(`https://proyectomodulo5.onrender.com/auth/protected`, {
           credentials:'include'
         });
-        const data2 = await response.json();
-       console.log(await response.json(), "response");
-       console.log(data2, "data");
+
        
        
         if (response.ok) {
