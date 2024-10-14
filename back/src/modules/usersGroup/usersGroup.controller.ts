@@ -21,16 +21,15 @@ export class GroupController {
     return this.groupService.getGroupsByUserId(userId);
   }
 
-  @Patch('assignGroup/:userId')
-  @ApiParam({ name: 'userId', required: true, description: 'ID of the user' })
-  @ApiResponse({ status: 200, description: 'Grupos asignados al usuario correctamente.' })
-  async assignGroupsToUser(
-    @Param('userId') userId: string,
-    @Body('groupIds') groupIds: string[]
-  ): Promise<string> {
-    await this.groupService.assignGroupsToUser(userId, groupIds);
-    return `Grupos asignados al usuario ${userId} correctamente.`;
-  }
+  @Patch('assignGroup')
+@ApiResponse({ status: 200, description: 'Grupos asignados a los usuarios correctamente.' })
+async assignGroupsToUsers(
+  @Body('userIds') userIds: string[],  // Recibe una lista de userIds
+  @Body('groupIds') groupIds: string[],
+): Promise<string> {
+  await this.groupService.assignGroupsToUsers(userIds, groupIds);
+  return `Grupos asignados a los usuarios correctamente.`;
+}
 
   @Patch('changeName/:groupId')
   async changeGroupName(

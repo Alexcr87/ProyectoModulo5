@@ -3,6 +3,7 @@ import "./globals.css";
 import NavBar from "@/components/navBar/NavBar";
 import Footer from "@/components/footer/Footer";
 import { AuthProvider } from "@/context/Authontext";
+import { GuideProvider } from "@/context/GuideContext";
 
 
 
@@ -20,21 +21,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* <UserProvider> */}
         <AuthProvider>
-        <div className="containerPrincipal">
-          <header>
-            <NavBar />
-          </header>
-          <main className="mt-14">
-            {children}
-          </main>
-          <footer>
-            <Footer/>
-          </footer>
-        </div>
-      </AuthProvider>
-      {/* </UserProvider> */}
+          <GuideProvider>
+            <div className="containerPrincipal">
+              <header>
+                <NavBar />
+              </header>
+              <main className="mt-14">
+                {children}
+              </main>
+              <footer>
+                <Footer />
+              </footer>
+            </div>
+          </GuideProvider>
+        </AuthProvider>
       </body>
     </html>
   );

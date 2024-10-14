@@ -8,9 +8,11 @@ import IUsers from "@/interfaces/IUsers";
 import Spinner from "../ui/Spinner";
 import Select from 'react-select';
 import Swal from "sweetalert2";
+import {deleteUsersHelper} from "../../helpers/user.helper";
 
 
 const MySwal = withReactContent(Swal);
+
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 
@@ -23,60 +25,65 @@ const Users = () => {
   const [groups, setGroups] = useState<IGroup[]>([]);
   const [roles, setRoles] = useState<string[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+  const [selectAll, setSelectAll] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (userData) {
-      setRoles(userData.userData.roles.map((role) => role.name));
+
+// Definición de fetchUsers fuera del componente Users
+const fetchUsers = async (userData: any, roles: string[], setUsers: (users: IUsers[]) => void, setGroups: (groups: IGroup[]) => void, setLoading: (loading: boolean) => void) => {
+  if (!userData?.userData.id) {
+    setLoading(false);
+    return;
+  }
+
+  try {
+    let response;
+    if (roles.includes("admin")) {
+      response = await fetch(`${APIURL}/user`, {
+        method: "GET",
+      });
+    } else {
+      response = await fetch(`${APIURL}/user?parentId=${userData.userData.id}`, {
+        method: "GET",
+      });
     }
-  }, [userData]);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      if (!userData?.userData.id) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        let response;
-        if (roles.includes("admin")) {
-          response = await fetch(`${APIURL}/user`, {
-            method: "GET",
-          });
-        } else {
-          response = await fetch(`${APIURL}/user?parentId=${userData.userData.id}`, {
-            method: "GET",
-          });
-        }
-
-        if (!response.ok) {
-          throw new Error("La respuesta de la red no fue correcta");
-        }
-
-        const data = await response.json();
-        setUsers(data);
-        const groupsResponse = await fetch(`${APIURL}/groups/user/${userData.userData.id}`, {
-          method: "GET",
-        });
-
-        if (!groupsResponse.ok) {
-          throw new Error("La respuesta de la red no fue correcta al obtener grupos.");
-        }
-
-        const groupsData = await groupsResponse.json();
-        setGroups(groupsData);
-      } catch (error) {
-        console.error("Error al obtener usuarios o grupos:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    // Ejecuta el fetch solo cuando los roles se han establecido y están listos
-    if (roles.length > 0) {
-      fetchUsers();
+    if (!response.ok) {
+      throw new Error("La respuesta de la red no fue correcta");
     }
-  }, [roles, userData]); // Solo se ejecuta cuando userSesion cambia
+
+    const data = await response.json();
+    setUsers(data);
+
+    const groupsResponse = await fetch(`${APIURL}/groups/user/${userData.userData.id}`, {
+      method: "GET",
+    });
+
+    if (!groupsResponse.ok) {
+      throw new Error("La respuesta de la red no fue correcta al obtener grupos.");
+    }
+
+    const groupsData = await groupsResponse.json();
+    setGroups(groupsData);
+  } catch (error) {
+    console.error("Error al obtener usuarios o grupos:", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+useEffect(() => {
+  if (userData) {
+    setRoles(userData.userData.roles.map((role) => role.name));
+  }
+}, [userData]);
+
+useEffect(() => {
+  // Ejecuta fetchUsers solo cuando los roles se han establecido
+  if (roles.length > 0) {
+    fetchUsers(userData, roles, setUsers, setGroups, setLoading);
+  }
+}, [roles, userData]);
+
 
   if (loading) {
     return (
@@ -91,38 +98,49 @@ const Users = () => {
     label: group.name as string
   }))
 
-  const handleCheckboxChange = (userId: string) => {
-    setSelectedUsers((prevSelectedUsers) =>
-      prevSelectedUsers.includes(userId)
-        ? prevSelectedUsers.filter((id) => id !== userId)
-        : [...prevSelectedUsers, userId]
+  const handleSelectAllChange = () => {
+    setSelectAll(!selectAll);
 
-    );
-    console.log (selectedUsers)
-  };
-
-
-
-  const handleDeleteUsers = async () => {
-    try {
-      const response = await fetch(`${APIURL}/user`, {
-        method: "DELETE",
-        body: JSON.stringify({ userIds: selectedUsers }), // Enviar IDs seleccionados
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.ok) {
-        setUsers((prevUsers) => prevUsers.filter((user) => !selectedUsers.includes(user.id)));
-        setSelectedUsers([]); // Limpiar la selección
-      } else {
-        throw new Error("Error al eliminar usuarios");
-      }
-    } catch (error) {
-      console.error(error);
+    if (!selectAll) {
+      // Selecciona todos los usuarios
+      const allUserIds = users.map(user => user.id);
+      setSelectedUsers(allUserIds);
+    } else {
+      // Deselecciona todos los usuarios
+      setSelectedUsers([]);
     }
   };
 
+  const handleCheckboxChange = (userId: string) => {
+    if (selectedUsers.includes(userId)) {
+      setSelectedUsers(selectedUsers.filter(id => id !== userId));
+    } else {
+      setSelectedUsers([...selectedUsers, userId]);
+    }
+  };
+
+
+
+  const handleDeleteUsers = async (selectedUsers: string[], APIURL: string | undefined): Promise<void> => {
+    if (!APIURL) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'La URL de la API no está definida.',
+
+      });
+      return; 
+    }
+  
+    const success = await deleteUsersHelper(selectedUsers, APIURL); 
+    if (success) {
+      setUsers((prevUsers) => prevUsers.filter((user) => !selectedUsers.includes(user.id)));
+      setSelectedUsers([]); 
+    }
+  };
+
+
+ 
   const handleAssignGroup = async () => {
     let selectedGroups: IGroup[] = []; // Usamos la interfaz IGroup
   
@@ -164,11 +182,11 @@ const Users = () => {
   
     if (formValues && formValues.length > 0) {
       try {
-        const response = await fetch(`${APIURL}/groups/assignGroup/${selectedUsers}`, {
+        const response = await fetch(`${APIURL}/groups/assignGroup`, { // Eliminamos el userId de la URL
           method: "PATCH",
           body: JSON.stringify({
-            userIds: selectedUsers,
-            groupIds: formValues.map((group: IGroup) => group.id), // Obtener solo los valores de ID de los grupos seleccionados
+            userIds: selectedUsers,  // Aquí envías los userIds en el body
+            groupIds: formValues.map((group: IGroup) => group.id),
           }),
           headers: {
             "Content-Type": "application/json",
@@ -177,6 +195,7 @@ const Users = () => {
   
         if (response.ok) {
           MySwal.fire("Grupos asignados", "Los grupos han sido asignados correctamente", "success");
+          await fetchUsers(userData, roles, setUsers, setGroups, setLoading);
         } else {
           throw new Error("Error al asignar grupos");
         }
@@ -186,13 +205,15 @@ const Users = () => {
       }
     }
   };
+
 const filteredUsers = users
     .filter((user) =>
       selectedRole ? user.roles?.some((role) => role.name === selectedRole) : true
     )
     .filter((user) =>
-      selectedGroup ? user.group?.some((group) => group.name === selectedGroup) : true
+      selectedGroup ? user.groups?.some((group) => group.id === selectedGroup) : true
     );
+
 
     return (
       <div className="container mx-auto p-4">
@@ -208,6 +229,16 @@ const filteredUsers = users
             <option value="moderator">Moderador</option>
             <option value="voter">Votante</option>
           </select>
+           {/* Checkbox para seleccionar todos */}
+          <label>
+            <input
+              type="checkbox"
+              checked={selectAll}
+              onChange={handleSelectAllChange}
+            />
+            Seleccionar todo
+          </label>
+
           <select
             value={selectedGroup}
             onChange={(e) => setSelectedGroup(e.target.value)}
@@ -222,13 +253,13 @@ const filteredUsers = users
           </select>
         </div>
         <div className="flex justify-between mt-4 mb-4">
-          <button
-            onClick={handleDeleteUsers}
-            className="bg-red-500 text-white px-4 py-2 rounded-md"
-            disabled={selectedUsers.length === 0}
-          >
-            Eliminar seleccionados
-          </button>
+        <button
+  onClick={() => handleDeleteUsers(selectedUsers, APIURL)}
+  className="bg-blue-500 text-white px-4 py-2 rounded-md"
+  disabled={selectedUsers.length === 0}
+>
+  Eliminar seleccionados
+</button>
           <button
             onClick={handleAssignGroup}
             className="bg-blue-500 text-white px-4 py-2 rounded-md"

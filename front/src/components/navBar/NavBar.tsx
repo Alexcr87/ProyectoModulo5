@@ -7,7 +7,7 @@ import { IloginProps } from '@/interfaces/ILogin'
 import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
 import { useAuth } from '@/context/Authontext'
-
+import Guia from "../Guia/guia"
 const NavBar = () => {
     const { userData, setUserData } = useAuth();
     const router = useRouter();
@@ -197,6 +197,7 @@ const NavBar = () => {
                     flex-direction: column;
                 }
             `}</style>
+            <Guia/>
         </nav>
     )
 }

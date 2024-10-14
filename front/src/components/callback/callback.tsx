@@ -19,8 +19,8 @@ const Callback = () => {
         // Realizar la solicitud a localhost:3000/auth/protected
         const response = await fetch(`${APIURL}/auth/protected`, {
           method: 'GET',
-          credentials: 'include',
         });
+       console.log(response, "response");
        
         if (response.ok) {
           const data = await response.json();

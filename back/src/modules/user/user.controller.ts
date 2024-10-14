@@ -115,20 +115,11 @@ export class UserController {
     }
   }
 
-
-  @Delete(":id")
-  @HttpCode(200)
-  async deleteUserById(@Param("id", ParseUUIDPipe) id:string){
-    try {
-      return await this.userService.deteleUserById(id)
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new NotFoundException(error.message);
-      } else {
-        throw new InternalServerErrorException('Error al eliminar un usuario');
-      }
-    }
+  @Delete()
+  async deleteUsers(@Body() body: { userIds: string[] }): Promise<void> {
+    return this.userService.deleteUsers(body.userIds);
   }
+
 
 
   @Post()

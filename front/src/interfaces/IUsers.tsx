@@ -14,7 +14,7 @@ interface IUsers {
         name:string,
         description:string
     }],
-    group?:IGroup[]
+    groups?:IGroup[]
     isFirstLogin?: boolean
 }
 

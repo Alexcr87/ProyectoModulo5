@@ -13,6 +13,9 @@ import { OrganizationalStructure} from "src/entities/organizationalStructure.ent
 import { updateUserDto } from "src/dto/updateUserDto";
 import { log } from "console";
 import { Group } from "src/entities/group.entity";
+import { Campaign } from "src/entities/campaign.entity";
+import { Account } from "src/entities/account.entity";
+import { VoteUser } from "src/entities/voteUser.entity";
 
 // import { Account } from "src/entities/account.entity";
 
@@ -22,7 +25,7 @@ export class UserService{
   private isCreatingUser = false;
   
   constructor(
-    @InjectRepository(Group) // Asegúrate de que todos los repositorios sean inyectados correctamente
+    @InjectRepository(Group) 
     private readonly groupRepository: Repository<Group>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -31,7 +34,12 @@ export class UserService{
     private readonly mailService: MailService,
     @InjectRepository(OrganizationalStructure)
     private structureRepository: Repository<OrganizationalStructure>,
-    // @InjectRepository(Account) private readonly accountRepository:Repository<Account>,
+    @InjectRepository(Campaign) 
+    private readonly campaingRepository:Repository<Campaign>,
+    @InjectRepository(Account) 
+    private readonly accountRepository:Repository<Account>,
+    @InjectRepository(VoteUser) 
+    private readonly voterUserRepository:Repository<VoteUser>,
   ) {}
 
 
@@ -284,6 +292,40 @@ export class UserService{
         this.isCreatingUser = false; // Reset flag after processing.
     }
 }
+
+async deleteUsers(userIds: string[]): Promise<void> {
+  if (!Array.isArray(userIds) || userIds.length === 0) {
+    throw new Error('userIds debe ser un array no vacío');
+  }
+
+  try {
+    
+    await this.groupRepository.delete({ user: { id: In(userIds) } });
+    await this.campaingRepository.delete({ user: { id: In(userIds) } });
+    await this.voterUserRepository.delete({ user: { id: In(userIds) } });
+    await this.accountRepository.delete({ user: { id: In(userIds) } });
+
+    
+    await this.structureRepository.createQueryBuilder()
+      .delete()
+      .from(OrganizationalStructure)
+      .where('parentId IN (:...userIds)', { userIds })
+      .orWhere('childId IN (:...userIds)', { userIds })
+      .execute();
+
+    
+    await this.userRepository.delete({ id: In(userIds) });
+
+  
+  } catch (error) {
+   
+    throw new Error(`Hubo un problema al eliminar los usuarios: ${error.message}`);
+  }
+}
+
+
+
+
 
   async readExcelFile(filePath: string): Promise<CreateUserDto[]> {
     const data = fs.readFileSync(filePath);
