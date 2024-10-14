@@ -71,25 +71,28 @@ export class GroupService {
         });
     }
 
-    async assignGroupsToUser(userId: string, groupIds: string[]): Promise<void> {
-      const user = await this.userRepository.findOne({
-        where: { id: userId },
-        relations: ['groups'], 
+    async assignGroupsToUsers(userIds: string[], groupIds: string[]): Promise<void> {
+      const users = await this.userRepository.findBy({
+        id: In(userIds),
       });
-  
-      if (!user) {
-        throw new NotFoundException(`Usuario con ID ${userId} no encontrado.`);
+    
+      if (users.length === 0) {
+        throw new NotFoundException(`No se encontraron usuarios con los IDs proporcionados.`);
       }
-  
-      const groups = await this.groupRepository.findByIds(groupIds);
-  
+    
+      const groups = await this.groupRepository.findBy({
+        id: In(groupIds),
+      });
+    
       if (groups.length === 0) {
         throw new NotFoundException(`No se encontraron grupos con los IDs proporcionados.`);
       }
-      user.groups = groups; 
-      await this.userRepository.save(user); 
+    
+      for (const user of users) {
+        user.groups = groups;  // Asignamos los grupos a cada usuario
+        await this.userRepository.save(user); // Guardamos los cambios en la base de datos
+      }
     }
-
     async changeGroupName(groupId: string, newName: string): Promise<boolean> {
       const group: Group | undefined = await this.groupRepository.findOne(
         {where: { id: groupId }
