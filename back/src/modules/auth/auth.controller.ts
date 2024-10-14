@@ -119,6 +119,7 @@ export class AuthController {
   @Get('protected')
   async userby(@Req() req: Request) {
   try {
+    if (!req.oidc.user){return "no existe usuario"}
     const user = {
       name:req.oidc.user.name,
       email: req.oidc.user.email,
