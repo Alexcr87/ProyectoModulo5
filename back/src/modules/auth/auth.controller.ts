@@ -114,12 +114,19 @@ export class AuthController {
   }
 
 
+
+
   @Get('protected')
   async userby(@Req() req: Request) {
   try {
-    console.log(req.oidc.user, "authprotected");
+    const user = {
+      name:req.oidc.user.name,
+      email: req.oidc.user.email,
+      token:req.oidc.user.sid
+    }
+    console.log(user, "useAuth0");
     
-    return req.oidc.user;
+    return user
   } catch (error) {
     throw new BadRequestException(error.message)
   }
