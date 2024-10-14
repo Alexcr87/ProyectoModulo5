@@ -45,14 +45,17 @@ export class User {
   @Column({ default: false })
   isFirstLogin: boolean;
 
-  @OneToMany(() => Candidate, (candidate) => candidate.user, {
-    cascade: ['remove'],  
+  @OneToMany(() => Candidate, (candidate) => candidate.user, {  
+    cascade:true ,
     onDelete: 'CASCADE',
   })
   candidate: Candidate[];  
 
 
-  @ManyToMany(() => Role, (role) => role.users)
+  @ManyToMany(() => Role, (role) => role.users , {
+    cascade:true,
+    onDelete: 'CASCADE',
+  })
   @JoinTable({
     name: 'user_roles',
     joinColumn: { name: 'user_id', referencedColumnName: 'id' },
@@ -60,19 +63,34 @@ export class User {
   })
   roles: Role[];
 
-  @OneToMany(() => Campaign, (campaign) => campaign.user)
+  @OneToMany(() => Campaign, (campaign) => campaign.user , {
+    cascade:true,
+    onDelete: 'CASCADE'
+  })
   campaigns: Campaign[];
 
-  @OneToMany(() => Group, (group) => group.user)
+  @OneToMany(() => Group, (group) => group.user , {
+    cascade:true,
+    onDelete: 'CASCADE'
+  })
   groupCreator: Group[];
 
-  @OneToMany(() => Account, (account) => account.user)
+  @OneToMany(() => Account, (account) => account.user , {
+    cascade:true,
+    onDelete: 'CASCADE'
+  })
    accounts: Account[];
 
-  @OneToMany(() => VoteUser, (votoUsuario) => votoUsuario.user)
+  @OneToMany(() => VoteUser, (votoUsuario) => votoUsuario.user , {
+    cascade:true,
+    onDelete: 'CASCADE'
+  })
   votes: VoteUser[];
 
-  @ManyToMany(() => Group, (group) => group.users)
+  @ManyToMany(() => Group, (group) => group.users , {
+    cascade:true,
+    onDelete: 'CASCADE'
+  })
   groups: Group[]; 
 
 }
