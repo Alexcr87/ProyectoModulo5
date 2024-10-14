@@ -61,4 +61,35 @@ export class MailService {
     );
   }
 
+   // Nueva función para enviar correo de bienvenida al admin
+   async sendWelcomeEmailToAdmin(email: string, name: string): Promise<void> {
+    const templatePath = path.join(__dirname, '../../..', 'welcomeAdmin.ejs');
+    let template: string;
+
+    try {
+      template = fs.readFileSync(templatePath, 'utf-8');
+    } catch (error) {
+      console.error('Error al leer la plantilla:', error);
+      return; // Salir si hay un error
+    }
+
+    // Datos que se inyectarán en la plantilla
+    const data = {
+      title: 'Comienza a Gestionar el Éxito de tus Campañas',
+      name,
+      apiUrl: process.env.API_URL,
+    };
+
+    // Renderizar el HTML usando la plantilla y los datos
+    const htmlContent = ejs.render(template, data);
+
+    // Enviar el correo
+    await this.sendMail(
+      email,
+     "Bienvenido al Control Total de tus Estrategias Electorales",
+      htmlContent,
+    );
+  }
 }
+
+
