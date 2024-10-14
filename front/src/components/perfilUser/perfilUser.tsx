@@ -4,7 +4,7 @@ import { useAuth } from "@/context/Authontext";
 import { useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
-import { IRegisterError, IRegisterProps } from "../Register/TypesRegister";
+import { IRegisterError, IRegisterProps } from "../pricingTable/Register/TypesRegister";
 import Swal from "sweetalert2";
 import { validateRegisterForm } from "@/helpers/validateRegister";
 import Input from "../ui/Input";

@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import Boton from "../ui/Boton";
 import InputFile from "../ui/InputFile";
 import { importUser } from "@/helpers/auth.helper";
-import Register from "../Register/register";
+import Register from "../pricingTable/Register/register";
 import { useAuth } from '@/context/Authontext'
 import Select from "react-select";
 import IGroup from "@/interfaces/IGroup";

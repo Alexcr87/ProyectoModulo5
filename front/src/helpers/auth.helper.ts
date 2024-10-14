@@ -1,4 +1,4 @@
-import {  IRegisterProps } from "@/components/Register/TypesRegister";
+import {  IRegisterProps } from "@/components/pricingTable/Register/TypesRegister";
 import IGroup from "@/interfaces/IGroup";
 import { IloginProps } from "@/interfaces/ILogin";
 import Swal from 'sweetalert2';
