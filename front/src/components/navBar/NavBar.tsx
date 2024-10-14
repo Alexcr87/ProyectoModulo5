@@ -198,7 +198,7 @@ const NavBar = () => {
                     flex-direction: column;
                 }
             `}</style>
-            <div className='flex gap-4 text-white list-none'>
+            <div className='flex gap-8 text-white list-none'>
                 <p>{(isCandidate || isVotante || isModerator || isAdmin) && (<>{changePassword()}</>)}</p>
                 <Guia/>
             </div>
