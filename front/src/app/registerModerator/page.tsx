@@ -1,4 +1,4 @@
-import RegisterModerator from "@/components/Register/registerModerator";
+import RegisterModerator from "@/components/pricingTable/Register/registerModerator";
 
 const RegisterUsers=()=>{
     return(
