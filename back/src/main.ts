@@ -33,7 +33,7 @@ async function bootstrap() {
         'http://localhost:4000',  // Para entorno local
       ], // Incluye tu dominio de Vercel y localhost
       methods: 'GET,POST,PUT,PATCH,DELETE',
-      credentials: true, // Si estás manejando autenticación basada en cookies o encabezados de autenticación
+   // Si estás manejando autenticación basada en cookies o encabezados de autenticación
     });
   await app.listen(3000);
 }
