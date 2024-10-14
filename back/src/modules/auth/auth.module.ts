@@ -26,7 +26,7 @@ import { AccountSeedModule } from 'src/seeder/accountSeeder/seed.module';
 
 export class AuthModule implements NestModule{
     configure(consumer: MiddlewareConsumer) {
-        consumer.apply(requiresAuth()).forRoutes('auth/protected')
+        //consumer.apply(requiresAuth()).forRoutes('auth/protected')
     }
 };
 
