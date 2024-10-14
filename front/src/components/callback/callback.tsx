@@ -20,6 +20,7 @@ const Callback = () => {
         const response = await fetch(`${APIURL}/auth/protected`, {
           method: 'GET',
         });
+       console.log(response, "response");
        
         if (response.ok) {
           const data = await response.json();
