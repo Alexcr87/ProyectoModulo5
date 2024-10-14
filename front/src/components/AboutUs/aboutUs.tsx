@@ -1,4 +1,13 @@
+"use client"
+
+import React from 'react';
+
 const AboutUs = () => {
+  const handleRedirect = async () => {
+    const response = await fetch(`https://proyectomodulo5.onrender.com/auth/protected`);
+    console.log(await response.json(), "response");
+    
+  };
   return (
     <div
       className="relative h-screen w-full bg-cover bg-center"
@@ -14,6 +23,7 @@ const AboutUs = () => {
         <header className="p-6">
           <h1 className="text-4xl font-bold mb-4">Sobre Nosotros</h1>
         </header>
+       
         <section className="mt-6">
           <h2 className="text-2xl font-semibold mb-4">Nuestra Misión</h2>
           <p className="leading-relaxed mb-6">
@@ -29,6 +39,12 @@ const AboutUs = () => {
           <p>
             Si tienes preguntas, no dudes en contactarnos a través de <a href="mailto:gestionelectoral2024m5@gmail.com" className="text-blue-500 hover:underline">gestionelectoral2024m5@gmail.com</a>.
           </p>
+          <button 
+          onClick={handleRedirect} 
+          className="mt-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Ir a Protected
+        </button>
         </section>
       </div>
     </div>

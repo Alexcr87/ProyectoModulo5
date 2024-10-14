@@ -18,9 +18,12 @@ const Callback = () => {
       try {
         // Realizar la solicitud a localhost:3000/auth/protected
         const response = await fetch(`https://proyectomodulo5.onrender.com/auth/protected`, {
-          method: 'GET',
+          credentials:'include'
         });
+        const data2 = await response.json();
        console.log(await response.json(), "response");
+       console.log(data2, "data");
+       
        
         if (response.ok) {
           const data = await response.json();
