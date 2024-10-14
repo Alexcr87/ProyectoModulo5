@@ -81,7 +81,7 @@ const CustomModal: React.FC<CustomModalProps> = ({ isOpen, onRequestClose, userR
             <ul className={styles.lista}>
                 <li>
                     <div onClick={onRequestClose}>
-                        <Link href='/registerModerator' className={styles.stepLink}>
+                        <Link href='/registerUser' className={styles.stepLink}>
                             <strong>Paso 1:</strong> <em>Crea tu Cuenta</em>
                         </Link>
                     </div>
