@@ -35,7 +35,7 @@
     "src/helpers/landbot.js",
     "src/components/Chatbot/Chatbot.tsx",
     ".next/types/**/*.ts"
-  ],
+, "src/app/api/auth/[auth0]/route.js"  ],
   "exclude": [
     "node_modules"
   ]
