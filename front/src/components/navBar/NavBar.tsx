@@ -3,14 +3,15 @@ import React, { useEffect, useState, useRef } from 'react'
 import Image from 'next/image'
 import Link from "next/link"
 import { usePathname } from 'next/navigation'
-import { IloginProps } from '@/interfaces/ILogin'
 import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
 import { useAuth } from '@/context/Authontext'
 import Guia from "../Guia/guia"
+
 const NavBar = () => {
     const { userData, setUserData } = useAuth();
     const router = useRouter();
+    const [bars, setBars] = useState<boolean>(false)
     const [isDropdownOpen, setDropdownOpen] = useState(false); // Estado para el dropdown de Usuarios
     const [isCampaignDropdownOpen, setCampaignDropdownOpen] = useState(false); // Estado para el dropdown de Campañas
     const pathname = usePathname();
@@ -27,33 +28,34 @@ const NavBar = () => {
     }, [pathname]);
 
     const handleClose = () => {
-      // revisar lo del cierre de sesion con auth0
-         const auth0LoginUrl = `${process.env.NEXT_PUBLIC_AUTH0_ISSUER_BASE_URL}/v2/logout?returnTo=${process.env.NEXT_PUBLIC_API_URL}/logouts&client_id=${process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID}`;
-         window.location.href = auth0LoginUrl;
-
-        localStorage.clear();
-        
-        setUserData(null)
-        const Toast = Swal.mixin({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 2000,
-            timerProgressBar: true,
-            customClass: {
-                container: 'mt-12'
-            },
-            didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-            }
-        });
-        Toast.fire({
-            icon: "success",
-            title: "Gracias por visitar nuestra web, vuelve pronto"
-        });
-        router.push("/");
+        if (process.env.NEXT_PUBLIC_AUTH0_ISSUER_BASE_URL && process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID) {
+            // Usar Auth0 para cerrar sesión si están definidas las variables de entorno
+            const auth0LoginUrl = `${process.env.NEXT_PUBLIC_AUTH0_ISSUER_BASE_URL}/v2/logout?returnTo=${process.env.NEXT_PUBLIC_API_URL}/logouts&client_id=${process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID}`;
+            window.location.href = auth0LoginUrl;
+        } else {
+            // Cierre de sesión local
+            localStorage.clear();
+            setUserData(null);
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                customClass: { container: 'mt-12' },
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+            Toast.fire({
+                icon: "success",
+                title: "Gracias por visitar nuestra web, vuelve pronto"
+            });
+            router.push('/');
+        }
     }
+    
 
     const toggleDropdown = () => {
         setDropdownOpen(!isDropdownOpen);
@@ -154,17 +156,23 @@ const NavBar = () => {
                     <Image src="/images/logo.png" alt="imagenLogo" width={180} height={230} className='invert'/>
                 </div>
             </Link>
-            <div>
-                <ul className='flex gap-4 pr-8 text-cuartiaryColor'>
+            <button className={`${bars ? "hidden": "md:hidden"} absolute right-4`} onClick={()=>setBars(!bars)}>
+                <i className="fa-solid fa-bars text-white text-2xl"></i>
+            </button>
+            <button className={`${bars ? "md:hidden": "hidden"} absolute right-4`} onClick={()=>setBars(!bars)}>
+                <i className="fa-solid fa-x text-white text-2xl"></i>
+            </button>
+            <div className={`w-[100%] md:w-auto md:flex ${bars ? "md:flex":"hidden"}`}>
+                <ul className='md:flex bg-primaryColor md:bg-none mt-44 md:mt-0 gap-8 pr-8 text-cuartiaryColor p-8 md:p-0 '>
                     {!userData ? (
                         <>
-                            <li>
+                            <li className='md:bg-none  py-4 md:py-0 px-2' onClick={()=>setBars(!bars)}>
                                 <Link href="/registerUser">Registrarme</Link>
                             </li>
-                            <li>
+                            <li className='md:bg-none  py-4 md:py-0 px-2' onClick={()=>setBars(!bars)}>
                                 <Link href="/login">Iniciar Sesión</Link>
                             </li>
-                            <li>
+                            <li className='md:bg-none  py-4 md:py-0 px-2' onClick={()=>setBars(!bars)}>
                                 <Link href="/aboutus">¿Quiénes somos?</Link>
                             </li>
                         </>
@@ -175,7 +183,7 @@ const NavBar = () => {
                             {(isCandidate || isVotante) && (<>{campaigns()} {perfilVotante()}</>)}
                             {isModerator && (<> {campaign()} {users()} {groups()} {results()} {perfilVotante()} </>)}
 
-                            <li>
+                            <li className='md:bg-none  md:py-0' onClick={()=>setBars(!bars)}>
                                 <button onClick={handleClose}>Cerrar Sesión</button>
                             </li>
                         </>
@@ -197,7 +205,11 @@ const NavBar = () => {
                     flex-direction: column;
                 }
             `}</style>
-            <Guia/>
+            <div className='hidden md:flex gap-8 text-white list-none'>
+                <p>{(isCandidate || isVotante || isModerator || isAdmin) && (<>{changePassword()}</>)}</p>
+                <Guia/>
+            </div>
+            
         </nav>
     )
 }

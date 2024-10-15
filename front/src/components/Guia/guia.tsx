@@ -1,6 +1,7 @@
 import { useAuth } from "@/context/Authontext";
 import { useEffect, useState } from "react";
 import CustomModal from "../InstructionsModal/Modal";
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 
 const rolesMapping: {[key: string]: string } ={
@@ -31,13 +32,9 @@ const Guia = ()=>{
     };
     return (
         <div>
-            <div>
+            <div className="mr-8">
                 <button onClick={openModal}>
-                    <img
-                    src='/images/help.png'
-                    alt='Help Icon'
-                    className="w-6 h-6 mr-2"
-                    />
+                <i className="fa-solid fa-question"></i>
                 </button>
                 <CustomModal
                 isOpen={modalIsOpen}
