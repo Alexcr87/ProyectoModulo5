@@ -278,7 +278,12 @@ export class UserService{
       }
 
       await this.userRepository.save(newUser);
-      await this.mailService.sendWelcomeEmail(newUser.email, newUser.name, password);
+       // Enviar correo de bienvenida basado en la existencia de parentId
+      if (parentId) {
+        await this.mailService.sendWelcomeEmail(newUser.email, newUser.name,password);
+      } else {
+        await this.mailService.sendWelcomeEmailToAdmin(newUser.email, newUser.name );
+      }
       
       if (parentId) {
         await this.saveOrganizationalStructure(parentId, newUser.id) 

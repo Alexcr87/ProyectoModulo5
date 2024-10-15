@@ -216,57 +216,66 @@ const filteredUsers = users
 
     return (
       <div className="container mx-auto p-4">
-        <div>
-          <select
-            value={selectedRole}
-            onChange={(e) => setSelectedRole(e.target.value)}
-            className="mb-4 p-2 border rounded-md"
-          >
-            <option value="">Todos los roles</option>
-            <option value="admin">Admin</option>
-            <option value="candidate">Candidato</option>
-            <option value="moderator">Moderador</option>
-            <option value="voter">Votante</option>
-          </select>
-           {/* Checkbox para seleccionar todos */}
-          <label>
-            <input
-              type="checkbox"
-              checked={selectAll}
-              onChange={handleSelectAllChange}
-            />
-            Seleccionar todo
-          </label>
+        <div className="flex justify-between items-start">
+          {/* Filtros y checkbox a la izquierda */}
+          <div>
+            <select
+              value={selectedRole}
+              onChange={(e) => setSelectedRole(e.target.value)}
+              className="mb-4 p-2 border rounded-md"
+            >
+              <option value="">Todos los roles</option>
+              <option value="admin">Admin</option>
+              <option value="candidate">Candidato</option>
+              <option value="moderator">Moderador</option>
+              <option value="voter">Votante</option>
+            </select>
 
-          <select
-            value={selectedGroup}
-            onChange={(e) => setSelectedGroup(e.target.value)}
-            className="p-2 border rounded-md"
-          >
-            <option value="">Todos los grupos</option>
-            {groups.map((group) => (
-              <option key={group.id} value={group.id}>
-                {group.name}
-              </option>
-            ))}
-          </select>
+            <select
+              value={selectedGroup}
+              onChange={(e) => setSelectedGroup(e.target.value)}
+              className="p-2 border rounded-md"
+            >
+              <option value="">Todos los grupos</option>
+              {groups.map((group) => (
+                <option key={group.id} value={group.id}>
+                  {group.name}
+                </option>
+              ))}
+            </select>
+
+            {/* Checkbox para seleccionar todos */}
+            <div className="mt-4">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={selectAll}
+                  onChange={handleSelectAllChange}
+                />
+                Seleccionar todo
+              </label>
+            </div>
+          </div>
+
+          {/* Botones a la derecha */}
+          <div className="flex flex-col space-y-2">
+            <button
+              onClick={handleAssignGroup}
+              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+              disabled={selectedUsers.length === 0}
+            >
+              Asignar grupo
+            </button>
+            <button
+              onClick={() => handleDeleteUsers(selectedUsers, APIURL)}
+              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+              disabled={selectedUsers.length === 0}
+            >
+              Eliminar seleccionados
+            </button>
+          </div>
         </div>
-        <div className="flex justify-between mt-4 mb-4">
-        <button
-  onClick={() => handleDeleteUsers(selectedUsers, APIURL)}
-  className="bg-blue-500 text-white px-4 py-2 rounded-md"
-  disabled={selectedUsers.length === 0}
->
-  Eliminar seleccionados
-</button>
-          <button
-            onClick={handleAssignGroup}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md"
-            disabled={selectedUsers.length === 0}
-          >
-            Asignar grupo
-          </button>
-        </div>
+
         <h1 className="text-2xl font-bold mb-4 text-center">Usuarios</h1>
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">

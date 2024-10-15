@@ -99,6 +99,7 @@ const ChangePassword = () => {
         ) : (
         <form onSubmit={handleSubmit} className='w-full gap-8 flex flex-col items-center'>
             <Input 
+                type="password"
                 name="password"
                 value={data.password}
                 onChange={handleChange}
@@ -109,6 +110,7 @@ const ChangePassword = () => {
                 <div className="text-red-500 text-xs mt-2">{error.password}</div>
             )}
             <Input 
+                type="password"
                 name="newPassword"
                 value={data.newPassword}
                 onChange={handleChange}
@@ -119,6 +121,7 @@ const ChangePassword = () => {
                 <div className="text-red-500 text-xs mt-2">{error.newPassword}</div>
             )}
             <Input 
+                type="password"
                 name='confirmPassword'
                 value={data.confirmPassword}
                 onChange={handleChange}
