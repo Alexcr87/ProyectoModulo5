@@ -9,10 +9,12 @@ import Register from "../pricingTable/Register/register";
 import { useAuth } from '@/context/Authontext'
 import Select from "react-select";
 import IGroup from "@/interfaces/IGroup";
+import { useRouter } from 'next/navigation'
 
-const PopUpRegisterComponent = () => {
-  const [registroManual, setRegistroManual] = useState(false);
-  const [registroMasivo, setRegistroMasivo] = useState(false);
+const PopUpRegisterComponent = ({ registroManual, registroMasivo}: { registroManual: boolean, registroMasivo: boolean  }) => {
+  // const [registroManual, setRegistroManual] = useState(false);
+  // const [registroMasivo, setRegistroMasivo] = useState(false);
+ const router = useRouter()
   const [file, setFile] = useState<File | null>(null);
   const { userData, setUserData } = useAuth();
   const [groups, setGroups] = useState<IGroup[]>([]);
@@ -42,7 +44,7 @@ const PopUpRegisterComponent = () => {
       }
     }
   };
-  
+
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] || null;
@@ -80,7 +82,7 @@ const PopUpRegisterComponent = () => {
         timer: 1500,
       });
     }finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -93,8 +95,8 @@ const PopUpRegisterComponent = () => {
 
   const handleDownloadExcel = () => {
     const link = document.createElement("a");
-    link.href = `${window.location.origin}/images/ExcelDeMuestra.xlsx`; 
-    link.download = "ExcelDeMuestra.xlsx"; 
+    link.href = `${window.location.origin}/images/ExcelDeMuestra.xlsx`;
+    link.download = "ExcelDeMuestra.xlsx";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -102,7 +104,7 @@ const PopUpRegisterComponent = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <button
+      {/* <button
         onClick={() => setRegistroManual(true)}
         className="bg-blue-500 text-white px-4 py-2 m-2 rounded"
       >
@@ -113,14 +115,15 @@ const PopUpRegisterComponent = () => {
         className="bg-green-500 text-white px-4 py-2 m-2 rounded"
       >
         Registro Masivo
-      </button>
+      </button> */}
 
       {/* Popup para registro manual */}
       {registroManual && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-lg relative overflow-hidden">
-            <button 
-              onClick={() => setRegistroManual(false)} 
+            <button
+              // onClick={() => setRegistroManual(false)}
+              onClick={() => router.push('/')} 
               className="absolute top-0 right-0 bg-slate-400 hover:bg-red-500 font-bold text-xl text-white px-2">
               x
             </button>
@@ -133,13 +136,14 @@ const PopUpRegisterComponent = () => {
       {registroMasivo && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-8 w-[40%] rounded-lg shadow-lg relative overflow-hidden flex flex-col items-center">
-            <button 
-              onClick={() => setRegistroMasivo(false)} 
+            <button
+              // onClick={() => setRegistroMasivo(false)}
+              onClick={() => router.push('/')} 
               className="absolute top-0 right-0 bg-slate-400 hover:bg-red-500 font-bold text-xl text-white px-2">
               x
             </button>
             <h2 className="text-xl mb-4 font-bold">Subir y Descargar Excel</h2>
-            <p>1º- Descargar la plantilla de excel donde agregaras los usuarios</p> 
+            <p>1º- Descargar la plantilla de excel donde agregaras los usuarios</p>
             <span className="text-red-500">Nota: no agregar ni quitar columnas de la plantilla</span>
             <div className="flex justify-between my-4">
               <Boton onClick={handleDownloadExcel}>Descargar Excel</Boton>
