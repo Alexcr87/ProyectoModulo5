@@ -9,7 +9,7 @@ const Result = async ()=>{
         {
             datas && datas.map((data)=>{
                 return(
-                    <Link href={`/results/${data.id}`}>
+                    <Link href={`/results/${data.id}` key={data.id}>
                         <div className="bg-white rounded-2xl h-40 overflow-hidden">
                             <div className="bg-primaryColor text-white p-2 flex justify-center">
                                 <h2>{data.name}</h2>
