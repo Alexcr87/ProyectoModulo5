@@ -78,8 +78,8 @@ const NavBar = () => {
     const handleClose = () => {
         if (process.env.NEXT_PUBLIC_AUTH0_ISSUER_BASE_URL && process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID) {
             // Usar Auth0 para cerrar sesión si están definidas las variables de entorno
-            const auth0LoginUrl = `${process.env.NEXT_PUBLIC_AUTH0_ISSUER_BASE_URL}/v2/logout?returnTo=${process.env.NEXT_PUBLIC_API_URL}/logouts&client_id=${process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID}`;
-            window.location.href = auth0LoginUrl;
+            //const auth0LoginUrl = `${process.env.NEXT_PUBLIC_AUTH0_ISSUER_BASE_URL}/v2/logout?returnTo=${process.env.NEXT_PUBLIC_API_URL}/logouts&client_id=${process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID}`;
+            //window.location.href = auth0LoginUrl;
         } else {
             // Cierre de sesión local
             localStorage.clear();
