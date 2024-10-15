@@ -2,11 +2,10 @@
 
 import React, { useEffect, useState } from 'react'
 import Swal from "sweetalert2";
-import Boton from '../ui/Boton'
-import Boton2 from '../ui/Boton2'
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 import Account from '@/interfaces/account';
 import Spinner from '../ui/Spinner';
+import { useAuth } from '@/context/Authontext';
 
 const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 const APIURL = process.env.NEXT_PUBLIC_API_URL
@@ -23,8 +22,8 @@ const PricingTable = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [preferenceId, setPreferenceId] = useState('');
   const [selectedAccountId, setSelectedAccountId] = useState<number | null>(null);
-  const [isRegistered, setIsRegistered] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const {userData} = useAuth()
 
   useEffect(() => {
     
@@ -57,7 +56,7 @@ const PricingTable = () => {
   const handlePlanSelection = async (accountId: number , price:number) => {
     setSelectedAccountId(accountId);
 
-    if (!isRegistered) {
+    if (!userData) {
       Swal.fire({
         title: '¡Regístrate para continuar!',
         text: 'Debes estar registrado para acceder a estas cuentas',

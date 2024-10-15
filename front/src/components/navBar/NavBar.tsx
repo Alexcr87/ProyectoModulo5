@@ -27,33 +27,34 @@ const NavBar = () => {
     }, [pathname]);
 
     const handleClose = () => {
-      // revisar lo del cierre de sesion con auth0
-         const auth0LoginUrl = `${process.env.NEXT_PUBLIC_AUTH0_ISSUER_BASE_URL}/v2/logout?returnTo=${process.env.NEXT_PUBLIC_API_URL}/logouts&client_id=${process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID}`;
-         window.location.href = auth0LoginUrl;
-
-        localStorage.clear();
-        
-        setUserData(null)
-        const Toast = Swal.mixin({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 2000,
-            timerProgressBar: true,
-            customClass: {
-                container: 'mt-12'
-            },
-            didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-            }
-        });
-        Toast.fire({
-            icon: "success",
-            title: "Gracias por visitar nuestra web, vuelve pronto"
-        });
-        router.push("/");
+        if (process.env.NEXT_PUBLIC_AUTH0_ISSUER_BASE_URL && process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID) {
+            // Usar Auth0 para cerrar sesión si están definidas las variables de entorno
+            const auth0LoginUrl = `${process.env.NEXT_PUBLIC_AUTH0_ISSUER_BASE_URL}/v2/logout?returnTo=${process.env.NEXT_PUBLIC_API_URL}/logouts&client_id=${process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID}`;
+            window.location.href = auth0LoginUrl;
+        } else {
+            // Cierre de sesión local
+            localStorage.clear();
+            setUserData(null);
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                customClass: { container: 'mt-12' },
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+            Toast.fire({
+                icon: "success",
+                title: "Gracias por visitar nuestra web, vuelve pronto"
+            });
+            router.push('/');
+        }
     }
+    
 
     const toggleDropdown = () => {
         setDropdownOpen(!isDropdownOpen);
@@ -197,7 +198,11 @@ const NavBar = () => {
                     flex-direction: column;
                 }
             `}</style>
-            <Guia/>
+            <div className='flex gap-8 text-white list-none'>
+                <p>{(isCandidate || isVotante || isModerator || isAdmin) && (<>{changePassword()}</>)}</p>
+                <Guia/>
+            </div>
+            
         </nav>
     )
 }
