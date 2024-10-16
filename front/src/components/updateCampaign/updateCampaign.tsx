@@ -8,6 +8,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/context/Authontext';
 import IGroup from '@/interfaces/IGroup';
 import Spinner from '../ui/Spinner';
+import { Tooltip } from 'react-tooltip';
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
@@ -94,49 +95,102 @@ const updateCampaign = () => {
     <>
       <div className="col-start-5 col-end-9 mt-[2.5em] my-[2em] text-center text-xl font-bold">
         ACTUALIZAR CAMPAÑA
-          <div className="flex flex-row items-center w-full md:w-[40%] gap-4 m-auto mt-8 py-8 px-4 font-bold border-4 rounded-md outline-none
-            border-stroke dark:border-dark-3 border-blue-500" >
+        <div className="flex flex-row items-center w-full md:w-[40%] gap-4 m-auto mt-8 py-8 px-4 font-bold border-4 rounded-md outline-none
+              border-stroke dark:border-dark-3 border-blue-500">
           <p>{`Campana: ${campaign?.name}`}</p>
-          {/* <p>{`Fecha: ${campaign?.date}`}</p> */}
-          <p>{`Fecha: ${campaign?.date ? new Date(campaign.date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) : ''}`}</p> </div>
+          <p>{`Fecha: ${campaign?.date ? new Date(campaign.date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) : ''}`}</p>
+        </div>
       </div>
       <form className="campaign-form flex justify-center" onSubmit={handleUpdateCampaign}>
         <div className="flex flex-col items-center w-full md:w-[40%] gap-4">
-          <Input
-            type="text"
-            id="name"
-            name="name"
-            placeholder='Nombre'
-            // value={id}
-            required
-          />
-          <textarea
-            id="description"
-            name="description"
-            placeholder='Descripcion'
-            // value={campaign.description}
-            className="w-full h-40 px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
-            border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
-            dark:focus:border-primaryColor focus-visible:shadow-none"
-            required
-          />
-          <Input
-            type="text"
-            id="location"
-            name="location"
-            placeholder='ubicacion'
-            // value={campaign.location}
-            required
-          />
-          <Input
-            type="date"
-            name="date"
-            id="date"
-            // placeholder={campaign?.date ? campaign.date.toISOString().substring(0, 10) : ''}
-            value={date ? date.toISOString().substring(0, 10) : ''}
-            onChange={(e) => setDate(new Date(e.target.value))}
-            required
-          />
+          {/* Nombre */}
+          <div className="relative">
+            <label className="flex items-center">
+              Nombre
+              <span
+                className="ml-2 text-blue-500 cursor-pointer"
+                data-tooltip-id="tooltip-name"
+              >
+                ℹ️
+              </span>
+              <Tooltip id="tooltip-name" place="top" content="Introduce el nombre de la campaña." />
+            </label>
+            <Input
+              type="text"
+              id="name"
+              name="name"
+              placeholder='Nombre'
+              required
+            />
+          </div>
+  
+          {/* Descripción */}
+          <div className="relative">
+            <label className="flex items-center">
+              Descripción
+              <span
+                className="ml-2 text-blue-500 cursor-pointer"
+                data-tooltip-id="tooltip-description"
+              >
+                ℹ️
+              </span>
+              <Tooltip id="tooltip-description" place="top" content="Proporciona una breve descripción de la campaña." />
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              placeholder='Descripción'
+              className="w-full h-40 px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
+                border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
+                dark:focus:border-primaryColor focus-visible:shadow-none"
+              required
+            />
+          </div>
+  
+          {/* Ubicación */}
+          <div className="relative">
+            <label className="flex items-center">
+              Ubicación
+              <span
+                className="ml-2 text-blue-500 cursor-pointer"
+                data-tooltip-id="tooltip-location"
+              >
+                ℹ️
+              </span>
+              <Tooltip id="tooltip-location" place="top" content="Indica la ubicación de la campaña." />
+            </label>
+            <Input
+              type="text"
+              id="location"
+              name="location"
+              placeholder='Ubicación'
+              required
+            />
+          </div>
+  
+          {/* Fecha */}
+          <div className="relative">
+            <label className="flex items-center">
+              Fecha
+              <span
+                className="ml-2 text-blue-500 cursor-pointer"
+                data-tooltip-id="tooltip-date"
+              >
+                ℹ️
+              </span>
+              <Tooltip id="tooltip-date" place="top" content="Selecciona la fecha de la campaña." />
+            </label>
+            <Input
+              type="date"
+              name="date"
+              id="date"
+              value={date ? date.toISOString().substring(0, 10) : ''}
+              onChange={(e) => setDate(new Date(e.target.value))}
+              required
+            />
+          </div>
+  
+          {/* Botón de actualización */}
           <Boton type="submit">Actualizar Campaña</Boton>
         </div>
       </form>

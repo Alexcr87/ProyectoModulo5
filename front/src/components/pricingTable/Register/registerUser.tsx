@@ -13,6 +13,7 @@ import Spinner from "../../ui/Spinner";
 import { Country, City } from "@/components/utils/types";
 import { citiesByCountry } from "@/components/utils/citiesByCountry";
 import { countries } from "../../utils/countries";
+import { Tooltip } from 'react-tooltip'
 
 const RegisterByAuth0 = () => {
 const router = useRouter();
@@ -130,14 +131,13 @@ const initialState = {
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <div>
-          <div className="w-full justify-center flex mb-6">
-            COMPLETAR REGISTRO
-          </div>
+        <div className="w-full justify-center flex mb-6">
+          COMPLETAR REGISTRO
         </div>
 
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
+            {/* Nombre */}
             <div className="flex flex-col">
               <Input
                 id="name"
@@ -146,10 +146,14 @@ const initialState = {
                 value={userData?.userData.name}
                 onChange={handleChange}
                 placeholder="Nombre"
+                data-tooltip-id="name-tooltip"
+                data-tooltip-content="Ingresa tu nombre completo"
               />
+              <Tooltip id="name-tooltip" />
               {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
             </div>
 
+            {/* DNI */}
             <div className="flex flex-col mt-4">
               <Input
                 id="dni"
@@ -158,10 +162,14 @@ const initialState = {
                 value={dataUser.dni}
                 onChange={handleChange}
                 placeholder="DNI"
+                data-tooltip-id="dni-tooltip"
+                data-tooltip-content="Ingresa tu número de DNI"
               />
+              <Tooltip id="dni-tooltip" />
               {errors.dni && <span className="text-red-500 text-sm">{errors.dni}</span>}
             </div>
 
+            {/* Dirección */}
             <div className="flex flex-col mt-4">
               <Input
                 name="address"
@@ -169,10 +177,14 @@ const initialState = {
                 value={dataUser.address}
                 onChange={handleChange}
                 placeholder="Dirección"
+                data-tooltip-id="address-tooltip"
+                data-tooltip-content="Ingresa tu dirección completa"
               />
+              <Tooltip id="address-tooltip" />
               {errors.address && <span className="text-red-500 text-sm">{errors.address}</span>}
             </div>
 
+            {/* Contraseña */}
             <div className="flex flex-col mt-4">
               <Input
                 id="password"
@@ -182,10 +194,14 @@ const initialState = {
                 onBlur={handleBlur}
                 onChange={handleChange}
                 placeholder="**********"
+                data-tooltip-id="password-tooltip"
+                data-tooltip-content="Debe contener al menos 8 caracteres"
               />
+              <Tooltip id="password-tooltip" />
               {touched.password && errors.password && <span className="text-red-500 text-sm">{errors.password}</span>}
             </div>
 
+            {/* Correo Electrónico */}
             <div className="flex flex-col mt-4">
               <Input
                 id="email-address"
@@ -194,49 +210,65 @@ const initialState = {
                 value={userData?.userData.email}
                 onChange={handleChange}
                 placeholder="Correo Electrónico"
+                data-tooltip-id="email-tooltip"
+                data-tooltip-content="Ingresa un correo electrónico válido"
               />
+              <Tooltip id="email-tooltip" />
               {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
             </div>
           </div>
 
           <div>
+            {/* País */}
             <div className="flex flex-col mt-4">
-            <select
-          name="country"
-          onChange={handleCountryChange}
-          className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        >
-          <option value="">Selecciona un país</option>
-          {countries.map(country => (
-              <option key={country.id} value={country.id}>{country.name}</option>
-          ))}
-        </select>
-        {errors.country && <p className="text-red-500">{errors.country}</p>}
-        <div className="flex flex-col mt-4">
-        <select
-          name="city"
-          value={dataUser.city}
-          onChange={handleChange}
-          className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        >
-          <option value="">Selecciona una ciudad</option>
-          {cities.map(city => (
-              <option key={city.id} value={city.id}>{city.name}</option>
-          ))}
-        </select>
-        </div>
+              <select
+                name="country"
+                onChange={handleCountryChange}
+                className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+                data-tooltip-id="country-tooltip"
+                data-tooltip-content="Selecciona tu país de residencia"
+              >
+                <option value="">Selecciona un país</option>
+                {countries.map(country => (
+                  <option key={country.id} value={country.id}>{country.name}</option>
+                ))}
+              </select>
+              <Tooltip id="country-tooltip" />
+              {errors.country && <p className="text-red-500">{errors.country}</p>}
+            </div>
+
+            {/* Ciudad */}
+            <div className="flex flex-col mt-4">
+              <select
+                name="city"
+                value={dataUser.city}
+                onChange={handleChange}
+                className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+                data-tooltip-id="city-tooltip"
+                data-tooltip-content="Selecciona tu ciudad"
+              >
+                <option value="">Selecciona una ciudad</option>
+                {cities.map(city => (
+                  <option key={city.id} value={city.id}>{city.name}</option>
+                ))}
+              </select>
+              <Tooltip id="city-tooltip" />
               {errors.city && <span className="text-red-500 text-sm">{errors.city}</span>}
             </div>
+
+            {/* Botón de Enviar */}
             <div className="mt-4">
-            <Boton
-              type="submit"
-              disabled={!isFormValid} 
-            >
-              {isLoading ? <Spinner /> : "Completar Registro"}
-            </Boton>
+              <Boton
+                type="submit"
+                disabled={!isFormValid}
+              >
+                {isLoading ? <Spinner /> : "Completar Registro"}
+              </Boton>
             </div>
+
+            {/* Imagen */}
             <img
               src="/images/registerImage.png"
               alt="Small icon"

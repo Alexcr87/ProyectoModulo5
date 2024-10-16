@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import IGroup from "@/interfaces/IGroup";
 import Spinner from "../ui/Spinner";
 import Swal from "sweetalert2";
+import { Tooltip } from 'react-tooltip';
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
@@ -184,34 +185,55 @@ const Groups = () => {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4 text-center">Mis Grupos</h1>
 
+      {/* Formulario para crear un nuevo grupo */}
       <div className="mb-4">
-  <form onSubmit={handleCreateGroup} className="flex items-center">
-    <input
-      type="text"
-      value={groupName}
-      onChange={(e) => setGroupName(e.target.value)}
-      placeholder="Nombre del grupo"
-      className="border rounded p-2 mr-2"
-    />
-    <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-      Crear Grupo
-    </button>
-  </form>
-  <button
-    onClick={handleDeleteGroups}
-    className="bg-blue-500 text-white p-2 rounded mt-2 disabled:opacity-50"
-    disabled={selectedGroups.length === 0} // Desactiva si no hay grupos seleccionados
-  >
-    Eliminar Grupos
-  </button>
-</div>
+        <form onSubmit={handleCreateGroup} className="flex items-center">
+          <input
+            type="text"
+            value={groupName}
+            onChange={(e) => setGroupName(e.target.value)}
+            placeholder="Nombre del grupo"
+            className="border rounded p-2 mr-2"
+            required
+            data-tooltip-id="groupname-tooltip"
+            data-tooltip-content="Escribe el nombre del nuevo grupo"
+          />
+          <Tooltip id="groupname-tooltip" />
+          
+          <button 
+            type="submit" 
+            className="bg-blue-500 text-white p-2 rounded"
+            data-tooltip-id="creategroup-tooltip"
+            data-tooltip-content="Haz clic para crear un nuevo grupo"
+          >
+            Crear Grupo
+          </button>
+          <Tooltip id="creategroup-tooltip" />
+        </form>
+
+        {/* Botón para eliminar los grupos seleccionados */}
+        <button
+          onClick={handleDeleteGroups}
+          className="bg-blue-500 text-white p-2 rounded mt-2 disabled:opacity-50"
+          disabled={selectedGroups.length === 0} // Desactiva si no hay grupos seleccionados
+          data-tooltip-id="deletegroups-tooltip"
+          data-tooltip-content={selectedGroups.length === 0 
+            ? "Selecciona uno o más grupos para eliminar"
+            : "Haz clic para eliminar los grupos seleccionados"}
+        >
+          Eliminar Grupos
+        </button>
+        <Tooltip id="deletegroups-tooltip" />
+      </div>
+
+      {/* Tabla de grupos */}
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
           <thead>
             <tr className="bg-primaryColor text-white text-left">
               <th className="py-3 px-6 text-sm font-medium">Seleccionar</th>
               <th className="py-3 px-6 text-sm font-medium">Nombre</th>
-              <th className="py-3 px-6 text-sm font-medium">Accion</th>
+              <th className="py-3 px-6 text-sm font-medium">Acción</th>
             </tr>
           </thead>
           <tbody>
@@ -226,16 +248,22 @@ const Groups = () => {
                       type="checkbox"
                       checked={selectedGroups.includes(group.id ?? "")} // Usa el id o un valor por defecto
                       onChange={() => handleSelectGroup(group.id ?? "")} // Manejamos el cambio del checkbox
+                      data-tooltip-id={`checkbox-tooltip-${group.id ?? idx}`}
+                      data-tooltip-content="Selecciona este grupo"
                     />
+                    <Tooltip id={`checkbox-tooltip-${group.id ?? idx}`} />
                   </td>
                   <td className="py-3 px-6 text-sm text-gray-700">{group.name}</td>
                   <td className="py-3 px-6 text-sm text-gray-700">
                     <button
                       onClick={() => handleEditGroup(group)}
                       className="text-blue-500 hover:text-blue-700 font-medium"
+                      data-tooltip-id={`editgroup-tooltip-${group.id ?? idx}`}
+                      data-tooltip-content="Editar este grupo"
                     >
                       editar grupo
                     </button>
+                    <Tooltip id={`editgroup-tooltip-${group.id ?? idx}`} />
                   </td>
                 </tr>
               ))

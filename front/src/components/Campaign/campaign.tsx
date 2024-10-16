@@ -12,6 +12,7 @@ import Spinner from '../ui/Spinner';
 import ICampaignError from '@/interfaces/ICampaignError';
 import { validateCampaingError } from '@/helpers/validateCampaingError';
 import ICampaignSinID from '@/interfaces/ICampaignSinId';
+import { Tooltip } from 'react-tooltip';
 
 const CampaignForm = () => {
   const { userData } = useAuth(); 
@@ -150,67 +151,92 @@ const CampaignForm = () => {
             <Spinner />  
           ) : (
             <>
-          <Input
-            type="text"
-            id="name"
-            name="name"
-            placeholder="Nombre de la campaña"
-            value={formData.name}
-            onChange={handleInputChange}
-            required
-          />
-          {errors.name && (
+              {/* Nombre de la Campaña */}
+              <Input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Nombre de la campaña"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+                data-tooltip-id="name-tooltip"
+                data-tooltip-content="Ingresa un nombre para tu campaña"
+              />
+              <Tooltip id="name-tooltip" />
+              {errors.name && (
                 <div className="text-red-500 text-xs mt-2">{errors.name}</div>
-          )}
-          <textarea
-            id="description"
-            name="description"
-            placeholder="Descripción"
-            value={formData.description}
-            onChange={handleInputChange}
-            className="w-full h-40 px-5 py-3 text-base transition bg-transparent border rounded-md outline-none border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor dark:focus:border-primaryColor focus-visible:shadow-none"
-            required
-          />
-          {errors.description && (
-                <div className="text-red-500 text-xs mt-2">{errors.description}</div>
-          )}
-          <Input
-            type="text"
-            id="location"
-            name="location"
-            placeholder="Ubicación"
-            value={formData.location}
-            onChange={handleInputChange}
-            required
-          />
-          {errors.location && (
-                <div className="text-red-500 text-xs mt-2">{errors.location}</div>
-          )}
-          <Input
-            type="date"
-            name="date"
-            id="date"
-            value={formData.date.toISOString().substring(0, 10)}
-            onChange={handleDateChange}
-            required
-          />
-          {errors.date && (
-                <div className="text-red-500 text-xs mt-2">{errors.date}</div>
-          )}
-          <Select
-            isMulti
-            name="groups"
-            options={groups.map(group => ({ value: group.id, label: group.name }))}
-            className="basic-multi-select w-full"
-            classNamePrefix="select"
-            onChange={handleMultiSelectChange}
-            value={formData.groups.map(group => ({ value: group.id, label: group.name }))}
-            placeholder='Selecciona grupos'
-            required
-          />
+              )}
 
-          <Boton type="submit">Crear Campaña</Boton>
-          </>
+              {/* Descripción */}
+              <textarea
+                id="description"
+                name="description"
+                placeholder="Descripción"
+                value={formData.description}
+                onChange={handleInputChange}
+                className="w-full h-40 px-5 py-3 text-base transition bg-transparent border rounded-md outline-none border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor dark:focus:border-primaryColor focus-visible:shadow-none"
+                required
+                data-tooltip-id="description-tooltip"
+                data-tooltip-content="Proporciona una descripción detallada"
+              />
+              <Tooltip id="description-tooltip" />
+              {errors.description && (
+                <div className="text-red-500 text-xs mt-2">{errors.description}</div>
+              )}
+
+              {/* Ubicación */}
+              <Input
+                type="text"
+                id="location"
+                name="location"
+                placeholder="Ubicación"
+                value={formData.location}
+                onChange={handleInputChange}
+                required
+                data-tooltip-id="location-tooltip"
+                data-tooltip-content="Indica la ubicación de la campaña"
+              />
+              <Tooltip id="location-tooltip" />
+              {errors.location && (
+                <div className="text-red-500 text-xs mt-2">{errors.location}</div>
+              )}
+
+              {/* Fecha */}
+              <Input
+                type="date"
+                name="date"
+                id="date"
+                value={formData.date.toISOString().substring(0, 10)}
+                onChange={handleDateChange}
+                required
+                data-tooltip-id="date-tooltip"
+                data-tooltip-content="Selecciona una fecha para la campaña"
+              />
+              <Tooltip id="date-tooltip" />
+              {errors.date && (
+                <div className="text-red-500 text-xs mt-2">{errors.date}</div>
+              )}
+
+              {/* Grupos */}
+              <Select
+                isMulti
+                name="groups"
+                options={groups.map(group => ({ value: group.id, label: group.name }))}
+                className="basic-multi-select w-full"
+                classNamePrefix="select"
+                onChange={handleMultiSelectChange}
+                value={formData.groups.map(group => ({ value: group.id, label: group.name }))}
+                placeholder="Selecciona grupos"
+                required
+                data-tooltip-id="groups-tooltip"
+                data-tooltip-content="Selecciona los grupos que participarán"
+              />
+              <Tooltip id="groups-tooltip" />
+
+              {/* Botón de Crear */}
+              <Boton type="submit">Crear Campaña</Boton>
+            </>
         )}
         </div>
       </form>
