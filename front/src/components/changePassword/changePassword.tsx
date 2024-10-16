@@ -9,6 +9,7 @@ import Swal from 'sweetalert2'
 import { useRouter } from 'next/navigation'
 import { validateChangePassword } from '@/helpers/validateChangePassword'
 import Spinner from '../ui/Spinner'
+import { Tooltip } from 'react-tooltip';
 
 const ChangePassword = () => {
     const [loading, setLoading] = useState(false);
@@ -90,55 +91,65 @@ const ChangePassword = () => {
         setError(errors);
     }, [data]);
     
-  return (
-    <div className='bg-cuartiaryColor min-h-[85vh] flex justify-center'>
-      <div className='bg-white w-[50%] my-8 shadow-2xl rounded-2xl flex flex-col items-center px-16'>
-        <h2 className='text-2xl font-bold my-12'>Cambio De Contraseña</h2>
-        {loading ? ( 
-            <Spinner />
-        ) : (
-        <form onSubmit={handleSubmit} className='w-full gap-8 flex flex-col items-center'>
-            <Input 
-                type="password"
-                name="password"
-                value={data.password}
-                onChange={handleChange}
-                placeholder='Contraseña actual'
-                required
-            />
-            {error.password && (
-                <div className="text-red-500 text-xs mt-2">{error.password}</div>
+    return (
+        <div className='bg-cuartiaryColor min-h-[85vh] flex justify-center'>
+          <div className='bg-white w-[50%] my-8 shadow-2xl rounded-2xl flex flex-col items-center px-16'>
+            <h2 className='text-2xl font-bold my-12'>Cambio De Contraseña</h2>
+            {loading ? (
+              <Spinner />
+            ) : (
+              <form onSubmit={handleSubmit} className='w-full gap-8 flex flex-col items-center'>
+                <Input 
+                  type="password"
+                  name="password"
+                  value={data.password}
+                  onChange={handleChange}
+                  placeholder='Contraseña actual'
+                  required
+                  data-tooltip-id="passwordTooltip"
+                  data-tooltip-content="Introduce tu contraseña actual"
+                />
+                {error.password && (
+                  <div className="text-red-500 text-xs mt-2">{error.password}</div>
+                )}
+                <Input 
+                  type="password"
+                  name="newPassword"
+                  value={data.newPassword}
+                  onChange={handleChange}
+                  placeholder='Contraseña nueva'
+                  required
+                  data-tooltip-id="newPasswordTooltip"
+                  data-tooltip-content="Introduce tu nueva contraseña"
+                />
+                {error.newPassword && (
+                  <div className="text-red-500 text-xs mt-2">{error.newPassword}</div>
+                )}
+                <Input 
+                  type="password"
+                  name='confirmPassword'
+                  value={data.confirmPassword}
+                  onChange={handleChange}
+                  placeholder='Confirmar contraseña'
+                  required
+                  data-tooltip-id="confirmPasswordTooltip"
+                  data-tooltip-content="Repite la nueva contraseña para confirmarla"
+                />
+                {error.confirmPassword && (
+                  <div className="text-red-500 text-xs mt-2">{error.confirmPassword}</div>
+                )}
+                <div className='w-[20%]'>
+                  <Boton>Renovar</Boton>
+                </div>
+              </form>
             )}
-            <Input 
-                type="password"
-                name="newPassword"
-                value={data.newPassword}
-                onChange={handleChange}
-                placeholder='Contraseña nueva'
-                required
-            />
-            {error.newPassword && (
-                <div className="text-red-500 text-xs mt-2">{error.newPassword}</div>
-            )}
-            <Input 
-                type="password"
-                name='confirmPassword'
-                value={data.confirmPassword}
-                onChange={handleChange}
-                placeholder='Confirmar contraseña'
-                required
-            />
-            {error.confirmPassword && (
-                <div className="text-red-500 text-xs mt-2">{error.confirmPassword}</div>
-            )}
-            <div className='w-[20%]'>
-                <Boton>Renovar</Boton>
-            </div>
-        </form>
-         )}
-      </div>
-    </div>
-  )
+          </div>
+          {/* Tooltip components */}
+          <Tooltip id="passwordTooltip" />
+          <Tooltip id="newPasswordTooltip" />
+          <Tooltip id="confirmPasswordTooltip" />
+        </div>
+      );
 }
 
 export default ChangePassword
