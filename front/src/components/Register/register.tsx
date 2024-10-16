@@ -5,15 +5,15 @@ import { useEffect, useState } from "react";
 import { IRegisterError, IRegisterProps } from "./TypesRegister";
 import { importUser, register } from "@/helpers/auth.helper";
 import { validateRegisterForm } from "@/helpers/validateRegister";
-import Boton from "../../ui/Boton";
+import Boton from "../ui/Boton";
 import Swal from 'sweetalert2'
 import { IloginProps } from "@/interfaces/ILogin";
-import Input from "../../ui/Input";
-import InputFile from "../../ui/InputFile";
+import Input from "../ui/Input";
+import InputFile from "../ui/InputFile";
 import { useAuth } from "@/context/Authontext";
 import IGroup from "@/interfaces/IGroup";
 import Select from 'react-select';
-import Spinner from "../../ui/Spinner";
+import Spinner from "../ui/Spinner";
 
 const Register = () => {
   const router = useRouter();

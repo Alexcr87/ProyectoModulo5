@@ -11,7 +11,7 @@ import { countries } from "@/components/utils/countries"; // Importa la lista de
 import { citiesByCountry } from "@/components/utils/citiesByCountry";
 import { Country, City } from "@/components/utils/types";
 
-import Spinner from "../../ui/Spinner";
+import Spinner from "../ui/Spinner";
 
 
 const RegisterModerator = () => {

@@ -1,4 +1,4 @@
-import RegisterByAuth0 from "@/components/pricingTable/Register/registerByAuth0";
+import RegisterByAuth0 from "@/components/Register/registerByAuth0";
 
 
 const RegisterAuth0=()=>{
