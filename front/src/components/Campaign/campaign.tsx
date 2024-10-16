@@ -208,6 +208,7 @@ const CampaignForm = () => {
                 name="date"
                 id="date"
                 value={formData.date.toISOString().substring(0, 10)}
+                min={new Date().toISOString().substring(0, 10)}
                 onChange={handleDateChange}
                 required
                 data-tooltip-id="date-tooltip"
