@@ -261,14 +261,14 @@ const filteredUsers = users
           <div className="flex flex-col space-y-2">
             <button
               onClick={handleAssignGroup}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+              className="bg-primaryColor text-white px-4 py-2 rounded-md"
               disabled={selectedUsers.length === 0}
             >
               Asignar grupo
             </button>
             <button
               onClick={() => handleDeleteUsers(selectedUsers, APIURL)}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+              className="bg-primaryColor text-white px-4 py-2 rounded-md"
               disabled={selectedUsers.length === 0}
             >
               Eliminar seleccionados
@@ -322,7 +322,7 @@ const filteredUsers = users
                     <td className="py-3 px-6 text-sm text-gray-700">
                       <a
                         href={`/createCandidate/${user.id}`}
-                        className="text-blue-500 hover:text-blue-700 font-medium"
+                        className="text-primaryColor hover:text-primaryColor font-medium"
                       >
                         Postular Candidato
                       </a>

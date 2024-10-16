@@ -125,7 +125,7 @@ const PopUpRegisterComponent = ({ registroManual, registroMasivo}: { registroMan
             <button
               // onClick={() => setRegistroManual(false)}
               onClick={() => router.push('/')} 
-              className="absolute top-0 right-0 bg-slate-400 hover:bg-red-500 font-bold text-xl text-white px-2">
+              className="bg-primaryColor text-white px-4 py-2 m-2 rounded">
               x
             </button>
             <Register />
@@ -140,7 +140,7 @@ const PopUpRegisterComponent = ({ registroManual, registroMasivo}: { registroMan
             <button
               // onClick={() => setRegistroMasivo(false)}
               onClick={() => router.push('/')} 
-              className="absolute top-0 right-0 bg-slate-400 hover:bg-red-500 font-bold text-xl text-white px-2">
+              className="bg-tertiaryColor text-white px-4 py-2 m-2 rounded">
               x
             </button>
             <h2 className="text-xl mb-4 font-bold">Subir y Descargar Excel</h2>
