@@ -4,7 +4,7 @@ import NavBar from "@/components/navBar/NavBar";
 import Footer from "@/components/footer/Footer";
 import { AuthProvider } from "@/context/Authontext";
 import { GuideProvider } from "@/context/GuideContext";
-
+import { ThemeProvider } from '@/context/ThemeContext';
 
 
 export const metadata: Metadata = {
@@ -23,6 +23,7 @@ export default function RootLayout({
       <body>
         <AuthProvider>
           <GuideProvider>
+            <ThemeProvider>
             <div className="containerPrincipal">
               <header>
                 <NavBar />
@@ -34,6 +35,7 @@ export default function RootLayout({
                 <Footer />
               </footer>
             </div>
+            </ThemeProvider>
           </GuideProvider>
         </AuthProvider>
       </body>

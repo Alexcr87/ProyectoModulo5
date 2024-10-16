@@ -211,14 +211,14 @@ const CampaignsTable = () => {
                                     {new Date(campaign.date).toLocaleDateString()}
                                 </td>
                                 <td 
-                                    className={`border p-2 ${expired ? 'text-gray-400 cursor-not-allowed' : 'text-blue-500 hover:text-blue-700 cursor-pointer'}`}
+                                    className={`border p-2 ${expired ? 'text-gray-400 cursor-not-allowed' : 'text-primaryColor hover:text-blue-700 cursor-pointer'}`}
                                     onClick={!expired ? () => handleAction(campaign.id) : undefined} // Deshabilitar clic si ha expirado
                                 >
                                     {roles.includes('candidate') || roles.includes('voter') ? 'votar' : 'ver'}
                                 </td>
                                 {roles.includes('admin') || roles.includes('moderator') ? (
                                     <td 
-                                    className={`border p-2 ${expired ? 'text-gray-400 cursor-not-allowed' : 'text-blue-500 hover:text-blue-700 cursor-pointer'}`}
+                                    className={`border p-2 ${expired ? 'text-gray-400 cursor-not-allowed' : 'text-primaryColor hover:text-blue-700 cursor-pointer'}`}
                                         onClick={!expired ? () => handleUpdate(campaign.id) : undefined} // Deshabilitar clic si ha expirado
                                     >
                                         Actualizar

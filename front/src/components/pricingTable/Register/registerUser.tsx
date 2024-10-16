@@ -200,11 +200,13 @@ const initialState = {
           </div>
 
           <div>
-            <div className="flex flex-col mt-4">
+            <div className="flex flex-col ">
             <select
           name="country"
           onChange={handleCountryChange}
-          className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
+        border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
+        dark:focus:border-primaryColor focus-visible:shadow-none"
           required
         >
           <option value="">Selecciona un país</option>
@@ -218,7 +220,9 @@ const initialState = {
           name="city"
           value={dataUser.city}
           onChange={handleChange}
-          className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
+        border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
+        dark:focus:border-primaryColor focus-visible:shadow-none"
           required
         >
           <option value="">Selecciona una ciudad</option>
