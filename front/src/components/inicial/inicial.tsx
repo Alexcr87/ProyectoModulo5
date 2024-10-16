@@ -4,11 +4,12 @@ import React, { useEffect, useState } from 'react';
 import CustomModal from '../InstructionsModal/Modal'; 
 import { useAuth } from '@/context/Authontext';
 
+
 const Inicial = () => {
     const { userData } = useAuth();
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [userRole, setUserRole] = useState<string | null>(null);
-
+  
     useEffect(() => {
         Modal.setAppElement('#__next'); // Establece el elemento raíz
 
