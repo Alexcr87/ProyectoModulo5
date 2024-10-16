@@ -97,7 +97,7 @@ if (loading) {
         window.location.href = `/updateCandidate?id=${candidate.user.id}`
         }} 
          key={candidate.user.id} 
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2"
+        className="bg-primaryColor hover:bg-primaryColor text-white font-bold py-2 px-4 rounded mb-2"
         >
         actualizar
         </button>
@@ -107,7 +107,7 @@ if (loading) {
         window.location.href= `/candidates/${candidate.id}`;
         }} 
         key={candidate.user.id} 
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        className="bg-primaryColor hover:bg-primaryColor text-white font-bold py-2 px-4 rounded"
         >
         votar
         </button>

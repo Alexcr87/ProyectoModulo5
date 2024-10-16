@@ -202,7 +202,7 @@ const Groups = () => {
           
           <button 
             type="submit" 
-            className="bg-blue-500 text-white p-2 rounded"
+            className="bg-primaryColor text-white p-2 rounded"
             data-tooltip-id="creategroup-tooltip"
             data-tooltip-content="Haz clic para crear un nuevo grupo"
           >
@@ -214,7 +214,7 @@ const Groups = () => {
         {/* Botón para eliminar los grupos seleccionados */}
         <button
           onClick={handleDeleteGroups}
-          className="bg-blue-500 text-white p-2 rounded mt-2 disabled:opacity-50"
+          className="bg-primaryColor text-white p-2 rounded mt-2 disabled:opacity-50"
           disabled={selectedGroups.length === 0} // Desactiva si no hay grupos seleccionados
           data-tooltip-id="deletegroups-tooltip"
           data-tooltip-content={selectedGroups.length === 0 

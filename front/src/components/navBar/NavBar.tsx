@@ -21,13 +21,19 @@ const NavBar = () => {
     const campaignDropdownRef = useRef<HTMLLIElement>(null); // Referencia al li del dropdown de campañas
     const usersDropdownRef = useRef<HTMLLIElement>(null); // Referencia al li del dropdown de usuarios
     const {user} =useUser()
-  
+    const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+
     useEffect(() => {
         const localUser = localStorage.getItem("userData");
         if (localUser) {
             setUserData(JSON.parse(localUser));
         }
     }, [pathname]);
+
+    const toggleDarkMode = () => {
+        setIsDarkMode(!isDarkMode);
+        document.documentElement.classList.toggle('dark');  // Cambia el modo oscuro global
+    }
 
     useEffect(() => {
         const checkUserInBackend = async () => {
@@ -251,7 +257,15 @@ const NavBar = () => {
             `}</style>
             <div className='hidden md:flex gap-8 text-white list-none'>
                 <p>{(isCandidate || isVotante || isModerator || isAdmin) && (<>{changePassword()}</>)}</p>
-                <Guia/>
+                 <Guia/>                
+            </div>
+            <div className="hidden md:flex gap-4">
+                <button
+                    onClick={toggleDarkMode}
+                    className={`text-white ${isDarkMode ? 'bg-yellow-300' : 'bg-gray-800'} px-4 py-2 rounded`}
+                >
+                    {isDarkMode ? 'Claro' : 'Oscuro'}
+                </button>
             </div>
             
         </nav>
