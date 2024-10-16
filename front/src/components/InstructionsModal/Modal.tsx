@@ -47,7 +47,6 @@ const CustomModal: React.FC<CustomModalProps> = ({ isOpen, onRequestClose, userR
                             <strong>Paso 4:</strong><em>Dale a "votar"</em>
                         </Link>
                     </div>
-                    Dale a "votar"
                 </li>
                 <br />
                 <li>
@@ -56,7 +55,6 @@ const CustomModal: React.FC<CustomModalProps> = ({ isOpen, onRequestClose, userR
                             <strong>Paso 5:</strong><em>Tu sufragio fue emitido</em>
                         </Link>
                     </div>
-                    Tu sufragio fue emitido
                 </li>
                 <br />
                 <li>
@@ -65,7 +63,6 @@ const CustomModal: React.FC<CustomModalProps> = ({ isOpen, onRequestClose, userR
                             <strong>Paso 6:</strong><em>Puedes cerrar sesión</em>
                         </Link>
                     </div>
-                    Puedes cerrar sesión
                 </li>
             </ul>
             <br />
