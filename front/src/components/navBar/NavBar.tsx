@@ -12,6 +12,7 @@ const NavBar = () => {
     const { userData, setUserData } = useAuth();
     const router = useRouter();
     const [bars, setBars] = useState<boolean>(false)
+    const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
     const [isDropdownOpen, setDropdownOpen] = useState(false); // Estado para el dropdown de Usuarios
     const [isCampaignDropdownOpen, setCampaignDropdownOpen] = useState(false); // Estado para el dropdown de Campañas
     const pathname = usePathname();
@@ -20,6 +21,7 @@ const NavBar = () => {
     const usersDropdownRef = useRef<HTMLLIElement>(null); // Referencia al li del dropdown de usuarios
 
     const APIRUL =process.env.AUTH0_ISSUER_BASE_URL
+
     useEffect(() => {
         const localUser = localStorage.getItem("userData");
         if (localUser) {
@@ -85,6 +87,11 @@ const NavBar = () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
+
+    const toggleDarkMode = () => {
+        setIsDarkMode(!isDarkMode);
+        document.documentElement.classList.toggle('dark');  // Cambia el modo oscuro global
+    }
     
     const userRoles = userData?.userData.roles.map(item => item.id)
     const isAdmin = userRoles?.includes(1)
@@ -207,9 +214,16 @@ const NavBar = () => {
             `}</style>
             <div className='hidden md:flex gap-8 text-white list-none'>
                 <p>{(isCandidate || isVotante || isModerator || isAdmin) && (<>{changePassword()}</>)}</p>
-                <Guia/>
+                <Guia/>                
             </div>
-            
+            <div className="hidden md:flex gap-4">
+                <button
+                    onClick={toggleDarkMode}
+                    className={`text-white ${isDarkMode ? 'bg-yellow-300' : 'bg-gray-800'} px-4 py-2 rounded`}
+                >
+                    {isDarkMode ? 'Claro' : 'Oscuro'}
+                </button>
+            </div>
         </nav>
     )
 }

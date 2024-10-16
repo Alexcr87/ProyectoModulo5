@@ -7,12 +7,20 @@
     grid-template-rows: auto 1fr auto;
     min-height: 100dvh;
 }
-:root{
-    --primary-color: #3758F9;
-    --secundary-color: #838bfa;
-    --tertiary-color: #13C296;
-    --cuartiary-color: #e8ebfd;
+:root {
+  --primary-color: #3758F9;
+  --secundary-color: #838bfa;
+  --tertiary-color: #13C296;
+  --cuartiary-color: #e8ebfd;
 }
+
+.dark {
+  --primary-color: #1f2937;
+  --secundary-color: #4b5563;
+  --tertiary-color: #48c49b;
+  --cuartiary-color: #d1d5db;
+}
+
 
 .large-swal-popup {
   max-width: 600px; /* Aumenta el ancho según lo necesario */
@@ -33,4 +41,3 @@
   margin-top: 0px; /* Eliminar margen superior */
   margin-bottom: 70px; /* Reducir el margen inferior entre el título y el Select */
 }
-

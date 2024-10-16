@@ -193,13 +193,13 @@ const Groups = () => {
       placeholder="Nombre del grupo"
       className="border rounded p-2 mr-2"
     />
-    <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+    <button type="submit" className="bg-primaryColor text-white p-2 rounded">
       Crear Grupo
     </button>
   </form>
   <button
     onClick={handleDeleteGroups}
-    className="bg-blue-500 text-white p-2 rounded mt-2 disabled:opacity-50"
+    className="bg-primaryColor text-white p-2 rounded mt-2 disabled:opacity-50"
     disabled={selectedGroups.length === 0} // Desactiva si no hay grupos seleccionados
   >
     Eliminar Grupos
@@ -232,7 +232,7 @@ const Groups = () => {
                   <td className="py-3 px-6 text-sm text-gray-700">
                     <button
                       onClick={() => handleEditGroup(group)}
-                      className="text-blue-500 hover:text-blue-700 font-medium"
+                      className="text-primaryColor hover:text-blue-700 font-medium"
                     >
                       editar grupo
                     </button>

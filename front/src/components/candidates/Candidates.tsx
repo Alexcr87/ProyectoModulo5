@@ -119,10 +119,10 @@ const CampaignsTable = () => {
                                 <td className="border p-2">{campaign.description}</td>
                                 <td className="border p-2">{campaign.location}</td>
                                 <td className="border p-2">{new Date(campaign.date).toLocaleDateString()}</td>
-                                <td className="border p-2 text-blue-500 hover:text-blue-700 cursor-pointer" onClick={() => handleAction(campaign.id)}>
+                                <td className="border p-2 text-blue-500 hover:text-primaryColor cursor-pointer" onClick={() => handleAction(campaign.id)}>
                                     {roles.includes('candidate') || roles.includes('voter') ? 'votar' : 'ver'}
                                 </td>
-                                <td className="border p-1 text-blue-500 hover:text-blue-700 cursor-pointer" onClick={() => handleUpdate(campaign.id)}>Actualizar </td>
+                                <td className="border p-1 text-blue-500 hover:text-primaryColor cursor-pointer" onClick={() => handleUpdate(campaign.id)}>Actualizar </td>
                             </tr>
                         ))}
                     </tbody>

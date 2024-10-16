@@ -104,13 +104,13 @@ const PopUpRegisterComponent = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <button
         onClick={() => setRegistroManual(true)}
-        className="bg-blue-500 text-white px-4 py-2 m-2 rounded"
+        className="bg-primaryColor text-white px-4 py-2 m-2 rounded"
       >
        Registro Manual
       </button>
       <button
         onClick={() => setRegistroMasivo(true)}
-        className="bg-green-500 text-white px-4 py-2 m-2 rounded"
+        className="bg-tertiaryColor text-white px-4 py-2 m-2 rounded"
       >
         Registro Masivo
       </button>
