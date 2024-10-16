@@ -3,17 +3,13 @@ import { AppModule } from './app.module';
 import { connectionSource } from './config/typeorm';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { loggerGlobal } from './middleware/logger.middleware';
-import { auth } from 'express-openid-connect';
-//import { config as auth0Config } from './config/auth0';
 
-/*if (process.env.ALLOW_INSECURE_TLS === 'true') {
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-}*/
+
 
 async function bootstrap() {
   await connectionSource.initialize();
   const app = await NestFactory.create(AppModule);
-  //app.use(auth(auth0Config));
+
   app.use(loggerGlobal);
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Votaciones 2024')
@@ -33,7 +29,7 @@ async function bootstrap() {
         'http://localhost:4000',  // Para entorno local
       ], // Incluye tu dominio de Vercel y localhost
       methods: 'GET,POST,PUT,PATCH,DELETE',
-      credentials: true, // Si estás manejando autenticación basada en cookies o encabezados de autenticación
+  // Si estás manejando autenticación basada en cookies o encabezados de autenticación
     });
   await app.listen(3000);
 }
