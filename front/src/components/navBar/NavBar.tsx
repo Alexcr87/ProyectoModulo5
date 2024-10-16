@@ -223,9 +223,9 @@ const NavBar = () => {
                     ) : (
                         <>
 
-                            {isAdmin && (<>{campaign()} {users()} {groups()} {results()} </>)}
+                            {isAdmin && (<>{groups()} {campaign()} {users()}  {results()} </>)}
                             {(isCandidate || isVotante) && (<>{campaigns()} {perfilVotante()}</>)}
-                            {isModerator && (<> {campaign()} {users()} {groups()} {results()} {perfilVotante()} </>)}
+                            {isModerator && (<> {groups()} {campaign()} {users()} {results()} {perfilVotante()} </>)}
 
                             <li className='md:bg-none  md:py-0' onClick={()=>setBars(!bars)}>
                                 <button onClick={handleClose}>Cerrar Sesión</button>
