@@ -80,13 +80,45 @@ export class MailService {
       apiUrl: process.env.API_URL,
     };
 
-    // Renderizar el HTML usando la plantilla y los datos
+    
     const htmlContent = ejs.render(template, data);
 
-    // Enviar el correo
+  
     await this.sendMail(
       email,
      "Bienvenido al Control Total de tus Estrategias Electorales",
+      htmlContent,
+    );
+  }
+
+  async sendPasswordResetEmail(email: string, userId: string): Promise<void> {
+    const templatePath = path.join(__dirname, '../../..', 'passwordResetTemplate.ejs');
+    let template: string;
+
+    try {
+      template = fs.readFileSync(templatePath, 'utf-8');
+    } catch (error) {
+      console.error('Error al leer la plantilla:', error);
+      return; 
+    }
+
+    
+    const resetLink = `${process.env.API_URL}/forgotPassword?email=${encodeURIComponent(email)}`;
+
+   
+    const data = {
+      title: 'Restablecimiento de Contraseña',
+      resetLink,  
+      apiUrl: process.env.API_URL,
+    };
+
+    
+    const htmlContent = ejs.render(template, data);
+
+  
+    await this.sendMail(
+      email,
+      'Instrucciones para Restablecer su Contraseña',
       htmlContent,
     );
   }

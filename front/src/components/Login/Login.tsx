@@ -4,7 +4,7 @@ import { IloginError, IloginProps } from '@/interfaces/ILogin';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { login } from '@/helpers/auth.helper';
+import { forgotPassword, login } from '@/helpers/auth.helper';
 import Swal from 'sweetalert2';
 import Input from '../ui/Input';
 import Boton from '../ui/Boton';
@@ -71,11 +71,13 @@ const LoginForm = () => {
                         toast.onmouseleave = Swal.resumeTimer;
                     }
                 });
-                if (redirect === 'changePassword') {
-                    router.push('/changePassword'); // Redirige al cambio de contraseña
-                } else {
+                if (clearUser.mustChangePassword) { // Redirige si debe cambiar su contraseña
+                    router.push('/changePassword');
+                  } else if (redirect === 'changePassword') {
+                    router.push('/changePassword'); // Redirige según el parámetro
+                  } else {
                     router.push('/');
-                }
+                  }
             } else {
                 const Toast = Swal.mixin({
                     toast: true,
@@ -112,6 +114,42 @@ const LoginForm = () => {
         window.location.href = auth0LoginUrl;
     };
 
+    // "Olvidé mi contraseña"
+    const handleForgotPassword = async () => {
+        const email = dataUser.email; // Usa el email del estado actual
+        if (!email) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Por favor, ingresa tu correo electrónico.',
+          });
+          return;
+        }
+      
+        try {
+          const response = await forgotPassword(email);
+          Swal.fire({
+            icon: 'success',
+            title: 'Correo Enviado',
+            text: response.message || 'Revisa tu correo para restablecer la contraseña.',
+          });
+        } catch (error: unknown) { // Especificar el tipo de error
+          if (error instanceof Error) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: error.message, // Ahora TypeScript reconoce que error tiene un mensaje
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Error desconocido.',
+            });
+          }
+        }
+      };
+      
     return (
         <div className='my-4 text-center flex flex-col items-center bg-white shadow-lg px-4 rounded-lg'>
             <Image src="/images/logo.png" alt="imagenLogo" width={350} height={350} className='m-10' />
@@ -157,6 +195,11 @@ const LoginForm = () => {
                     <i className="fa-brands fa-google mr-2"></i>
                     Continuar Con Google
                 </Boton>
+                <div className="mt-4">
+                    <a href="#" onClick={handleForgotPassword} className="text-blue-500 hover:underline">
+                        Olvidé mi contraseña
+                    </a>
+                </div>
             </form>
         </div>
     );

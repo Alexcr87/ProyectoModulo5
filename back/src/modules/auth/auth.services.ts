@@ -19,12 +19,14 @@ import { Repository } from 'typeorm';
 import { Role } from 'src/entities/roles.entity';
 import { User } from 'src/entities/user.entity';
 import { CreateUserDtoByAuth0 } from 'src/dto/createUserByAuth0Dto';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly mailService: MailService,
     @InjectRepository(Role)
     private roleRepository: Repository<Role>,
     @InjectRepository(User)
@@ -32,44 +34,55 @@ export class AuthService {
   ) {}
 
   async sigIn(login: CredentialUserDto) {
+    // Validar datos de entrada
     if (!login.email || !login.password) {
       throw new BadRequestException('Datos faltantes');
     }
-
+  
     const user = await this.userRepository.findOne({
       where: { email: login.email },
       relations: ['roles', 'groups'],
     });
-
-    const userHashedPassword = await bcrypt.compare(
-      login.password,
-      user.password,
-    );
-
-    if (!userHashedPassword) {
-      throw new UnauthorizedException('Nombre de ususario y/o contraseña incorrectos');
+  
+    if (!user) {
+      throw new UnauthorizedException('Usuario no encontrado');
     }
-
-    if (!user.isFirstLogin) {
-      // aca hay que hacer la logica del login
-      const userPayload = {
-        sub: user.id,
-        id: user.id,
-        email: user.email,
-        roles: user.roles.map((role) => role.name),
-      };
-      const token = this.jwtService.sign(userPayload);
-      const { password: excludedPassword, ...userData } = user;
+  
+    // Comparar contraseña
+    const userHashedPassword = await bcrypt.compare(login.password, user.password);
+  
+    if (!userHashedPassword) {
+      throw new UnauthorizedException('Nombre de usuario y/o contraseña incorrectos');
+    }
+  
+    const userPayload = {
+      sub: user.id,
+      id: user.id,
+      email: user.email,
+      roles: user.roles.map((role) => role.name),
+    };
+    const token = this.jwtService.sign(userPayload);
+    const { password: excludedPassword, ...userData } = user;
+  
+    // Verificar si el usuario debe cambiar la contraseña
+    if (user.isFirstLogin) {
       return {
-        succes: 'Login realizado, su sesion expira en 1 hora',
+        success: 'Login realizado, usted debe cambiar su contraseña',
         token,
         userData,
+        mustChangePassword: true, // Bandera para el frontend
       };
-    } else {
-      return { message: 'Usted debe cambiar su contraseña' };
     }
+  
+    // Respuesta normal si no necesita cambiar la contraseña
+    return {
+      success: 'Login realizado, su sesión expira en 1 hora',
+      token,
+      userData,
+      mustChangePassword: false, // Asegúrate de incluir esto también
+    };
   }
-
+  
   async newPasswordLogin(newCredential: newChangePasswordDto) {
     const { dni, password, newPassword, confirmPassword } = newCredential;
 
@@ -113,4 +126,18 @@ export class AuthService {
     }
     return `${newUser.email}, Ud. ya posee una cuenta`;
   }
+
+  async requestPasswordReset(email: string) {
+    // Verifica que el correo existe
+    const user = await this.userRepository.findOneBy({ email });
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    // Envía el correo de restablecimiento de contraseña
+    await this.mailService.sendPasswordResetEmail(email, user.id);
+    
+    return { message: 'Correo de restablecimiento de contraseña enviado' };
+  }
 }
+
