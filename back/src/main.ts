@@ -21,7 +21,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, document);
-    // estos dos parametros el primero es para que funcione el despligue el otro es para que funcione local descomentar el que necesiten
     app.enableCors({
       origin: [
        '*'
