@@ -96,8 +96,6 @@ export class UserController {
       }
 
     }
-  
-  
 
 
   @Put(":id")
@@ -116,11 +114,26 @@ export class UserController {
   }
 
   @Delete()
+  @HttpCode(204)
+  @ApiOperation({ summary: 'Delete multiple users by their IDs' })  // Descripción en Swagger
+  @ApiResponse({ status: 204, description: 'Users deleted successfully.' })
+  @ApiResponse({ status: 400, description: 'Invalid user IDs provided.' })
+  @ApiBody({
+    description: 'Array of user IDs to delete',
+    schema: {
+      type: 'object',
+      properties: {
+        userIds: {
+          type: 'array',
+          items: { type: 'string' },
+          example: ['user-id-1', 'user-id-2']
+        }
+      }
+    }
+  })
   async deleteUsers(@Body() body: { userIds: string[] }): Promise<void> {
     return this.userService.deleteUsers(body.userIds);
   }
-
-
 
   @Post()
   @HttpCode(201)
