@@ -24,9 +24,7 @@ async function bootstrap() {
     // estos dos parametros el primero es para que funcione el despligue el otro es para que funcione local descomentar el que necesiten
     app.enableCors({
       origin: [
-        'https://dev-xk4piwty04btc53j.us.auth0.com', //Dominio de Auth0
-        'https://proyecto-modulo5-projecto-5.vercel.app',  // Dominio de Vercel
-        'http://localhost:4000',  // Para entorno local
+       '*'
       ], // Incluye tu dominio de Vercel y localhost
       methods: 'GET,POST,PUT,PATCH,DELETE',
   // Si estás manejando autenticación basada en cookies o encabezados de autenticación
