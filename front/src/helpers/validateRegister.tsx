@@ -1,42 +1,49 @@
 import { IRegisterError, IRegisterProps } from "../components/Register/TypesRegister";
 
-
-export function validateRegisterForm(values: IRegisterProps): IRegisterError {
+export function validateRegisterForm(values: IRegisterProps, excludedFields: string[] = []): IRegisterError {
   const errors: IRegisterError = {};
 
   // Validación del email
-  if (values.email && !values.email.trim()) {
-    errors.email = "El correo electrónico es obligatorio.";
-  } else if ( values.email && !/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(values.email)) {
-    errors.email = "Correo electrónico inválido.";
+  if (!excludedFields.includes("email")) {
+    if (values.email && !values.email.trim()) {
+      errors.email = "El correo electrónico es obligatorio.";
+    } else if (values.email && !/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(values.email)) {
+      errors.email = "Correo electrónico inválido.";
+    }
   }
 
   // Validación del nombre
-  if (values.name && !values.name.trim()) {
-    errors.name = "El nombre es obligatorio.";
-  } else if (values.name && !/^[a-zA-Z\s]+$/.test(values.name)) {
-    errors.name = "El nombre no debe tener números ni símbolos.";
-  } else if (values.name && /\s{2,}/.test(values.name)) {
-    errors.name = "El nombre no debe tener más de dos espacios consecutivos.";
+  if (!excludedFields.includes("name")) {
+    if (values.name && !values.name.trim()) {
+      errors.name = "El nombre es obligatorio.";
+    } else if (values.name && !/^[a-zA-Z\s]+$/.test(values.name)) {
+      errors.name = "El nombre no debe tener números ni símbolos.";
+    } else if (values.name && /\s{2,}/.test(values.name)) {
+      errors.name = "El nombre no debe tener más de dos espacios consecutivos.";
+    }
   }
 
-  if (values.address && !values.address?.trim()) {
-    errors.address = "La dirección es obligatoria.";
+  // Validación de la dirección
+  if (!excludedFields.includes("address")) {
+    if (values.address && !values.address.trim()) {
+      errors.address = "La dirección es obligatoria.";
+    }
   }
 
-  // Validación del DNI (número y sin puntos)
-  if (values.dni && !values.dni.trim()) {
-    errors.dni = "El DNI es obligatorio.";
-  } else if (values.dni && !/^\d+$/.test(values.dni)) {
-    errors.dni = "El DNI debe ser un número sin puntos.";
+  // Validación del DNI
+  if (!excludedFields.includes("dni")) {
+    if (values.dni && !values.dni.trim()) {
+      errors.dni = "El DNI es obligatorio.";
+    } else if (values.dni && !/^\d+$/.test(values.dni)) {
+      errors.dni = "El DNI debe ser un número sin puntos.";
+    }
   }
 
   // Validación de la contraseña
-  
-    if(!values.password){
-      errors.password = "La contraseña es obligatoria"
-    }
-    if (values.password) {
+  if (!excludedFields.includes("password")) {
+    if (!values.password) {
+      errors.password = "La contraseña es obligatoria";
+    } else {
       if (values.password.length < 8) {
         errors.password = "La contraseña debe tener al menos 8 caracteres.";
       } else if (values.password.length > 20) {
@@ -48,61 +55,22 @@ export function validateRegisterForm(values: IRegisterProps): IRegisterError {
       } else if (/\s/.test(values.password)) {
         errors.password = "La contraseña no debe contener espacios.";
       }
-
     }
-    
-  
-   // Validación del país
-   if (values.country && !values.country?.trim()) {
-    errors.country = "El país es obligatorio.";
+  }
+
+  // Validación del país
+  if (!excludedFields.includes("country")) {
+    if (values.country && !values.country.trim()) {
+      errors.country = "El país es obligatorio.";
+    }
   }
 
   // Validación de la ciudad
-  if (values.city && !values.city?.trim()) {
-    errors.city = "La ciudad es obligatoria.";
-  }
-
-
-
-  return errors;
-}
-
-
-
-/*export function validateRegisterForm(values: IRegisterProps): IRegisterError {
-  const errors: IRegisterError = {};
-  
-  if (values.email && !/^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/.test(values.email)) {
-    errors.email = "Correo electronico invalido.";
-  }
-
-  if (values.name && !/^[a-zA-Z\s]+$/.test(values.name)) {
-    errors.name = "El nombre no debe tener numeros y simbolos.";
-  }
-  if (!values.name.trim()) {
-  
-  }
-  if (/\s{2,}/.test(values.name)) {
-    errors.name = "El nombre no debe tener mas de dos espacios consecutivos.";
-  }
-
-  if (values.dni && !/^\d+$/.test(values.dni)) {
-    errors.dni = "dni debe ser un número.";
-  }
-  if (typeof values.password === 'string') {
-    if (values.password.length < 8) {
-      errors.password = "Password must be at least 8 characters long.";
-    } else if (values.password.length > 20) {
-      errors.password = "Password must be less than 20 characters.";
-    } else if (!/[A-Z]/.test(values.password)) {
-      errors.password = "Password must contain at least one uppercase letter.";
-    } else if (!/[!@#$%^&*]/.test(values.password)) {
-      errors.password = "Password must contain at least one special character.";
-    } else if (/\s/.test(values.password)) {
-      errors.password = "Password must not contain spaces.";
+  if (!excludedFields.includes("city")) {
+    if (values.city && !values.city.trim()) {
+      errors.city = "La ciudad es obligatoria.";
     }
   }
 
-
   return errors;
-};*/
+}
