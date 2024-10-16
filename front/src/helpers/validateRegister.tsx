@@ -16,7 +16,7 @@ export function validateRegisterForm(values: IRegisterProps, excludedFields: str
   if (!excludedFields.includes("name")) {
     if (values.name && !values.name.trim()) {
       errors.name = "El nombre es obligatorio.";
-    } else if (values.name && !/^[a-zA-Z\s]+$/.test(values.name)) {
+    } else if (values.name && !/^[a-zA-ZñÑ\s]+$/.test(values.name)) {
       errors.name = "El nombre no debe tener números ni símbolos.";
     } else if (values.name && /\s{2,}/.test(values.name)) {
       errors.name = "El nombre no debe tener más de dos espacios consecutivos.";
@@ -36,6 +36,8 @@ export function validateRegisterForm(values: IRegisterProps, excludedFields: str
       errors.dni = "El DNI es obligatorio.";
     } else if (values.dni && !/^\d+$/.test(values.dni)) {
       errors.dni = "El DNI debe ser un número sin puntos.";
+    }else if (values.dni && values.dni.length > 8) {
+      errors.dni = "El DNI debe tener como máximo 8 números.";
     }
   }
 
