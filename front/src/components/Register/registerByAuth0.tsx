@@ -36,13 +36,17 @@ const initialState = {
     country: "",
     city: ""
   };
+   
 
+  
   const [dataUser, setDataUser] = useState<IRegisterProps>(initialState);
   const [errors, setErrors] = useState<IRegisterError>(initialState);
   const [isFormValid, setIsFormValid] = useState(false);
   
   const [cities, setCities] = useState<City[]>([]);
   const [touched, setTouched] = useState<IRegisterError>(initialState);
+  
+
 
   // const handleBlur = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
   //   const { name } = event.target;
