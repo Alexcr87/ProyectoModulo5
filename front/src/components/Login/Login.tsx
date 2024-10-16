@@ -144,7 +144,8 @@ const LoginForm = () => {
                 {errors.password && (
                     <div className="text-red-500 text-xs mt-2">{errors.password}</div>
                 )}
-                
+                <a href="">¿olvido su contraseña?</a>
+                <hr className='my-4'/>
                 <Boton 
                     type='submit'
                     disabled={Object.keys(errors).length > 0}>
