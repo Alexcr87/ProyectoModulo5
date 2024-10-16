@@ -47,7 +47,6 @@ city: userData?.userData?.city || "",
   const [dataUser, setDataUser] = useState<IRegisterProps>(initialState);
   const [errors, setErrors] = useState<IRegisterError>(initialState);
   const [isFormValid, setIsFormValid] = useState(false);
-  
   const [cities, setCities] = useState<City[]>([]);
   const [touched, setTouched] = useState<IRegisterError>(initialState);
   
@@ -188,6 +187,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     );
   }
 
+
   return (
     <>
       {loading && (
@@ -285,10 +285,10 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                   id="email-address"
                   name="email"
                   type="email"
-                  value={user?.email!}
+                  value={dataUser.email}
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  placeholder={user?.email!}
+                  placeholder={dataUser.email!}
                   disabled
                 />
                 {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
