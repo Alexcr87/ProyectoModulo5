@@ -174,7 +174,8 @@ const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
                   Nombre
                   <span
                     className="ml-2 text-blue-500 cursor-pointer"
-                    data-tooltip="Ingresa tu nombre completo aquí."
+                    data-tooltip-id="nameTooltip"
+                    data-tooltip-content="Ingresa tu nombre completo aquí."
                   >
                     ℹ️
                   </span>
@@ -195,7 +196,8 @@ const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
                   DNI
                   <span
                     className="ml-2 text-blue-500 cursor-pointer"
-                    data-tooltip="Introduce tu número de DNI."
+                    data-tooltip-id="dniTooltip"
+                    data-tooltip-content="Introduce tu número de DNI."
                   >
                     ℹ️
                   </span>
@@ -216,7 +218,8 @@ const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
                   Dirección
                   <span
                     className="ml-2 text-blue-500 cursor-pointer"
-                    data-tooltip="Introduce tu dirección completa."
+                    data-tooltip-id="addressTooltip"
+                    data-tooltip-content="Introduce tu dirección completa."
                   >
                     ℹ️
                   </span>
@@ -236,7 +239,8 @@ const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
                   Correo Electrónico
                   <span
                     className="ml-2 text-blue-500 cursor-pointer"
-                    data-tooltip="El correo está prellenado y no se puede cambiar."
+                    data-tooltip-id="emailTooltip"
+                    data-tooltip-content="El correo está prellenado y no se puede cambiar."
                   >
                     ℹ️
                   </span>
@@ -261,7 +265,8 @@ const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
                   País
                   <span
                     className="ml-2 text-blue-500 cursor-pointer"
-                    data-tooltip="Selecciona tu país de residencia."
+                    data-tooltip-id="countryTooltip"
+                    data-tooltip-content="Selecciona tu país de residencia."
                   >
                     ℹ️
                   </span>
@@ -287,7 +292,8 @@ const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
                   Ciudad
                   <span
                     className="ml-2 text-blue-500 cursor-pointer"
-                    data-tooltip="Selecciona tu ciudad."
+                    data-tooltip-id="cityTooltip"
+                    data-tooltip-content="Selecciona tu ciudad."
                   >
                     ℹ️
                   </span>
@@ -324,6 +330,14 @@ const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
           </div>
         </div>
       </form>
+  
+      {/* Tooltip components */}
+      <Tooltip id="nameTooltip" />
+      <Tooltip id="dniTooltip" />
+      <Tooltip id="addressTooltip" />
+      <Tooltip id="emailTooltip" />
+      <Tooltip id="countryTooltip" />
+      <Tooltip id="cityTooltip" />
     </>
   );
 };
