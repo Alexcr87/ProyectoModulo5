@@ -199,7 +199,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         <div className="col-start-1 col-end-13">
           <div className="grid grid-cols-12">
             <div className="col-start-5 col-end-9 mt-[2.5em] my-[2em] text-center text-xl">
-              COMPLETAR REGISTRO
+              MI PERFIL
             </div>
           </div>
   
@@ -353,7 +353,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
   
               <div className="mt-4">
                 <Boton type="submit" disabled={!isFormValid || loading}>
-                  {loading ? <Spinner /> : 'Completar Registro'}
+                  {loading ? <Spinner /> : 'Actualizar Datos'}
                 </Boton>
               </div>
   
