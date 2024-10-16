@@ -98,7 +98,7 @@ const initialState = {
     });
   };
   const handleAuth0Login = () => {
-    const auth0LoginUrl = `${process.env.NEXT_PUBLIC_API_URL}/login`;
+    const auth0LoginUrl = `${process.env.NEXT_PUBLIC_AUTH0_BASE_URL}/login`;
     window.location.href = auth0LoginUrl;
 };
 
