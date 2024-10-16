@@ -1,4 +1,4 @@
-import RegisterUser from "@/components/pricingTable/Register/registerUser";
+import RegisterUser from "@/components/Register/registerUser";
 
 
 

@@ -76,12 +76,8 @@ const NavBar = () => {
     
 
     const handleClose = () => {
-        if (process.env.NEXT_PUBLIC_AUTH0_ISSUER_BASE_URL && process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID) {
-            // Usar Auth0 para cerrar sesión si están definidas las variables de entorno
-            const auth0LoginUrl = `${process.env.NEXT_PUBLIC_AUTH0_ISSUER_BASE_URL}/api/auth/logout`;
-            window.location.href = auth0LoginUrl;
-        } else {
-            // Cierre de sesión local
+            router.push('/api/auth/logout')
+             // Cierre de sesión local
             localStorage.clear();
             setUserData(null);
             const Toast = Swal.mixin({
@@ -101,7 +97,7 @@ const NavBar = () => {
                 title: "Gracias por visitar nuestra web, vuelve pronto"
             });
             router.push('/');
-        }
+        
     }
     
 
