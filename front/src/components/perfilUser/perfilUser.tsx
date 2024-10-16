@@ -19,6 +19,8 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import { getUserByID, updateUserById } from "@/helpers/user.helper";
 import { userSession } from "@/interfaces/Session";
 import { IRegisterError, IRegisterProps } from "../Register/TypesRegister";
+import UpdateCandidate from "../updateCandidate/updateCandidate";
+
 
 const VoterProfile = () => {
 const router = useRouter();
@@ -26,6 +28,7 @@ const { userData, setUserData } = useAuth();
 const [loading, setLoading] = useState(false);
 const [isSubmitted, setIsSubmitted] = useState(false);
 const {user} =useUser()
+
 
 /*const localUser = localStorage.getItem("userSesion");
 if (localUser) {
@@ -186,7 +189,8 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       </div>
     );
   }
-
+  const userRoles = userData?.userData.roles.map(item => item.id)
+  const isCandidate = userRoles?.includes(2)
 
   return (
     <>
@@ -313,7 +317,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                   className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 >
-                  <option value="">Selecciona un país</option>
+                  <option value="">{dataUser.country}</option>
                   {countries.map(country => (
                     <option key={country.id} value={country.id}>
                       {country.name}
@@ -341,7 +345,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                   className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 >
-                  <option value="">Selecciona una ciudad</option>
+                  <option value="">{dataUser.city}</option>
                   {cities.map(city => (
                     <option key={city.id} value={city.id}>
                       {city.name}
@@ -366,7 +370,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
           </div>
         </div>
       </form>
-  
+     {isCandidate && <UpdateCandidate/>}
       {/* Tooltip components */}
       <Tooltip id="nameTooltip" />
       <Tooltip id="dniTooltip" />
