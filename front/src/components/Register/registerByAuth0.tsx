@@ -15,12 +15,14 @@ import { Country, City } from "@/components/utils/types";
 import { citiesByCountry } from "@/components/utils/citiesByCountry";
 import { countries } from "../utils/countries";
 import { Tooltip } from 'react-tooltip';
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 const RegisterByAuth0 = () => {
 const router = useRouter();
 const { userData, auth0UserData } = useAuth();
 const [loading, setLoading] = useState(false);
 const [isSubmitted, setIsSubmitted] = useState(false);
+const {user} =useUser()
 
 /*const localUser = localStorage.getItem("userSesion");
 if (localUser) {
@@ -28,10 +30,10 @@ if (localUser) {
 }*/
 
 const initialState = {
-    name: `${auth0UserData?.name}`,
+    name: `${user?.name}`,
     dni: "",
     address: "",
-    email: `${auth0UserData?.email}`,
+    email: `${user?.email}`,
     password: "12345aS@",
     country: "",
     city: ""
@@ -189,7 +191,7 @@ const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
                   type="text"
                   value={dataUser.name}
                   onChange={handleChange}
-                  placeholder={auth0UserData?.name}
+                  placeholder={user?.name!}
                 />
                 {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
               </div>
@@ -249,10 +251,10 @@ const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
                   id="email-address"
                   name="email"
                   type="email"
-                  value={auth0UserData?.email}
+                  value={user?.email!}
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  placeholder={auth0UserData?.email}
+                  placeholder={user?.email!}
                   disabled
                 />
                 {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
