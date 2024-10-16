@@ -149,33 +149,33 @@ const NavBar = () => {
    } 
 
    const results = () =>{
-    return ( <li>
+    return ( <li onClick={()=>setBars(!bars)}>
         <Link href="/results">Resultados</Link>
     </li>)
    } 
    const groups = () =>{
-    return ( <li>
+    return ( <li onClick={()=>setBars(!bars)}>
         <Link href="/groups">Grupos</Link>
     </li>)
    } 
    const candidates = () =>{
-    return (<li>
+    return (<li onClick={()=>setBars(!bars)}>
             <Link href="/candidates">Candidatos</Link>
     </li>)
    }
    const perfilVotante = () =>{
-    return (<li>
+    return (<li onClick={()=>setBars(!bars)}>
             <Link href="/perfilUser">Mi perfil</Link>
     </li>)
    }
 
    const campaigns = () =>{
-    return (<li>
+    return (<li onClick={()=>setBars(!bars)}>
             <Link href="/campaigns">Campañas</Link>
     </li>)
    }
    const changePassword = () =>{
-    return (<li>
+    return (<li onClick={()=>setBars(!bars)}>
             <Link href="/changePassword">Cambio Contraseña</Link>
     </li>)
    }
