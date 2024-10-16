@@ -54,6 +54,8 @@ export function validateRegisterForm(values: IRegisterProps, excludedFields: str
         errors.password = "La contraseña debe contener al menos un carácter especial.";
       } else if (/\s/.test(values.password)) {
         errors.password = "La contraseña no debe contener espacios.";
+      }else if(!/[a-z]/.test(values.password)){
+        errors.password = "La contraseña debe tener al menos una letra minúscula."
       }
     }
   }
