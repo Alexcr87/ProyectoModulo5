@@ -1,4 +1,4 @@
-import { IRegisterError, IRegisterProps } from "../components/pricingTable/Register/TypesRegister";
+import { IRegisterError, IRegisterProps } from "../components/Register/TypesRegister";
 
 
 export function validateRegisterForm(values: IRegisterProps): IRegisterError {

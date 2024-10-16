@@ -6,14 +6,14 @@ import { IRegisterError, IRegisterProps } from "./TypesRegister";
 
 import { validateRegisterForm } from "@/helpers/validateRegister";
 import Swal from "sweetalert2";
-import Input from "../../ui/Input";
-import Boton from "../../ui/Boton";
+import Input from "../ui/Input";
+import Boton from "../ui/Boton";
 import { useAuth } from "@/context/Authontext";
 import { register } from "@/helpers/auth.helper";
-import Spinner from "../../ui/Spinner";
+import Spinner from "../ui/Spinner";
 import { Country, City } from "@/components/utils/types";
 import { citiesByCountry } from "@/components/utils/citiesByCountry";
-import { countries } from "../../utils/countries";
+import { countries } from "../utils/countries";
 import { Tooltip } from 'react-tooltip';
 
 const RegisterByAuth0 = () => {
@@ -52,23 +52,23 @@ const initialState = {
   //   });
   // };
   
-  // useEffect(() => {
-  //   // Cargar datos del local storage
-  //   const localUser = localStorage.getItem("userSesion");
-  //   if (localUser) {
-  //     const user = JSON.parse(localUser);
-  //     // Verifica que las propiedades existan antes de asignar
-  //     setDataUser({
-  //       name: user.name || "",
-  //       dni: user.dni || "",
-  //       address:user.address || "",
-  //       email: user.email,
-  //       password:user.password || "asjkd12321S@", // Si decides no usar la contraseña, omítela
-  //       country:"",
-  //       city:""
-  //     });
-  //   }
-  // }, []);
+   useEffect(() => {
+     // Cargar datos del local storage
+     const localUser = localStorage.getItem("userSesion");
+     if (localUser) {
+       const user = JSON.parse(localUser);
+       // Verifica que las propiedades existan antes de asignar
+       setDataUser({
+         name: user.name || "",
+         dni: user.dni || "",
+         address:user.address || "",
+         email: user.email,
+         password:user.password || "asjkd12321S@", // Si decides no usar la contraseña, omítela
+        country:"",
+         city:""
+       });
+     }
+   }, []);
   const fetchCitiesByCountryId = (countryId: number) => {
     return citiesByCountry.filter((city: { id_country: number; }) => city.id_country === countryId);
 };

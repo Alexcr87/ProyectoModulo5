@@ -5,14 +5,14 @@ import { useEffect, useState } from "react";
 import { IRegisterError, IRegisterProps } from "./TypesRegister";
 import { validateRegisterForm } from "@/helpers/validateRegister";
 import Swal from "sweetalert2";
-import Input from "../../ui/Input";
-import Boton from "../../ui/Boton";
+import Input from "../ui/Input";
+import Boton from "../ui/Boton";
 import { useAuth } from "@/context/Authontext";
 import { register } from "@/helpers/auth.helper";
-import Spinner from "../../ui/Spinner";
+import Spinner from "../ui/Spinner";
 import { Country, City } from "@/components/utils/types";
 import { citiesByCountry } from "@/components/utils/citiesByCountry";
-import { countries } from "../../utils/countries";
+import { countries } from "../utils/countries";
 import { Tooltip } from 'react-tooltip'
 
 const RegisterByAuth0 = () => {
