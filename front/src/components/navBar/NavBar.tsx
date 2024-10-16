@@ -7,6 +7,9 @@ import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
 import { useAuth } from '@/context/Authontext'
 import Guia from "../Guia/guia"
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { userSession } from '@/interfaces/Session'
+import { IRole } from '@/interfaces/IRole'
 
 const NavBar = () => {
     const { userData, setUserData } = useAuth();
@@ -15,11 +18,10 @@ const NavBar = () => {
     const [isDropdownOpen, setDropdownOpen] = useState(false); // Estado para el dropdown de Usuarios
     const [isCampaignDropdownOpen, setCampaignDropdownOpen] = useState(false); // Estado para el dropdown de Campañas
     const pathname = usePathname();
-
     const campaignDropdownRef = useRef<HTMLLIElement>(null); // Referencia al li del dropdown de campañas
     const usersDropdownRef = useRef<HTMLLIElement>(null); // Referencia al li del dropdown de usuarios
-
-    const APIRUL =process.env.AUTH0_ISSUER_BASE_URL
+    const {user} =useUser()
+  
     useEffect(() => {
         const localUser = localStorage.getItem("userData");
         if (localUser) {
@@ -27,10 +29,56 @@ const NavBar = () => {
         }
     }, [pathname]);
 
+    useEffect(() => {
+        const checkUserInBackend = async () => {
+            if (user) {
+                try {
+                    const emailCheckResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/email/${user.email}`);
+            
+                    if (!emailCheckResponse.ok) {
+                        const errorData = await emailCheckResponse.json();
+                        console.error("Error: ", errorData.message);
+                        router.push('/registerByAuth0'); // Redirigir si no se encuentra el usuario
+                        return;
+                    }
+            
+                    const newUser = await emailCheckResponse.json(); // Obtener los datos del usuario si existe
+            
+                    // Crear el objeto de sesión del usuario
+                    const usersession: userSession = {
+                        token: user.sub || '', // Manejar el caso donde `user.sid` puede ser indefinido
+                        userData: {
+                            id: newUser.id,
+                            email: newUser.email,
+                            name: newUser.name,
+                            city: newUser.city,
+                            dni: newUser.dni,
+                            country: newUser.country,
+                            roles: newUser.roles.map((role: IRole) => ({
+                                id: role.id,
+                                name: role.name,
+                                description: role.description,
+                            })),
+                            groups: newUser.groups, // Asegúrate de que esto sea correcto
+                        },
+                    };
+            
+                    setUserData(usersession); // Guardar los datos del usuario en el contexto de autenticación
+                    router.push('/'); // Redirigir a la página de inicio
+                } catch (error) {
+                    console.error('Error during fetch to /user/email:', error);
+                }
+            }
+        };
+
+        checkUserInBackend();
+    }, [user, router, setUserData]);
+    
+
     const handleClose = () => {
         if (process.env.NEXT_PUBLIC_AUTH0_ISSUER_BASE_URL && process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID) {
             // Usar Auth0 para cerrar sesión si están definidas las variables de entorno
-            const auth0LoginUrl = `${process.env.NEXT_PUBLIC_AUTH0_ISSUER_BASE_URL}/v2/logout?returnTo=${process.env.NEXT_PUBLIC_API_URL}/logouts&client_id=${process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID}`;
+            const auth0LoginUrl = `${process.env.NEXT_PUBLIC_AUTH0_ISSUER_BASE_URL}/api/auth/logout`;
             window.location.href = auth0LoginUrl;
         } else {
             // Cierre de sesión local
