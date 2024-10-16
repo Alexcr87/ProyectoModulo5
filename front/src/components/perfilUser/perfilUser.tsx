@@ -196,6 +196,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                   type="text"
                   value={userData?.userData.dni}
                   onChange={handleChange}
+                  disabled
                   placeholder="DNI"
                   data-tooltip-id="dni-tooltip"
                   data-tooltip-content="Ingresa tu número de DNI"
@@ -226,6 +227,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                   name="email"
                   type="email"
                   value={dataUser.email}
+                  disabled
                   onChange={handleChange}
                   placeholder={userData?.userData.email}
                   data-tooltip-id="email-tooltip"
