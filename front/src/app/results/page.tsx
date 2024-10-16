@@ -13,6 +13,7 @@ const Result = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setLoading(true)
                 const data = await getCampaigns();
                 setDatas(data);
             } catch (err) {

@@ -10,6 +10,7 @@ import { useAuth } from '@/context/Authontext'
 import Select from "react-select";
 import IGroup from "@/interfaces/IGroup";
 import { useRouter } from 'next/navigation'
+import BotonExcel from "../ui/BotonExcel";
 
 const PopUpRegisterComponent = ({ registroManual, registroMasivo}: { registroManual: boolean, registroMasivo: boolean  }) => {
   // const [registroManual, setRegistroManual] = useState(false);
@@ -163,7 +164,7 @@ const PopUpRegisterComponent = ({ registroManual, registroMasivo}: { registroMan
             />
             </div>
             <div className="flex justify-between mt-4">
-              <Boton onClick={handleUpload}>Subir Excel</Boton>
+              <BotonExcel onClick={handleUpload} loading={loading}>Subir Excel</BotonExcel>
             </div>
           </div>
         </div>

@@ -11,7 +11,7 @@ import { Tooltip } from 'react-tooltip';
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
-const updateCandidate = () =>  {
+const UpdateCandidate = () =>  {
 
 
   return (
@@ -153,4 +153,4 @@ const updateCandidate = () =>  {
     </div>
   );
 };
-export default updateCandidate;
+export default UpdateCandidate;

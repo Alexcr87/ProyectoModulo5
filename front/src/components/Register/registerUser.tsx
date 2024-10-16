@@ -65,6 +65,13 @@ const initialState = {
       ...dataUser,
       [name]: value,
     });
+
+    const newErrors = validateRegisterForm({
+      ...dataUser,
+      [name]: value, // Cambiar solo el campo que se está actualizando
+    });
+  
+    setErrors(newErrors);
   };
 
   const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -123,10 +130,10 @@ const initialState = {
     }
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
     const errors = validateRegisterForm(dataUser);
     setErrors(errors);
-  }, [dataUser]);
+  }, [dataUser]);*/
 
   return (
     <form onSubmit={handleSubmit}>
@@ -195,7 +202,7 @@ const initialState = {
                 onChange={handleChange}
                 placeholder="**********"
                 data-tooltip-id="password-tooltip"
-                data-tooltip-content="Debe contener al menos 8 caracteres"
+                data-tooltip-content="Debe contener al menos 8 caracteres, una minúscula, una mayúscula y un caracter especial"
               />
               <Tooltip id="password-tooltip" />
               {touched.password && errors.password && <span className="text-red-500 text-sm">{errors.password}</span>}

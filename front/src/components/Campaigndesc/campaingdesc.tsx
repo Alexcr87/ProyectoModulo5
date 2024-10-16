@@ -109,7 +109,7 @@ const Campaingdesc = () => {
     }
   }, [userData, roles, searchParams]);
 
-  if (loading) return <p>Cargando campaña...</p>;
+  if (loading) return <Spinner />;
   if (error) return <p>{error}</p>;
 
   return (

@@ -223,7 +223,7 @@ const NavBar = () => {
                     ) : (
                         <>
 
-                            {isAdmin && (<>{groups()} {campaign()} {users()}  {results()} </>)}
+                            {isAdmin && (<>{groups()} {campaign()} {users()}  {results()} {perfilVotante()}</>)}
                             {(isCandidate || isVotante) && (<>{campaigns()} {perfilVotante()}</>)}
                             {isModerator && (<> {groups()} {campaign()} {users()} {results()} {perfilVotante()} </>)}
 

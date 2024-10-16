@@ -222,11 +222,11 @@ const Register = () => {
 
   return (
     <>
-      {loading && (
+      {/* {loading && (
         <div className="flex justify-center items-center">
-          <Spinner /> {/* Muestra el spinner si hay carga */}
+          <Spinner /> {/* Muestra el spinner si hay carga 
         </div>
-      )}
+      )} */}
 
       <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">
         <div className="col-start-1 col-end-13">
@@ -351,13 +351,12 @@ const Register = () => {
               {/* Botón de Enviar */}
               <Boton
                 type="submit"
-                disabled={!isFormValid}
+                disabled={!isFormValid || loading} // Deshabilita el botón mientras está cargando
                 data-tooltip-id="submit-tooltip"
                 data-tooltip-content={!isFormValid ? "Completa todos los campos requeridos" : "Haz clic para enviar"}
-              >
-                Registrar
+                >
+                {loading ? <Spinner /> : "Registrar"} {/* Muestra el spinner si está cargando */}
               </Boton>
-              <Tooltip id="submit-tooltip" />
 
               {/* Imagen de registro */}
               <img

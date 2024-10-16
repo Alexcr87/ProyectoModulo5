@@ -1,85 +1,108 @@
-"use client"
+"use client";
 
-import { useAuth } from "@/context/Authontext";
-import { useRouter } from "next/navigation";
-
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { IRegisterError, IRegisterProps } from "../Register/TypesRegister";
-import Swal from "sweetalert2";
+
+
 import { validateRegisterForm } from "@/helpers/validateRegister";
+import Swal from "sweetalert2";
 import Input from "../ui/Input";
 import Boton from "../ui/Boton";
+import { useAuth } from "@/context/Authontext";
+import { register } from "@/helpers/auth.helper";
+import Spinner from "../ui/Spinner";
+import { Country, City } from "@/components/utils/types";
+import { citiesByCountry } from "@/components/utils/citiesByCountry";
+import { countries } from "../utils/countries";
+import { Tooltip } from 'react-tooltip';
+import { useUser } from "@auth0/nextjs-auth0/client";
 import { getUserByID, updateUserById } from "@/helpers/user.helper";
 import { userSession } from "@/interfaces/Session";
-import Spinner from "../ui/Spinner";
-import { Tooltip } from 'react-tooltip';
+import { IRegisterError, IRegisterProps } from "../Register/TypesRegister";
+import UpdateCandidate from "../updateCandidate/updateCandidate";
+
 
 const VoterProfile = () => {
-  const router = useRouter();
-  const { userData, setUserData } = useAuth();
+const router = useRouter();
+const { userData, setUserData } = useAuth();
+const [loading, setLoading] = useState(false);
+const [isSubmitted, setIsSubmitted] = useState(false);
+const {user} =useUser()
+
+
+/*const localUser = localStorage.getItem("userSesion");
+if (localUser) {
+  userAuth = JSON.parse(localUser);
+}*/
+
+const initialState = {
+  id: userData?.userData?.id || "",
+name: userData?.userData?.name || "",
+dni: userData?.userData?.dni ? String(userData?.userData?.dni) : "",
+address: userData?.userData?.address || "",
+email: userData?.userData?.email || "",
+country: userData?.userData?.country || "",
+city: userData?.userData?.city || "",
+  };
+   
+
   
-  const initialState = {
-    id: userData?.userData?.id || "",
-  name: userData?.userData?.name || "",
-  dni: userData?.userData?.dni ? String(userData?.userData?.dni) : "",
-  address: userData?.userData?.address || "",
-  email: userData?.userData?.email || "",
-  country: userData?.userData?.country || "",
-  city: userData?.userData?.city || "",
-    };
-    
-    const [dataUser, setDataUser] = useState<IRegisterProps>(initialState);
-    const [errors, setErrors] = useState<IRegisterError>(initialState);
-    const [isFormValid, setIsFormValid] = useState(false);
-    const [countries] = useState<string[]>(["Argentina", "Chile", "Colombia"]);
-    const [cities, setCities] = useState<string[]>([]);
-    const [touched, setTouched] = useState<IRegisterError>(initialState);
-    const [loading, setLoading] = useState<boolean>(false)
+  const [dataUser, setDataUser] = useState<IRegisterProps>(initialState);
+  const [errors, setErrors] = useState<IRegisterError>(initialState);
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [cities, setCities] = useState<City[]>([]);
+  const [touched, setTouched] = useState<IRegisterError>(initialState);
   
-    const handleBlur = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-     const { name } = event.target;
-       setTouched({
-        ...touched,
-        [name]: true,
-      });
-     };
+
+
+  // const handleBlur = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  //   const { name } = event.target;
+  //   setTouched({
+  //     ...touched,
+  //     [name]: true,
+  //   });
+  // };
   
-    const fetchCitiesByCountry = (country: string) => {
-      const countryCitiesMap: Record<string, string[]> = {
-        "Argentina": ["Buenos Aires", "Córdoba", "Rosario"],
-        "Chile": ["Santiago", "Valparaíso", "Concepción"],
-        "Colombia": ["Bogotá", "Medellín", "Cali"],
-      };
-      return countryCitiesMap[country] || [];
-    };
-  
-    useEffect(() => {
-      setIsFormValid(
-        dataUser.name.trim() !== '' &&
-        dataUser.email.trim() !== '' &&
-        String(dataUser.dni).trim() !== '' &&
-        dataUser.address.trim() !== '' &&
-        dataUser.country.trim() !== '' &&
-        dataUser.city.trim() !== ''
-      );
-    }, [dataUser]);
-  
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      const { name, value } = event.target;
-      setDataUser({
-        ...dataUser,
-        [name]: value,
-      });
-    };
-  
-    const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-      const selectedCountry = event.target.value;
-      setDataUser({ ...dataUser, country: selectedCountry });
-  
-      // Fetch cities based on the selected country
-      const fetchedCities = fetchCitiesByCountry(selectedCountry);
-      setCities(fetchedCities);
-    };
+  useEffect(() => {
+    setIsFormValid(
+      dataUser.name.trim() !== '' &&
+      dataUser.email.trim() !== '' &&
+      dataUser.address.trim() !== '' &&
+      dataUser.country.trim() !== '' &&
+      dataUser.city.trim() !== ''
+    );
+  }, [dataUser]);
+
+  const fetchCitiesByCountryId = (countryId: number) => {
+    return citiesByCountry.filter((city: { id_country: number; }) => city.id_country === countryId);
+};
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = event.target;
+    setDataUser({
+      ...dataUser,
+      [name]: value,
+    });
+  };
+ 
+
+const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const selectedCountryId = Number(event.target.value);
+  const selectedCountryName = countries.find(country => country.id === selectedCountryId)?.name || "";
+
+  setDataUser((prevDataUser) => ({
+    ...prevDataUser,
+    country: selectedCountryName,
+    city: "" // Reiniciar la ciudad al cambiar el país
+  }));
+
+  const fetchedCities = fetchCitiesByCountryId(selectedCountryId);
+  setCities(fetchedCities);
+
+  if (isSubmitted) {
+    setIsSubmitted(false);
+  }
+};
 
 const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
   event.preventDefault();
@@ -146,148 +169,198 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
   }
 };
 
+  useEffect(() => {
+    const errors = validateRegisterForm(dataUser, ["dni", "email"]);
+    setErrors(errors);
+  }, [dataUser]);
 
-    useEffect(() => {
-      const errors = validateRegisterForm(dataUser);
-      setErrors(errors);
-    }, [dataUser]);
-    
-    if (loading) {
-      return (
-        <div className="flex justify-center items-center h-screen">
-          <Spinner /> {/* Mostrar Spinner mientras carga */}
-        </div>
-      );
-    }
-  
+  const handleBlur = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name } = event.target;
+    setTouched({
+      ...touched,
+      [name]: true,
+    });
+  };
+
+  if (loading) {
     return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner /> {/* Mostrar Spinner mientras carga */}
+      </div>
+    );
+  }
+  const userRoles = userData?.userData.roles.map(item => item.id)
+  const isCandidate = userRoles?.includes(2)
+
+  return (
+    <>
+      {loading && (
+        <div className="flex justify-center items-center">
+          <Spinner /> {/* Muestra el spinner */}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">
         <div className="col-start-1 col-end-13">
           <div className="grid grid-cols-12">
             <div className="col-start-5 col-end-9 mt-[2.5em] my-[2em] text-center text-xl">
-              ACTUALIZACIÓN DE DATOS
+              MI PERFIL
             </div>
           </div>
   
           <div className="flex">
-            {/* Primera columna */}
             <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
-              <div className="flex flex-col">
-                {/* Nombre */}
+              <div className="flex flex-col relative">
+                <label className="flex items-center">
+                  Nombre
+                  <span
+                    className="ml-2 text-blue-500 cursor-pointer"
+                    data-tooltip-id="nameTooltip"
+                    data-tooltip-content="Ingresa tu nombre completo aquí."
+                  >
+                    ℹ️
+                  </span>
+                </label>
                 <Input
                   id="name"
                   name="name"
                   type="text"
                   value={dataUser.name}
                   onChange={handleChange}
-                  placeholder={userData?.userData.name}
-                  data-tooltip-id="name-tooltip"
-                  data-tooltip-content="Ingresa tu nombre completo"
+                  placeholder={user?.name!}
                 />
-                <Tooltip id="name-tooltip" />
                 {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
               </div>
   
-              {/* DNI */}
-              <div className="flex flex-col mt-4">
+              <div className="flex flex-col mt-4 relative">
+                <label className="flex items-center">
+                  DNI
+                  <span
+                    className="ml-2 text-blue-500 cursor-pointer"
+                    data-tooltip-id="dniTooltip"
+                    data-tooltip-content="Introduce tu número de DNI."
+                  >
+                    ℹ️
+                  </span>
+                </label>
                 <Input
                   id="dni"
                   name="dni"
                   type="text"
-                  value={userData?.userData.dni}
+                  value={dataUser.dni}
                   onChange={handleChange}
-                  disabled
                   placeholder="DNI"
-                  data-tooltip-id="dni-tooltip"
-                  data-tooltip-content="Ingresa tu número de DNI"
+                  disabled
                 />
-                <Tooltip id="dni-tooltip" />
-                {errors.dni && <span className="text-red-500 text-sm">{errors.dni}</span>}
               </div>
   
-              {/* Dirección */}
-              <div className="flex flex-col mt-4">
+              <div className="flex flex-col mt-4 relative">
+                <label className="flex items-center">
+                  Dirección
+                  <span
+                    className="ml-2 text-blue-500 cursor-pointer"
+                    data-tooltip-id="addressTooltip"
+                    data-tooltip-content="Introduce tu dirección completa."
+                  >
+                    ℹ️
+                  </span>
+                </label>
                 <Input
                   name="address"
                   type="text"
                   value={dataUser.address}
                   onChange={handleChange}
-                  placeholder={userData?.userData.address}
-                  data-tooltip-id="address-tooltip"
-                  data-tooltip-content="Ingresa tu dirección completa"
+                  placeholder="Dirección"
                 />
-                <Tooltip id="address-tooltip" />
                 {errors.address && <span className="text-red-500 text-sm">{errors.address}</span>}
               </div>
   
-              {/* Correo Electrónico */}
-              <div className="flex flex-col mt-4">
+              <div className="flex flex-col mt-4 relative">
+                <label className="flex items-center">
+                  Correo Electrónico
+                  <span
+                    className="ml-2 text-blue-500 cursor-pointer"
+                    data-tooltip-id="emailTooltip"
+                    data-tooltip-content="El correo está prellenado y no se puede cambiar."
+                  >
+                    ℹ️
+                  </span>
+                </label>
                 <Input
                   id="email-address"
                   name="email"
                   type="email"
                   value={dataUser.email}
-                  disabled
+                  onBlur={handleBlur}
                   onChange={handleChange}
-                  placeholder={userData?.userData.email}
-                  data-tooltip-id="email-tooltip"
-                  data-tooltip-content="Ingresa un correo electrónico válido"
+                  placeholder={dataUser.email!}
+                  disabled
                 />
-                <Tooltip id="email-tooltip" />
                 {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
               </div>
             </div>
   
-            {/* Segunda columna */}
             <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
-              <div className="flex flex-col">
-                {/* País */}
+              <div className="flex flex-col relative">
+                <label className="flex items-center">
+                  País
+                  <span
+                    className="ml-2 text-blue-500 cursor-pointer"
+                    data-tooltip-id="countryTooltip"
+                    data-tooltip-content="Selecciona tu país de residencia."
+                  >
+                    ℹ️
+                  </span>
+                </label>
                 <select
                   name="country"
-                  value={dataUser.country}
                   onChange={handleCountryChange}
-                  className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
-                    border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 focus:border-primaryColor 
-                    dark:focus:border-primaryColor focus-visible:shadow-none"
-                  data-tooltip-id="country-tooltip"
-                  data-tooltip-content="Selecciona tu país de residencia"
+                  className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
                 >
-                  <option value={`${userData?.userData.country}`}>{userData?.userData.country}</option>
+                  <option value="">{dataUser.country}</option>
                   {countries.map(country => (
-                    <option key={country} value={country}>{country}</option>
+                    <option key={country.id} value={country.id}>
+                      {country.name}
+                    </option>
                   ))}
                 </select>
-                <Tooltip id="country-tooltip" />
-                {errors.country && <span className="text-red-500 text-sm">{errors.country}</span>}
+                {errors.country && <p className="text-red-500">{errors.country}</p>}
               </div>
   
-              {/* Ciudad */}
-              <div className="flex flex-col my-4">
+              <div className="flex flex-col mt-4 relative">
+                <label className="flex items-center">
+                  Ciudad
+                  <span
+                    className="ml-2 text-blue-500 cursor-pointer"
+                    data-tooltip-id="cityTooltip"
+                    data-tooltip-content="Selecciona tu ciudad."
+                  >
+                    ℹ️
+                  </span>
+                </label>
                 <select
                   name="city"
                   value={dataUser.city}
                   onChange={handleChange}
-                  className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
-                    border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 focus:border-primaryColor 
-                    dark:focus:border-primaryColor focus-visible:shadow-none"
-                  data-tooltip-id="city-tooltip"
-                  data-tooltip-content="Selecciona tu ciudad"
+                  className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
                 >
-                  <option value={`${userData?.userData.city}`}>{userData?.userData.city}</option>
+                  <option value="">{dataUser.city}</option>
                   {cities.map(city => (
-                    <option key={city} value={city}>{city}</option>
+                    <option key={city.id} value={city.id}>
+                      {city.name}
+                    </option>
                   ))}
                 </select>
-                <Tooltip id="city-tooltip" />
                 {errors.city && <span className="text-red-500 text-sm">{errors.city}</span>}
               </div>
   
-              {/* Botón de Enviar */}
-              <Boton type="submit">
-                Actualizar Datos
-              </Boton>
+              <div className="mt-4">
+                <Boton type="submit" disabled={!isFormValid || loading}>
+                  {loading ? <Spinner /> : 'Actualizar Datos'}
+                </Boton>
+              </div>
   
-              {/* Imagen */}
               <img
                 src="/images/registerImage.png"
                 alt="Small icon"
@@ -297,11 +370,16 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
           </div>
         </div>
       </form>
-    );
-  };
-  
-  export default VoterProfile;
+     {isCandidate && <UpdateCandidate/>}
+      {/* Tooltip components */}
+      <Tooltip id="nameTooltip" />
+      <Tooltip id="dniTooltip" />
+      <Tooltip id="addressTooltip" />
+      <Tooltip id="emailTooltip" />
+      <Tooltip id="countryTooltip" />
+      <Tooltip id="cityTooltip" />
+    </>
+  );
+};
 
-function getUserById(id: string) {
-  throw new Error("Function not implemented.");
-}
+export default VoterProfile;
