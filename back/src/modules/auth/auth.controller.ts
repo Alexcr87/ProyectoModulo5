@@ -112,44 +112,4 @@ export class AuthController {
 
       }}
   }
-
-
-  @Get('protected')
-  async userby(@Req() req: Request) {
-  try {
-    if (!req.oidc || !req.oidc.user) {
-      throw new BadRequestException('User not found');
-    }
-    console.log(req.oidc.user);
-    
-    return req.oidc.user;
-  } catch (error) {
-    throw new BadRequestException(error.message)
-  }
-    
-  }
-
-  @Get('profile')
-  async userByAuth(
-    @Req() req: Request,
-  ): Promise<CreateUserDtoByAuth0 | string> {
-    const user = req.oidc.user;
-
-    if (!user) {
-      throw new BadRequestException('Usuario no encontrado en la solicitud');
-    }
-
-    if (!user.email) {
-      throw new BadRequestException('Correo electrónico no encontrado en la solicitud');
-    }
-
-    const newUser: Partial<CreateUserDtoByAuth0> = {
-      email: user.email,
-      name: user.name,
-      dni: 5487748,
-      password: '12345aS@',
-    };
-
-    return this.authservice.createUserByAuth0(newUser);
-  }
 }

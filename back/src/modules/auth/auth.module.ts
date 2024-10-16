@@ -24,9 +24,5 @@ import { AccountSeedModule } from 'src/seeder/accountSeeder/seed.module';
   providers: [AuthService, UserService, MailService],
 })
 
-export class AuthModule implements NestModule{
-    configure(consumer: MiddlewareConsumer) {
-        //consumer.apply(requiresAuth()).forRoutes('auth/protected')
-    }
-};
+export class AuthModule {};
 
