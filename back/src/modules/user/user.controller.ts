@@ -18,6 +18,7 @@ import { CreateUserDtoByAuth0 } from "src/dto/createUserByAuth0Dto";
 import { promises } from "dns";
 import { updateUserDto } from "src/dto/updateUserDto";
 import { ExcelFilePipe } from "src/pipes/maxSizeAndFormatPlanilla";
+import { ChangePasswordDto } from "src/dto/changePasswordDto";
 
 
 
@@ -207,4 +208,17 @@ export class UserController {
     return updatedUser;
   }
 
+  @Post('change-password')
+  async changePassword(@Body() changePasswordDto: ChangePasswordDto): Promise<User> {
+    console.log('Received change password request:', changePasswordDto);
+      const { email, newPassword, confirmPassword } = changePasswordDto;
+  
+      // Verifica si las contraseñas coinciden
+      if (newPassword !== confirmPassword) {
+          throw new BadRequestException('Las contraseñas no coinciden.');
+      }
+  
+      return this.userService.changePasswordByEmail(email, changePasswordDto);
+  }
+  
 }

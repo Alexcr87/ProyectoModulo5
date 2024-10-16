@@ -110,6 +110,12 @@ export class AuthController {
       } else {
         throw new HttpException('Error inesperado', HttpStatus.BAD_REQUEST);
 
-      }}
+      }
+    }
+  }
+
+  @Post('forgot-password')
+  async requestPasswordReset(@Body('email') email: string) {
+    return await this.authservice.requestPasswordReset(email);
   }
 }
