@@ -6,13 +6,12 @@ import { register } from "@/helpers/auth.helper";
 import { validateRegisterForm } from "@/helpers/validateRegister";
 import Swal from 'sweetalert2';
 import { useAuth } from "@/context/Authontext";
-
 import { countries } from "@/components/utils/countries"; // Importa la lista de países
 import { citiesByCountry } from "@/components/utils/citiesByCountry";
 import { Country, City } from "@/components/utils/types";
 
 import Spinner from "../ui/Spinner";
-
+import { Tooltip } from 'react-tooltip'
 
 const RegisterModerator = () => {
   const router = useRouter();
@@ -136,106 +135,206 @@ const RegisterModerator = () => {
 
   return (
     <div className="flex flex-col items-center bg-blue-50 min-h-screen p-8">
-      <h1 className="text-4xl font-bold text-black-800 mb-2 text-center">Comienza a ser parte de Voting System</h1>
+      <h1 className="text-4xl font-bold text-black-800 mb-2 text-center">
+        Comienza a ser parte de Voting System
+      </h1>
       <h2 className="text-lg text-center text-gray-700 mb-4">
         Regístrate y gestiona el sistema de votación con nuestra plataforma.
       </h2>
-      <form className="w-full max-w-lg space-y-6 bg-white shadow-lg rounded-lg p-8 border border-gray-200" autoComplete="off" onSubmit={handleSubmit}>
-        <input 
-          type="text" 
-          name="name" 
-          placeholder="Nombre" 
-          value={dataUser.name} 
-          onChange={handleChange} 
-          className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required 
-          autoComplete="off"
-        />
-        {errors.name && <p className="text-red-500">{errors.name}</p>}
-        
-        <input 
-          type="text" 
-          name="dni" 
-          placeholder="DNI" 
-          value={dataUser.dni} 
-          onChange={handleChange} 
-          className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required 
-          autoComplete="off"
-        />
-        {errors.dni && <p className="text-red-500">{errors.dni}</p>}
-        
-        <input 
-          type="text" 
-          name="address" 
-          placeholder="Dirección" 
-          value={dataUser.address} 
-          onChange={handleChange} 
-          className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required 
-          autoComplete="off"
-        />
-        {errors.address && <p className="text-red-500">{errors.address}</p>}
-        
-        <input 
-          type="email" 
-          name="email" 
-          placeholder="Correo Electrónico" 
-          value={dataUser.email} 
-          onChange={handleChange} 
-          className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required 
-          autoComplete="off"
-        />
-        {errors.email && <p className="text-red-500">{errors.email}</p>}
-        
-        <input 
-          type="password" 
-          name="password" 
-          placeholder="Contraseña" 
-          value={dataUser.password} 
-          onChange={handleChange} 
-          className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required 
-          autoComplete="off"
-        />
-        {errors.password && <p className="text-red-500">{errors.password}</p>}
-        
-        <select
-          name="country"
-          onChange={handleCountryChange}
-          className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
+      <form 
+        className="w-full max-w-lg space-y-6 bg-white shadow-lg rounded-lg p-8 border border-gray-200"
+        autoComplete="off" 
+        onSubmit={handleSubmit}
+      >
+        {/* Nombre */}
+        <div className="relative">
+          <label className="flex items-center">
+            Nombre
+            <span
+              className="ml-2 text-blue-500 cursor-pointer"
+              data-tooltip-id="tooltip-name"
+            >
+              ℹ️
+            </span>
+            <Tooltip id="tooltip-name" place="top" content="Ingresa tu nombre completo aquí." />
+          </label>
+          <input
+            type="text"
+            name="name"
+            placeholder="Nombre"
+            value={dataUser.name}
+            onChange={handleChange}
+            className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+            autoComplete="off"
+          />
+          {errors.name && <p className="text-red-500">{errors.name}</p>}
+        </div>
+  
+        {/* DNI */}
+        <div className="relative">
+          <label className="flex items-center">
+            DNI
+            <span
+              className="ml-2 text-blue-500 cursor-pointer"
+              data-tooltip-id="tooltip-dni"
+            >
+              ℹ️
+            </span>
+            <Tooltip id="tooltip-dni" place="top" content="Introduce tu número de DNI." />
+          </label>
+          <input
+            type="text"
+            name="dni"
+            placeholder="DNI"
+            value={dataUser.dni}
+            onChange={handleChange}
+            className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+            autoComplete="off"
+          />
+          {errors.dni && <p className="text-red-500">{errors.dni}</p>}
+        </div>
+  
+        {/* Dirección */}
+        <div className="relative">
+          <label className="flex items-center">
+            Dirección
+            <span
+              className="ml-2 text-blue-500 cursor-pointer"
+              data-tooltip-id="tooltip-address"
+            >
+              ℹ️
+            </span>
+            <Tooltip id="tooltip-address" place="top" content="Introduce tu dirección completa." />
+          </label>
+          <input
+            type="text"
+            name="address"
+            placeholder="Dirección"
+            value={dataUser.address}
+            onChange={handleChange}
+            className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+            autoComplete="off"
+          />
+          {errors.address && <p className="text-red-500">{errors.address}</p>}
+        </div>
+  
+        {/* Correo Electrónico */}
+        <div className="relative">
+          <label className="flex items-center">
+            Correo Electrónico
+            <span
+              className="ml-2 text-blue-500 cursor-pointer"
+              data-tooltip-id="tooltip-email"
+            >
+              ℹ️
+            </span>
+            <Tooltip id="tooltip-email" place="top" content="Introduce un correo electrónico válido." />
+          </label>
+          <input
+            type="email"
+            name="email"
+            placeholder="Correo Electrónico"
+            value={dataUser.email}
+            onChange={handleChange}
+            className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+            autoComplete="off"
+          />
+          {errors.email && <p className="text-red-500">{errors.email}</p>}
+        </div>
+  
+        {/* Contraseña */}
+        <div className="relative">
+          <label className="flex items-center">
+            Contraseña
+            <span
+              className="ml-2 text-blue-500 cursor-pointer"
+              data-tooltip-id="tooltip-password"
+            >
+              ℹ️
+            </span>
+            <Tooltip id="tooltip-password" place="top" content="La contraseña debe tener al menos 8 caracteres." />
+          </label>
+          <input
+            type="password"
+            name="password"
+            placeholder="Contraseña"
+            value={dataUser.password}
+            onChange={handleChange}
+            className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+            autoComplete="off"
+          />
+          {errors.password && <p className="text-red-500">{errors.password}</p>}
+        </div>
+  
+        {/* País */}
+        <div className="relative">
+          <label className="flex items-center">
+            País
+            <span
+              className="ml-2 text-blue-500 cursor-pointer"
+              data-tooltip-id="tooltip-country"
+            >
+              ℹ️
+            </span>
+            <Tooltip id="tooltip-country" place="top" content="Selecciona tu país de residencia." />
+          </label>
+          <select
+            name="country"
+            onChange={handleCountryChange}
+            className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          >
+            <option value="">Selecciona un país</option>
+            {countries.map(country => (
+              <option key={country.id} value={country.id}>
+                {country.name}
+              </option>
+            ))}
+          </select>
+          {errors.country && <p className="text-red-500">{errors.country}</p>}
+        </div>
+  
+        {/* Ciudad */}
+        <div className="relative">
+          <label className="flex items-center">
+            Ciudad
+            <span
+              className="ml-2 text-blue-500 cursor-pointer"
+              data-tooltip-id="tooltip-city"
+            >
+              ℹ️
+            </span>
+            <Tooltip id="tooltip-city" place="top" content="Selecciona la ciudad en la que resides." />
+          </label>
+          <select
+            name="city"
+            value={dataUser.city}
+            onChange={handleChange}
+            className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          >
+            <option value="">Selecciona una ciudad</option>
+            {cities.map(city => (
+              <option key={city.id} value={city.id}>
+                {city.name}
+              </option>
+            ))}
+          </select>
+          {errors.city && <p className="text-red-500">{errors.city}</p>}
+        </div>
+  
+        {/* Botón de registro */}
+        <button
+          type="submit"
+          className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded transition duration-200"
+          disabled={!isFormValid}
         >
-          <option value="">Selecciona un país</option>
-          {countries.map(country => (
-              <option key={country.id} value={country.id}>{country.name}</option>
-          ))}
-        </select>
-        {errors.country && <p className="text-red-500">{errors.country}</p>}
-        
-        <select
-          name="city"
-          value={dataUser.city}
-          onChange={handleChange}
-          className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        >
-          <option value="">Selecciona una ciudad</option>
-          {cities.map(city => (
-              <option key={city.id} value={city.id}>{city.name}</option>
-          ))}
-        </select>
-        {errors.city && <p className="text-red-500">{errors.city}</p>}
-        
-        <button 
-            type="submit" 
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded transition duration-200"
-            disabled={!isFormValid}
-        >
-
           {isLoading ? <Spinner /> : "Registrarse"}
-
         </button>
       </form>
     </div>

@@ -14,6 +14,7 @@ import Spinner from "../ui/Spinner";
 import { Country, City } from "@/components/utils/types";
 import { citiesByCountry } from "@/components/utils/citiesByCountry";
 import { countries } from "../utils/countries";
+import { Tooltip } from 'react-tooltip';
 
 const RegisterByAuth0 = () => {
 const router = useRouter();
@@ -153,118 +154,178 @@ const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
 
   return (
     <>
-    {loading && (
-      <div className="flex justify-center items-center">
-        <Spinner /> {/* Muestra el spinner */}
-      </div>
-    )}
-    <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">
-      <div className="col-start-1 col-end-13">
-        <div className="grid grid-cols-12">
-          <div className="col-start-5 col-end-9 mt-[2.5em] my-[2em] text-center text-xl">
-            COMPLETAR REGISTRO
+      {loading && (
+        <div className="flex justify-center items-center">
+          <Spinner /> {/* Muestra el spinner */}
+        </div>
+      )}
+      <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">
+        <div className="col-start-1 col-end-13">
+          <div className="grid grid-cols-12">
+            <div className="col-start-5 col-end-9 mt-[2.5em] my-[2em] text-center text-xl">
+              COMPLETAR REGISTRO
+            </div>
+          </div>
+  
+          <div className="flex">
+            <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
+              <div className="flex flex-col relative">
+                <label className="flex items-center">
+                  Nombre
+                  <span
+                    className="ml-2 text-blue-500 cursor-pointer"
+                    data-tooltip="Ingresa tu nombre completo aquí."
+                  >
+                    ℹ️
+                  </span>
+                </label>
+                <Input
+                  id="name"
+                  name="name"
+                  type="text"
+                  value={dataUser.name}
+                  onChange={handleChange}
+                  placeholder={auth0UserData?.name}
+                />
+                {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
+              </div>
+  
+              <div className="flex flex-col mt-4 relative">
+                <label className="flex items-center">
+                  DNI
+                  <span
+                    className="ml-2 text-blue-500 cursor-pointer"
+                    data-tooltip="Introduce tu número de DNI."
+                  >
+                    ℹ️
+                  </span>
+                </label>
+                <Input
+                  id="dni"
+                  name="dni"
+                  type="text"
+                  value={dataUser.dni}
+                  onChange={handleChange}
+                  placeholder="DNI"
+                />
+                {errors.dni && <span className="text-red-500 text-sm">{errors.dni}</span>}
+              </div>
+  
+              <div className="flex flex-col mt-4 relative">
+                <label className="flex items-center">
+                  Dirección
+                  <span
+                    className="ml-2 text-blue-500 cursor-pointer"
+                    data-tooltip="Introduce tu dirección completa."
+                  >
+                    ℹ️
+                  </span>
+                </label>
+                <Input
+                  name="address"
+                  type="text"
+                  value={dataUser.address}
+                  onChange={handleChange}
+                  placeholder="Dirección"
+                />
+                {errors.address && <span className="text-red-500 text-sm">{errors.address}</span>}
+              </div>
+  
+              <div className="flex flex-col mt-4 relative">
+                <label className="flex items-center">
+                  Correo Electrónico
+                  <span
+                    className="ml-2 text-blue-500 cursor-pointer"
+                    data-tooltip="El correo está prellenado y no se puede cambiar."
+                  >
+                    ℹ️
+                  </span>
+                </label>
+                <Input
+                  id="email-address"
+                  name="email"
+                  type="email"
+                  value={auth0UserData?.email}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  placeholder={auth0UserData?.email}
+                  disabled
+                />
+                {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
+              </div>
+            </div>
+  
+            <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
+              <div className="flex flex-col relative">
+                <label className="flex items-center">
+                  País
+                  <span
+                    className="ml-2 text-blue-500 cursor-pointer"
+                    data-tooltip="Selecciona tu país de residencia."
+                  >
+                    ℹ️
+                  </span>
+                </label>
+                <select
+                  name="country"
+                  onChange={handleCountryChange}
+                  className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                >
+                  <option value="">Selecciona un país</option>
+                  {countries.map(country => (
+                    <option key={country.id} value={country.id}>
+                      {country.name}
+                    </option>
+                  ))}
+                </select>
+                {errors.country && <p className="text-red-500">{errors.country}</p>}
+              </div>
+  
+              <div className="flex flex-col mt-4 relative">
+                <label className="flex items-center">
+                  Ciudad
+                  <span
+                    className="ml-2 text-blue-500 cursor-pointer"
+                    data-tooltip="Selecciona tu ciudad."
+                  >
+                    ℹ️
+                  </span>
+                </label>
+                <select
+                  name="city"
+                  value={dataUser.city}
+                  onChange={handleChange}
+                  className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                >
+                  <option value="">Selecciona una ciudad</option>
+                  {cities.map(city => (
+                    <option key={city.id} value={city.id}>
+                      {city.name}
+                    </option>
+                  ))}
+                </select>
+                {errors.city && <span className="text-red-500 text-sm">{errors.city}</span>}
+              </div>
+  
+              <div className="mt-4">
+                <Boton type="submit" disabled={!isFormValid || loading}>
+                  {loading ? <Spinner /> : 'Completar Registro'}
+                </Boton>
+              </div>
+  
+              <img
+                src="/images/registerImage.png"
+                alt="Small icon"
+                className="w-52 mx-auto mt-12"
+              />
+            </div>
           </div>
         </div>
-
-        <div className="flex">
-          <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
-            <div className="flex flex-col">
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                value={dataUser.name}
-                onChange={handleChange}
-                placeholder={auth0UserData?.name}
-              />
-              {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
-            </div>
-
-            <div className="flex flex-col mt-4">
-              <Input
-                id="dni"
-                name="dni"
-                type="text"
-                value={dataUser.dni}
-                onChange={handleChange}
-                placeholder="DNI"
-              />
-              {errors.dni && <span className="text-red-500 text-sm">{errors.dni}</span>}
-            </div>
-
-            <div className="flex flex-col mt-4">
-              <Input
-                name="address"
-                type="text"
-                value={dataUser.address}
-                onChange={handleChange}
-                placeholder="Dirección"
-              />
-              {errors.address && <span className="text-red-500 text-sm">{errors.address}</span>}
-            </div>
-
-            <div className="flex flex-col mt-4">
-              <Input
-                id="email-address"
-                name="email"
-                type="email"
-                value={auth0UserData?.email}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                placeholder={auth0UserData?.email}
-                disabled
-                
-              />
-              {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
-            </div>
-          </div>
-
-          <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
-            <div className="flex flex-col">
-            <select
-          name="country"
-          onChange={handleCountryChange}
-          className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        >
-          <option value="">Selecciona un país</option>
-          {countries.map(country => (
-              <option key={country.id} value={country.id}>{country.name}</option>
-          ))}
-        </select>
-        {errors.country && <p className="text-red-500">{errors.country}</p>}
-        <div className="flex flex-col mt-4">
-        <select
-          name="city"
-          value={dataUser.city}
-          onChange={handleChange}
-          className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        >
-          <option value="">Selecciona una ciudad</option>
-          {cities.map(city => (
-              <option key={city.id} value={city.id}>{city.name}</option>
-          ))}
-        </select>
-            </div>
-            {errors.city && <span className="text-red-500 text-sm">{errors.city}</span>}
-            </div>
-            <div className="mt-4">
-            <Boton type="submit" disabled={!isFormValid || loading}>
-              {loading ? <Spinner /> : 'Completar Registro'}
-            </Boton>
-            </div>
-            <img
-              src="/images/registerImage.png"
-              alt="Small icon"
-              className="w-52 mx-auto mt-12"
-            />
-          </div>
-        </div>
-      </div>
-    </form>
+      </form>
     </>
-);
+  );
 };
 
 export default RegisterByAuth0;

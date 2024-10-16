@@ -6,7 +6,7 @@ import Input from "../ui/Input";
 import InputFile from "../ui/InputFile";
 import Textarea from "../ui/Textarea";
 import Select from "../ui/Select";
-
+import { Tooltip } from 'react-tooltip';
 
 
 
@@ -104,60 +104,81 @@ const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
     <div className="flex w-[60%] justify-center items-center h-[80%] p-6 bg-white shadow-lg rounded-lg">
       <form onSubmit={handleSubmit} className="w-11/12 space-y-4">
         <h1 className="text-lg font-bold text-center">Crear Candidato</h1>
-          <Input
-            type="text"
-            placeholder="Postulación"
-            value={postulation}
-            onChange={(e) => setPostulation(e.target.value)}
-            required
-          />
-          <Input
-            type="text"
-            placeholder="Lista"
-            value={list}
-            onChange={(e) => setList(e.target.value)}
-            required
-          />
-          {/* <Textarea
-            value={campaignDescription}
-            placeholder="Descripción de la campaña"
-            onChange={(e) => setCampaignDescription(e.target.value)}
-            required
-          /> */}
+
+        {/* Postulación */}
+        <Input
+          type="text"
+          placeholder="Postulación"
+          value={postulation}
+          onChange={(e) => setPostulation(e.target.value)}
+          required
+          data-tooltip-id="postulation-tooltip"
+          data-tooltip-content="Introduce el nombre de la postulación"
+        />
+        <Tooltip id="postulation-tooltip" />
+
+        {/* Lista */}
+        <Input
+          type="text"
+          placeholder="Lista"
+          value={list}
+          onChange={(e) => setList(e.target.value)}
+          required
+          data-tooltip-id="list-tooltip"
+          data-tooltip-content="Indica el nombre de la lista"
+        />
+        <Tooltip id="list-tooltip" />
+
+        {/* Propuestas */}
         <div className="rounded-md">
           <label className="block text-sm font-medium text-gray-700">Propuestas</label>
           <Textarea
             value={proposals.join("\n")}
             onChange={handleProposalsChange}
             placeholder="Escribe cada propuesta en una nueva línea"
+            data-tooltip-id="proposals-tooltip"
+            data-tooltip-content="Separa cada propuesta con un salto de línea"
           />
+          <Tooltip id="proposals-tooltip" />
         </div>
+
+        {/* Campaña */}
         <div className="rounded-md">
           <label className="block text-sm font-medium text-gray-700">Campaña</label>
           <Select
             value={selectedCampaignId}
             onChange={(e) => setSelectedCampaignId(e.target.value)}
             required
+            data-tooltip-id="campaign-tooltip"
+            data-tooltip-content="Selecciona una campaña relacionada"
           >
             <option value="">Seleccione una campaña</option>
             {campaigns.map(campaign => (
               <option key={campaign.id} value={campaign.id}>{campaign.name}</option>
             ))}
           </Select>
+          <Tooltip id="campaign-tooltip" />
         </div>
+
+        {/* Imagen del candidato */}
         <div className="rounded-md">
           <label className="block text-sm font-medium text-gray-700">Imagen del candidato (JPG)</label>
           <InputFile
             type="file"
             accept="image/jpeg"
             onChange={handleFileChange}
+            data-tooltip-id="image-tooltip"
+            data-tooltip-content="Sube una imagen en formato JPG"
           />
+          <Tooltip id="image-tooltip" />
         </div>
+
+        {/* Botón de Crear */}
         <div className="flex justify-center">
           <div className="w-[20%]">
-            <Boton>Crear Candidato </Boton>
+            <Boton>Crear Candidato</Boton>
           </div>
-         </div>
+        </div>
       </form>
     </div>
   );

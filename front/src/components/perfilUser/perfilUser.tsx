@@ -12,6 +12,7 @@ import Boton from "../ui/Boton";
 import { getUserByID, updateUserById } from "@/helpers/user.helper";
 import { userSession } from "@/interfaces/Session";
 import Spinner from "../ui/Spinner";
+import { Tooltip } from 'react-tooltip';
 
 const VoterProfile = () => {
   const router = useRouter();
@@ -164,13 +165,15 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         <div className="col-start-1 col-end-13">
           <div className="grid grid-cols-12">
             <div className="col-start-5 col-end-9 mt-[2.5em] my-[2em] text-center text-xl">
-              ACTUALIZACION DE DATOS
+              ACTUALIZACIÓN DE DATOS
             </div>
           </div>
   
           <div className="flex">
+            {/* Primera columna */}
             <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
               <div className="flex flex-col">
+                {/* Nombre */}
                 <Input
                   id="name"
                   name="name"
@@ -178,10 +181,14 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                   value={dataUser.name}
                   onChange={handleChange}
                   placeholder={userData?.userData.name}
+                  data-tooltip-id="name-tooltip"
+                  data-tooltip-content="Ingresa tu nombre completo"
                 />
+                <Tooltip id="name-tooltip" />
                 {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
               </div>
   
+              {/* DNI */}
               <div className="flex flex-col mt-4">
                 <Input
                   id="dni"
@@ -190,10 +197,14 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                   value={userData?.userData.dni}
                   onChange={handleChange}
                   placeholder="DNI"
+                  data-tooltip-id="dni-tooltip"
+                  data-tooltip-content="Ingresa tu número de DNI"
                 />
+                <Tooltip id="dni-tooltip" />
                 {errors.dni && <span className="text-red-500 text-sm">{errors.dni}</span>}
               </div>
   
+              {/* Dirección */}
               <div className="flex flex-col mt-4">
                 <Input
                   name="address"
@@ -201,9 +212,14 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                   value={dataUser.address}
                   onChange={handleChange}
                   placeholder={userData?.userData.address}
+                  data-tooltip-id="address-tooltip"
+                  data-tooltip-content="Ingresa tu dirección completa"
                 />
+                <Tooltip id="address-tooltip" />
                 {errors.address && <span className="text-red-500 text-sm">{errors.address}</span>}
               </div>
+  
+              {/* Correo Electrónico */}
               <div className="flex flex-col mt-4">
                 <Input
                   id="email-address"
@@ -212,29 +228,38 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                   value={dataUser.email}
                   onChange={handleChange}
                   placeholder={userData?.userData.email}
+                  data-tooltip-id="email-tooltip"
+                  data-tooltip-content="Ingresa un correo electrónico válido"
                 />
+                <Tooltip id="email-tooltip" />
                 {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
               </div>
             </div>
   
+            {/* Segunda columna */}
             <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
               <div className="flex flex-col">
+                {/* País */}
                 <select
                   name="country"
                   value={dataUser.country}
                   onChange={handleCountryChange}
                   className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
-                  border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 focus:border-primaryColor 
-                  dark:focus:border-primaryColor focus-visible:shadow-none"
+                    border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 focus:border-primaryColor 
+                    dark:focus:border-primaryColor focus-visible:shadow-none"
+                  data-tooltip-id="country-tooltip"
+                  data-tooltip-content="Selecciona tu país de residencia"
                 >
                   <option value={`${userData?.userData.country}`}>{userData?.userData.country}</option>
                   {countries.map(country => (
                     <option key={country} value={country}>{country}</option>
                   ))}
                 </select>
+                <Tooltip id="country-tooltip" />
                 {errors.country && <span className="text-red-500 text-sm">{errors.country}</span>}
               </div>
   
+              {/* Ciudad */}
               <div className="flex flex-col my-4">
                 <select
                   name="city"
@@ -243,20 +268,24 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                   className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
                     border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 focus:border-primaryColor 
                     dark:focus:border-primaryColor focus-visible:shadow-none"
+                  data-tooltip-id="city-tooltip"
+                  data-tooltip-content="Selecciona tu ciudad"
                 >
                   <option value={`${userData?.userData.city}`}>{userData?.userData.city}</option>
                   {cities.map(city => (
                     <option key={city} value={city}>{city}</option>
                   ))}
                 </select>
+                <Tooltip id="city-tooltip" />
                 {errors.city && <span className="text-red-500 text-sm">{errors.city}</span>}
               </div>
-              <Boton
-                type="submit"
-                //disabled={!isFormValid}
-              >
+  
+              {/* Botón de Enviar */}
+              <Boton type="submit">
                 Actualizar Datos
               </Boton>
+  
+              {/* Imagen */}
               <img
                 src="/images/registerImage.png"
                 alt="Small icon"
