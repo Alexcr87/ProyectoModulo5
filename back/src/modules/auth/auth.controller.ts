@@ -25,7 +25,7 @@ import { AuthGuard } from 'src/Guards/auth.guard';
 import { RolesGuard } from 'src/Guards/roles.guard';
 import { Request, Response } from 'express';
 
-import { requiresAuth } from 'express-openid-connect';
+
 import { CreateUserDtoByAuth0 } from 'src/dto/createUserByAuth0Dto';
 
 @ApiTags('Auth')
