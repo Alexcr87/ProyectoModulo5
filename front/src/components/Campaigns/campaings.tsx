@@ -166,15 +166,17 @@ const CampaignsTable = () => {
     return (
         <div className="mt-4 overflow-x-auto">
         <h1 className="text-2xl font-bold mb-4 text-center">Mis Campañas</h1>
-        <div className="mb-4">
-            <button 
-                className='bg-primaryColor  text-cuartiaryColor py-2 px-4 flex justify-center rounded-lg hover:scale-105 hover:bg-primaryColor duration-300'
-                onClick={handleDelete}
-                disabled={selectedCampaigns.length === 0} // Deshabilitar si no hay seleccionados
-            >
-                Eliminar seleccionados
-            </button>
-        </div>
+        {(roles.includes('admin') || roles.includes('moderator')) && (
+            <div className="mb-4">
+                <button 
+                    className='bg-primaryColor  text-cuartiaryColor py-2 px-4 flex justify-center rounded-lg hover:scale-105 hover:bg-primaryColor duration-300'
+                    onClick={handleDelete}
+                    disabled={selectedCampaigns.length === 0} // Deshabilitar si no hay seleccionados
+                >
+                    Eliminar seleccionados
+                </button>
+            </div>
+        )}
         {campaigns.length > 0 ? (
             <table className="min-w-full border-collapse">
                 <thead>
