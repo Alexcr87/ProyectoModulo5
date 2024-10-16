@@ -8,7 +8,6 @@ import { OrganizationalStructure } from 'src/entities/organizationalStructure.en
 // import { Account } from 'src/entities/account.entity';
 import { MailModule } from '../mail/mail.module';
 import { MailService } from '../mail/mail.service';
-import { requiresAuth } from 'express-openid-connect';
 import { GroupModule } from '../usersGroup/usersGroup.module';
 import { Group } from 'src/entities/group.entity';
 import { GroupService } from '../usersGroup/usersGroup.service';
