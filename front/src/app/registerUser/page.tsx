@@ -1,8 +1,11 @@
+
 import RegisterUser from "@/components/Register/registerUser";
 
 
 
+
 const RegisterUserPage=()=>{
+
     return(
         <div className="bg-cuartiaryColor h-full flex justify-center">
 
