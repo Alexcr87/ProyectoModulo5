@@ -114,6 +114,7 @@ const NavBar = () => {
     const closeDropdown = () => {
         setCampaignDropdownOpen(false);
         setDropdownOpen(false);
+        setBars(false)
     }
 
     const toggleCampaignDropdown = () => {
