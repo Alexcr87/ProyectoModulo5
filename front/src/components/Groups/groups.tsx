@@ -192,7 +192,14 @@ const Groups = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4 text-center">Mis Grupos</h1>
-
+  
+      {/* Spinner que bloquea la pantalla cuando se está creando un grupo */}
+      {isCreatingGroup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+          <Spinner />
+        </div>
+      )}
+  
       {/* Formulario para crear un nuevo grupo */}
       <div className="mb-4">
         <form onSubmit={handleCreateGroup} className="flex items-center">
@@ -205,36 +212,37 @@ const Groups = () => {
             required
             data-tooltip-id="groupname-tooltip"
             data-tooltip-content="Escribe el nombre del nuevo grupo"
+            disabled={isCreatingGroup || isDeletingGroups}
           />
           <Tooltip id="groupname-tooltip" />
-          
+  
           <button 
             type="submit" 
             className="bg-primaryColor text-white p-2 rounded disabled:bg-gray-400"
             data-tooltip-id="creategroup-tooltip"
             data-tooltip-content="Haz clic para crear un nuevo grupo"
-            disabled={isCreatingGroup}
+            disabled={isCreatingGroup || isDeletingGroups}
           >
-             {isCreatingGroup ? <Spinner /> : "Crear Grupo"}
+            {"Crear Grupo"}
           </button>
           <Tooltip id="creategroup-tooltip" />
         </form>
-
+  
         {/* Botón para eliminar los grupos seleccionados */}
         <button
           onClick={handleDeleteGroups}
           className="bg-primaryColor text-white p-2 rounded mt-2 disabled:bg-gray-400"
-          disabled={selectedGroups.length === 0 || isDeletingGroups}   // Desactiva si no hay grupos seleccionados
+          disabled={selectedGroups.length === 0 || isCreatingGroup || isDeletingGroups} 
           data-tooltip-id="deletegroups-tooltip"
           data-tooltip-content={selectedGroups.length === 0 
             ? "Selecciona uno o más grupos para eliminar"
             : "Haz clic para eliminar los grupos seleccionados"}
         >
-         {isDeletingGroups ? <Spinner /> : "Eliminar Grupos"}
+          {"Eliminar Grupos"}
         </button>
         <Tooltip id="deletegroups-tooltip" />
       </div>
-
+  
       {/* Tabla de grupos */}
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
@@ -249,37 +257,33 @@ const Groups = () => {
             {groups.length > 0 ? (
               groups.map((group, idx) => (
                 <tr
-                  key={group.id ?? idx} // Usa el idx como backup si el id es undefined
+                  key={group.id ?? idx}
                   className={`${idx % 2 === 0 ? "bg-gray-50" : "bg-white"} border-t border-gray-200`}
                 >
                   <td className="py-3 px-6 text-sm text-gray-700">
                     <input
                       type="checkbox"
-                      checked={selectedGroups.includes(group.id ?? "")} // Usa el id o un valor por defecto
-                      onChange={() => handleSelectGroup(group.id ?? "")} // Manejamos el cambio del checkbox
-                      data-tooltip-id={`checkbox-tooltip-${group.id ?? idx}`}
-                      data-tooltip-content="Selecciona este grupo"
+                      checked={selectedGroups.includes(group.id ?? "")}
+                      onChange={() => handleSelectGroup(group.id ?? "")}
+                      disabled={isCreatingGroup || isDeletingGroups}
                     />
-                    <Tooltip id={`checkbox-tooltip-${group.id ?? idx}`} />
                   </td>
                   <td className="py-3 px-6 text-sm text-gray-700">{group.name}</td>
                   <td className="py-3 px-6 text-sm text-gray-700">
                     <button
                       onClick={() => handleEditGroup(group)}
-                      className="text-blue-500 hover:text-blue-700 font-medium"
-                      data-tooltip-id={`editgroup-tooltip-${group.id ?? idx}`}
-                      data-tooltip-content="Editar este grupo"
+                      className="text-blue-500 hover:underline"
+                      disabled={isCreatingGroup || isDeletingGroups}
                     >
-                      editar grupo
+                      Editar
                     </button>
-                    <Tooltip id={`editgroup-tooltip-${group.id ?? idx}`} />
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={8} className="py-4 text-center text-gray-500">
-                  No se encontraron grupos
+                <td colSpan={3} className="py-3 px-6 text-sm text-gray-700 text-center">
+                  No hay grupos disponibles.
                 </td>
               </tr>
             )}
@@ -288,6 +292,7 @@ const Groups = () => {
       </div>
     </div>
   );
+  
 };
 
 export default Groups;
