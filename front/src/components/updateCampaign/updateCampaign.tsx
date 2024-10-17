@@ -93,24 +93,26 @@ const updateCampaign = () => {
 
   return (
     <>
-      <div className="col-start-5 col-end-9 mt-[2.5em] my-[2em] text-center text-xl font-bold">
+      <div className="col-start-5 col-end-9 mt-10 my-8 text-center text-xl font-bold">
         ACTUALIZAR CAMPAÑA
-        <div className="flex flex-row items-center w-full md:w-[40%] gap-4 m-auto mt-8 py-8 px-4 font-bold border-4 rounded-md outline-none
-              border-stroke dark:border-dark-3 border-blue-500">
+        
+        <div className="flex flex-col md:flex-row items-center w-full md:w-4/5 lg:w-3/5 gap-4 m-auto mt-8 py-8 px-6 font-bold border-4 rounded-lg border-stroke dark:border-dark-3 border-primaryColor shadow-lg">
           <p>{`Campana: ${campaign?.name}`}</p>
-          <p>{`Fecha: ${campaign?.date ? new Date(campaign.date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) : ''}`}</p>
+          <p>{`Fecha: ${campaign?.date ? new Intl.DateTimeFormat('es-ES', { 
+            day: '2-digit', 
+            month: '2-digit', 
+            year: 'numeric', 
+            timeZone: 'UTC' 
+          }).format(new Date(campaign.date)) : ''}`}</p>
         </div>
       </div>
       <form className="campaign-form flex justify-center" onSubmit={handleUpdateCampaign}>
         <div className="flex flex-col items-center w-full md:w-[40%] gap-4">
           {/* Nombre */}
-          <div className="relative">
+          <div className="relative w-full">
             <label className="flex items-center">
               Nombre
-              <span
-                className="ml-2 text-blue-500 cursor-pointer"
-                data-tooltip-id="tooltip-name"
-              >
+              <span className="ml-2 text-primaryColor cursor-pointer" data-tooltip-id="tooltip-name">
                 ℹ️
               </span>
               <Tooltip id="tooltip-name" place="top" content="Introduce el nombre de la campaña." />
@@ -120,18 +122,18 @@ const updateCampaign = () => {
               id="name"
               name="name"
               placeholder='Nombre'
+              className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
+                border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
+                dark:focus:border-primaryColor focus-visible:shadow-none"
               required
             />
           </div>
   
           {/* Descripción */}
-          <div className="relative">
+          <div className="relative w-full">
             <label className="flex items-center">
               Descripción
-              <span
-                className="ml-2 text-blue-500 cursor-pointer"
-                data-tooltip-id="tooltip-description"
-              >
+              <span className="ml-2 text-primaryColor cursor-pointer" data-tooltip-id="tooltip-description">
                 ℹ️
               </span>
               <Tooltip id="tooltip-description" place="top" content="Proporciona una breve descripción de la campaña." />
@@ -148,13 +150,10 @@ const updateCampaign = () => {
           </div>
   
           {/* Ubicación */}
-          <div className="relative">
+          <div className="relative w-full">
             <label className="flex items-center">
               Ubicación
-              <span
-                className="ml-2 text-blue-500 cursor-pointer"
-                data-tooltip-id="tooltip-location"
-              >
+              <span className="ml-2 text-primaryColor cursor-pointer" data-tooltip-id="tooltip-location">
                 ℹ️
               </span>
               <Tooltip id="tooltip-location" place="top" content="Indica la ubicación de la campaña." />
@@ -164,18 +163,18 @@ const updateCampaign = () => {
               id="location"
               name="location"
               placeholder='Ubicación'
+              className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
+                border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
+                dark:focus:border-primaryColor focus-visible:shadow-none"
               required
             />
           </div>
   
           {/* Fecha */}
-          <div className="relative">
+          <div className="relative w-full">
             <label className="flex items-center">
               Fecha
-              <span
-                className="ml-2 text-blue-500 cursor-pointer"
-                data-tooltip-id="tooltip-date"
-              >
+              <span className="ml-2 text-primaryColor cursor-pointer" data-tooltip-id="tooltip-date">
                 ℹ️
               </span>
               <Tooltip id="tooltip-date" place="top" content="Selecciona la fecha de la campaña." />
@@ -185,17 +184,25 @@ const updateCampaign = () => {
               name="date"
               id="date"
               value={date ? date.toISOString().substring(0, 10) : ''}
-              onChange={(e) => setDate(new Date(e.target.value))}
+              onChange={(e) => {
+                const [year, month, day] = e.target.value.split('-');
+                setDate(new Date(Date.UTC(Number(year), Number(month) - 1, Number(day))));
+              }}
+              className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
+                border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 focus:border-primaryColor 
+                dark:focus:border-primaryColor focus-visible:shadow-none"
               required
             />
           </div>
   
           {/* Botón de actualización */}
-          <Boton type="submit">Actualizar Campaña</Boton>
+          <Boton type="submit" className="mt-4">
+            Actualizar Campaña
+          </Boton>
         </div>
       </form>
     </>
   );
-};
+} 
 
 export default updateCampaign;
