@@ -165,7 +165,7 @@ const PopUpRegisterComponent = ({ registroManual, registroMasivo}: { registroMan
             />
             </div>
             <div className="flex justify-between mt-4">
-              <BotonExcel onClick={handleUpload} loading={loading}>Subir Excel</BotonExcel>
+              <BotonExcel onClick={handleUpload} loading={loading}disabled={loading} >Subir Excel</BotonExcel>
             </div>
           </div>
         </div>
