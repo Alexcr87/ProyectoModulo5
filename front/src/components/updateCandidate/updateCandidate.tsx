@@ -118,86 +118,93 @@ const UpdateCandidate = () => {
 
   return (
     <div className="container mx-auto p-4">
-             {/* Vista previa de la imagen */}
-             <div className="flex justify-center items-center ml-6">
-        {imagePreview ? (
-          <img className="h-60 w-72" src={imagePreview} alt={`Imagen del candidato`} />
-        ) : candidateFinally?.imgUrl ? (
-          <img className="h-60 w-72" src={candidateFinally.imgUrl} alt={`Imagen del candidato ${candidateFinally.imgUrl}`} />
-        ) : (
-          <p>Cargando imagen del candidato...</p>
-        )}
-      </div>
-      <form className="w-11/12 space-y-4" onSubmit={handleSubmit}>
         <h1 className="text-lg font-bold text-center">Actualizar Candidato</h1>
+        <div className="flex ">
+        <form className="flex flex-col space-y-4 w-1/2" onSubmit={handleSubmit}>
 
-        {/* Postulación */}
-        <div className="relative">
-          <label className="flex items-center">
-            Postulación
-            <span className="ml-2 text-blue-500 cursor-pointer" data-tooltip-id="tooltip-postulation">ℹ️</span>
-            <Tooltip id="tooltip-postulation" place="top" content="Introduce el nombre de la postulación." />
-          </label>
-          <Input
-            id="postulation"
-            name="postulation"
-            type="text"
-            value={postulation}
-            onChange={(e) => setPostulation(e.target.value)}
-            placeholder="Postulación"
-            required
-          />
-        </div>
+          {/* Postulación */}
+          <div className="relative">
+            <label className="flex items-center">
+              Postulación
+              <span className="ml-2 text-blue-500 cursor-pointer" data-tooltip-id="tooltip-postulation">ℹ️</span>
+              <Tooltip id="tooltip-postulation" place="top" content="Introduce el nombre de la postulación." />
+            </label>
+            <Input
+              id="postulation"
+              name="postulation"
+              type="text"
+              value={postulation}
+              onChange={(e) => setPostulation(e.target.value)}
+              placeholder="Postulación"
+              required
+            />
+          </div>
 
-        {/* Lista */}
-        <div className="relative">
-          <label className="flex items-center">
-            Lista
-            <span className="ml-2 text-blue-500 cursor-pointer" data-tooltip-id="tooltip-list">ℹ️</span>
-            <Tooltip id="tooltip-list" place="top" content="Indica la lista a la que pertenece el candidato." />
-          </label>
-          <Input
-            id="list"
-            name="list"
-            type="text"
-            value={list}
-            onChange={(e) => setList(e.target.value)}
-            placeholder="Lista"
-            required
-          />
-        </div>
+          {/* Lista */}
+          <div className="relative">
+            <label className="flex items-center">
+              Lista
+              <span className="ml-2 text-blue-500 cursor-pointer" data-tooltip-id="tooltip-list">ℹ️</span>
+              <Tooltip id="tooltip-list" place="top" content="Indica la lista a la que pertenece el candidato." />
+            </label>
+            <Input
+              id="list"
+              name="list"
+              type="text"
+              value={list}
+              onChange={(e) => setList(e.target.value)}
+              placeholder="Lista"
+              required
+            />
+          </div>
 
-        {/* Propuestas */}
-        <div className="rounded-md">
-          <label className="block text-sm font-medium text-gray-700">
-            Propuestas
-            <span className="ml-2 text-blue-500 cursor-pointer" data-tooltip-id="tooltip-proposals">ℹ️</span>
-            <Tooltip id="tooltip-proposals" place="top" content="Escribe cada propuesta en una nueva línea." />
-          </label>
-          <Textarea
-            value={proposals.join("\n")}
-            onChange={handleProposalsChange}
-            placeholder="Escribe cada propuesta en una nueva línea"
-          />
-        </div>
+          {/* Propuestas */}
+          <div className="rounded-md">
+            <label className="block text-sm font-medium text-gray-700">
+              Propuestas
+              <span className="ml-2 text-blue-500 cursor-pointer" data-tooltip-id="tooltip-proposals">ℹ️</span>
+              <Tooltip id="tooltip-proposals" place="top" content="Escribe cada propuesta en una nueva línea." />
+            </label>
+            <Textarea
+              value={proposals.join("\n")}
+              onChange={handleProposalsChange}
+              placeholder="Escribe cada propuesta en una nueva línea"
+            />
+          </div>
 
-        {/* Imagen del candidato */}
-        <div className="rounded-md">
-          <label className="block text-sm font-medium text-gray-700">
-            Imagen del candidato (JPG)
-            <span className="ml-2 text-blue-500 cursor-pointer" data-tooltip-id="tooltip-candidate-image">ℹ️</span>
-            <Tooltip id="tooltip-candidate-image" place="top" content="Sube una imagen del candidato en formato JPG." />
-          </label>
-          <InputFile type="file" accept="image/jpeg" onChange={handleFileChange} />
-        </div>
+          {/* Imagen del candidato */}
+          <div className="rounded-md">
+            <label className="block text-sm font-medium text-gray-700">
+              Imagen del candidato (JPG)
+              <span className="ml-2 text-blue-500 cursor-pointer" data-tooltip-id="tooltip-candidate-image">ℹ️</span>
+              <Tooltip id="tooltip-candidate-image" place="top" content="Sube una imagen del candidato en formato JPG." />
+            </label>
+            <InputFile type="file" accept="image/jpeg" onChange={handleFileChange} />
+          </div>
+        </form>
+        <div className="w-1/2  flex justify-center items-center h-96">
+  {/* Vista previa de la imagen */}
+  <div className="flex justify-center items-center w-full h-full">
+    {imagePreview ? (
+      <img className="max-h-full max-w-full object-contain" src={imagePreview} alt={`Imagen del candidato`} />
+    ) : candidateFinally?.imgUrl ? (
+      <img className="max-h-full max-w-full object-contain" src={candidateFinally.imgUrl} alt={`Imagen del candidato ${candidateFinally.imgUrl}`} />
+    ) : (
+      <p>Cargando imagen del candidato...</p>
+    )}
+  </div>
+</div>
 
-        {/* Botón de actualización */}
-        <div className="flex justify-center items-center">
-          <Boton type="submit" >
-            Actualizar Candidato
-          </Boton>
-        </div>
-      </form>
+            </div>
+
+      {/* Botón de actualización */}
+      <div className="grid grid-cols-12 mt-4">
+  <div className="col-start-4 col-end-8 flex justify-center">
+        <Boton type="submit" >
+          Actualizar Candidato
+        </Boton>
+      </div>
+      </div>
     </div>
   );
 };
