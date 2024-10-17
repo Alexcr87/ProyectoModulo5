@@ -32,10 +32,10 @@ const CampaignsTable = () => {
     }, [userData]);
 
     useEffect(() => {
-        if (userData?.userData.id) {
+        if (userData?.userData.id && roles.length > 0 && groups.length > 0 && userData?.userData.id) {
             fetchCampaigns();
         }
-    }, [roles, groups, userData, pathname]);
+    },  [roles, groups, userData, pathname]);
 
     const fetchCampaigns = async () => {
         if (!userData?.userData.id) {
@@ -229,10 +229,10 @@ const CampaignsTable = () => {
                                 <td className="border p-2">{campaign.description}</td>
                                 <td className="border p-2">{campaign.location}</td>
                                 <td className="border p-2">
-  {new Date(campaign.date).toLocaleString('en-GB', {
-    timeZone: 'UTC'
-  })}
-</td>
+                                    {new Date(campaign.date).toLocaleString('en-GB', {
+                                      timeZone: 'UTC'
+                                    })}
+                                </td>
                                 <td 
                                    className={`border p-2 ${expired ? 'text-gray-400 cursor-not-allowed' : 'text-blue-500 hover:text-primaryColor cursor-pointer'}`}
                                    onClick={!expired ? () => handleAction2(campaign.id, campaign.date) : undefined} // Pasa la fecha de la campaña
