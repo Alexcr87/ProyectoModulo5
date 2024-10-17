@@ -127,17 +127,24 @@ export class AuthService {
     return `${newUser.email}, Ud. ya posee una cuenta`;
   }
 
-  async requestPasswordReset(email: string) {
-    // Verifica que el correo existe
-    const user = await this.userRepository.findOneBy({ email });
+  async requestPasswordReset(email: string): Promise<{ message: string }> { // Cambiar aquí
+    const user = await this.userRepository.findOne({ where: { email } });
     if (!user) {
       throw new NotFoundException('Usuario no encontrado');
     }
-
-    // Envía el correo de restablecimiento de contraseña
-    await this.mailService.sendPasswordResetEmail(email, user.id);
-    
-    return { message: 'Correo de restablecimiento de contraseña enviado' };
+    await this.mailService.sendPasswordResetEmail(email);
+    return { message: 'Se ha enviado un correo electrónico para restablecer la contraseña.' };
   }
+  
+  async resetPassword(email: string, newPassword: string): Promise<{ message: string }> {
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (!user) {
+        throw new NotFoundException('Usuario no encontrado');
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await this.userRepository.save(user);
+    return { message: 'Contraseña restablecida exitosamente.' };
+ }
 }
 

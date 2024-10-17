@@ -10,6 +10,7 @@ import Guia from "../Guia/guia"
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { userSession } from '@/interfaces/Session'
 import { IRole } from '@/interfaces/IRole'
+import { SunIcon, MoonIcon } from '@heroicons/react/16/solid'
 
 const NavBar = () => {
     const { userData, setUserData } = useAuth();
@@ -114,6 +115,7 @@ const NavBar = () => {
     const closeDropdown = () => {
         setCampaignDropdownOpen(false);
         setDropdownOpen(false);
+        setBars(false)
     }
 
     const toggleCampaignDropdown = () => {
@@ -260,12 +262,12 @@ const NavBar = () => {
                  <Guia/>                
             </div>
             <div className="hidden md:flex gap-4">
-                <button
-                    onClick={toggleDarkMode}
-                    className={`text-white ${isDarkMode ? 'bg-yellow-300' : 'bg-gray-800'} px-4 py-2 rounded`}
-                >
-                    {isDarkMode ? 'Claro' : 'Oscuro'}
-                </button>
+            <button
+    onClick={toggleDarkMode}
+    className={`text-white ${isDarkMode ? 'bg-primaryColor' : 'bg-gray-800'} px-4 py-2 rounded`}
+>
+    {isDarkMode ? <SunIcon className="h-6 w-6" /> : <MoonIcon className="h-6 w-6" />}
+</button>
             </div>
             
         </nav>

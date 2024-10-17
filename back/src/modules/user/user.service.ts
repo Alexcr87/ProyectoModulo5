@@ -16,7 +16,6 @@ import { Group } from "src/entities/group.entity";
 import { Campaign } from "src/entities/campaign.entity";
 import { Account } from "src/entities/account.entity";
 import { VoteUser } from "src/entities/voteUser.entity";
-import { ChangePasswordDto } from "src/dto/changePasswordDto";
 
 // import { Account } from "src/entities/account.entity";
 
@@ -410,29 +409,5 @@ async deleteUsers(userIds: string[]): Promise<void> {
       await this.structureRepository.save(structureRelation);
     }
     return existingRelation
-  }
-
-  async changePasswordByEmail(email: string, changePasswordDto: ChangePasswordDto): Promise<User> {
-    const user = await this.userRepository.findOne({ where: { email } });
-    if (!user) {
-        throw new NotFoundException('Usuario no encontrado.');
-    }
-
-    
-    if (changePasswordDto.newPassword !== changePasswordDto.confirmPassword) {
-        throw new BadRequestException('Las contraseñas no coinciden.');
-    }
-
-    
-    if (changePasswordDto.newPassword.length < 8) {
-        throw new BadRequestException('La nueva contraseña debe tener al menos 8 caracteres.');
-    }
-
-    
-    const hashedPassword = await bcrypt.hash(changePasswordDto.newPassword, 10); 
-    user.password = hashedPassword; 
-    await this.userRepository.save(user); 
-
-    return user; 
   }
 }
