@@ -21,13 +21,19 @@ const NavBar = () => {
     const campaignDropdownRef = useRef<HTMLLIElement>(null); // Referencia al li del dropdown de campañas
     const usersDropdownRef = useRef<HTMLLIElement>(null); // Referencia al li del dropdown de usuarios
     const {user} =useUser()
-  
+    const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+
     useEffect(() => {
         const localUser = localStorage.getItem("userData");
         if (localUser) {
             setUserData(JSON.parse(localUser));
         }
     }, [pathname]);
+
+    const toggleDarkMode = () => {
+        setIsDarkMode(!isDarkMode);
+        document.documentElement.classList.toggle('dark');  // Cambia el modo oscuro global
+    }
 
     useEffect(() => {
         const checkUserInBackend = async () => {
@@ -149,33 +155,33 @@ const NavBar = () => {
    } 
 
    const results = () =>{
-    return ( <li>
+    return ( <li onClick={()=>setBars(!bars)}>
         <Link href="/results">Resultados</Link>
     </li>)
    } 
    const groups = () =>{
-    return ( <li>
+    return ( <li onClick={()=>setBars(!bars)}>
         <Link href="/groups">Grupos</Link>
     </li>)
    } 
    const candidates = () =>{
-    return (<li>
+    return (<li onClick={()=>setBars(!bars)}>
             <Link href="/candidates">Candidatos</Link>
     </li>)
    }
    const perfilVotante = () =>{
-    return (<li>
+    return (<li onClick={()=>setBars(!bars)}>
             <Link href="/perfilUser">Mi perfil</Link>
     </li>)
    }
 
    const campaigns = () =>{
-    return (<li>
+    return (<li onClick={()=>setBars(!bars)}>
             <Link href="/campaigns">Campañas</Link>
     </li>)
    }
    const changePassword = () =>{
-    return (<li>
+    return (<li onClick={()=>setBars(!bars)}>
             <Link href="/changePassword">Cambio Contraseña</Link>
     </li>)
    }
@@ -251,7 +257,15 @@ const NavBar = () => {
             `}</style>
             <div className='hidden md:flex gap-8 text-white list-none'>
                 <p>{(isCandidate || isVotante || isModerator || isAdmin) && (<>{changePassword()}</>)}</p>
-                <Guia/>
+                 <Guia/>                
+            </div>
+            <div className="hidden md:flex gap-4">
+                <button
+                    onClick={toggleDarkMode}
+                    className={`text-white ${isDarkMode ? 'bg-yellow-300' : 'bg-gray-800'} px-4 py-2 rounded`}
+                >
+                    {isDarkMode ? 'Claro' : 'Oscuro'}
+                </button>
             </div>
             
         </nav>

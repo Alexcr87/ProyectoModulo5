@@ -14,6 +14,13 @@
     --cuartiary-color: #e8ebfd;
 }
 
+.dark {
+  --primary-color: #1f2937;
+  --secundary-color: #4b5563;
+  --tertiary-color: #48c49b;
+  --cuartiary-color: #d1d5db;
+}
+
 .large-swal-popup {
   max-width: 600px; /* Aumenta el ancho según lo necesario */
   width: 80%; /* Ajusta el porcentaje si prefieres que se adapte al tamaño de la pantalla */

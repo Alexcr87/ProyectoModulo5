@@ -5,6 +5,8 @@ import Footer from "@/components/footer/Footer";
 import { AuthProvider } from "@/context/Authontext";
 import { GuideProvider } from "@/context/GuideContext";
 import {UserProvider} from '@auth0/nextjs-auth0/client'
+import Dashboard from "@/components/dashboard/Dashboard";
+import { ThemeProvider } from "@/context/ThemaContext";
 
 
 export const metadata: Metadata = {
@@ -18,23 +20,28 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
+
   return (
     <html lang="en">
       <body>
         <UserProvider>
         <AuthProvider>
           <GuideProvider>
+          <ThemeProvider>
             <div className="containerPrincipal">
               <header>
                 <NavBar />
               </header>
               <main className="mt-14">
-                {children}
+                  <div> <Dashboard/> </div> 
+                  {children}
               </main>
               <footer>
                 <Footer />
               </footer>
             </div>
+            </ThemeProvider>
           </GuideProvider>
         </AuthProvider>
         </UserProvider>
