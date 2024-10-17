@@ -189,8 +189,6 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       </div>
     );
   }
-  const userRoles = userData?.userData.roles.map(item => item.id)
-  const isCandidate = userRoles?.includes(2)
 
   return (
     <>
@@ -199,191 +197,194 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
           <Spinner /> {/* Muestra el spinner */}
         </div>
       )}
-      <div className="container mx-auto p-4 ">
-      <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">
-        <div className="col-start-1 col-end-13">
-          <div className="grid grid-cols-12">
-            <div className="col-start-5 col-end-9 mt-[2.5em] my-[2em] text-center text-xl">
-              MI PERFIL
-            </div>
-          </div>
-  
-          <div className="flex">
-            <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
-              <div className="flex flex-col relative">
-                <label className="flex items-center">
-                  Nombre
-                  <span
-                    className="ml-2 text-blue-500 cursor-pointer"
-                    data-tooltip-id="nameTooltip"
-                    data-tooltip-content="Ingresa tu nombre completo aquí."
-                    >
-                    ℹ️
-                  </span>
-                </label>
-                <Input
-                  id="name"
-                  name="name"
-                  type="text"
-                  value={dataUser.name}
-                  onChange={handleChange}
-                  placeholder={user?.name!}
-                  />
-                {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
-              </div>
-  
-              <div className="flex flex-col mt-4 relative">
-                <label className="flex items-center">
-                  DNI
-                  <span
-                    className="ml-2 text-blue-500 cursor-pointer"
-                    data-tooltip-id="dniTooltip"
-                    data-tooltip-content="Introduce tu número de DNI."
-                    >
-                    ℹ️
-                  </span>
-                </label>
-                <Input
-                  id="dni"
-                  name="dni"
-                  type="text"
-                  value={dataUser.dni}
-                  onChange={handleChange}
-                  disabled
-                  />
-              </div>
-  
-              <div className="flex flex-col mt-4 relative">
-                <label className="flex items-center">
-                  Dirección
-                  <span
-                    className="ml-2 text-blue-500 cursor-pointer"
-                    data-tooltip-id="addressTooltip"
-                    data-tooltip-content="Introduce tu dirección completa."
-                    >
-                    ℹ️
-                  </span>
-                </label>
-                <Input
-                  name="address"
-                  type="text"
-                  value={dataUser.address}
-                  onChange={handleChange}
-                  />
-                {errors.address && <span className="text-red-500 text-sm">{errors.address}</span>}
-              </div>
-  
-              <div className="flex flex-col mt-4 relative">
-                <label className="flex items-center">
-                  Correo Electrónico
-                  <span
-                    className="ml-2 text-blue-500 cursor-pointer"
-                    data-tooltip-id="emailTooltip"
-                    data-tooltip-content="El correo está prellenado y no se puede cambiar."
-                    >
-                    ℹ️
-                  </span>
-                </label>
-                <Input
-                  id="email-address"
-                  name="email"
-                  type="email"
-                  value={dataUser.email}
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  placeholder={dataUser.email!}
-                  disabled
-                  />
-                {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
-              </div>
-            </div>
-  
-            <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
-              <div className="flex flex-col relative">
-                <label className="flex items-center">
-                  País
-                  <span
-                    className="ml-2 text-blue-500 cursor-pointer"
-                    data-tooltip-id="countryTooltip"
-                    data-tooltip-content="Selecciona tu país de residencia."
-                    >
-                    ℹ️
-                  </span>
-                </label>
-                <select
-                  name="country"
-                  onChange={handleCountryChange}
-                  className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
+      <div className="container mx-auto p-4">
+        <div className="flex flex-col gap-4">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <div className="grid grid-cols-12 gap-4">
+              <div className="col-start-1 col-end-13">
+                <div className="grid grid-cols-12">
+                  <div className="col-start-5 col-end-9 mt-[2.5em] my-[2em] text-center text-xl">
+                    MI PERFIL
+                  </div>
+                </div>
+
+                <div className="flex">
+                  <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
+                    <div className="flex flex-col relative">
+                      <label className="flex items-center">
+                        Nombre
+                        <span
+                          className="ml-2 text-blue-500 cursor-pointer"
+                          data-tooltip-id="nameTooltip"
+                          data-tooltip-content="Ingresa tu nombre completo aquí."
+                        >
+                          ℹ️
+                        </span>
+                      </label>
+                      <Input
+                        id="name"
+                        name="name"
+                        type="text"
+                        value={dataUser.name}
+                        onChange={handleChange}
+                        placeholder={user?.name!}
+                      />
+                      {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
+                    </div>
+
+                    <div className="flex flex-col mt-4 relative">
+                      <label className="flex items-center">
+                        DNI
+                        <span
+                          className="ml-2 text-blue-500 cursor-pointer"
+                          data-tooltip-id="dniTooltip"
+                          data-tooltip-content="Introduce tu número de DNI."
+                        >
+                          ℹ️
+                        </span>
+                      </label>
+                      <Input
+                        id="dni"
+                        name="dni"
+                        type="text"
+                        value={dataUser.dni}
+                        onChange={handleChange}
+                        disabled
+                      />
+                    </div>
+
+                    <div className="flex flex-col mt-4 relative">
+                      <label className="flex items-center">
+                        Dirección
+                        <span
+                          className="ml-2 text-blue-500 cursor-pointer"
+                          data-tooltip-id="addressTooltip"
+                          data-tooltip-content="Introduce tu dirección completa."
+                        >
+                          ℹ️
+                        </span>
+                      </label>
+                      <Input
+                        name="address"
+                        type="text"
+                        value={dataUser.address}
+                        onChange={handleChange}
+                      />
+                      {errors.address && <span className="text-red-500 text-sm">{errors.address}</span>}
+                    </div>
+
+                    <div className="flex flex-col mt-4 relative">
+                      <label className="flex items-center">
+                        Correo Electrónico
+                        <span
+                          className="ml-2 text-blue-500 cursor-pointer"
+                          data-tooltip-id="emailTooltip"
+                          data-tooltip-content="El correo está prellenado y no se puede cambiar."
+                        >
+                          ℹ️
+                        </span>
+                      </label>
+                      <Input
+                        id="email-address"
+                        name="email"
+                        type="email"
+                        value={dataUser.email}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        placeholder={dataUser.email!}
+                        disabled
+                      />
+                      {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
+                    <div className="flex flex-col relative">
+                      <label className="flex items-center">
+                        País
+                        <span
+                          className="ml-2 text-blue-500 cursor-pointer"
+                          data-tooltip-id="countryTooltip"
+                          data-tooltip-content="Selecciona tu país de residencia."
+                        >
+                          ℹ️
+                        </span>
+                      </label>
+                      <select
+                        name="country"
+                        onChange={handleCountryChange}
+                        className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
         border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
         dark:focus:border-primaryColor focus-visible:shadow-none"
-                  required
-                >
-                  <option value="">{dataUser.country}</option>
-                  {countries.map(country => (
-                    <option key={country.id} value={country.id}>
-                      {country.name}
-                    </option>
-                  ))}
-                </select>
-                {errors.country && <p className="text-red-500">{errors.country}</p>}
-              </div>
-  
-              <div className="flex flex-col mt-4 relative">
-                <label className="flex items-center">
-                  Ciudad
-                  <span
-                    className="ml-2 text-blue-500 cursor-pointer"
-                    data-tooltip-id="cityTooltip"
-                    data-tooltip-content="Selecciona tu ciudad."
-                    >
-                    ℹ️
-                  </span>
-                </label>
-                <select
-                  name="city"
-                  value={dataUser.city}
-                  onChange={handleChange}
-                  className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
+                        required
+                      >
+                        <option value="">{dataUser.country}</option>
+                        {countries.map(country => (
+                          <option key={country.id} value={country.id}>
+                            {country.name}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.country && <p className="text-red-500">{errors.country}</p>}
+                    </div>
+
+                    <div className="flex flex-col mt-4 relative">
+                      <label className="flex items-center">
+                        Ciudad
+                        <span
+                          className="ml-2 text-blue-500 cursor-pointer"
+                          data-tooltip-id="cityTooltip"
+                          data-tooltip-content="Selecciona tu ciudad."
+                        >
+                          ℹ️
+                        </span>
+                      </label>
+                      <select
+                        name="city"
+                        value={dataUser.city}
+                        onChange={handleChange}
+                        className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
         border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
         dark:focus:border-primaryColor focus-visible:shadow-none"
-                  required
-                  >
-                  <option value="">{dataUser.city}</option>
-                  {cities.map(city => (
-                    <option key={city.id} value={city.id}>
-                      {city.name}
-                    </option>
-                  ))}
-                </select>
-                {errors.city && <span className="text-red-500 text-sm">{errors.city}</span>}
+                        required
+                      >
+                        <option value="">{dataUser.city}</option>
+                        {cities.map(city => (
+                          <option key={city.id} value={city.id}>
+                            {city.name}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.city && <span className="text-red-500 text-sm">{errors.city}</span>}
+                    </div>
+
+                    <div className="mt-4">
+                      <Boton type="submit" disabled={!isFormValid || loading}>
+                        {loading ? <Spinner /> : 'Actualizar Datos'}
+                      </Boton>
+                    </div>
+
+                    <img
+                      src="/images/registerImage.png"
+                      alt="Small icon"
+                      className="w-52 mx-auto mt-12"
+                    />
+                  </div>
+                </div>
               </div>
-  
-              <div className="mt-4">
-                <Boton type="submit" disabled={!isFormValid || loading}>
-                  {loading ? <Spinner /> : 'Actualizar Datos'}
-                </Boton>
-              </div>
-  
-              <img
-                src="/images/registerImage.png"
-                alt="Small icon"
-                className="w-52 mx-auto mt-12"
-                />
             </div>
-          </div>
+          </form>
         </div>
-      </form>
-     {isCandidate && <UpdateCandidate/>}
-      {/* Tooltip components */}
-      <Tooltip id="nameTooltip" />
-      <Tooltip id="dniTooltip" />
-      <Tooltip id="addressTooltip" />
-      <Tooltip id="emailTooltip" />
-      <Tooltip id="countryTooltip" />
-      <Tooltip id="cityTooltip" />
+        {/* Tooltip components */}
+        <Tooltip id="nameTooltip" />
+        <Tooltip id="dniTooltip" />
+        <Tooltip id="addressTooltip" />
+        <Tooltip id="emailTooltip" />
+        <Tooltip id="countryTooltip" />
+        <Tooltip id="cityTooltip" />
       </div>
     </>
   );
-};
 
+}
 export default VoterProfile;
