@@ -108,7 +108,7 @@ const Campaingdesc = () => {
       console.error('Error al enviar el voto:', error);
     } finally {
       setLoading(false); // Mantén el loading en falso al final
-      setIsVoting(false); // Asegúrate de volver a habilitar el botón después de finalizar
+      //setIsVoting(false); // Asegúrate de volver a habilitar el botón después de finalizar
     }
   }
   useEffect(() => {
