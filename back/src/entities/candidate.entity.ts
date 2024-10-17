@@ -32,10 +32,10 @@ export class Candidate {
   @OneToMany(() => VoteCandidate, (vote) => vote.candidate , { cascade: true })
   votes: VoteCandidate[];
 
-  @ManyToOne(() => Campaign, (campaign) => campaign.candidates , { onDelete: 'CASCADE' })
+  @ManyToOne(() => Campaign, (campaign) => campaign.candidates , { onDelete: 'NO ACTION' })
   campaign: Campaign;
 
-  @ManyToOne(() => User, (user) => user.candidate, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.candidate, { onDelete: 'NO ACTION' })
   @JoinColumn({ name: 'userId' })
   user: User;
 
