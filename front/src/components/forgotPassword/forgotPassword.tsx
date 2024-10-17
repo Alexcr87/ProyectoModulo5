@@ -2,20 +2,19 @@
 import React, { useEffect, useState } from 'react';
 import Input from '../ui/Input';
 import Boton from '../ui/Boton';
-import { forgotPassword } from '@/helpers/auth.helper'; // Asegúrate de que esta función esté correctamente definida
 import { useRouter } from 'next/navigation';
 import Swal from 'sweetalert2';
 import Spinner from '../ui/Spinner';
-import { IForgotPassword } from '@/interfaces/IForgotPassword'; // Asegúrate de que esta interfaz esté bien definida
-import { updatePassword } from '@/helpers/forgotPassword.helper';
+import { IForgotPassword } from '@/interfaces/IForgotPassword';
+import { resetPassword } from '@/helpers/forgotPassword'; // Cambia a resetPassword
 
 const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // Estado para almacenar el email capturado
+  // Estado para almacenar el email capturado desde la URL
   const [email, setEmail] = useState<string | null>(null);
-  
+
   useEffect(() => {
     // Captura el parámetro "email" de la URL
     const queryParams = new URLSearchParams(window.location.search);
@@ -25,6 +24,7 @@ const ForgotPassword = () => {
     }
   }, []);
 
+  // Estado inicial del formulario
   const initialState: IForgotPassword = {
     email: email ?? "", // Asigna el email desde la URL (puede estar vacío inicialmente)
     newPassword: "",
@@ -33,58 +33,61 @@ const ForgotPassword = () => {
 
   const [data, setData] = useState<IForgotPassword>(initialState);
 
+  // Actualizar el estado de los campos de contraseña
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setData(prevData => ({
       ...prevData,
       [name]: value,
-      email: email ?? "", // Asegúrate de que email siempre se mantenga
+      email: email ?? "", // Asegúrate de que el email siempre se mantenga
     }));
   };
 
+  // Manejar el envío del formulario
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
 
     // Validar que el email esté presente
     if (!data.email) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se encontró el email en la URL.',
-        });
-        setLoading(false);
-        return;
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se encontró el email en la URL.',
+      });
+      setLoading(false);
+      return;
     }
 
-    // Cambiar la contraseña
+    // Llamada para restablecer la contraseña
     try {
-        await updatePassword(data.email, data); // Llama a updatePassword pasando email y data
-        Swal.fire({
-            icon: 'success',
-            title: 'Contraseña Cambiada',
-            text: 'Tu contraseña ha sido cambiada con éxito.',
-        });
-        router.push('/login'); // Redirigir al login
+      await resetPassword(data.email, data); // Llama a resetPassword en lugar de updatePassword
+      Swal.fire({
+        icon: 'success',
+        title: 'Contraseña Cambiada',
+        text: 'Tu contraseña ha sido cambiada con éxito.',
+      });
+      router.push('/login'); // Redirigir al login
     } catch (error) {
-        // Verificar si error tiene la propiedad message
-        if (error instanceof Error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: error.message || 'Error al cambiar la contraseña.',
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Ocurrió un error desconocido.',
-            });
-        }
+      // Verificar si el error tiene la propiedad message
+      if (error instanceof Error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message || 'Error al cambiar la contraseña.',
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Ocurrió un error desconocido.',
+        });
+      }
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
+
   return (
     <div className='bg-cuartiaryColor min-h-[85vh] flex justify-center'>
       <div className='bg-white w-[50%] my-8 shadow-2xl rounded-2xl flex flex-col items-center px-16'>

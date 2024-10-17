@@ -4,11 +4,12 @@ import { IloginError, IloginProps } from '@/interfaces/ILogin';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { forgotPassword, login } from '@/helpers/auth.helper';
+import { login } from '@/helpers/auth.helper';
 import Swal from 'sweetalert2';
 import Input from '../ui/Input';
 import Boton from '../ui/Boton';
 import { useAuth } from '@/context/Authontext'; // Importa el contexto de autenticación
+import { forgotPassword } from '@/helpers/forgotPassword';
 
 
 

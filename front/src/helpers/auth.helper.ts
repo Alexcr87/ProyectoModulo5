@@ -2,7 +2,7 @@ import {  IRegisterProps } from "@/components/Register/TypesRegister";
 import IGroup from "@/interfaces/IGroup";
 import { IloginProps } from "@/interfaces/ILogin";
 import Swal from 'sweetalert2';
-import { IChangePassword } from "../interfaces/IChangePassword";
+
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
@@ -37,8 +37,6 @@ export async function register(userData: IRegisterProps, parentId?: string) {
     );
   }
 }
-
-
 
 export async function importUser(file: File, parentId: string | undefined, groups?:IGroup[]) {
   const formData = new FormData();
@@ -117,28 +115,4 @@ export async function login (userData: IloginProps){
     return
   }
 }
-  export async function forgotPassword(email: string) {
-    try {
-      const res = await fetch(`${APIURL}/auth/forgot-password`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
   
-      if (!res.ok) {
-        const errorData = await res.json(); // Obtener los detalles del error
-        throw new Error(
-          `Error ${res.status}: ${errorData.message || "Failed to send reset email"}`
-        );
-      }
-      return await res.json(); // Aquí puedes retornar un mensaje de éxito si es necesario
-    } catch (error: any) {
-      console.error("Forgot password error:", error.message);
-      throw new Error(
-        error.message || `Unknown error occurred while sending reset email.`
-      );
-    }
-  }
-
