@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/Authontext';
 import Boton from '../ui/Boton';
 import Spinner from '../ui/Spinner'; // Asumo que tu spinner está en la ruta /ui/Spinner
+import Link from 'next/link';
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
@@ -107,7 +108,7 @@ const Campaingdesc = () => {
       console.error('Error al enviar el voto:', error);
     } finally {
       setLoading(false); // Mantén el loading en falso al final
-      setIsVoting(false); // Asegúrate de volver a habilitar el botón después de finalizar
+      //setIsVoting(false); // Asegúrate de volver a habilitar el botón después de finalizar
     }
   }
   useEffect(() => {
@@ -126,6 +127,10 @@ const Campaingdesc = () => {
   if (error) return <p>{error}</p>;
 
   return (
+    <div>
+          <Link href="/campaigns" className="text-blue-500 hover:underline">
+                Volver
+          </Link>
     <div>
       {campaign ? (
         <div className='flex flex-col items-center'>
@@ -208,6 +213,7 @@ const Campaingdesc = () => {
       ) : (
         <p>No se encontró la campaña.</p>
       )}
+    </div>
     </div>
   );
 }

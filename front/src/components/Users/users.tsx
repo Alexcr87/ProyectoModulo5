@@ -9,6 +9,7 @@ import Spinner from "../ui/Spinner";
 import Select from 'react-select';
 import Swal from "sweetalert2";
 import {deleteUsersHelper} from "../../helpers/user.helper";
+import Link from "next/link";
 
 
 const MySwal = withReactContent(Swal);
@@ -216,6 +217,9 @@ const filteredUsers = users
 
     return (
       <div className="container mx-auto p-4">
+        <Link href="/registerUsers" className="text-blue-500 hover:underline">
+                Volver
+          </Link>
         <div className="flex justify-between items-start">
           {/* Filtros y checkbox a la izquierda */}
           <div>

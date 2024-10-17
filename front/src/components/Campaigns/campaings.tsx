@@ -97,6 +97,25 @@ const CampaignsTable = () => {
             setSelectedCampaigns(selectedCampaigns.filter((c) => c.id !== campaign.id));
         }
     };
+
+    const handleAction2 = (id: string | undefined, campaignDate: Date) => {
+        const currentDate = new Date();
+    
+        if (new Date(campaignDate) > currentDate) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campaña no habilitada',
+                text: 'La campaña aún no está disponible para votar.',
+            });
+            return; // Detenemos la ejecución si la campaña no está habilitada
+        }
+    
+        if (roles.includes('candidate') || roles.includes('voter')) {
+            router.push(`/voting?campaignId=${id}`);
+        } else {
+            router.push(`/campaigndesc?campaignId=${id}`);
+        }
+    };
     
     
     const handleDelete = async () => {
@@ -216,7 +235,7 @@ const CampaignsTable = () => {
 </td>
                                 <td 
                                    className={`border p-2 ${expired ? 'text-gray-400 cursor-not-allowed' : 'text-blue-500 hover:text-primaryColor cursor-pointer'}`}
-                                    onClick={!expired ? () => handleAction(campaign.id) : undefined} // Deshabilitar clic si ha expirado
+                                   onClick={!expired ? () => handleAction2(campaign.id, campaign.date) : undefined} // Pasa la fecha de la campaña
                                 >
                                     {roles.includes('candidate') || roles.includes('voter') ? 'votar' : 'ver'}
                                 </td>
