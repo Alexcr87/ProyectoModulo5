@@ -199,6 +199,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
           <Spinner /> {/* Muestra el spinner */}
         </div>
       )}
+      <div className="container mx-auto p-4 ">
       <form onSubmit={handleSubmit} className="grid grid-cols-12 gap-4">
         <div className="col-start-1 col-end-13">
           <div className="grid grid-cols-12">
@@ -216,7 +217,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                     className="ml-2 text-blue-500 cursor-pointer"
                     data-tooltip-id="nameTooltip"
                     data-tooltip-content="Ingresa tu nombre completo aquí."
-                  >
+                    >
                     ℹ️
                   </span>
                 </label>
@@ -227,7 +228,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                   value={dataUser.name}
                   onChange={handleChange}
                   placeholder={user?.name!}
-                />
+                  />
                 {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
               </div>
   
@@ -238,7 +239,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                     className="ml-2 text-blue-500 cursor-pointer"
                     data-tooltip-id="dniTooltip"
                     data-tooltip-content="Introduce tu número de DNI."
-                  >
+                    >
                     ℹ️
                   </span>
                 </label>
@@ -248,9 +249,8 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                   type="text"
                   value={dataUser.dni}
                   onChange={handleChange}
-                  placeholder="DNI"
                   disabled
-                />
+                  />
               </div>
   
               <div className="flex flex-col mt-4 relative">
@@ -260,7 +260,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                     className="ml-2 text-blue-500 cursor-pointer"
                     data-tooltip-id="addressTooltip"
                     data-tooltip-content="Introduce tu dirección completa."
-                  >
+                    >
                     ℹ️
                   </span>
                 </label>
@@ -269,8 +269,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                   type="text"
                   value={dataUser.address}
                   onChange={handleChange}
-                  placeholder="Dirección"
-                />
+                  />
                 {errors.address && <span className="text-red-500 text-sm">{errors.address}</span>}
               </div>
   
@@ -281,7 +280,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                     className="ml-2 text-blue-500 cursor-pointer"
                     data-tooltip-id="emailTooltip"
                     data-tooltip-content="El correo está prellenado y no se puede cambiar."
-                  >
+                    >
                     ℹ️
                   </span>
                 </label>
@@ -294,7 +293,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                   onChange={handleChange}
                   placeholder={dataUser.email!}
                   disabled
-                />
+                  />
                 {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
               </div>
             </div>
@@ -307,14 +306,16 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                     className="ml-2 text-blue-500 cursor-pointer"
                     data-tooltip-id="countryTooltip"
                     data-tooltip-content="Selecciona tu país de residencia."
-                  >
+                    >
                     ℹ️
                   </span>
                 </label>
                 <select
                   name="country"
                   onChange={handleCountryChange}
-                  className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
+        border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
+        dark:focus:border-primaryColor focus-visible:shadow-none"
                   required
                 >
                   <option value="">{dataUser.country}</option>
@@ -334,7 +335,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                     className="ml-2 text-blue-500 cursor-pointer"
                     data-tooltip-id="cityTooltip"
                     data-tooltip-content="Selecciona tu ciudad."
-                  >
+                    >
                     ℹ️
                   </span>
                 </label>
@@ -342,9 +343,11 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                   name="city"
                   value={dataUser.city}
                   onChange={handleChange}
-                  className="w-full p-3 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
+        border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
+        dark:focus:border-primaryColor focus-visible:shadow-none"
                   required
-                >
+                  >
                   <option value="">{dataUser.city}</option>
                   {cities.map(city => (
                     <option key={city.id} value={city.id}>
@@ -365,7 +368,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                 src="/images/registerImage.png"
                 alt="Small icon"
                 className="w-52 mx-auto mt-12"
-              />
+                />
             </div>
           </div>
         </div>
@@ -378,6 +381,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       <Tooltip id="emailTooltip" />
       <Tooltip id="countryTooltip" />
       <Tooltip id="cityTooltip" />
+      </div>
     </>
   );
 };
