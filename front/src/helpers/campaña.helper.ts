@@ -55,3 +55,15 @@ export async function getCampaigns() {
     }
     
 }
+
+export async function getWitheVote(id:string) {
+    try {
+        const res = await fetch(`${APIURL}/votes/total-black-votes/${id}`)
+        const votes = await res.json()
+        return votes
+        
+    } catch (error: any) {
+        throw new Error(error)
+    }
+    
+}
