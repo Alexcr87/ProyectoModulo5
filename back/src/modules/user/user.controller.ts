@@ -12,13 +12,12 @@ import { RolesGuard } from "src/Guards/roles.guard";
 import { AuthGuard } from "src/Guards/auth.guard";
 import { User } from "src/entities/user.entity";
 import { Role } from "src/entities/roles.entity";
-
 import { Request, Response } from "express";
 import { CreateUserDtoByAuth0 } from "src/dto/createUserByAuth0Dto";
 import { promises } from "dns";
 import { updateUserDto } from "src/dto/updateUserDto";
 import { ExcelFilePipe } from "src/pipes/maxSizeAndFormatPlanilla";
-import { ChangePasswordDto } from "src/dto/changePasswordDto";
+
 
 
 
@@ -206,19 +205,6 @@ export class UserController {
   ) {
     const updatedUser = await this.userService.assignPackageToUser(userId, packageId );
     return updatedUser;
-  }
-
-  @Post('change-password')
-  async changePassword(@Body() changePasswordDto: ChangePasswordDto): Promise<User> {
-    console.log('Received change password request:', changePasswordDto);
-      const { email, newPassword, confirmPassword } = changePasswordDto;
-  
-      // Verifica si las contraseñas coinciden
-      if (newPassword !== confirmPassword) {
-          throw new BadRequestException('Las contraseñas no coinciden.');
-      }
-  
-      return this.userService.changePasswordByEmail(email, changePasswordDto);
   }
   
 }

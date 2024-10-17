@@ -24,9 +24,9 @@ import { CreateUserDto } from 'src/dto/createUser.dto';
 import { AuthGuard } from 'src/Guards/auth.guard';
 import { RolesGuard } from 'src/Guards/roles.guard';
 import { Request, Response } from 'express';
-
-
 import { CreateUserDtoByAuth0 } from 'src/dto/createUserByAuth0Dto';
+import { ForgotPasswordDto } from 'src/dto/forgotPasswordDto';
+import { ResetPasswordDto } from 'src/dto/resetPasswordDto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -115,7 +115,19 @@ export class AuthController {
   }
 
   @Post('forgot-password')
-  async requestPasswordReset(@Body('email') email: string) {
-    return await this.authservice.requestPasswordReset(email);
+  async requestPasswordReset(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    const { email } = forgotPasswordDto;
+    const response = await this.authservice.requestPasswordReset(email);
+    return response; // Esto ya será un objeto JSON
   }
+  
+  @Post('reset-password')
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    const { email, newPassword, confirmPassword } = resetPasswordDto;
+    if (newPassword !== confirmPassword) {
+        throw new BadRequestException('Las contraseñas no coinciden');
+    }
+
+    return await this.authservice.resetPassword(email, newPassword); 
+}
 }

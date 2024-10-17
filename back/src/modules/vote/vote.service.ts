@@ -58,7 +58,7 @@ export class VoteService {
       },
     });
     if (existingVote) {
-      return 'El usuario ya ha votado en esta campaña.';
+      throw new BadRequestException('El usuario ya ha votado en esta campaña.');
     }
   
     let blankVote = true
