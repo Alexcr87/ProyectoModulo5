@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/Authontext';
 import Boton from '../ui/Boton';
 import Spinner from '../ui/Spinner'; // Asumo que tu spinner está en la ruta /ui/Spinner
+import Link from 'next/link';
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
@@ -127,6 +128,10 @@ const Campaingdesc = () => {
 
   return (
     <div>
+          <Link href="/campaigns" className="text-blue-500 hover:underline">
+                Volver
+          </Link>
+    <div>
       {campaign ? (
         <div className='flex flex-col items-center'>
           <h1 className="text-2xl font-bold mb-4 capitalize">{campaign.name}</h1>
@@ -208,6 +213,7 @@ const Campaingdesc = () => {
       ) : (
         <p>No se encontró la campaña.</p>
       )}
+    </div>
     </div>
   );
 }
