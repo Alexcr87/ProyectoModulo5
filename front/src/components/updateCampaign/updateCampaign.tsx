@@ -90,7 +90,6 @@ const updateCampaign = () => {
     );
   }
 
-
   return (
     <>
       <div className="col-start-5 col-end-9 mt-10 my-8 text-center text-xl font-bold">
