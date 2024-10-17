@@ -13,10 +13,10 @@ export class VoteCandidate {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Candidate, (candidate) => candidate.votes )
+  @ManyToOne(() => Candidate, (candidate) => candidate.votes,{onDelete: 'CASCADE'} )
   candidate: Candidate;
 
-  @ManyToOne(() => Campaign, (campaign) => campaign.votes)
+  @ManyToOne(() => Campaign, (campaign) => campaign.votes,{onDelete: 'CASCADE'} )
   campaign: Campaign;
 
   @Column({ type: 'int', default: 0 })

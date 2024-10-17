@@ -37,7 +37,7 @@ export class Campaign {
   @OneToMany(() => Candidate, (candidate) => candidate.campaign , { cascade: true })
   candidates: Candidate[];
 
-  @ManyToMany(() => Group, (group) => group.campaigns )
+  @ManyToMany(() => Group, (group) => group.campaigns , { cascade: true })
   groups: Group[];
 }
 
