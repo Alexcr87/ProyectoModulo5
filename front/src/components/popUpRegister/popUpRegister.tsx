@@ -72,6 +72,7 @@ const PopUpRegisterComponent = ({ registroManual, registroMasivo}: { registroMan
         showConfirmButton: false,
         timer: 1500,
       });
+      router.push('/users');
     } catch (error:any) {
      const errorMessage = (error.message) || "Error desconocido al subir el archivo.";
       Swal.fire({
