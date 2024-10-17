@@ -83,7 +83,7 @@ export class MailService {
     
     const htmlContent = ejs.render(template, data);
 
-  
+    // Enviar el correo
     await this.sendMail(
       email,
      "Bienvenido al Control Total de tus Estrategias Electorales",
@@ -91,7 +91,7 @@ export class MailService {
     );
   }
 
-  async sendPasswordResetEmail(email: string, userId: string): Promise<void> {
+  async sendPasswordResetEmail(email: string): Promise<void> {
     const templatePath = path.join(__dirname, '../../..', 'passwordResetTemplate.ejs');
     let template: string;
 

@@ -65,39 +65,51 @@ const Campaingdesc = () => {
       });
 
       if (!response.ok) {
-        setVoteMessage('Error en la respuesta de enviar voto');
-        throw new Error('Error en la respuesta de enviar voto');
-      } else {
-        const Toast = Swal.mixin({
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          customClass: {
-            container: 'mt-12'
-          },
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          }
-        });
-        Toast.fire({
-          icon: "success",
-          title: "Votación Realizada"
-        });
+        const errorData = await response.json();// Obtener el mensaje de error del servidor
+        throw new Error(errorData.message || 'Error al enviar el voto'); // Usar solo el mensaje de error
       }
-      const result = await response.text();
-      setVoteMessage(result);
+  
+      const result = await response.text(); // Obtener el mensaje de éxito del servidor
+      setVoteMessage(result); // Establecer el mensaje de voto
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        customClass: {
+          container: 'mt-12'
+        },
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: "success",
+        title: "Votación Realizada"
+      });
+      
       voteMessageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+
     } catch (error) {
-      setVoteMessage('Error al enviar el voto');
+      const errorMessage = error instanceof Error ? error.message : 'Error al enviar el voto'; // Usar el mensaje de error recibido o un mensaje predeterminado
+      setVoteMessage(errorMessage);
+  
+      // Mostrar alerta con el mensaje de error
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: errorMessage,
+        confirmButtonText: 'Aceptar',
+      });
+  
       console.error('Error al enviar el voto:', error);
     } finally {
-      setLoading(false);
+      setLoading(false); // Mantén el loading en falso al final
+      setIsVoting(false); // Asegúrate de volver a habilitar el botón después de finalizar
     }
-  };
-
+  }
   useEffect(() => {
     if (userData) {
       setRoles(userData.userData.roles.map(role => role.name));
