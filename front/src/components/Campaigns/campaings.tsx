@@ -32,10 +32,10 @@ const CampaignsTable = () => {
     }, [userData]);
 
     useEffect(() => {
-        if (userData?.userData.id) {
+        if (userData?.userData.id && roles.length > 0 && groups.length > 0 && userData?.userData.id) {
             fetchCampaigns();
         }
-    }, [roles, groups, userData, pathname]);
+    },  [roles, groups, userData, pathname]);
 
     const fetchCampaigns = async () => {
         if (!userData?.userData.id) {
