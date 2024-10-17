@@ -96,7 +96,7 @@ const Groups = () => {
     } catch (error) {
       console.error("Error creando grupo:", error);
     }finally {
-      setIsCreatingGroup(false);
+     setIsCreatingGroup(false);
     }
   };
 
@@ -210,9 +210,10 @@ const Groups = () => {
           
           <button 
             type="submit" 
-            className="bg-primaryColor text-white p-2 rounded"
+            className="bg-primaryColor text-white p-2 rounded disabled:bg-gray-400"
             data-tooltip-id="creategroup-tooltip"
             data-tooltip-content="Haz clic para crear un nuevo grupo"
+            disabled={isCreatingGroup}
           >
              {isCreatingGroup ? <Spinner /> : "Crear Grupo"}
           </button>
@@ -222,8 +223,8 @@ const Groups = () => {
         {/* Botón para eliminar los grupos seleccionados */}
         <button
           onClick={handleDeleteGroups}
-          className="bg-primaryColor text-white p-2 rounded mt-2 disabled:opacity-50"
-          disabled={selectedGroups.length === 0} // Desactiva si no hay grupos seleccionados
+          className="bg-primaryColor text-white p-2 rounded mt-2 disabled:bg-gray-400"
+          disabled={selectedGroups.length === 0 || isDeletingGroups}   // Desactiva si no hay grupos seleccionados
           data-tooltip-id="deletegroups-tooltip"
           data-tooltip-content={selectedGroups.length === 0 
             ? "Selecciona uno o más grupos para eliminar"
