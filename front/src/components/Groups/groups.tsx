@@ -17,6 +17,9 @@ const Groups = () => {
   const [groupName, setGroupName] = useState<string>("");
   const [roles, setRoles] = useState<string[]>([]); // Estado para roles
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
+  const [isCreatingGroup, setIsCreatingGroup] = useState<boolean>(false); // Estado de carga para creación de grupo
+  const [isDeletingGroups, setIsDeletingGroups] = useState<boolean>(false); // Estado de carga para eliminación de grupos
+
 
   useEffect(() => {
     const initializeData = async () => {
@@ -71,7 +74,7 @@ const Groups = () => {
 
   const handleCreateGroup = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setIsCreatingGroup(true);
     try {
       const response = await fetch(`${APIURL}/groups`, {
         method: "POST",
@@ -92,6 +95,8 @@ const Groups = () => {
       setGroupName(""); 
     } catch (error) {
       console.error("Error creando grupo:", error);
+    }finally {
+     setIsCreatingGroup(false);
     }
   };
 
@@ -115,6 +120,7 @@ const Groups = () => {
     });
 
     if (result.isConfirmed) {
+      setIsDeletingGroups(true);
       try {
         const response = await deleteGroups(selectedGroups);
         const newGroups = groups.filter(
@@ -127,6 +133,8 @@ const Groups = () => {
       } catch (error: any) {
         const errorMessage = error.message || "Error al eliminar los grupos.";
         Swal.fire("Error", errorMessage, "error");
+      }finally {
+        setIsDeletingGroups(false); 
       }
     }
   };
@@ -202,11 +210,12 @@ const Groups = () => {
           
           <button 
             type="submit" 
-            className="bg-primaryColor text-white p-2 rounded"
+            className="bg-primaryColor text-white p-2 rounded disabled:bg-gray-400"
             data-tooltip-id="creategroup-tooltip"
             data-tooltip-content="Haz clic para crear un nuevo grupo"
+            disabled={isCreatingGroup}
           >
-            Crear Grupo
+             {isCreatingGroup ? <Spinner /> : "Crear Grupo"}
           </button>
           <Tooltip id="creategroup-tooltip" />
         </form>
@@ -214,14 +223,14 @@ const Groups = () => {
         {/* Botón para eliminar los grupos seleccionados */}
         <button
           onClick={handleDeleteGroups}
-          className="bg-primaryColor text-white p-2 rounded mt-2 disabled:opacity-50"
-          disabled={selectedGroups.length === 0} // Desactiva si no hay grupos seleccionados
+          className="bg-primaryColor text-white p-2 rounded mt-2 disabled:bg-gray-400"
+          disabled={selectedGroups.length === 0 || isDeletingGroups}   // Desactiva si no hay grupos seleccionados
           data-tooltip-id="deletegroups-tooltip"
           data-tooltip-content={selectedGroups.length === 0 
             ? "Selecciona uno o más grupos para eliminar"
             : "Haz clic para eliminar los grupos seleccionados"}
         >
-          Eliminar Grupos
+         {isDeletingGroups ? <Spinner /> : "Eliminar Grupos"}
         </button>
         <Tooltip id="deletegroups-tooltip" />
       </div>
