@@ -115,42 +115,48 @@ const LoginForm = () => {
         window.location.href = auth0LoginUrl;
     };
 
-    // "Olvidé mi contraseña"
+     // "Olvidé mi contraseña"
     const handleForgotPassword = async () => {
-        const email = dataUser.email; // Usa el email del estado actual
-        if (!email) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Por favor, ingresa tu correo electrónico.',
-          });
-          return;
+        const { value: email } = await Swal.fire({
+            title: 'Restablecer Contraseña',
+            input: 'email',
+            inputLabel: 'Ingresa tu correo electrónico',
+            inputPlaceholder: 'Correo electrónico',
+            showCancelButton: true,
+            confirmButtonText: 'Enviar',
+            cancelButtonText: 'Cancelar',
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Por favor, ingresa tu correo electrónico';
+                }
+            }
+        });
+
+        if (email) {
+            try {
+                const response = await forgotPassword(email);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Correo Enviado',
+                    text: response.message || 'Revisa tu correo para restablecer la contraseña.',
+                });
+            } catch (error: unknown) {
+                if (error instanceof Error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message,
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error desconocido.',
+                    });
+                }
+            }
         }
-      
-        try {
-          const response = await forgotPassword(email);
-          Swal.fire({
-            icon: 'success',
-            title: 'Correo Enviado',
-            text: response.message || 'Revisa tu correo para restablecer la contraseña.',
-          });
-        } catch (error: unknown) { // Especificar el tipo de error
-          if (error instanceof Error) {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: error.message, // Ahora TypeScript reconoce que error tiene un mensaje
-            });
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'Error desconocido.',
-            });
-          }
-        }
-      };
-      
+    };
     return (
         <div className='my-4 text-center flex flex-col items-center bg-white shadow-lg px-4 rounded-lg'>
             <Image src="/images/logo.png" alt="imagenLogo" width={350} height={350} className='m-10' />
