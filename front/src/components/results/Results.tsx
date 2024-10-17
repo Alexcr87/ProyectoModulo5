@@ -5,22 +5,32 @@ import Image from 'next/image';
 import { IDataVote, IVotesResult } from '@/interfaces/IVotesResult';
 import colors from '@/helpers/colors.helper';
 import Spinner from '../ui/Spinner';
+import { getWitheVote } from '@/helpers/campaña.helper';
 
+interface ResultProps {
+  data: IVotesResult[]
+  id: string
+}
 
-const Results: React.FC<{ data: IVotesResult[] }> = ({ data }) => {
+const Results: React.FC<ResultProps> = ({ data, id }) => {
   const [dataCan, setDataCan] = useState<IDataVote[]>([]);
   const [totalVotes, setTotalVotes] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [whitePercen, setWhitePercen] = useState<number>(0)
+  const [whiteVote, setWhiteVote] = useState<number>(0)
+
 
   useEffect(() => {
-    const fetchData = () => {
-
+    const fetchData = async () => {
+      const whiteVotes = await getWitheVote(id);
+      
       if (!Array.isArray(data)) {
         console.error('Expected data to be an array, but got', data);
         return;
       }
 
-      let total = 0;
+      let total = whiteVotes;
+      setWhiteVote(Number(total))
       const dataCandidate: IDataVote[] = [];
 
       data.forEach((item)=>{
@@ -28,6 +38,7 @@ const Results: React.FC<{ data: IVotesResult[] }> = ({ data }) => {
       })
 
       data.forEach((item, index) => {
+        
         const obj = {
           name: item.user.name, 
           votes: item.votes,
@@ -38,6 +49,9 @@ const Results: React.FC<{ data: IVotesResult[] }> = ({ data }) => {
         dataCandidate.push(obj);
       });
 
+      const percenWhite = (whiteVotes/ total) * 100
+
+      setWhitePercen(percenWhite)
       setDataCan(dataCandidate);
       setTotalVotes(total);
       setIsLoading(false);
@@ -62,6 +76,19 @@ const Results: React.FC<{ data: IVotesResult[] }> = ({ data }) => {
         </div>
         <div className='flex flex-col md:flex-row gap-8 bg-cuartiaryColor rounded-3xl'>
           <div className='w-full md:w-[50%] justify-center flex flex-col md:ml-2'>
+          <div className='flex w-full items-center border-2 bg-white p-4 mb-2 rounded-xl'>
+                  <Image src="/images/blankVote.jpg" alt={`voto en blaco`} width={100} height={100} className='rounded-full object-cover' />
+                  <div className='flex flex-col w-full mr-4 items-center'>
+                    <p>Voto en blanco</p>
+                    <div className={`w-full bg-blue-200 rounded-full dark:bg-gray-700 ml-4 h-4`}>
+                      <div style={{ backgroundColor: "#ffffff",  width: `${whitePercen}%`, border:"solid 1px black"  }} 
+                        className={`text-xs font-medium text-center p-0.5 leading-none rounded-full`} 
+                      > 
+                        {whiteVote} 
+                      </div>
+                    </div>
+                  </div>
+                </div>
             {dataCan && dataCan.map((candidate, index) => {
               let percentage = 0;
 
@@ -87,7 +114,7 @@ const Results: React.FC<{ data: IVotesResult[] }> = ({ data }) => {
             })} 
           </div>
           <div className='w-full md:w-[50%]'>
-            <Graph dataCan={dataCan}/>
+            <Graph dataCan={dataCan} id={id}/>
           </div>
         </div>
       </div>
