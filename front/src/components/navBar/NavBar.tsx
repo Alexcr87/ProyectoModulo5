@@ -257,19 +257,16 @@ const NavBar = () => {
                     flex-direction: column;
                 }
             `}</style>
-            <div className='hidden md:flex gap-8 text-white list-none'>
+            <div className='hidden md:flex items-center gap-8 text-white list-none'>
                 <p>{(isCandidate || isVotante || isModerator || isAdmin) && (<>{changePassword()}</>)}</p>
-                 <Guia/>                
-            </div>
-            <div className="hidden md:flex gap-4">
-            <button
-    onClick={toggleDarkMode}
-    className={`text-white ${isDarkMode ? 'bg-primaryColor' : 'bg-gray-800'} px-4 py-2 rounded`}
->
-    {isDarkMode ? <SunIcon className="h-6 w-6" /> : <MoonIcon className="h-6 w-6" />}
-</button>
-            </div>
-            
+                <button
+                    onClick={toggleDarkMode}
+                    className={`text-white px-4 py-2 rounded`}
+                    >
+                    {isDarkMode ? <SunIcon className="h-6 w-6" /> : <MoonIcon className="h-6 w-6" />}
+                </button>
+                <Guia/>                
+            </div>            
         </nav>
     )
 }
