@@ -52,6 +52,7 @@ const Campaingdesc = () => {
 
   const sendVote = async (candidateId?: string) => {
     setIsVoting(true);
+    setLoading(true)
     try {
       const response = await fetch(`${APIURL}/votes`, {
         method: 'POST',
@@ -93,7 +94,7 @@ const Campaingdesc = () => {
       setVoteMessage('Error al enviar el voto');
       console.error('Error al enviar el voto:', error);
     } finally {
-      setIsVoting(false);
+      setLoading(false);
     }
   };
 
@@ -156,7 +157,7 @@ const Campaingdesc = () => {
                           disabled={isVoting}
                           style={{ cursor: isVoting ? 'default' : 'pointer' }}
                         >
-                          {isVoting ? <Spinner /> : 'Votar'}
+                          {'Votar'}
                         </Boton>
                       </div>
                     )}
@@ -181,7 +182,7 @@ const Campaingdesc = () => {
                         disabled={isVoting}
                         style={{ cursor: isVoting ? 'default' : 'pointer' }}
                       >
-                        {isVoting ? <Spinner /> : 'Votar'}
+                        {'Votar'}
                       </Boton>
                     </div>
                   </div>
