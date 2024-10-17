@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Input from '../ui/Input';
 import Boton from '../ui/Boton';
-import { forgotPassword } from '@/helpers/auth.helper'; // Asegúrate de que esta función esté correctamente definida
+
 import { useRouter } from 'next/navigation';
 import Swal from 'sweetalert2';
 import Spinner from '../ui/Spinner';
