@@ -77,15 +77,13 @@ export class CandidateController {
 
   @Patch(':id')
 @UseInterceptors(FileInterceptor('file')) // Aquí se maneja la subida de archivos
-update(
-  @Param('id') id: string, 
-  @Body() updateData: Partial<Candidate>, 
-  @UploadedFile() file: Express.Multer.File
+@ApiOperation({ summary: 'Update candidate with file' })
+async update(
+  @Param('id') id: string,
+  @Body() updateData: Partial<Candidate>,
+  @UploadedFile(new MinSizeAndFormat()) file: Express.Multer.File
 ) {
-  if (file) {
-    updateData.imgUrl = file.filename; // Almacena el nombre del archivo
-  }
-  return this.candidateService.updateCandidate(id, updateData);
+  return this.candidateService.updateCandidate(id, updateData, file);
 }
 
   @Delete(':id')

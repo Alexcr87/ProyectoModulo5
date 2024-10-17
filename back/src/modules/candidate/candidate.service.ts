@@ -127,21 +127,34 @@ export class CandidateService {
   async updateCandidate(
     id: string,
     updateData: Partial<Candidate>,
+    file?: Express.Multer.File, // Add optional file parameter
   ): Promise<Candidate> {
     const candidate = await this.candidateRepository.findOne({ where: { id } });
-
+  
     if (!candidate) {
       throw new NotFoundException('Candidato no encontrado');
     }
-
+  
+    // Convert proposals to JSON string if provided
     if (updateData.proposals) {
       updateData.proposals = JSON.stringify(updateData.proposals);
     }
-
+  
+    // Handle the image upload if a file is provided
+    if (file) {
+      const uploadResult = await this.cloudinaryService.uploadFile(
+        file.buffer,
+        file.originalname
+      );
+      updateData.imgUrl = uploadResult; // Store the Cloudinary URL in updateData
+    }
+  
+    // Save the updated candidate
     const updatedCandidate = await this.candidateRepository.save({
       ...candidate,
       ...updateData,
     });
+  
     return {
       ...updatedCandidate,
       proposals: JSON.parse(updatedCandidate.proposals),

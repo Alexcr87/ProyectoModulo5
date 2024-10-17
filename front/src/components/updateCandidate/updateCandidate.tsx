@@ -20,6 +20,8 @@ const UpdateCandidate = () => {
   const [selectedCandidateId, setSelectedCandidateId] = useState<string | undefined>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [candidateFinally, setCandidateFinally] = useState<ICandidate>();
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
 
   useEffect(() => {
     const fetchCandidates = async () => {
@@ -53,6 +55,18 @@ const UpdateCandidate = () => {
   const handleProposalsChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     setProposals(value.split("\n"));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0] || null;
+    setFile(selectedFile);
+    
+    if (selectedFile) {
+      const fileUrl = URL.createObjectURL(selectedFile); // Crear URL del archivo
+      setImagePreview(fileUrl); // Actualizar el estado de la imagen
+    } else {
+      setImagePreview(null); // Limpiar el estado si no hay archivo
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -164,43 +178,28 @@ const UpdateCandidate = () => {
             <span className="ml-2 text-blue-500 cursor-pointer" data-tooltip-id="tooltip-candidate-image">ℹ️</span>
             <Tooltip id="tooltip-candidate-image" place="top" content="Sube una imagen del candidato en formato JPG." />
           </label>
-          <InputFile type="file" accept="image/jpeg" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+          <InputFile type="file" accept="image/jpeg" onChange={handleFileChange} />
         </div>
 
         {/* Botón de actualización */}
-        <div className="flex justify-center">
-          <div className="w-[40%]">
-            <Boton>Actualizar Candidato</Boton>
-          </div>
+        <div className="flex justify-center items-center">
+          <Boton type="submit" >
+            Actualizar Candidato
+          </Boton>
         </div>
       </form>
-
-         {/* Imagen del candidato a la derecha */}
-    <div className="flex justify-center items-center ml-6">
-
-{/* {candidateFinally ? (
-
-  <img 
-    className="h-60 w-72"
-    src={candidateFinally.imgUrl} 
-    alt={imagen del candidato ${candidateFinally.imgUrl}} 
-  />
-) : (
-  <p>Cargando imagen del candidato...</p>
-)} */}
- {candidateFinally && candidateFinally?.imgUrl ? (
-<img 
-className="h-60 w-72"
-src={candidateFinally.imgUrl} 
-alt={`imagen del candidato ${candidateFinally.imgUrl}`} 
-/>
-) : (
-<p>Cargando imagen del candidato...</p>
-)} 
-</div>
-</div>
-);
-
+       {/* Vista previa de la imagen */}
+       <div className="flex justify-center items-center ml-6">
+        {imagePreview ? (
+          <img className="h-60 w-72" src={imagePreview} alt={`Imagen del candidato`} />
+        ) : candidateFinally?.imgUrl ? (
+          <img className="h-60 w-72" src={candidateFinally.imgUrl} alt={`Imagen del candidato ${candidateFinally.imgUrl}`} />
+        ) : (
+          <p>Cargando imagen del candidato...</p>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default UpdateCandidate;
