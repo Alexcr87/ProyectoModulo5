@@ -117,7 +117,17 @@ const UpdateCandidate = () => {
   };
 
   return (
-    <div className="flex w-[50%] justify-center items-center p-6 bg-white shadow-lg rounded-lg m-auto mt-10">
+    <div className="container mx-auto p-4">
+             {/* Vista previa de la imagen */}
+             <div className="flex justify-center items-center ml-6">
+        {imagePreview ? (
+          <img className="h-60 w-72" src={imagePreview} alt={`Imagen del candidato`} />
+        ) : candidateFinally?.imgUrl ? (
+          <img className="h-60 w-72" src={candidateFinally.imgUrl} alt={`Imagen del candidato ${candidateFinally.imgUrl}`} />
+        ) : (
+          <p>Cargando imagen del candidato...</p>
+        )}
+      </div>
       <form className="w-11/12 space-y-4" onSubmit={handleSubmit}>
         <h1 className="text-lg font-bold text-center">Actualizar Candidato</h1>
 
@@ -188,16 +198,6 @@ const UpdateCandidate = () => {
           </Boton>
         </div>
       </form>
-       {/* Vista previa de la imagen */}
-       <div className="flex justify-center items-center ml-6">
-        {imagePreview ? (
-          <img className="h-60 w-72" src={imagePreview} alt={`Imagen del candidato`} />
-        ) : candidateFinally?.imgUrl ? (
-          <img className="h-60 w-72" src={candidateFinally.imgUrl} alt={`Imagen del candidato ${candidateFinally.imgUrl}`} />
-        ) : (
-          <p>Cargando imagen del candidato...</p>
-        )}
-      </div>
     </div>
   );
 };
