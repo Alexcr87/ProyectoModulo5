@@ -54,3 +54,24 @@ export async function registerCandidate(userData: ICandidate) {
       );
     }
   }
+
+  export async function updateCandidateById(userData:ICandidate, id:string) {
+    try {
+        const res = await fetch(`${APIURL}/candidates/${id}`,{
+            method:"PATCH",
+            headers: {
+                "Content-type": "application/json",
+              },
+              body: JSON.stringify(userData),
+        })
+        if (!res.ok) {
+            return "respuesta error"
+        }
+        const user = await res.json()
+        
+        return user
+        
+    } catch (error:any) {
+        throw new Error(error)
+    }
+  }

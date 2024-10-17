@@ -1,3 +1,4 @@
+import ICandidate from "./ICandidate";
 import IGroup from "./IGroup";
 import IUsers from "./IUser";
 
@@ -40,4 +41,5 @@ export interface updateUserSession {
             }
         ];
         groups: IGroup[];
+        candidate?:ICandidate
 }
