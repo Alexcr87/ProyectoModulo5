@@ -6,7 +6,7 @@ import React from 'react'
 const ResultCampaña: React.FC<{ params: { id: string } }> = async ({ params }) => {
     const data:IVotesResult[] = await getCampañaByID(params.id)
   return (
-    <Results data={data} />
+    <Results data={data} id={params.id} />
   )
 }
 
