@@ -36,7 +36,7 @@ const popUPSelectRegister = () => {
             <div id="popup-modal"  className={isOpen ? 'fixed inset-0 flex items-center justify-center bg-cuartiaryColor' : 'hidden'}>
                 <div  className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="relative p-4 w-full max-w-md max-h-full">
-                        <div className="relative bg-white  rounded-lg shadow bg-cuartiaryColor w-[500px] h-[500px]">
+                        <div className="relative bg-white  rounded-lg shadow bg-cuartiaryColor md:w-[500px] md:h-[500px]">
                         {/* <div className="relative bg-gradient-to-r from-green-100 to-blue-100 rounded-lg shadow dark:bg-gray-700 w-[500px] h-[500px]"> */}
                             <button type="button" className="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" onClick={handleModalClose}>
                             <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -48,11 +48,11 @@ const popUPSelectRegister = () => {
 
                                 <img className="mx-auto mb-8 mt-6 text-gray-400 w-40 h-42 dark:text-gray-200" aria-hidden="true" src="/images/popupregister.png">
                                 </img>
-                                <h3 className="mb-20 mt-12  text-xl font-normal text-black dark:text-gray-400">Seleccione la opción para registrar usuarios</h3>
+                                <h3 className="mb-4 md:mb-20 mt-12  text-xl font-normal text-black dark:text-gray-400">Seleccione la opción para registrar usuarios</h3>
                                 <button 
                                 //  onClick={() => setRegistroManual(true)}
                                 onClick={() => handleRegistroClick('manual')}
-                                data-modal-hide="popup-modal" type="button" className="text-white text-xl/8 bg-blue-500  hover:bg-blue-400 hover:text-black focus:outline-none font-normal rounded-lg inline-flex items-center px-5 py-2.5 text-center mr-8">
+                                data-modal-hide="popup-modal" type="button" className="text-white text-xl/8 bg-blue-500  hover:bg-blue-400 hover:text-black focus:outline-none font-normal rounded-lg inline-flex items-center px-5 py-2.5 text-center md:mr-8">
                                 Registro Manual
                                 </button>
                                 <button 

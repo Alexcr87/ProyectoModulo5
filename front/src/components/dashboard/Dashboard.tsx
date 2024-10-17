@@ -11,9 +11,10 @@ const Dashboard = () => {
   return (
     <>
         { (isAdmin || isModerator) &&<div>
-        <div className={`${open ? "w-80":"w-14"} transition-all duration-300 bg-primaryColor p-2 flex items-start justify-center h-screen fixed z-50`}>
-            <button onClick={()=>setOpen(true)} className={`${open && "hidden"}`}>
+        <div className={`${open ? "w-full md:w-80":"w-full md:w-14"} transition-all duration-300 bg-primaryColor p-2 items-start justify-center md:h-screen fixed opacity-80 z-40`}>
+            <button onClick={()=>setOpen(true)} className={`${open && "hidden"} flex`}>
                 <i className="fa-solid fa-bars text-2xl text-white"></i>
+                <p className={`${open && "hidden"} text-white font-bold ml-4 md:hidden`}>Dashboard</p>
             </button>
             <button onClick={()=>setOpen(false)} className={`${!open && "hidden"} absolute right-4`}>
                 <i className="fa-solid fa-x text-2xl text-white"></i>

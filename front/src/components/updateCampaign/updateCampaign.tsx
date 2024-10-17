@@ -104,17 +104,18 @@ const updateCampaign = () => {
       <form className="campaign-form flex justify-center" onSubmit={handleUpdateCampaign}>
         <div className="flex flex-col items-center w-full md:w-[40%] gap-4">
           {/* Nombre */}
-          <div className="relative">
+          <div className="relative w-full">
             <label className="flex items-center">
               Nombre
               <span
-                className="ml-2 text-blue-500 cursor-pointer"
+                className="ml-2 text-blue-500 cursor-pointer" 
                 data-tooltip-id="tooltip-name"
               >
                 ℹ️
               </span>
               <Tooltip id="tooltip-name" place="top" content="Introduce el nombre de la campaña." />
             </label>
+            
             <Input
               type="text"
               id="name"
@@ -125,7 +126,7 @@ const updateCampaign = () => {
           </div>
   
           {/* Descripción */}
-          <div className="relative">
+          <div className="relative w-full">
             <label className="flex items-center">
               Descripción
               <span
@@ -148,7 +149,7 @@ const updateCampaign = () => {
           </div>
   
           {/* Ubicación */}
-          <div className="relative">
+          <div className="relative w-full">
             <label className="flex items-center">
               Ubicación
               <span
@@ -169,7 +170,7 @@ const updateCampaign = () => {
           </div>
   
           {/* Fecha */}
-          <div className="relative">
+          <div className="relative w-full">
             <label className="flex items-center">
               Fecha
               <span
@@ -191,7 +192,9 @@ const updateCampaign = () => {
           </div>
   
           {/* Botón de actualización */}
-          <Boton type="submit">Actualizar Campaña</Boton>
+          <div className='mb-8'>
+            <Boton type="submit">Actualizar Campaña</Boton>
+          </div>
         </div>
       </form>
     </>
