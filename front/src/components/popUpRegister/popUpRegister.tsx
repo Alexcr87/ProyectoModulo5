@@ -61,29 +61,63 @@ const PopUpRegisterComponent = ({ registroManual, registroMasivo}: { registroMan
       });
       return;
     }
+  
     setLoading(true);
+  
     try {
-      // Implementa la lógica de importación del archivo aquí
-    await importUser(file, userData?.userData.id, selectedGroups); // Asegúrate de definir esta función
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Archivo subido con éxito",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      router.push('/users');
-    } catch (error:any) {
-     const errorMessage = (error.message) || "Error desconocido al subir el archivo.";
+      // Lógica de importación de usuarios, ahora recibe la respuesta con addedUsers, errors y existingUsers
+      const response = await importUser(file, userData?.userData.id, selectedGroups);
+  
+      const { addedUsers, errors, existingUsers } = response;
+  
+      // Si hay usuarios agregados
+      if (addedUsers.length > 0) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: `${addedUsers.length} usuarios añadidos con éxito`,
+          showConfirmButton: true,
+        });
+      }
+  
+      // Si hay usuarios existentes
+      if (existingUsers.length > 0) {
+        Swal.fire({
+          position: "center",
+          icon: "info",
+          title: "Usuarios ya registrados",
+          text: `Los siguientes usuarios ya están registrados: ${existingUsers.join(', ')}. Por favor, gestiona estos usuarios en "Mis usuarios" para agregarlos o cambiarlos de grupo.`,
+          showConfirmButton: true,
+        });
+      }
+  
+      // Si hay errores
+      if (errors.length > 0) {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Errores durante la carga",
+          text: `Hubo errores con los siguientes usuarios: ${errors.join(', ')}`,
+          showConfirmButton: true,
+        });
+      }
+  
+      // Redirigir o hacer alguna acción adicional si todo es exitoso
+      if (addedUsers.length > 0) {
+        router.push('/users');
+      }
+  
+    } catch (error: any) {
+      const errorMessage = (error.message) || "Error desconocido al subir el archivo.";
       Swal.fire({
         position: "center",
         icon: "error",
         title: "Error al subir el archivo",
-        text:errorMessage,
+        text: errorMessage,
         showConfirmButton: false,
         timer: 1500,
       });
-    }finally {
+    } finally {
       setLoading(false);
     }
   };

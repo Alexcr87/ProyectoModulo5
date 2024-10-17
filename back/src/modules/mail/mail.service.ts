@@ -48,7 +48,7 @@ export class MailService {
       changePasswordLink,  // Enlace de cambio de contraseña
       apiUrl: process.env.API_URL,
     };
-    console.log(data)
+
   
     // Renderizar el HTML usando la plantilla y los datos
     const htmlContent = ejs.render(template, data);

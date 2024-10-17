@@ -173,7 +173,7 @@ export class UserService{
   }
 
   async findUserByEmail(email:string):Promise<User>{
-    console.log(email, "email");
+   
     
     const user = await this.userRepository.findOne({ where: { email },relations: { roles:true, groups:true}});
       if (!user) {
@@ -347,7 +347,7 @@ async deleteUsers(userIds: string[]): Promise<void> {
     filePath: string, 
     parentId: string,
     groupsId?: string[]
-  ): Promise<{ addedUsers: string[], errors: string[] }> {
+  ): Promise<{ addedUsers: string[], errors: string[], existingUsers: string[]}> {
     if (!filePath) {
       throw new BadRequestException('Archivo no seleccionado');
     }
@@ -355,6 +355,7 @@ async deleteUsers(userIds: string[]): Promise<void> {
     const users = await this.readExcelFile(filePath);
     const addedUsers: string[] = [];
     const errors: string[] = [];
+    const existingUsers: string[] = [];
     
     for (const user of users) {
       const missingFields = this.validateUserFields(user);
@@ -363,6 +364,13 @@ async deleteUsers(userIds: string[]): Promise<void> {
         continue;
       }
       try {
+
+        const existingUser = await this.userRepository.findOne({ where: { email: user.email } });
+      if (existingUser) {
+        existingUsers.push(user.email); // Agregamos el correo del usuario ya registrado al array
+        continue; // Saltamos a la siguiente iteración
+      }
+
         user.groupId = groupsId;
         const create = await this.createUser(user, parentId);
         addedUsers.push(user.email);
@@ -372,7 +380,8 @@ async deleteUsers(userIds: string[]): Promise<void> {
     }
     return {
       addedUsers,
-      errors  
+      errors,
+      existingUsers 
     };
   }
   private validateUserFields(user: CreateUserDto): string[] {
