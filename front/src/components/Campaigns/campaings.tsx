@@ -229,7 +229,9 @@ const CampaignsTable = () => {
                                 <td className="border p-2">{campaign.description}</td>
                                 <td className="border p-2">{campaign.location}</td>
                                 <td className="border p-2">
-                                    {new Date(campaign.date).toLocaleDateString()}
+                                    {new Date(campaign.date).toLocaleString('en-GB', {
+                                      timeZone: 'UTC'
+                                    })}
                                 </td>
                                 <td 
                                    className={`border p-2 ${expired ? 'text-gray-400 cursor-not-allowed' : 'text-blue-500 hover:text-primaryColor cursor-pointer'}`}
