@@ -117,6 +117,7 @@ const updateCampaign = () => {
               </span>
               <Tooltip id="tooltip-name" place="top" content="Introduce el nombre de la campaña." />
             </label>
+            
             <Input
               type="text"
               id="name"
@@ -196,9 +197,9 @@ const updateCampaign = () => {
           </div>
   
           {/* Botón de actualización */}
-          <Boton type="submit" className="mt-4">
-            Actualizar Campaña
-          </Boton>
+          <div className='mb-8'>
+            <Boton type="submit">Actualizar Campaña</Boton>
+          </div>
         </div>
       </form>
     </>

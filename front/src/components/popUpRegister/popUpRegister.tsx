@@ -122,7 +122,7 @@ const PopUpRegisterComponent = ({ registroManual, registroMasivo}: { registroMan
       {/* Popup para registro manual */}
       {registroManual && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg relative overflow-hidden">
+          <div className="bg-white mt-28 md:mt-0 md:p-8 rounded-lg shadow-lg relative overflow-hidden">
             <button
               // onClick={() => setRegistroManual(false)}
               onClick={() => router.push('/')} 
@@ -137,7 +137,7 @@ const PopUpRegisterComponent = ({ registroManual, registroMasivo}: { registroMan
       {/* Popup para registro masivo */}
       {registroMasivo && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 w-[40%] rounded-lg shadow-lg relative overflow-hidden flex flex-col items-center">
+          <div className="bg-white p-8 w-[90%] md:w-[40%] rounded-lg shadow-lg relative overflow-hidden flex flex-col items-center">
             <button
               // onClick={() => setRegistroMasivo(false)}
               onClick={() => router.push('/')} 
