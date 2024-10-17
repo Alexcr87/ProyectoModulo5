@@ -98,12 +98,7 @@ const updateCampaign = () => {
         
         <div className="flex flex-col md:flex-row items-center w-full md:w-4/5 lg:w-3/5 gap-4 m-auto mt-8 py-8 px-6 font-bold border-4 rounded-lg border-stroke dark:border-dark-3 border-primaryColor shadow-lg">
           <p>{`Campana: ${campaign?.name}`}</p>
-          <p>{`Fecha: ${campaign?.date ? new Intl.DateTimeFormat('es-ES', { 
-            day: '2-digit', 
-            month: '2-digit', 
-            year: 'numeric', 
-            timeZone: 'UTC' 
-          }).format(new Date(campaign.date)) : ''}`}</p>
+          <p>{`Fecha: ${campaign?.date ? new Intl.DateTimeFormat('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC'  }).format(new Date(campaign.date)) : ''}`}</p>
         </div>
       </div>
       <form className="campaign-form flex justify-center" onSubmit={handleUpdateCampaign}>
