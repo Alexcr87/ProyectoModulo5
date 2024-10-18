@@ -26,6 +26,7 @@ const Users = () => {
   const [roles, setRoles] = useState<string[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [selectAll, setSelectAll] = useState<boolean>(false);
+  const [loadingModal, setLoadingModal] = useState<boolean>(false);
 
 
 // Definición de fetchUsers fuera del componente Users
@@ -132,11 +133,17 @@ useEffect(() => {
       });
       return; 
     }
-  
-    const success = await deleteUsersHelper(selectedUsers, APIURL); 
-    if (success) {
-      setUsers((prevUsers) => prevUsers.filter((user) => !selectedUsers.includes(user.id)));
-      setSelectedUsers([]); 
+    setLoadingModal(true);
+    try {
+      const success = await deleteUsersHelper(selectedUsers, APIURL);
+      if (success) {
+        setUsers((prevUsers) => prevUsers.filter((user) => !selectedUsers.includes(user.id)));
+        setSelectedUsers([]);
+      }
+    } catch (error) {
+      console.error("Error al eliminar usuarios:", error);
+    } finally {
+      setLoadingModal(false); // Ocultar spinner
     }
   };
 
@@ -182,6 +189,7 @@ useEffect(() => {
     });
   
     if (formValues && formValues.length > 0) {
+      setLoadingModal(true); // Mostrar spinne
       try {
         const response = await fetch(`${APIURL}/groups/assignGroup`, { // Eliminamos el userId de la URL
           method: "PATCH",
@@ -203,6 +211,8 @@ useEffect(() => {
       } catch (error) {
         console.error('Error:', error);
         MySwal.fire("Error", "Ocurrió un error al asignar grupos", "error");
+      }finally {
+        setLoadingModal(false); // Ocultar spinner
       }
     }
   };
@@ -217,7 +227,13 @@ const filteredUsers = users
 
 
     return (
+      
       <div className="container mx-auto p-4">
+        {loadingModal && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <Spinner /> {/* Mostrar spinner */}
+  </div>
+)}
         <Link href="/registerUsers" className="text-blue-500 hover:underline">
                 Volver
           </Link>
@@ -266,14 +282,14 @@ const filteredUsers = users
             <button
               onClick={handleAssignGroup}
               className="bg-primaryColor text-white px-4 py-2 rounded-md"
-              disabled={selectedUsers.length === 0}
+              disabled={selectedUsers.length === 0 || loadingModal}
             >
               Asignar grupo
             </button>
             <button
               onClick={() => handleDeleteUsers(selectedUsers, APIURL)}
               className="bg-primaryColor text-white px-4 py-2 rounded-md"
-              disabled={selectedUsers.length === 0}
+              disabled={selectedUsers.length === 0|| loadingModal}
             >
               Eliminar seleccionados
             </button>

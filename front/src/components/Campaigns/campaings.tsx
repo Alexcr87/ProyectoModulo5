@@ -118,7 +118,7 @@ const CampaignsTable = () => {
     const handleAction2 = (id: string | undefined, campaignDate: Date) => {
         const currentDate = new Date();
        
-        if (new Date(campaignDate) > currentDate) {
+        if (!roles.includes('admin') && new Date(campaignDate) > currentDate) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Campaña no habilitada',
