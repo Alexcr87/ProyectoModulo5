@@ -173,7 +173,7 @@ const NavBar = () => {
    }
    const perfilVotante = () =>{
     return (<li onClick={()=>setBars(!bars)}>
-            <Link href="/perfilUser">Mi perfil</Link>
+            <Link href="/perfilMadre">Mi perfil</Link>
     </li>)
    }
 

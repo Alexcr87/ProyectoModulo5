@@ -81,13 +81,15 @@ const updateCampaign = () => {
     try {
       const form = event.target as HTMLFormElement;
       const formData = new FormData(form);
-      
+      if(!campaign){
+        return
+      }
       const selectedDate = formData.get('date') as string;
       const updatedCampaign = {
         name: formData.get('name'),
         description: formData.get('description'),
         location: formData.get('location'),
-        date: new Date(selectedDate + 'T00:00:00-03:00').toISOString() || campaign?.date,
+        date: new Date(selectedDate + 'T00:00:00-03:00').toISOString() || formatDateToInput(campaign.date),
       };
       const response = await fetch(`${APIURL}/campaigns/${id}`, {
         method: 'PATCH',
@@ -248,29 +250,33 @@ let isToday = false
             />
           </div>
   
-          {/* Fecha */}
-          <div className="relative w-full">
-            <label className="flex items-center">
-              Fecha
-              <span className="ml-2 text-primaryColor cursor-pointer" data-tooltip-id="tooltip-date">
-                ℹ️
-              </span>
-              <Tooltip id="tooltip-date" place="top" content="Selecciona la fecha de la campaña." />
-            </label>
-            <Input
-              type="date"
-              name="date"
-              id="date"
-              value={formatDateToInput(formData.date)} // Formato YYYY-MM-DD
-              min={formatDateToInput(new Date())} // Asegúrate de que el mínimo sea también YYYY-MM-DD
-              onChange={handleDateChange}
-              disabled={isToday}
-              className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
-                border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 focus:border-primaryColor 
-                dark:focus:border-primaryColor focus-visible:shadow-none"
-              required
-            />
-          </div>
+         
+{!isToday ? (
+  <div className="relative w-full">
+    <label className="flex items-center">
+      Fecha
+      <span className="ml-2 text-primaryColor cursor-pointer" data-tooltip-id="tooltip-date">
+        ℹ️
+      </span>
+      <Tooltip id="tooltip-date" place="top" content="Selecciona la fecha de la campaña." />
+    </label>
+    <Input
+      type="date"
+      name="date"
+      id="date"
+      value={formatDateToInput(formData.date)} // Formato YYYY-MM-DD
+      min={formatDateToInput(new Date())} // Asegúrate de que el mínimo sea también YYYY-MM-DD
+      onChange={handleDateChange}
+      className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
+        border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 focus:border-primaryColor 
+        dark:focus:border-primaryColor focus-visible:shadow-none"
+      required
+    />
+  </div>
+) : (
+  // Campo oculto con la fecha para cuando isToday es true
+  <input type="hidden" name="date" value={formatDateToInput(formData.date)} />
+)}
   
           {/* Botón de actualización */}
           <div className='mb-8'>
