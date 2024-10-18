@@ -236,8 +236,13 @@ const CampaignsTable = () => {
                                 <td className="border p-2">{campaign.description}</td>
                                 <td className="border p-2">{campaign.location}</td>
                                 <td className="border p-2">
-{new Date(campaign.date).toLocaleDateString('en-GB',
-)}
+                                {(() => {
+        const date = new Date(campaign.date);
+        const day = String(date.getUTCDate()).padStart(2, '0'); // Get day and pad with zero if needed
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Get month (0-11) and pad
+        const year = date.getUTCFullYear(); // Get full year
+        return `${day}/${month}/${year}`; // Return formatted date
+    })()}
                                 </td>
                                 <td 
                                    className={`border p-2 ${expired ? 'text-gray-400 cursor-not-allowed' : 'text-blue-500 hover:text-primaryColor cursor-pointer'}`}
