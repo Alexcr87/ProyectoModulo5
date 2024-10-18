@@ -195,6 +195,14 @@ const UpdateCandidate = () => {
             </label>
             <InputFile type="file" accept="image/jpeg" onChange={handleFileChange} />
           </div>
+
+          <div className="grid grid-cols-12 mt-4">
+  <div className="col-start-4 col-end-8 flex justify-center">
+        <Boton type="submit" >
+          Actualizar Candidato
+        </Boton>
+      </div>
+      </div>
         </form>
         <div className="w-1/2  flex justify-center items-center h-96">
   {/* Vista previa de la imagen */}
@@ -212,13 +220,7 @@ const UpdateCandidate = () => {
             </div>
 
       {/* Botón de actualización */}
-      <div className="grid grid-cols-12 mt-4">
-  <div className="col-start-4 col-end-8 flex justify-center">
-        <Boton type="submit" >
-          Actualizar Candidato
-        </Boton>
-      </div>
-      </div>
+ 
     </div>
   );
 };
