@@ -38,12 +38,12 @@ const popUPSelectRegister = () => {
                     <div className="relative p-4 w-full max-w-md max-h-full">
                         <div className="relative bg-white  rounded-lg shadow bg-cuartiaryColor md:w-[500px] md:h-[500px]">
                         {/* <div className="relative bg-gradient-to-r from-green-100 to-blue-100 rounded-lg shadow dark:bg-gray-700 w-[500px] h-[500px]"> */}
-                            <button type="button" className="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" onClick={handleModalClose}>
-                            <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                </svg>
-                                <span className="sr-only">Close modal</span>   
-                            </button>
+                        <button
+                            onClick={handleModalClose}
+                            className="absolute top-2 left-2 bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
+                        >
+                            x
+                        </button>
                             <div className="p-4 md:p-5 text-center ">
 
                                 <img className="mx-auto mb-8 mt-6 text-gray-400 w-40 h-42 dark:text-gray-200" aria-hidden="true" src="/images/popupregister.png">

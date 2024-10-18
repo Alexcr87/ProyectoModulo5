@@ -36,16 +36,15 @@ export class MailService {
       return; // Salir si hay un error
     }
   
-    // Generar el enlace de cambio de contraseña
     const changePasswordLink = `${process.env.API_URL}/login?redirect=changePassword`;
   
-    // Datos que se inyectarán en la plantilla
+  
     const data = {
       title: 'Bienvenido a Gestión Electoral 2024',
       name,
       password,
       platform: 'Gestión Electoral 2024',
-      changePasswordLink,  // Enlace de cambio de contraseña
+      changePasswordLink,  
       apiUrl: process.env.API_URL,
     };
 
