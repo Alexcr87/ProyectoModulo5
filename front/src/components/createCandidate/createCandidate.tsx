@@ -7,6 +7,7 @@ import InputFile from "../ui/InputFile";
 import Textarea from "../ui/Textarea";
 import Select from "../ui/Select";
 import { Tooltip } from 'react-tooltip';
+import Spinner from "../ui/Spinner";
 
 
 
@@ -176,7 +177,9 @@ const CreateCandidate : React.FC<{ id: string }> = ({ id }) => {
         {/* Botón de Crear */}
         <div className="flex justify-center">
           <div className="w-[20%]">
-            <Boton>Crear Candidato</Boton>
+            <Boton disabled={loading}>
+               {loading ? <Spinner /> : 'Crear Candidato'} {/* Mostrar el spinner o el texto */}
+            </Boton>
           </div>
         </div>
       </form>
