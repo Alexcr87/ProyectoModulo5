@@ -21,7 +21,7 @@ const teamMembers = [
         "id": 3,
         "name": "Martin Rossetti",
         "profession":"FrontEnd Developer",
-        "image":"https://www.labsaenzrenauld.com/wp-content/uploads/2020/10/Perfil-hombre-ba%CC%81sico_738242395.jpg",
+        "image":"https://res.cloudinary.com/dgexsgnid/image/upload/v1729292703/Martin_faz9ur.jpg",
         "linkFacebook":"",
         "linkGitHub":"",
         "linkLinkedIn":""
