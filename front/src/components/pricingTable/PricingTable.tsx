@@ -24,6 +24,7 @@ const PricingTable = () => {
   const [selectedAccountId, setSelectedAccountId] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const {userData} = useAuth()
+  const [isLoadingPayment, setIsLoadingPayment] = useState<boolean>(false);
 
   useEffect(() => {
     
@@ -55,7 +56,7 @@ const PricingTable = () => {
 
   const handlePlanSelection = async (accountId: number , price:number) => {
     setSelectedAccountId(accountId);
-
+    setIsLoadingPayment(true)
     if (!userData) {
       Swal.fire({
         title: '¡Regístrate para continuar!',
@@ -63,12 +64,14 @@ const PricingTable = () => {
         icon: 'info',
         confirmButtonText: 'Ok',
       });
+      setIsLoadingPayment(false);
       return;
     }
 
     if (price === 0) { 
       
       setPreferenceId('');
+      setIsLoadingPayment(false);
       return;
     }
 
@@ -89,6 +92,8 @@ const PricingTable = () => {
       setPreferenceId(data.preferenceId); // Guarda el ID de preferencia para el botón de Mercado Pago
     } catch (error) {
       console.error('Error al crear la preferencia:', error);
+    }finally {
+      setIsLoadingPayment(false); // Detener el loading cuando se haya creado la preferencia
     }
   };
 
@@ -128,7 +133,11 @@ const PricingTable = () => {
       {/* Contenedor del botón de Mercado Pago */}
       {selectedAccountId && preferenceId && (
         <div className='mt-8 flex justify-center'>
-          <Wallet initialization={{ preferenceId }} /> {/* Botón centrado */}
+          {isLoadingPayment ? (
+            <Spinner /> // Mostrar el spinner mientras se carga el botón de Mercado Pago
+          ) : (
+            preferenceId && <Wallet initialization={{ preferenceId }} /> // Mostrar el botón de Mercado Pago una vez cargado
+          )}
         </div>
       )}
     </div>

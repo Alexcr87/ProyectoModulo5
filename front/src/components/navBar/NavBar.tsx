@@ -173,7 +173,7 @@ const NavBar = () => {
    }
    const perfilVotante = () =>{
     return (<li onClick={()=>setBars(!bars)}>
-            <Link href="/perfilUser">Mi perfil</Link>
+            <Link href="/perfilMadre">Mi perfil</Link>
     </li>)
    }
 
@@ -215,7 +215,7 @@ const NavBar = () => {
                 <i className="fa-solid fa-x text-white text-2xl"></i>
             </button>
             <div className={`w-[100%] md:w-auto md:flex ${bars ? "md:flex":"hidden"}`}>
-                <ul className='md:flex bg-primaryColor md:bg-none mt-44 md:mt-0 gap-8 pr-8 text-cuartiaryColor p-8 md:p-0 '>
+                <ul className='md:flex bg-primaryColor md:bg-none mt-80 md:mt-0 gap-8 pr-8 text-cuartiaryColor p-8 md:p-0 '>
                     {!userData ? (
                         <>
                             <li className='md:bg-none  py-4 md:py-0 px-2' onClick={()=>setBars(!bars)}>
@@ -240,8 +240,28 @@ const NavBar = () => {
                             </li>
                         </>
                     )}
+                <div className='md:hidden items-center gap-8 text-white list-none'>
+                <p>{(isCandidate || isVotante || isModerator || isAdmin) && (<>{changePassword()}</>)}</p>
+                <button
+                    onClick={toggleDarkMode}
+                    className={`text-white rounded`}
+                    >
+                    {isDarkMode ? "Modo Claro" : "Modo oscuro"}
+                </button>
+                <Guia/>                
+            </div>
                 </ul>
             </div>
+            <div className='hidden md:flex items-center gap-8 text-white list-none'>
+                <p>{(isCandidate || isVotante || isModerator || isAdmin) && (<>{changePassword()}</>)}</p>
+                <button
+                    onClick={toggleDarkMode}
+                    className={`text-white px-4 py-2 rounded`}
+                    >
+                    {isDarkMode ? <SunIcon className="h-6 w-6" /> : <MoonIcon className="h-6 w-6" />}
+                </button>
+                <Guia/>                
+            </div>            
             <style jsx>{`
                 .dropdown-toggle {
                     background: none;
@@ -257,16 +277,6 @@ const NavBar = () => {
                     flex-direction: column;
                 }
             `}</style>
-            <div className='hidden md:flex items-center gap-8 text-white list-none'>
-                <p>{(isCandidate || isVotante || isModerator || isAdmin) && (<>{changePassword()}</>)}</p>
-                <button
-                    onClick={toggleDarkMode}
-                    className={`text-white px-4 py-2 rounded`}
-                    >
-                    {isDarkMode ? <SunIcon className="h-6 w-6" /> : <MoonIcon className="h-6 w-6" />}
-                </button>
-                <Guia/>                
-            </div>            
         </nav>
     )
 }

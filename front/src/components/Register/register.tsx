@@ -15,6 +15,9 @@ import IGroup from "@/interfaces/IGroup";
 import Select from 'react-select';
 import Spinner from "../ui/Spinner";
 import { Tooltip } from 'react-tooltip';
+import { citiesByCountry } from "../utils/citiesByCountry";
+import { City } from "../utils/types";
+import { countries } from "../utils/countries";
 
 const Register = () => {
   const router = useRouter();
@@ -29,13 +32,12 @@ const Register = () => {
     groupId:"",
     groups: [],
   };
-
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const {userData} =useAuth()
   const [dataUser, setDataUser] = useState<IRegisterProps>(initialState);
   const [errors, setErrors] = useState<IRegisterError>(initialState);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [countries, setCountries] = useState<string[]>(["Argentina", "Chile", "Colombia"]);
-  const [cities, setCities] = useState<string[]>([]);
+  const [cities, setCities] = useState<City[]>([]);
   const [file, setFile] = useState<File | null>(null);
   const [groups, setGroups] = useState<IGroup[]>([]);
   const [touched, setTouched] = useState<IRegisterError>(initialState);
@@ -51,8 +53,11 @@ const Register = () => {
       ...touched,
       [name]: true,
     });
-  };
-  
+
+}
+const fetchCitiesByCountryId = (countryId: number) => {
+  return citiesByCountry.filter((city: { id_country: number; }) => city.id_country === countryId);
+};
   
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] || null;
@@ -114,14 +119,7 @@ const Register = () => {
     }
   };
 
-  const fetchCitiesByCountry = (country: string) => {
-    const countryCitiesMap: Record<string, string[]> = {
-      "Argentina": ["Buenos Aires", "Córdoba", "Rosario"],
-      "Chile": ["Santiago", "Valparaíso", "Concepción"],
-      "Colombia": ["Bogotá", "Medellín", "Cali"],
-    };
-    return countryCitiesMap[country] || [];
-  };
+ 
    
     useEffect(() => {
     setIsFormValid(
@@ -148,15 +146,30 @@ const Register = () => {
       ...dataUser,
       [name]: value,
     });
+    const newErrors = validateRegisterForm({
+      ...dataUser,
+      [name]: value, // Cambiar solo el campo que se está actualizando
+    });
+  
+    setErrors(newErrors);
   };
 
-  const handleCountryChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedCountry = event.target.value;
-    setDataUser({ ...dataUser, country: selectedCountry });
+  const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedCountryId = Number(event.target.value);
+    const selectedCountryName = countries.find(country => country.id === selectedCountryId)?.name || "";
 
-    // Fetch cities based on the selected country
-    const fetchedCities = fetchCitiesByCountry(selectedCountry);
+    setDataUser((prevDataUser) => ({
+      ...prevDataUser,
+      country: selectedCountryName,
+      city: "" // Reiniciar la ciudad al cambiar el país
+    }));
+
+    const fetchedCities = fetchCitiesByCountryId(selectedCountryId);
     setCities(fetchedCities);
+
+    if (isSubmitted) {
+      setIsSubmitted(false);
+    }
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -302,35 +315,42 @@ const Register = () => {
             <div className="flex flex-col ml-[3em] pr-[4em] w-1/2">
               {/* Campo País */}
               <div className="flex flex-col">
-                <select
-                  name="country"
-                  value={dataUser.country}
-                  onChange={handleCountryChange}
-                  onBlur={handleBlur}
-                  className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor dark:focus:border-primaryColor focus-visible:shadow-none"
-                >
-                  <option value="">Selecciona un país</option>
-                  {countries.map(country => (
-                    <option key={country} value={country}>{country}</option>
-                  ))}
-                </select>
+              <select
+                name="country"
+                onChange={handleCountryChange}
+                className="-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
+        border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
+        dark:focus:border-primaryColor focus-visible:shadow-none"
+                required
+                data-tooltip-id="country-tooltip"
+                data-tooltip-content="Selecciona tu país de residencia"
+              >
+                <option value="">Selecciona un país</option>
+                {countries.map(country => (
+                  <option key={country.id} value={country.id}>{country.name}</option>
+                ))}
+              </select>
                 {errors.country && <span className="text-red-500 text-sm">{errors.country || 'Este campo es obligatorio'}</span>}
               </div>
 
               {/* Campo Ciudad */}
               <div className="flex flex-col mt-4">
-                <select
-                  name="city"
-                  value={dataUser.city}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className="w-full px-5 py-3 mb-4 text-base transition bg-transparent border rounded-md outline-none border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor dark:focus:border-primaryColor focus-visible:shadow-none"
-                >
-                  <option value="">Selecciona una ciudad</option>
-                  {cities.map(city => (
-                    <option key={city} value={city}>{city}</option>
-                  ))}
-                </select>
+              <select
+                name="city"
+                value={dataUser.city}
+                onChange={handleChange}
+                className="-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
+        border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 placeholder:text-black focus:border-primaryColor 
+        dark:focus:border-primaryColor focus-visible:shadow-none"
+                required
+                data-tooltip-id="city-tooltip"
+                data-tooltip-content="Selecciona tu ciudad"
+              >
+                <option value="">Selecciona una ciudad</option>
+                {cities.map(city => (
+                  <option key={city.id} value={city.id}>{city.name}</option>
+                ))}
+              </select>
                 {errors.city && <span className="text-red-500 text-sm">{errors.city || 'Este campo es obligatorio'}</span>}
               </div>
 

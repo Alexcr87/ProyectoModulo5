@@ -22,7 +22,7 @@ const CampaignsTable = () => {
     const router = useRouter()
     
 
-    console.log(userData, "userdatra");
+
     
     
 
@@ -77,7 +77,7 @@ const CampaignsTable = () => {
             }
     
             const data: ICampaign[] = await response.json();
-            console.log(data, "data");
+  
             
             const campaignsWithDates = data.map(campaign => ({
                 ...campaign,
@@ -118,7 +118,7 @@ const CampaignsTable = () => {
     const handleAction2 = (id: string | undefined, campaignDate: Date) => {
         const currentDate = new Date();
        
-        if (new Date(campaignDate) > currentDate) {
+        if (!roles.includes('admin') && new Date(campaignDate) > currentDate) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Campaña no habilitada',

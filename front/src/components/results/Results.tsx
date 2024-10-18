@@ -105,7 +105,7 @@ const Results: React.FC<ResultProps> = ({ data, id }) => {
                       <div style={{ backgroundColor: candidate.borderColor,  width: `${percentage}%`  }} 
                         className={`text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full`} 
                       > 
-                        {candidate.votes} 
+                        {candidate.votes} votos ({percentage.toFixed(2)}%)
                       </div>
                     </div>
                   </div>

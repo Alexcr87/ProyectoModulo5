@@ -20,7 +20,7 @@ const Callback = () => {
         const response = await fetch(`${APIURL}/auth/protected`, {
           method: 'GET',
         });
-       console.log(response, "response");
+      
        
         if (response.ok) {
           const data = await response.json();
@@ -59,7 +59,6 @@ const Callback = () => {
             },
           };
 
-          console.log(usersession, "userData callback");
           setUserData(usersession); // Guardar los datos del usuario en el contexto de autenticación
           router.push('/'); // Redirigir a la página de inicio
         } else {

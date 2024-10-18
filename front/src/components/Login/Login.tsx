@@ -106,6 +106,7 @@ const LoginForm = () => {
                     icon: "error",
                     title: clearUser.message
                 });
+                setLoading(false);
                 return;
             }
         }

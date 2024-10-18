@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, Put, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Put, Delete, Patch } from '@nestjs/common';
 import { CampaignService } from './campaign.service';
 import { CreateCampaignDto } from 'src/dto/createCampaign.dto';
 import { Campaign } from 'src/entities/campaign.entity';
@@ -49,7 +49,7 @@ export class CampaignController {
   }
 
 
-  @Put(':id')
+  @Patch(':id')
   @ApiResponse({ status: 200, description: 'Campaign replaced successfully.', type: Campaign })
   async replace(
     @Param('id') campaignId: string, 

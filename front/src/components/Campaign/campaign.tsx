@@ -63,10 +63,15 @@ const CampaignForm = () => {
 
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedDate = event.target.value; // Obtén el valor del input
+    // Obtén la fecha seleccionada en formato YYYY-MM-DD
+    const selectedDate = event.target.value;
+
+    // Convierte la cadena en un objeto Date y ajusta a la zona horaria de Argentina
+    const argentinaDate = new Date(selectedDate + 'T00:00:00-03:00'); // -03:00 es la zona horaria de Argentina
+
     setFormData({
         ...formData,
-        date: new Date(selectedDate) // Almacena la fecha sin la hora
+        date: argentinaDate // Guarda la fecha ajustada
     });
 };
 
@@ -96,7 +101,7 @@ const data = {
       ...formData,
       
     }
-  console.log(data, "data back");
+
   
     setIsLoading(true);
     try {
@@ -145,13 +150,14 @@ const data = {
   },[formData])
 
   const formatDateToInput = (date: Date) => {
-    console.log(date, "asnhkjajhlkslasflhkafshlafshlnknlfhjlafs");
-    
+    // Obtén el año, mes y día
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses empiezan desde 0
     const day = String(date.getDate()).padStart(2, '0'); // Asegúrate de que el día tenga dos dígitos
-    return `${year}-${month}-${day}`;
-  };
+    return `${year}-${month}-${day}`; // Devuelve en el formato correcto para el input
+};
+
+
 
   return (
     <>
