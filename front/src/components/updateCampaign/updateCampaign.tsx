@@ -10,6 +10,7 @@ import IGroup from '@/interfaces/IGroup';
 import Spinner from '../ui/Spinner';
 import { Tooltip } from 'react-tooltip';
 import ICampaignSinID from '@/interfaces/ICampaignSinId';
+import Swal from 'sweetalert2';
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
@@ -24,7 +25,7 @@ const updateCampaign = () => {
     name: '',
     description: '',
     location: '',
-    date: new Date(),
+    date: new Date(campaign?.date!)||'',
     userId: userData?.userData.id || '', 
     user: { 
       id: userData?.userData.id || '', 
@@ -35,10 +36,11 @@ const updateCampaign = () => {
     candidates: [],
     groups: []  // Aquí mantenemos un array de grupos seleccionados
   });
-
+ 
   const searchParams = useSearchParams(); // Obtener parámetros de la URL
   const id = searchParams.get('id'); // Obtener el id de la campaña de los parámetros de la URL
 
+  
   useEffect(() => {
     if (id) {
       setLoading(true)
@@ -85,10 +87,10 @@ const updateCampaign = () => {
         name: formData.get('name'),
         description: formData.get('description'),
         location: formData.get('location'),
-        date: formData.get ('date'),
+        date: formData.get ('date') || campaign?.date,
       };
       const response = await fetch(`${APIURL}/campaigns/${id}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedCampaign),
       });
@@ -96,11 +98,31 @@ const updateCampaign = () => {
       if (response.ok) { 
         setCampaign(data); // Actualiza la campaña con la nueva data
         setError(null); // Limpia cualquier error previo
+        Swal.fire({
+          title: '¡Éxito!',
+          text: 'La campaña se ha actualizado correctamente.',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+        });
       } else {
         setError(data.message || 'Ocurrió un error');
+        setError(data.message || 'Ocurrió un error');
+      Swal.fire({
+        title: 'Error',
+        text: data.message || 'Ocurrió un error al actualizar la campaña.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+      });
       }
     } catch (error) {
-      setError((error as { message: string }).message);
+      const errorMessage = (error as { message: string }).message;
+      setError(errorMessage);
+      Swal.fire({
+        title: 'Error',
+        text: errorMessage || 'Ocurrió un error inesperado.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+      });
     } finally {
       setLoading(false); // Asegúrate de que se detenga la carga después de la petición
     }
@@ -121,6 +143,15 @@ const updateCampaign = () => {
         date: new Date(selectedDate) // Almacena la fecha sin la hora
     });
 };
+
+const today = new Date().toISOString().substring(0, 10)
+
+
+let isToday = false
+  if(campaign?.date && new Date(campaign.date).toISOString().substring(0, 10) === today){
+     isToday =true
+  }
+
 
   return (
     <>
@@ -220,6 +251,7 @@ const updateCampaign = () => {
               value={formData.date.toISOString().substring(0, 10)}
               min={new Date().toISOString().substring(0, 10)}
               onChange={handleDateChange}
+              disabled={isToday}
               className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
                 border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 focus:border-primaryColor 
                 dark:focus:border-primaryColor focus-visible:shadow-none"
