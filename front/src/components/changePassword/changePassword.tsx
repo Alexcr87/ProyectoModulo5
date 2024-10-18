@@ -93,7 +93,7 @@ const ChangePassword = () => {
     
     return (
         <div className='bg-cuartiaryColor min-h-[85vh] flex justify-center'>
-          <div className='bg-white w-[50%] my-8 shadow-2xl rounded-2xl flex flex-col items-center px-16'>
+          <div className='bg-white w-full md:w-[50%] my-8 shadow-2xl rounded-2xl flex flex-col items-center px-16'>
             <h2 className='text-2xl font-bold my-12'>Cambio De Contraseña</h2>
             {loading ? (
               <Spinner />
