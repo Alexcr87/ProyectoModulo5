@@ -16,6 +16,7 @@ const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
 
 const updateCampaign = () => {
+  const router = useRouter()
   const { userData } = useAuth(); 
   const [campaign, setCampaign] = useState<ICampaign | null>(null);
   const [loading, setLoading] = useState(true);
@@ -105,6 +106,8 @@ const updateCampaign = () => {
           text: 'La campaña se ha actualizado correctamente.',
           icon: 'success',
           confirmButtonText: 'Aceptar',
+        }).then(() => {
+          router.push('/campaigns');
         });
       } else {
         setError(data.message || 'Ocurrió un error');
