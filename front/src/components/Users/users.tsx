@@ -51,7 +51,10 @@ const fetchUsers = async (userData: any, roles: string[], setUsers: (users: IUse
       throw new Error("La respuesta de la red no fue correcta");
     }
 
-    const data = await response.json();
+    let data = await response.json();
+
+    // Filtra los usuarios que no sean 'admin'
+    data = data.filter((user: IUsers) => user.roles && !user.roles.some(roles => roles.name == "admin"));
     setUsers(data);
 
     const groupsResponse = await fetch(`${APIURL}/groups/user/${userData.userData.id}`, {
@@ -118,8 +121,6 @@ useEffect(() => {
       setSelectedUsers([...selectedUsers, userId]);
     }
   };
-
-
 
   const handleDeleteUsers = async (selectedUsers: string[], APIURL: string | undefined): Promise<void> => {
     if (!APIURL) {
@@ -229,7 +230,6 @@ const filteredUsers = users
               className="mb-4 p-2 border rounded-md"
             >
               <option value="">Todos los roles</option>
-              <option value="admin">Admin</option>
               <option value="candidate">Candidato</option>
               <option value="moderator">Moderador</option>
               <option value="voter">Votante</option>
