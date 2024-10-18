@@ -22,7 +22,7 @@ const CampaignsTable = () => {
     const router = useRouter()
     
 
-    console.log(userData, "userdatra");
+
     
     
 
@@ -77,7 +77,7 @@ const CampaignsTable = () => {
             }
     
             const data: ICampaign[] = await response.json();
-            console.log(data, "data");
+  
             
             const campaignsWithDates = data.map(campaign => ({
                 ...campaign,

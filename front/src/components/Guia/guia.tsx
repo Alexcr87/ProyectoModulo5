@@ -22,7 +22,6 @@ const Guia = ()=>{
           } else {
             setUserRole(null);
           }
-          console.log('Rol del usuario:', rolesMapping[String(role)]);
     },[userData]);
     const openModal = ()=>{
         setModalIsOpen(true);
