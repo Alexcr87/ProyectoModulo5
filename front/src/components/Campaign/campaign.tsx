@@ -92,10 +92,11 @@ const CampaignForm = () => {
       });
       return; // Evitar que se procese el formulario si la fecha no es válida
     }
-    const data = {
+const data = {
       ...formData,
-      date: formData.date.toISOString().split('T')[0], // Asegúrate de que la fecha esté en formato ISO
+      
     }
+  console.log(data, "data back");
   
     setIsLoading(true);
     try {
@@ -142,6 +143,15 @@ const CampaignForm = () => {
     const error = validateCampaingError(formData)
     setErros(error)
   },[formData])
+
+  const formatDateToInput = (date: Date) => {
+    console.log(date, "asnhkjajhlkslasflhkafshlafshlnknlfhjlafs");
+    
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses empiezan desde 0
+    const day = String(date.getDate()).padStart(2, '0'); // Asegúrate de que el día tenga dos dígitos
+    return `${year}-${month}-${day}`;
+  };
 
   return (
     <>
@@ -207,16 +217,16 @@ const CampaignForm = () => {
 
               {/* Fecha */}
               <Input
-                type="date"
-                name="date"
-                id="date"
-                value={formData.date.toISOString().substring(0, 10)}
-                min={new Date().toISOString().substring(0, 10)}
-                onChange={handleDateChange}
-                required
-                data-tooltip-id="date-tooltip"
-                data-tooltip-content="Selecciona una fecha para la campaña"
-              />
+  type="date"
+  name="date"
+  id="date"
+  value={formatDateToInput(formData.date)} // Formato YYYY-MM-DD
+  min={formatDateToInput(new Date())} // Asegúrate de que el mínimo sea también YYYY-MM-DD
+  onChange={handleDateChange}
+  required
+  data-tooltip-id="date-tooltip"
+  data-tooltip-content="Selecciona una fecha para la campaña"
+/>
               <Tooltip id="date-tooltip" />
               {errors.date && (
                 <div className="text-red-500 text-xs mt-2">{errors.date}</div>

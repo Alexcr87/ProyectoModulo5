@@ -9,6 +9,7 @@ import { useAuth } from '@/context/Authontext';
 import IGroup from '@/interfaces/IGroup';
 import Spinner from '../ui/Spinner';
 import { Tooltip } from 'react-tooltip';
+import ICampaignSinID from '@/interfaces/ICampaignSinId';
 
 const APIURL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 
@@ -19,7 +20,21 @@ const updateCampaign = () => {
   const [loading, setLoading] = useState(true);
   const [groups, setGroups] = useState<IGroup[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [date, setDate] = useState(campaign?.date ? new Date(campaign?.date) : null);
+  const [formData, setFormData] = useState<ICampaignSinID>({
+    name: '',
+    description: '',
+    location: '',
+    date: new Date(),
+    userId: userData?.userData.id || '', 
+    user: { 
+      id: userData?.userData.id || '', 
+      name: userData?.userData.name || '', 
+      dni: 0, 
+      email: '' 
+    },
+    candidates: [],
+    groups: []  // Aquí mantenemos un array de grupos seleccionados
+  });
 
   const searchParams = useSearchParams(); // Obtener parámetros de la URL
   const id = searchParams.get('id'); // Obtener el id de la campaña de los parámetros de la URL
@@ -83,6 +98,14 @@ const updateCampaign = () => {
       </div>
     );
   }
+
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedDate = event.target.value; // Obtén el valor del input
+    setFormData({
+        ...formData,
+        date: new Date(selectedDate) // Almacena la fecha sin la hora
+    });
+};
 
   return (
     <>
@@ -172,12 +195,9 @@ const updateCampaign = () => {
               type="date"
               name="date"
               id="date"
+              value={formData.date.toISOString().substring(0, 10)}
               min={new Date().toISOString().substring(0, 10)}
-              value={date ? date.toISOString().substring(0, 10) : ''}
-              onChange={(e) => {
-                const [year, month, day] = e.target.value.split('-');
-                setDate(new Date(Date.UTC(Number(year), Number(month) - 1, Number(day))));
-              }}
+              onChange={handleDateChange}
               className="w-full px-5 py-3 text-base transition bg-transparent border rounded-md outline-none 
                 border-stroke dark:border-dark-3 text-body-color dark:text-dark-6 focus:border-primaryColor 
                 dark:focus:border-primaryColor focus-visible:shadow-none"

@@ -25,6 +25,8 @@ const CampaignsTable = () => {
     console.log(userData, "userdatra");
     
     
+
+    
     useEffect(() => {
         if (userData) {
             setRoles(userData.userData.roles.map(role => role.name));
@@ -35,7 +37,7 @@ const CampaignsTable = () => {
     useEffect(() => {
         if (userData?.userData.id && roles.length > 0) {
             // Verifica si hay grupos antes de hacer fetch
-            if (groups.length === 0 && roles.includes('candidate') || roles.includes('voter')) {
+            if (groups.length === 0 && (roles.includes('candidate') || roles.includes('voter'))) {
                 setLoading(false); // Si no hay grupos, no hay necesidad de cargar campañas
                 return; // Sale de la función
             }
@@ -75,7 +77,15 @@ const CampaignsTable = () => {
             }
     
             const data: ICampaign[] = await response.json();
-            setCampaigns(data);
+            console.log(data, "data");
+            
+            const campaignsWithDates = data.map(campaign => ({
+                ...campaign,
+                date: new Date(campaign.date),
+                 // Asegúrate de convertir la fecha aquí
+            }));
+    
+            setCampaigns(campaignsWithDates);
             
         } catch (error) {
             setError(error instanceof Error ? error.message : 'Error desconocido');
@@ -107,7 +117,7 @@ const CampaignsTable = () => {
 
     const handleAction2 = (id: string | undefined, campaignDate: Date) => {
         const currentDate = new Date();
-    
+       
         if (new Date(campaignDate) > currentDate) {
             Swal.fire({
                 icon: 'warning',
@@ -189,6 +199,20 @@ const CampaignsTable = () => {
         return (currentTime - campaignDateTime) > 24 * 60 * 60 * 1000;
     };
     
+    const formatDateToDisplay = (date: Date) => {
+        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        return new Intl.DateTimeFormat('es-AR', options).format(new Date(date));
+    };
+    const formatDateToInput = (date: Date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses empiezan desde 0
+        const day = String(date.getDate()).padStart(2, '0'); // Asegúrate de que el día tenga dos dígitos
+        return `${year}-${month}-${day}`;
+      };
+
+    
+      
+
     return (
         <div className="mt-4 overflow-x-auto">
         <h1 className="text-2xl font-bold mb-4 text-center">Mis Campañas</h1>
@@ -236,13 +260,9 @@ const CampaignsTable = () => {
                                 <td className="border p-2">{campaign.description}</td>
                                 <td className="border p-2">{campaign.location}</td>
                                 <td className="border p-2">
-                                {(() => {
-        const date = new Date(campaign.date);
-        const day = String(date.getUTCDate()).padStart(2, '0'); // Get day and pad with zero if needed
-        const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Get month (0-11) and pad
-        const year = date.getUTCFullYear(); // Get full year
-        return `${day}/${month}/${year}`; // Return formatted date
-    })()}
+                                
+                                  {formatDateToDisplay(campaign.date)}
+                        
                                 </td>
                                 <td 
                                    className={`border p-2 ${expired ? 'text-gray-400 cursor-not-allowed' : 'text-blue-500 hover:text-primaryColor cursor-pointer'}`}

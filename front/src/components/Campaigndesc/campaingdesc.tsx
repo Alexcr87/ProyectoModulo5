@@ -137,7 +137,7 @@ const Campaingdesc = () => {
           <h1 className="text-2xl font-bold mb-4 capitalize">{campaign.name}</h1>
           <p className="text-lg">{campaign.description}</p>
           <p className="text-md text-gray-600">Ubicación: {campaign.location}</p>
-          <p className="text-md text-gray-600">Fecha: {new Date(campaign.date).toLocaleDateString('en-Gb', {timeZone: 'UTC'})}</p>
+          <p className="text-md text-gray-600">Fecha: {new Date(campaign.date).toLocaleDateString('es-AR')}</p>
 
           {(roles.includes('candidate') || roles.includes('voter')) && (
             <div ref={voteMessageRef} className="flex flex-wrap justify-center gap-2">

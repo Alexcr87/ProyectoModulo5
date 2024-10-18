@@ -71,7 +71,7 @@ export class User {
 
   @OneToMany(() => Group, (group) => group.user , {
     cascade:true,
-    onDelete: 'CASCADE'
+    onDelete: 'NO ACTION'
   })
   groupCreator: Group[];
 
