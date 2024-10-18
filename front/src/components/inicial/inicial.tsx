@@ -26,7 +26,7 @@ const Inicial = () => {
         } else {
             setUserRole(null);
         }
-        console.log("Rol del usuario:", userRole); // Log para verificar el rol
+
     }, [userData]); // Dependencia para que se ejecute al cambiar userData
 
     const openModal = () => {

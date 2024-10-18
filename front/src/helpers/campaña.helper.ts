@@ -26,11 +26,11 @@ export const deleteCampaign = async (campaignIds: string[]) => {
             body: JSON.stringify({ ids: campaignIds }),
         });
 
-        console.log('Response status:', res.status); // Verifica el estado de la respuesta
+  
 
         if (!res.ok) {
             const errorData = await res.text();
-            console.log('Error data:', errorData); // Registra los datos de error
+ 
             throw new Error(`Error al eliminar la campaña con ID(s): ${errorData}`);
         }
 

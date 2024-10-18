@@ -273,7 +273,7 @@ const initialState = {
             <div className="mt-4">
               <Boton
                 type="submit"
-                disabled={!isFormValid}
+                disabled={!isFormValid || isLoading}
               >
                 {isLoading ? <Spinner /> : "Completar Registro"}
               </Boton>
