@@ -35,7 +35,7 @@ const CampaignsTable = () => {
     useEffect(() => {
         if (userData?.userData.id && roles.length > 0) {
             // Verifica si hay grupos antes de hacer fetch
-            if (groups.length === 0) {
+            if (groups.length === 0 && roles.includes('candidate') || roles.includes('voter')) {
                 setLoading(false); // Si no hay grupos, no hay necesidad de cargar campañas
                 return; // Sale de la función
             }
@@ -236,9 +236,8 @@ const CampaignsTable = () => {
                                 <td className="border p-2">{campaign.description}</td>
                                 <td className="border p-2">{campaign.location}</td>
                                 <td className="border p-2">
-                                    {new Date(campaign.date).toLocaleString('en-GB', {
-                                      timeZone: 'UTC'
-                                    })}
+{new Date(campaign.date).toLocaleDateString('en-GB',
+)}
                                 </td>
                                 <td 
                                    className={`border p-2 ${expired ? 'text-gray-400 cursor-not-allowed' : 'text-blue-500 hover:text-primaryColor cursor-pointer'}`}
