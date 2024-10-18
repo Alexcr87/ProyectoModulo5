@@ -10,11 +10,13 @@ import Input from '../ui/Input';
 import Boton from '../ui/Boton';
 import { useAuth } from '@/context/Authontext'; // Importa el contexto de autenticación
 import { forgotPassword } from '@/helpers/forgotPassword';
+import Spinner from '../ui/Spinner';
 
 
 
 const LoginForm = () => {
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
     const { setUserData } = useAuth(); // Obtiene setUserData desde el contexto
     const initialState = {
         email: "",
@@ -45,13 +47,14 @@ const LoginForm = () => {
     // ENVIO LOS DATOS AL BACK O GUARDO LOS DATOS EN EL ARRAY   
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        
+        setLoading(true)
         if (Object.keys(errors).length > 0) { 
             Swal.fire({
                 icon: "error",
                 title: "Oops...",
                 text: "Something went wrong!",
             });
+            setLoading(false);
         } else {
             const clearUser = await login(dataUser);
             if (clearUser.token) {
@@ -71,6 +74,11 @@ const LoginForm = () => {
                         toast.onmouseenter = Swal.stopTimer;
                         toast.onmouseleave = Swal.resumeTimer;
                     }
+                    
+                });
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Bienvenido a Voting System'
                 });
                 if (clearUser.mustChangePassword) { // Redirige si debe cambiar su contraseña
                     router.push('/changePassword');
@@ -159,9 +167,10 @@ const LoginForm = () => {
     };
     return (
         <div className='my-4 text-center flex flex-col items-center bg-white shadow-lg px-4 rounded-lg'>
+            {loading && <Spinner />} {/* Muestra el spinner mientras está cargando */}
             <Image src="/images/logo.png" alt="imagenLogo" width={350} height={350} className='m-10' />
             <h1 className='font-bold text-2xl mt-4'>INICIAR SESION</h1>
-            <form onSubmit={handleSubmit} className="mx-auto  md:px-28 pb-20 rounded-lg">
+            <form onSubmit={handleSubmit} className="mx-auto md:px-28 pb-20 rounded-lg">
                 <div className="flex flex-col mt-4 w-full">
                     <Input
                         type="text"
@@ -169,6 +178,7 @@ const LoginForm = () => {
                         value={dataUser.email}
                         onChange={handleChange}
                         placeholder="Email"
+                        disabled={loading} // Deshabilitar si está cargando
                     />
                 </div>
 
@@ -183,6 +193,7 @@ const LoginForm = () => {
                         value={dataUser.password}
                         onChange={handleChange}
                         placeholder="Password"
+                        disabled={loading} // Deshabilitar si está cargando
                     />
                 </div>
 
@@ -192,13 +203,16 @@ const LoginForm = () => {
                 
                 <Boton 
                     type='submit'
-                    disabled={Object.keys(errors).length > 0}>
-                    Iniciar Sesion
+                    disabled={loading || Object.keys(errors).length > 0} // Deshabilitar si está cargando o si hay errores
+                >
+                    {loading ? "Iniciando..." : "Iniciar Sesion"} {/* Cambiar texto del botón */}
                 </Boton>
                 <hr className='my-4'/>
                 <Boton 
                     type='button'
-                    onClick={handleAuth0Login}>
+                    onClick={handleAuth0Login}
+                    disabled={loading} // Deshabilitar si está cargando
+                >
                     <i className="fa-brands fa-google mr-2"></i>
                     Continuar Con Google
                 </Boton>

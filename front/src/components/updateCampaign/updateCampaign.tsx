@@ -40,12 +40,6 @@ const updateCampaign = () => {
     }
   }, [id]);
 
-  console.log (campaign)
-
-  //   fetchGroups();
-  // }, [userData]);
-
-  console.log (groups)
  
   // ESTA FUNCION EJECUTA LA MODIFICACION
 
@@ -178,6 +172,7 @@ const updateCampaign = () => {
               type="date"
               name="date"
               id="date"
+              min={new Date().toISOString().substring(0, 10)}
               value={date ? date.toISOString().substring(0, 10) : ''}
               onChange={(e) => {
                 const [year, month, day] = e.target.value.split('-');

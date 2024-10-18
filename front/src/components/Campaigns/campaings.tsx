@@ -70,6 +70,7 @@ const CampaignsTable = () => {
     
             const data: ICampaign[] = await response.json();
             setCampaigns(data);
+            
         } catch (error) {
             setError(error instanceof Error ? error.message : 'Error desconocido');
         } finally {

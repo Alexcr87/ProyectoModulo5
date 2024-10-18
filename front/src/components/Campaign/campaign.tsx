@@ -60,12 +60,13 @@ const CampaignForm = () => {
     }));
   };
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      date: new Date(e.target.value),
-    }));
-  };
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedDate = event.target.value; // Obtén el valor del input
+    setFormData({
+        ...formData,
+        date: new Date(selectedDate) // Almacena la fecha sin la hora
+    });
+};
 
   const handleMultiSelectChange = (selectedOptions: any) => {
     const selectedGroups = selectedOptions.map((option: any) => ({ id: option.value, name: option.label }));
