@@ -60,6 +60,8 @@ const CampaignForm = () => {
     }));
   };
 
+
+
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedDate = event.target.value; // Obtén el valor del input
     setFormData({
@@ -90,11 +92,11 @@ const CampaignForm = () => {
       });
       return; // Evitar que se procese el formulario si la fecha no es válida
     }
-
     const data = {
       ...formData,
-      date: formData.date.toISOString(), // Asegúrate de que la fecha esté en formato ISO
-    };
+      date: formData.date.toISOString().split('T')[0], // Asegúrate de que la fecha esté en formato ISO
+    }
+  
     setIsLoading(true);
     try {
       const response = await fetch(`${APIURL}/campaigns`, {
