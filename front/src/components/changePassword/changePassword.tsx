@@ -138,7 +138,7 @@ const ChangePassword = () => {
                 {error.confirmPassword && (
                   <div className="text-red-500 text-xs mt-2">{error.confirmPassword}</div>
                 )}
-                <div className='w-[20%]'>
+                <div className='w-full md:w-[50%]'>
                   <Boton>Renovar</Boton>
                 </div>
               </form>
