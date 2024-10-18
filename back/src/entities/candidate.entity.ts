@@ -35,7 +35,7 @@ export class Candidate {
   @ManyToOne(() => Campaign, (campaign) => campaign.candidates , { onDelete: 'NO ACTION' })
   campaign: Campaign;
 
-  @ManyToOne(() => User, (user) => user.candidate, { onDelete: 'NO ACTION' })
+  @ManyToOne(() => User, (user) => user.candidate, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user: User;
 

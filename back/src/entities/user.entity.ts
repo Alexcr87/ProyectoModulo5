@@ -64,27 +64,32 @@ export class User {
   roles: Role[];
 
   @OneToMany(() => Campaign, (campaign) => campaign.user , {
+    cascade:true,
     onDelete: 'NO ACTION'
   })
   campaigns: Campaign[];
 
   @OneToMany(() => Group, (group) => group.user , {
-    onDelete: 'NO ACTION'
+    cascade:true,
+    onDelete: 'CASCADE'
   })
   groupCreator: Group[];
 
   @OneToMany(() => Account, (account) => account.user , {
+    cascade:true,
     onDelete: 'CASCADE'
   })
    accounts: Account[];
 
   @OneToMany(() => VoteUser, (votoUsuario) => votoUsuario.user , {
+    cascade:true,
     onDelete: 'NO ACTION'
   })
   votes: VoteUser[];
 
   @ManyToMany(() => Group, (group) => group.users , {
-    onDelete: 'NO ACTION'
+    cascade:true,
+    onDelete: 'CASCADE'
   })
   groups: Group[]; 
 
