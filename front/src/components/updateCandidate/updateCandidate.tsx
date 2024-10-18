@@ -49,7 +49,21 @@ const UpdateCandidate = () => {
     if (candidate.length > 0 && selectedCandidateId) {
       const foundCandidate = candidate.find(item => item.user.id === selectedCandidateId);
       setCandidateFinally(foundCandidate);
+      if (foundCandidate) {
+        // Precargar datos en los estados
+        setPostulation(foundCandidate.postulation || "");
+        setList(foundCandidate.list!|| "");
+        if (typeof foundCandidate.proposals === "string") {
+        try {
+          const parsedProposals = JSON.parse(foundCandidate.proposals); // Parsear el string JSON
+          setProposals(Array.isArray(parsedProposals) ? parsedProposals : []); // Verificar si es un array
+        } catch (error) {
+          console.error("Error al parsear las propuestas:", error);
+          setProposals([]); // Asignar un array vacío en caso de error
+        }
+      }
     }
+  }
   }, [candidate, selectedCandidateId]);
 
   const handleProposalsChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
